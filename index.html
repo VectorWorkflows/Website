@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Workflows</title>
+    
+    <!-- GOOGLE FONTS: Anton for bold headers, Inter for clean paragraph text -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FONT AWESOME: This link provides the icons (YouTube, GitHub, etc.) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           1. COLOR PALETTE & VARIABLES
+           Change these hex codes to alter the whole site's color scheme!
+           ========================================= */
+        :root {
+            /* Changed to an ultra-dark violet/black to match the logo's vibe */
+            --bg-color: #08070b; 
+            /* The color of the Bento boxes */
+            --surface-color: #121016; 
+            /* The neon purple glow matching your logo */
+            --accent-glow: #6f59cc; 
+            /* Main readable text color */
+            --text-main: #f4f4f5; 
+            /* Greyed out text for descriptions */
+            --text-muted: #8a8f98; 
+            /* The subtle borders around boxes */
+            --border-light: rgba(255, 255, 255, 0.06); 
+        }
+
+        /* =========================================
+           2. BASE STYLES & RESET
+           Cleans up default browser spacing
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth; /* Enables smooth scrolling when clicking nav links */
+        }
+
+        /* Changes the highlight color when you drag your mouse over text */
+        ::selection {
+            background-color: var(--accent-glow);
+            color: #fff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevents horizontal scrolling */
+        }
+
+        h1, h2, h3 {
+            font-family: 'Anton', sans-serif;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: normal;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit; /* Links inherit the color of their parent container */
+        }
+
+        /* =========================================
+           3. NAVIGATION BAR
+           Fixed at the top, frosted glass effect
+           ========================================= */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%; /* 20px top/bottom, 5% left/right */
+            background: rgba(8, 7, 11, 0.8); /* Semi-transparent background */
+            backdrop-filter: blur(12px); /* The frosted glass blur effect */
+            -webkit-backdrop-filter: blur(12px); /* For Safari support */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000; /* Keeps it on top of other elements */
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Space between logo image and text */
+        }
+
+        .logo-img {
+            height: 40px; /* Adjust this to make the logo bigger/smaller */
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            display: flex;
+            gap: 6px;
+        }
+
+        /* Button style for the nav */
+        .nav-btn {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            transition: all 0.3s ease; /* Smooth hover transition */
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-glow);
+            background: rgba(111, 89, 204, 0.1); /* Very faint purple background on hover */
+        }
+
+        /* =========================================
+           4. HERO SECTION (Main Header)
+           ========================================= */
+        .hero {
+            min-height: 100vh; /* Takes up 100% of the screen height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 5%;
+        }
+
+        /* THE PURPLE GLOW: This creates the glowing orb behind the text */
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(111,89,204,0.15) 0%, rgba(8,7,11,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1; /* Puts it behind the text */
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .hero-tag {
+            font-size: 0.85rem;
+            color: var(--accent-glow);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem); /* Scales text size dynamically based on screen width */
+            line-height: 1;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto 50px auto;
+            font-weight: 300;
+        }
+
+        /* =========================================
+           5. BENTO BOX GRID (Your Links)
+           ========================================= */
+        .work-section {
+            padding: 100px 5%;
+            max-width: 1400px;
+            margin: 0 auto; /* Centers the grid */
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Divides grid into 4 equal columns */
+            grid-auto-rows: 280px; /* Base height for all boxes */
+            gap: 20px; /* Spacing between boxes */
+        }
+
+        /* Base styles for every box */
+        .bento-item {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-light);
+            border-radius: 12px; /* Rounded corners */
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Advanced smooth hover */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Box Hover effects */
+        .bento-item:hover {
+            border-color: rgba(111, 89, 204, 0.4); /* Purple border on hover */
+            transform: translateY(-4px); /* Lifts the box up slightly */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Adds a drop shadow */
+        }
+
+        .bento-item i {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            transition: color 0.4s ease;
+        }
+
+        .bento-item:hover i {
+            color: var(--accent-glow); /* Icon turns purple on hover */
+        }
+
+        .bento-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .bento-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* 
+           GRID SIZING LOGIC 
+           'span 2' means it takes up 2 blocks. 'span 1' takes up 1 block.
+        */
+        
+        /* YouTube Card: Takes up 2 columns and 2 rows (Large Square) */
+        .item-yt { 
+            grid-column: span 2; 
+            grid-row: span 2; 
+            /* HERE IS YOUR BANNER! Darkened to 90% opacity over the image */
+            background: linear-gradient(rgba(14, 12, 19, 0.9), rgba(14, 12, 19, 0.9)), url('banner.png') center/cover; 
+        }
+        
+        /* GitHub Card: Takes up 2 columns, 1 row (Wide Rectangle) */
+        .item-gh { grid-column: span 2; grid-row: span 1; }
+        
+        /* Notion & IG Cards: Take up 1 column, 1 row (Small Squares) */
+        .item-nt { grid-column: span 1; grid-row: span 1; }
+        .item-ig { grid-column: span 1; grid-row: span 1; }
+
+        /* Specific adjustments for the large YouTube card */
+        .item-yt i { font-size: 4rem; }
+        .item-yt .bento-text h3 { font-size: 2.5rem; }
+
+        /* =========================================
+           6. CONTACT SECTION & FOOTER
+           ========================================= */
+        .contact-section {
+            padding: 120px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-light);
+            background: linear-gradient(180deg, var(--bg-color) 0%, #050507 100%);
+        }
+
+        .contact-section h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-section p {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 16px 36px;
+            background-color: var(--text-main);
+            color: var(--bg-color);
+            font-family: 'Anton', sans-serif;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-glow);
+            color: #fff;
+            transform: scale(1.02); /* Makes the button slightly larger on hover */
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border-light);
+            color: #555;
+            font-size: 0.85rem;
+            background-color: #050507;
+        }
+
+        /* =========================================
+           7. ANIMATION CLASSES
+           These classes are triggered by the Javascript at the bottom
+           ========================================= */
+        .reveal {
+            opacity: 0; /* Hidden by default */
+            transform: translateY(30px); /* Pushed down by 30px */
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1; /* Fully visible */
+            transform: translateY(0); /* Moved back to original position */
+        }
+
+        /* =========================================
+           8. RESPONSIVE DESIGN (Mobile/Tablet rules)
+           ========================================= */
+        
+        /* TABLETS */
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr); /* Changes grid to 2 columns */
+            }
+            .item-yt, .item-gh { grid-column: span 2; }
+            .item-nt, .item-ig { grid-column: span 1; }
+        }
+
+        /* PHONES */
+        @media (max-width: 600px) {
+            .bento-grid {
+                grid-template-columns: 1fr; /* Changes grid to 1 column */
+                grid-auto-rows: 250px;
+            }
+            /* Make all items take up full width on phones */
+            .item-yt, .item-gh, .item-nt, .item-ig {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            .item-yt .bento-text h3 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION HTML -->
+    <nav>
+        <div class="logo-container">
+            <!-- Ensure site_logo.png is in the same folder as this HTML file -->
+            <img src="site_logo.png" alt="Vector Workflows Logo" class="logo-img">
+            <!-- Added "WORKFLOWS" to the logo text here -->
+            <div class="logo-text"><strong>VECTOR</strong> WORKFLOWS</div>
+        </div>
+        <a href="#contact" class="nav-btn">Start a Conversation</a>
+    </nav>
+
+    <!-- HERO SECTION HTML -->
+    <section class="hero">
+        <div class="hero-content reveal">
+            <span class="hero-tag">Core / 2026</span>
+            <h1>Digital<br>Workflows.</h1>
+            <p>An archive of code repositories, process documentation, and digital systems.</p>
+        </div>
+    </section>
+
+    <!-- BENTO GRID SECTION HTML -->
+    <section id="work" class="work-section">
+        <div class="section-header reveal">
+            <h2>Index</h2>
+        </div>
+        
+        <div class="bento-grid">
+            <!-- 1. YouTube Box (Using the banner.jpg as background) -->
+            <a href="https://www.youtube.com/@vectorworkflows" target="_blank" class="bento-item item-yt reveal">
+                <i class="fa-brands fa-youtube"></i>
+                <div class="bento-text">
+                    <h3>Video Log</h3>
+                    <p>Process, breakdowns, and visual updates.</p>
+                </div>
+            </a>
+
+            <!-- 2. GitHub Box -->
+            <a href="https://github.com/VectorWorkflows" target="_blank" class="bento-item item-gh reveal" style="transition-delay: 0.1s;">
+                <i class="fa-brands fa-github"></i>
+                <div class="bento-text">
+                    <h3>Repositories</h3>
+                    <p>Open-source code and technical architecture.</p>
+                </div>
+            </a>
+
+            <!-- 3. Notion Box (Text updated to 'Documentation') -->
+            <a href="https://app.notion.com/p/3a7d07dc818580b6bf8afab5dde00c17?v=3a7d07dc818580d78fa6000c60bc6eac&source=copy_link" target="_blank" class="bento-item item-nt reveal" style="transition-delay: 0.2s;">
+                <i class="fa-solid fa-book-open"></i>
+                <div class="bento-text">
+                    <h3>Documentation</h3>
+                    <p>Public notes & docs.</p>
+                </div>
+            </a>
+
+            <!-- 4. Instagram Box -->
+            <a href="https://www.instagram.com/vectorworkflows/" target="_blank" class="bento-item item-ig reveal" style="transition-delay: 0.3s;">
+                <i class="fa-brands fa-instagram"></i>
+                <div class="bento-text">
+                    <h3>Social</h3>
+                    <p>Behind the scenes.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION HTML -->
+    <section id="contact" class="contact-section reveal">
+        <h2>Inquiries</h2>
+        <p>Currently open for discussions regarding technical solutions and collaborations.</p>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=core@vectoworkflows.com&su=Project%20Inquiry&body=Hi%20there!" target="_blank" class="btn-primary">
+            Initialize Contact
+        </a>
+    </section>
+
+    <!-- FOOTER HTML -->
+    <footer>
+        <p>VECTOR WORKFLOWS &copy; 2026. CORE STREAM DRIVE.</p>
+    </footer>
+
+    <!-- JAVASCRIPT FOR SCROLL ANIMATIONS -->
+    <!-- This script detects when elements with the 'reveal' class enter the screen and fades them in -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Find every element with the class "reveal"
+            const reveals = document.querySelectorAll('.reveal');
+
+            // Setup an observer to watch when they scroll onto the screen
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    // If the element is visible on the screen...
+                    if (entry.isIntersecting) {
+                        // Add the 'active' class (which triggers the CSS fade-in)
+                        entry.target.classList.add('active');
+                        // Stop watching it so it doesn't animate every time you scroll up and down
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                threshold: 0.1, // Trigger when 10% of the element is visible
+                rootMargin: "0px 0px -50px 0px" // Triggers slightly before the element hits the bottom of the screen
+            });
+
+            // Tell the observer to watch all the reveal elements
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+            
+            // Immediately fade in the main header text since it's at the very top
+            setTimeout(() => {
+                document.querySelector('.hero-content').classList.add('active');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
