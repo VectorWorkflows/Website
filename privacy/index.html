@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Vector Workflows</title>
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="../site_logo.png">
+    
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CORE VARIABLES (Same as main site) --- */
+        :root {
+            --bg-color: #08070b; 
+            --surface-color: #121016; 
+            --accent-glow: #6f59cc; 
+            --text-main: #f4f4f5; 
+            --text-muted: #8a8f98; 
+            --border-light: rgba(255, 255, 255, 0.06); 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection {
+            background-color: var(--accent-glow);
+            color: #fff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Anton', sans-serif;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: normal;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(8, 7, 11, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img { height: 40px; width: auto; }
+        .logo-text { font-size: 1.2rem; letter-spacing: 2px; }
+
+        .nav-btn {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-glow);
+            background: rgba(111, 89, 204, 0.1);
+        }
+
+        /* --- PRIVACY DOCUMENT LAYOUT --- */
+        .legal-container {
+            max-width: 800px;
+            margin: 150px auto 100px auto;
+            padding: 0 5%;
+        }
+
+        .legal-header {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .legal-header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .legal-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .legal-content h2 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin: 40px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .legal-content p {
+            margin-bottom: 20px;
+            color: #d1d5db;
+        }
+
+        .legal-content ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .legal-content li {
+            margin-bottom: 12px;
+            color: #d1d5db;
+        }
+
+        .legal-content li strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .contact-block {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-light);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .contact-block p {
+            margin-bottom: 5px;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        .effective-date {
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border-light);
+            color: #555;
+            font-size: 0.85rem;
+            background-color: #050507;
+        }
+        
+        .footer-links {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <a href="../" class="logo-container">
+            <img src="../site_logo.png" alt="Vector Workflows Logo" class="logo-img">
+            <div class="logo-text"><strong>VECTOR</strong> WORKFLOWS</div>
+        </a>
+        <a href="../" class="nav-btn">Return Home</a>
+    </nav>
+
+    <!-- PRIVACY CONTENT -->
+    <div class="legal-container">
+        
+        <div class="legal-header">
+            <h1>Privacy & Data Transparency</h1>
+            <p>When you use Vector Workflows, you trust us to manage your calendar and automate your daily routines. We take that responsibility seriously.</p>
+        </div>
+
+        <div class="legal-content">
+            <p>We build our tools with a simple rule: <strong>your data belongs to you, and you stay in full control.</strong> This page explains clearly what information our Dynamic Circadian Calendar Scheduler interacts with, how it works under the hood, and how you can delete your data at any time.</p>
+
+            <h2>What Information We Process</h2>
+            <p>To generate dynamic schedules directly on your calendar, our Telegram bot processes only the absolute minimum data required:</p>
+            <ul>
+                <li><strong>Google Calendar Access:</strong> Secure OAuth authorization tokens that allow us to create, update, and clear specific circadian schedule entries on your Google Calendar.</li>
+                <li><strong>Telegram Identifier & Timestamps:</strong> Your Telegram User ID and the exact timestamps of the messages or wake-up pings you send to the bot.</li>
+            </ul>
+            <p><em>We do not request access to your contacts, emails, location, or any Google services outside of your Google Calendar.</em></p>
+
+            <h2>How Your Data Is Used</h2>
+            <p>Every piece of data processed has a single, functional purpose:</p>
+            <ul>
+                <li><strong>Pre-Configuring Placeholder Templates:</strong> Upon initial setup, the app prepares schedule blocks roughly two months ahead of today's date. This ensures your near-term calendar stays clean and unobstructed until you actively trigger a daily routine.</li>
+                <li><strong>Real-Time Circadian Scheduling:</strong> When you send a wake-up ping to the bot in Telegram, the system evaluates your input and writes your customized, buffered daily schedule directly to your Google Calendar, starting within 15 minutes of your ping.</li>
+                <li><strong>Session Management:</strong> Storing your encrypted access tokens so the bot can write updates without forcing you to re-authenticate every time.</li>
+            </ul>
+
+            <h2>Our Google Data Guarantees (Limited Use)</h2>
+            <p>Our application strictly complies with the Google API Services User Data Policy, including its Limited Use requirements:</p>
+            <ul>
+                <li><strong>Zero Advertising:</strong> Your calendar data is never used to serve advertisements, build ad profiles, or target marketing.</li>
+                <li><strong>Zero Data Sales:</strong> We do not sell, rent, trade, or transfer your Google Calendar data to any third party.</li>
+                <li><strong>Zero AI Model Training:</strong> Your personal schedule and calendar entries are never fed into AI or machine learning models.</li>
+                <li><strong>Zero Human Inspection:</strong> No member of the Vector Workflows team reads your calendar events unless you explicitly grant written permission for technical troubleshooting or safety reasons.</li>
+            </ul>
+
+            <h2>You Stay in Control (Instant Deletion)</h2>
+            <p>You can disconnect your account and wipe your data from our system whenever you choose:</p>
+            <ul>
+                <li><strong>In-Bot One-Click Wipe:</strong> Tap the Delete and Logout button inside the Telegram bot interface. This immediately purges your stored Google tokens and session credentials from our servers.</li>
+                <li><strong>Google Security Settings:</strong> You can also revoke access directly from your Google Security Dashboard at any time.</li>
+            </ul>
+
+            <h2>Security & Encryption</h2>
+            <p>All communication between Telegram, our servers, and Google’s APIs is protected using industry-standard TLS/HTTPS encryption in transit. Your secret tokens are stored securely in isolated environment variables and encrypted datastores.</p>
+
+            <h2>Questions or Support?</h2>
+            <p>If you ever have questions about how your data is handled, feel free to reach out directly:</p>
+            
+            <div class="contact-block">
+                <p><strong>Studio:</strong> Vector Workflows</p>
+                <p><strong>Web:</strong> <a href="https://vectorworkflows.com" style="color: var(--accent-glow);">vectorworkflows.com</a></p>
+                <p><strong>Email:</strong> <a href="mailto:support@vectorworkflows.com" style="color: var(--accent-glow);">support@vectorworkflows.com</a></p>
+            </div>
+
+            <div class="effective-date">
+                Effective July 31, 2026
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>VECTOR WORKFLOWS &copy; 2026. CORE STREAM DRIVE.</p>
+        <div class="footer-links">
+            <a href="../">Home</a>
+            <a href="./">Privacy Policy</a>
+        </div>
+    </footer>
+
+</body>
+</html>
