@@ -1,279 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy | Vector Workflows</title>
-    
-    <!-- FAVICON -->
-    <link rel="icon" type="image/png" href="../site_logo.png">
-    
-    <!-- GOOGLE FONTS -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- CORE VARIABLES (Same as main site) --- */
-        :root {
-            --bg-color: #08070b; 
-            --surface-color: #121016; 
-            --accent-glow: #6f59cc; 
-            --text-main: #f4f4f5; 
-            --text-muted: #8a8f98; 
-            --border-light: rgba(255, 255, 255, 0.06); 
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy | Vector Workflows</title>
+<meta name="description" content="How Vector Workflows' Dynamic Circadian Calendar Scheduler handles your Google Calendar and Telegram data — what's collected, why, and how to delete it.">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<link rel="icon" type="image/png" href="../site_logo.png">
 
-        ::selection {
-            background-color: var(--accent-glow);
-            color: #fff;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
+<style>
+/* ============================================================
+   TOKENS — identical to the main site's system. --ink-soft is the
+   one addition: long-form legal paragraphs need higher contrast
+   than the marketing copy's --ink-dim (~3.8:1, fine for short
+   labels, too low for dense reading text). --ink-soft sits between
+   --ink and --ink-dim at ~11:1 against --void so policy text stays
+   easy to read without breaking from the palette's character.
+   ============================================================ */
+:root{
+  --void:      #050505;
+  --surface:   #0c0a10;
+  --surface-2: #110d17;
+  --accent:    #6f59cc;
+  --accent-2:  #a594f0;
+  --ink:       #f4f4f5;
+  --ink-soft:  #c9cbd3;
+  --ink-dim:   #6b6d76;
+  --line:      rgba(244,244,245,0.08);
+  --line-strong: rgba(244,244,245,0.16);
 
-        h1, h2, h3 {
-            font-family: 'Anton', sans-serif;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-weight: normal;
-        }
+  --f-display: 'Anton', sans-serif;
+  --f-body:    'Space Grotesk', sans-serif;
+  --f-mono:    'JetBrains Mono', monospace;
+}
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+*{margin:0;padding:0;box-sizing:border-box;}
+::selection{background:var(--accent);color:#fff;}
 
-        /* --- NAVIGATION --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            background: rgba(8, 7, 11, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-light);
-        }
+html{background:var(--void);}
+body{
+  font-family:var(--f-body);
+  background:var(--void);
+  color:var(--ink-soft);
+  line-height:1.7;
+  overflow-x:clip;
+}
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+a{color:inherit;text-decoration:none;}
+h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:400;letter-spacing:0.01em;color:var(--ink);}
+.mono{font-family:var(--f-mono);}
 
-        .logo-img { height: 40px; width: auto; }
-        .logo-text { font-size: 1.2rem; letter-spacing: 2px; }
+/* Skip link — quality-floor accessibility addition, hidden until focused */
+.skip-link{
+  position:absolute; left:1rem; top:-60px;
+  background:var(--accent); color:#fff;
+  padding:12px 20px; font-family:var(--f-mono); font-size:0.8rem;
+  z-index:10001; border-radius:2px; transition:top .2s ease;
+}
+.skip-link:focus{top:1rem;}
 
-        .nav-btn {
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 10px 20px;
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
+/* ============================================================
+   GRAIN — same tactile film texture as the main site
+   ============================================================ */
+.grain{
+  position:fixed; inset:0; z-index:9990;
+  pointer-events:none; opacity:0.05; mix-blend-mode:overlay;
+}
 
-        .nav-btn:hover {
-            border-color: var(--accent-glow);
-            background: rgba(111, 89, 204, 0.1);
-        }
+/* ============================================================
+   AMBIENT GLOW — a CSS-only stand-in for the homepage's WebGL
+   fluid shader. A legal page's job is to be read quickly and
+   trusted, not to carry a full render loop, so this keeps the same
+   violet/void mood as a couple of static, blurred radial gradients
+   with a slow transform drift, instead of loading Three.js for it.
+   ============================================================ */
+.ambient-glow{
+  position:fixed; inset:-15%; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(600px circle at 18% 15%, rgba(111,89,204,0.22), transparent 60%),
+    radial-gradient(560px circle at 82% 65%, rgba(165,148,240,0.14), transparent 60%);
+  filter:blur(70px);
+  animation:ambientDrift 34s ease-in-out infinite alternate;
+}
+@keyframes ambientDrift{
+  0%{transform:translate(0,0) scale(1);}
+  100%{transform:translate(-3%,2.5%) scale(1.04);}
+}
 
-        /* --- PRIVACY DOCUMENT LAYOUT --- */
-        .legal-container {
-            max-width: 800px;
-            margin: 150px auto 100px auto;
-            padding: 0 5%;
-        }
+/* ============================================================
+   STATUS STRIP — identical language to the main site's instrument
+   readout: live dot, clock, UTC offset, section index, scroll %.
+   ============================================================ */
+#status-strip{
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px clamp(1.25rem,4vw,2.5rem);
+  font-family:var(--f-mono); font-size:0.68rem; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--ink-dim);
+  background:linear-gradient(to bottom, rgba(5,5,5,0.9), rgba(5,5,5,0));
+  pointer-events:none;
+}
+#status-strip span{color:var(--ink);}
+#status-strip .divider{color:var(--line-strong);margin:0 0.6em;}
+.status-group{display:flex;align-items:center;}
+#status-strip .status-live-dot{
+  display:inline-block;width:5px;height:5px;background:var(--accent-2);
+  border-radius:50%;margin-right:0.5em;box-shadow:0 0 6px var(--accent-2);
+}
+@media (max-width:640px){ #status-strip .status-hide-mobile{display:none;} }
 
-        .legal-header {
-            margin-bottom: 50px;
-            text-align: center;
-        }
+/* ============================================================
+   NAV — same logo mark and CTA button as the main site. Given
+   solid content sits directly beneath (no full-bleed hero), the
+   bar carries a blurred backdrop here so scrolled text stays
+   legible under it; the homepage nav can stay transparent because
+   its hero is dark edge-to-edge already.
+   ============================================================ */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:400;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:20px clamp(1.25rem,4vw,2.5rem);
+  margin-top:38px;
+  background:rgba(5,5,5,0.72);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.logo-mark{
+  display:flex; align-items:baseline; gap:10px;
+  font-family:var(--f-display); font-size:1.05rem; letter-spacing:0.02em;
+}
+.logo-mark .lm-dot{color:var(--accent-2);}
+.nav-cta{
+  font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.12em;
+  text-transform:uppercase; padding:11px 20px;
+  border:1px solid var(--line-strong); border-radius:2px;
+  transition:border-color .3s ease, background-color .3s ease;
+}
+.nav-cta:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);}
 
-        .legal-header h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            color: #fff;
-            margin-bottom: 15px;
-        }
+/* ============================================================
+   PAGE HEAD — compact analogue of the homepage hero: same eyebrow
+   + stroked second-line title treatment, scaled down since this
+   page isn't a full-bleed entry point.
+   ============================================================ */
+.page-head{
+  position:relative; z-index:10;
+  padding:200px clamp(1.25rem,4vw,2.5rem) 60px;
+  max-width:1100px; margin:0 auto;
+}
+.page-eyebrow{
+  font-family:var(--f-mono); font-size:0.72rem; letter-spacing:0.3em;
+  text-transform:uppercase; color:var(--accent-2);
+  margin-bottom:24px; display:flex; align-items:center; gap:14px;
+}
+.page-eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
+.page-head h1{
+  font-size:clamp(2.6rem,7.5vw,5.5rem);
+  line-height:0.92;
+}
+.page-head h1 .stroke{
+  color:transparent; -webkit-text-stroke:1.5px var(--ink);
+}
+.page-lede{
+  max-width:640px; margin-top:32px;
+  font-size:1.08rem; font-weight:300; color:var(--ink-soft);
+  line-height:1.75;
+}
 
-        .legal-header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
+/* ============================================================
+   MARQUEE — pure CSS infinite scroll (no measured-width JS needed
+   since the track holds two identical copies of the content and
+   -50% always equals exactly one copy's width).
+   ============================================================ */
+.marquee-wrap{
+  position:relative; z-index:10;
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:18px 0; overflow:hidden; background:var(--void);
+}
+.marquee-track{
+  display:flex; width:max-content; gap:3rem;
+  animation:marqueeScroll 24s linear infinite;
+}
+.marquee-track span{
+  font-family:var(--f-mono); font-size:0.85rem; letter-spacing:0.15em;
+  text-transform:uppercase; color:var(--ink-dim);
+  display:flex; align-items:center; gap:3rem; white-space:nowrap;
+}
+.marquee-track span em{font-style:normal;color:var(--accent-2);}
+@keyframes marqueeScroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
-        .legal-content h2 {
-            font-size: 1.5rem;
-            color: #fff;
-            margin: 40px 0 15px 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-light);
-        }
+/* ============================================================
+   POLICY SECTIONS — shared shell for every clause of the policy
+   ============================================================ */
+.policy-main{
+  position:relative; z-index:10;
+  max-width:1100px; margin:0 auto;
+  padding:0 clamp(1.25rem,4vw,2.5rem);
+}
+.policy-section{
+  padding:100px 0; border-top:1px solid var(--line);
+}
+.policy-section:first-of-type{border-top:none;}
+.policy-head{margin-bottom:40px;}
+.policy-head .eyebrow{
+  font-family:var(--f-mono); font-size:0.72rem; letter-spacing:0.3em;
+  text-transform:uppercase; color:var(--accent-2);
+  margin-bottom:14px; display:block;
+}
+.policy-head h2{font-size:clamp(1.9rem,4.5vw,2.9rem);}
+.policy-note{
+  color:var(--ink-soft); font-weight:400; font-size:1.02rem;
+  line-height:1.75; max-width:70ch; margin-bottom:36px;
+}
+.policy-note em{color:var(--ink); font-style:normal;}
 
-        .legal-content p {
-            margin-bottom: 20px;
-            color: #d1d5db;
-        }
+/* ---- non-interactive spec cards (What We Process / Your Control) ---- */
+.spec-grid{
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:1px; background:var(--line); border:1px solid var(--line);
+}
+.spec-card{
+  background:var(--surface); padding:32px;
+  display:flex; flex-direction:column; gap:14px; min-height:220px;
+}
+.spec-card .s-index{
+  font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.1em;
+  color:var(--ink-dim); display:flex; align-items:center; gap:10px;
+}
+.spec-card .s-index i{color:var(--accent-2);font-size:1rem;}
+.spec-card h3{font-size:1.35rem;letter-spacing:0.02em;}
+.spec-card p{color:var(--ink-soft);font-weight:400;font-size:0.95rem;line-height:1.7;}
+@media (max-width:640px){ .spec-grid{grid-template-columns:1fr;} }
 
-        .legal-content ul {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
+/* ---- indexed row list (How Your Data Is Used) ---- */
+.policy-list{border-top:1px solid var(--line);}
+.policy-row{
+  display:grid; grid-template-columns:2.5rem 1fr; gap:24px;
+  padding:26px 0; border-bottom:1px solid var(--line);
+  transition:padding-left .3s ease;
+}
+.policy-row:hover{padding-left:12px;}
+.policy-row .p-index{font-family:var(--f-mono);font-size:0.75rem;color:var(--ink-dim);padding-top:5px;}
+.policy-row h4{font-size:1.15rem;letter-spacing:0.03em;margin-bottom:8px;transition:color .3s ease;}
+.policy-row:hover h4{color:var(--accent-2);}
+.policy-row p{color:var(--ink-soft);font-weight:400;font-size:0.98rem;line-height:1.75;max-width:64ch;}
 
-        .legal-content li {
-            margin-bottom: 12px;
-            color: #d1d5db;
-        }
+/* ---- guarantee grid (reuses the telemetry instrument-readout language) ---- */
+.telemetry-grid{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:var(--line); border:1px solid var(--line);
+}
+.telemetry-cell{background:var(--surface);padding:30px 26px;}
+.telemetry-cell .t-label{
+  font-family:var(--f-mono); font-size:0.66rem; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--ink-dim); margin-bottom:14px; display:block;
+}
+.telemetry-cell .t-value{
+  font-family:var(--f-mono); font-size:clamp(1.3rem,2.4vw,1.7rem);
+  color:var(--ink); display:flex; align-items:center; gap:6px;
+}
+.telemetry-cell .t-value .t-live-dot{
+  display:inline-block;width:6px;height:6px;background:var(--accent-2);
+  border-radius:50%;margin-right:4px;box-shadow:0 0 6px var(--accent-2);
+}
+.telemetry-cell p{color:var(--ink-soft);font-weight:400;font-size:0.85rem;line-height:1.65;margin-top:14px;}
+@media (max-width:900px){ .telemetry-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:520px){ .telemetry-grid{grid-template-columns:1fr;} }
 
-        .legal-content li strong {
-            color: #fff;
-            font-weight: 600;
-        }
+/* ---- security badges ---- */
+.badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
+.badge{
+  font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--ink-soft);
+  border:1px solid var(--line-strong); border-radius:2px;
+  padding:9px 16px; display:inline-flex; align-items:center; gap:8px;
+}
+.badge i{color:var(--accent-2);}
 
-        .contact-block {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-light);
-            padding: 25px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
+/* ---- contact card ---- */
+.contact-card{
+  background:var(--surface); border:1px solid var(--line);
+  padding:32px; max-width:480px; margin-bottom:28px;
+}
+.contact-card p{
+  font-family:var(--f-mono); font-size:0.92rem; color:var(--ink-soft);
+  margin-bottom:8px;
+}
+.contact-card p:last-child{margin-bottom:0;}
+.contact-card p strong{color:var(--ink);font-weight:600;}
+.contact-card a{color:var(--accent-2);}
+.contact-card a:hover{text-decoration:underline;}
 
-        .contact-block p {
-            margin-bottom: 5px;
-            font-family: monospace;
-            font-size: 0.95rem;
-        }
+.contact-btn{
+  position:relative; display:inline-flex; align-items:center; gap:12px;
+  padding:16px 30px; border:1px solid var(--line-strong); border-radius:2px;
+  font-family:var(--f-mono); font-size:0.75rem; letter-spacing:0.16em;
+  text-transform:uppercase; overflow:hidden; transition:border-color .4s ease;
+}
+.contact-btn::before{
+  content:''; position:absolute; inset:0; background:var(--accent);
+  transform:translateY(101%); transition:transform .45s cubic-bezier(.16,1,.3,1); z-index:-1;
+}
+.contact-btn:hover{border-color:var(--accent);color:#fff;}
+.contact-btn:hover::before{transform:translateY(0);}
+.contact-btn i{transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.contact-btn:hover i{transform:translate(3px,-3px);}
 
-        .effective-date {
-            margin-top: 60px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-align: center;
-            font-style: italic;
-        }
+.effective-note{
+  font-family:var(--f-mono); font-size:0.8rem; font-style:italic;
+  color:var(--ink-dim); margin-top:8px;
+}
 
-        /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid var(--border-light);
-            color: #555;
-            font-size: 0.85rem;
-            background-color: #050507;
-        }
-        
-        .footer-links {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
+/* ============================================================
+   FOOTER — identical to the main site
+   ============================================================ */
+footer{
+  position:relative; z-index:10;
+  padding:32px clamp(1.25rem,4vw,2.5rem);
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid var(--line);
+  font-family:var(--f-mono); font-size:0.68rem; letter-spacing:0.08em;
+  color:var(--ink-dim); text-transform:uppercase; flex-wrap:wrap; gap:12px;
+}
+footer a{transition:color .3s ease;}
+footer a:hover{color:var(--accent-2);}
+footer .current{color:var(--accent-2);}
 
-        .footer-links a {
-            color: var(--text-muted);
-            transition: color 0.3s ease;
-        }
+/* ============================================================
+   REVEAL UTILITY
+   ============================================================ */
+.reveal-up{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease;}
+.reveal-up.is-visible{opacity:1;transform:translateY(0);}
 
-        .footer-links a:hover {
-            color: var(--accent-glow);
-        }
-    </style>
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-offset:4px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
+  .reveal-up{opacity:1;transform:none;}
+  .ambient-glow{animation:none;}
+  .marquee-track{animation:none;}
+}
+</style>
 </head>
 <body>
 
-    <!-- NAVIGATION -->
-    <nav>
-        <a href="../" class="logo-container">
-            <img src="../site_logo.png" alt="Vector Workflows Logo" class="logo-img">
-            <div class="logo-text"><strong>VECTOR</strong> WORKFLOWS</div>
-        </a>
-        <a href="../" class="nav-btn">Return Home</a>
-    </nav>
+<a href="#main" class="skip-link">Skip to content</a>
 
-    <!-- PRIVACY CONTENT -->
-    <div class="legal-container">
-        
-        <div class="legal-header">
-            <h1>Privacy & Data Transparency</h1>
-            <p>When you use Vector Workflows, you trust us to manage your calendar and automate your daily routines. We take that responsibility seriously.</p>
+<canvas id="grain" class="grain"></canvas>
+<div class="ambient-glow" aria-hidden="true"></div>
+
+<div id="status-strip">
+  <div class="status-group">
+    <span class="status-live-dot"></span>
+    <span id="clockLocal">00:00:00</span>
+    <span class="divider">/</span>
+    <span class="status-hide-mobile" id="clockOffset">UTC+00:00</span>
+  </div>
+  <div class="status-group">
+    <span class="status-hide-mobile">SEC <span id="secIndex">01</span>/<span id="secTotal">--</span></span>
+    <span class="divider status-hide-mobile">/</span>
+    <span>SCROLL <span id="scrollPct">000</span></span>
+  </div>
+</div>
+
+<nav>
+  <a href="../" class="logo-mark" aria-label="Vector Workflows home">
+    VECTOR<span class="lm-dot">·</span>WORKFLOWS
+  </a>
+  <a href="../" class="nav-cta">Return Home</a>
+</nav>
+
+<header class="page-head" data-section-name="Overview">
+  <div class="page-eyebrow">Legal — Effective Jul 31, 2026</div>
+  <h1>Privacy &amp;<br><span class="stroke">Transparency.</span></h1>
+  <p class="page-lede">When you use Vector Workflows, you trust us to manage your calendar and automate your daily routines. This page explains exactly what the Dynamic Circadian Calendar Scheduler touches, why, and how to delete it whenever you want.</p>
+</header>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>OAUTH TOKENS ONLY <em>/</em> ZERO AD SALES <em>/</em> ZERO AI TRAINING <em>/</em> ZERO DATA SALES <em>/</em> INSTANT DELETION <em>/</em></span>
+    <span>OAUTH TOKENS ONLY <em>/</em> ZERO AD SALES <em>/</em> ZERO AI TRAINING <em>/</em> ZERO DATA SALES <em>/</em> INSTANT DELETION <em>/</em></span>
+  </div>
+</div>
+
+<main id="main" class="policy-main">
+
+  <section class="policy-section" data-section-name="Data Collected">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 01 — Collection</span>
+      <h2>What Information<br>We Process</h2>
+    </div>
+    <p class="policy-note reveal-up">To generate dynamic schedules directly on your calendar, our Telegram bot processes only the absolute minimum data required — <em>nothing more.</em></p>
+
+    <div class="spec-grid reveal-up">
+      <div class="spec-card">
+        <span class="s-index"><i class="fa-solid fa-calendar-check"></i>D.01 — CALENDAR</span>
+        <h3>Google Calendar Access</h3>
+        <p>Secure OAuth authorization tokens that let us create, update, and clear specific circadian schedule entries on your Google Calendar.</p>
+      </div>
+      <div class="spec-card">
+        <span class="s-index"><i class="fa-brands fa-telegram"></i>D.02 — TELEGRAM</span>
+        <h3>Telegram ID &amp; Timestamps</h3>
+        <p>Your Telegram User ID and the exact timestamps of the messages or wake-up pings you send to the bot.</p>
+      </div>
+    </div>
+    <p class="policy-note reveal-up" style="margin-top:28px;margin-bottom:0;"><em>We do not request access to your contacts, emails, location, or any Google services outside of your Google Calendar.</em></p>
+  </section>
+
+  <section class="policy-section" data-section-name="Data Usage">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 02 — Usage</span>
+      <h2>How Your Data<br>Is Used</h2>
+    </div>
+    <p class="policy-note reveal-up">Every piece of data processed has a single, functional purpose.</p>
+
+    <div class="policy-list reveal-up">
+      <div class="policy-row">
+        <span class="p-index">01</span>
+        <div>
+          <h4>Pre-Configuring Placeholder Templates</h4>
+          <p>Upon initial setup, the app prepares schedule blocks roughly two months ahead of today's date. This keeps your near-term calendar clean and unobstructed until you actively trigger a daily routine.</p>
         </div>
-
-        <div class="legal-content">
-            <p>We build our tools with a simple rule: <strong>your data belongs to you, and you stay in full control.</strong> This page explains clearly what information our Dynamic Circadian Calendar Scheduler interacts with, how it works under the hood, and how you can delete your data at any time.</p>
-
-            <h2>What Information We Process</h2>
-            <p>To generate dynamic schedules directly on your calendar, our Telegram bot processes only the absolute minimum data required:</p>
-            <ul>
-                <li><strong>Google Calendar Access:</strong> Secure OAuth authorization tokens that allow us to create, update, and clear specific circadian schedule entries on your Google Calendar.</li>
-                <li><strong>Telegram Identifier & Timestamps:</strong> Your Telegram User ID and the exact timestamps of the messages or wake-up pings you send to the bot.</li>
-            </ul>
-            <p><em>We do not request access to your contacts, emails, location, or any Google services outside of your Google Calendar.</em></p>
-
-            <h2>How Your Data Is Used</h2>
-            <p>Every piece of data processed has a single, functional purpose:</p>
-            <ul>
-                <li><strong>Pre-Configuring Placeholder Templates:</strong> Upon initial setup, the app prepares schedule blocks roughly two months ahead of today's date. This ensures your near-term calendar stays clean and unobstructed until you actively trigger a daily routine.</li>
-                <li><strong>Real-Time Circadian Scheduling:</strong> When you send a wake-up ping to the bot in Telegram, the system evaluates your input and writes your customized, buffered daily schedule directly to your Google Calendar, starting within 15 minutes of your ping.</li>
-                <li><strong>Session Management:</strong> Storing your encrypted access tokens so the bot can write updates without forcing you to re-authenticate every time.</li>
-            </ul>
-
-            <h2>Our Google Data Guarantees (Limited Use)</h2>
-            <p>Our application strictly complies with the Google API Services User Data Policy, including its Limited Use requirements:</p>
-            <ul>
-                <li><strong>Zero Advertising:</strong> Your calendar data is never used to serve advertisements, build ad profiles, or target marketing.</li>
-                <li><strong>Zero Data Sales:</strong> We do not sell, rent, trade, or transfer your Google Calendar data to any third party.</li>
-                <li><strong>Zero AI Model Training:</strong> Your personal schedule and calendar entries are never fed into AI or machine learning models.</li>
-                <li><strong>Zero Human Inspection:</strong> No member of the Vector Workflows team reads your calendar events unless you explicitly grant written permission for technical troubleshooting or safety reasons.</li>
-            </ul>
-
-            <h2>You Stay in Control (Instant Deletion)</h2>
-            <p>You can disconnect your account and wipe your data from our system whenever you choose:</p>
-            <ul>
-                <li><strong>In-Bot One-Click Wipe:</strong> Tap the Delete and Logout button inside the Telegram bot interface. This immediately purges your stored Google tokens and session credentials from our servers.</li>
-                <li><strong>Google Security Settings:</strong> You can also revoke access directly from your Google Security Dashboard at any time.</li>
-            </ul>
-
-            <h2>Security & Encryption</h2>
-            <p>All communication between Telegram, our servers, and Google’s APIs is protected using industry-standard TLS/HTTPS encryption in transit. Your secret tokens are stored securely in isolated environment variables and encrypted datastores.</p>
-
-            <h2>Questions or Support?</h2>
-            <p>If you ever have questions about how your data is handled, feel free to reach out directly:</p>
-            
-            <div class="contact-block">
-                <p><strong>Studio:</strong> Vector Workflows</p>
-                <p><strong>Web:</strong> <a href="https://vectorworkflows.com" style="color: var(--accent-glow);">vectorworkflows.com</a></p>
-                <p><strong>Email:</strong> <a href="mailto:support@vectorworkflows.com" style="color: var(--accent-glow);">support@vectorworkflows.com</a></p>
-            </div>
-
-            <div class="effective-date">
-                Effective July 31, 2026
-            </div>
+      </div>
+      <div class="policy-row">
+        <span class="p-index">02</span>
+        <div>
+          <h4>Real-Time Circadian Scheduling</h4>
+          <p>When you send a wake-up ping to the bot in Telegram, the system evaluates your input and writes your customized, buffered daily schedule directly to your Google Calendar, starting within 15 minutes of your ping.</p>
         </div>
+      </div>
+      <div class="policy-row">
+        <span class="p-index">03</span>
+        <div>
+          <h4>Session Management</h4>
+          <p>Storing your encrypted access tokens so the bot can write updates without forcing you to re-authenticate every time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="policy-section" data-section-name="Guarantees">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 03 — Limited Use</span>
+      <h2>Our Google Data<br>Guarantees</h2>
+    </div>
+    <p class="policy-note reveal-up">Our application strictly complies with the Google API Services User Data Policy, including its Limited Use requirements.</p>
+
+    <div class="telemetry-grid reveal-up">
+      <div class="telemetry-cell">
+        <span class="t-label">Advertising</span>
+        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
+        <p>Your calendar data is never used to serve ads, build ad profiles, or target marketing.</p>
+      </div>
+      <div class="telemetry-cell">
+        <span class="t-label">Data Sales</span>
+        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
+        <p>We do not sell, rent, trade, or transfer your Google Calendar data to any third party.</p>
+      </div>
+      <div class="telemetry-cell">
+        <span class="t-label">AI Model Training</span>
+        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
+        <p>Your personal schedule and calendar entries are never fed into AI or machine learning models.</p>
+      </div>
+      <div class="telemetry-cell">
+        <span class="t-label">Human Inspection</span>
+        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
+        <p>No member of the Vector Workflows team reads your calendar events without your explicit written permission.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="policy-section" data-section-name="Your Control">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 04 — Deletion</span>
+      <h2>You Stay<br>In Control</h2>
+    </div>
+    <p class="policy-note reveal-up">You can disconnect your account and wipe your data from our system whenever you choose.</p>
+
+    <div class="spec-grid reveal-up">
+      <div class="spec-card">
+        <span class="s-index"><i class="fa-solid fa-trash-can"></i>C.01 — IN-BOT</span>
+        <h3>One-Click Wipe</h3>
+        <p>Tap the Delete and Logout button inside the Telegram bot interface. This immediately purges your stored Google tokens and session credentials from our servers.</p>
+      </div>
+      <div class="spec-card">
+        <span class="s-index"><i class="fa-solid fa-shield-halved"></i>C.02 — GOOGLE</span>
+        <h3>Security Settings</h3>
+        <p>You can also revoke access directly from your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener" style="color:var(--accent-2);">Google Security Dashboard</a> at any time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="policy-section" data-section-name="Security">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 05 — Security</span>
+      <h2>Encryption</h2>
+    </div>
+    <p class="policy-note reveal-up" style="margin-bottom:0;">All communication between Telegram, our servers, and Google's APIs is protected using industry-standard encryption in transit. Your secret tokens are stored in isolated environment variables and encrypted datastores.</p>
+    <div class="badge-row reveal-up">
+      <span class="badge"><i class="fa-solid fa-lock"></i>TLS / HTTPS in transit</span>
+      <span class="badge"><i class="fa-solid fa-database"></i>Encrypted at rest</span>
+    </div>
+  </section>
+
+  <section class="policy-section" data-section-name="Contact">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 06 — Contact</span>
+      <h2>Questions or<br>Support?</h2>
+    </div>
+    <p class="policy-note reveal-up">If you ever have questions about how your data is handled, reach out directly.</p>
+
+    <div class="contact-card reveal-up">
+      <p><strong>Studio:</strong> Vector Workflows</p>
+      <p><strong>Web:</strong> <a href="https://vectorworkflows.com">vectorworkflows.com</a></p>
+      <p><strong>Email:</strong> <a href="mailto:support@vectorworkflows.com">support@vectorworkflows.com</a></p>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>VECTOR WORKFLOWS &copy; 2026. CORE STREAM DRIVE.</p>
-        <div class="footer-links">
-            <a href="../">Home</a>
-            <a href="./">Privacy Policy</a>
-        </div>
-    </footer>
+    <a href="mailto:support@vectorworkflows.com" class="contact-btn reveal-up">
+      Email Support
+      <i class="fa-solid fa-arrow-up" style="transform:rotate(45deg);"></i>
+    </a>
 
+    <p class="effective-note reveal-up">Effective July 31, 2026</p>
+  </section>
+
+</main>
+
+<footer>
+  <span>Vector Workflows &copy; 2026. Core Stream Drive.</span>
+  <span>
+    <a href="../">Home</a>
+    &nbsp;·&nbsp;
+    <span class="current">Privacy Policy</span>
+  </span>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* GRAIN — same animated noise texture as the main site */
+  (function grain(){
+    var canvas = document.getElementById("grain");
+    var ctx = canvas.getContext("2d");
+    var w, h;
+    function resize(){
+      w = canvas.width = Math.floor(window.innerWidth / 2);
+      h = canvas.height = Math.floor(window.innerHeight / 2);
+      canvas.style.width = "100vw";
+      canvas.style.height = "100vh";
+    }
+    resize();
+    window.addEventListener("resize", resize);
+    var frame = 0;
+    function render(){
+      frame++;
+      if (frame % 2 === 0){
+        var imgData = ctx.createImageData(w,h);
+        var buf = imgData.data;
+        for (var i=0; i<buf.length; i+=4){
+          var v = (Math.random()*255)|0;
+          buf[i]=v; buf[i+1]=v; buf[i+2]=v; buf[i+3]=22;
+        }
+        ctx.putImageData(imgData,0,0);
+      }
+      requestAnimationFrame(render);
+    }
+    render();
+  })();
+
+  /* STATUS STRIP — clock, UTC offset, live section index, scroll % */
+  var sections = Array.prototype.slice.call(document.querySelectorAll("[data-section-name]"));
+  var secIndexEl = document.getElementById("secIndex");
+  var secTotalEl = document.getElementById("secTotal");
+  var scrollPctEl = document.getElementById("scrollPct");
+  if (secTotalEl) secTotalEl.textContent = String(sections.length).padStart(2, "0");
+
+  function updateStatusStrip(){
+    var doc = document.documentElement;
+    var scrollTop = window.scrollY || doc.scrollTop;
+    var max = (doc.scrollHeight - window.innerHeight) || 1;
+    var pct = Math.min(100, Math.max(0, Math.round((scrollTop/max)*100)));
+    scrollPctEl.textContent = String(pct).padStart(3,"0");
+    var current = 1;
+    for (var i=0;i<sections.length;i++){
+      var r = sections[i].getBoundingClientRect();
+      if (r.top < window.innerHeight*0.5) current = i+1;
+    }
+    secIndexEl.textContent = String(current).padStart(2,"0");
+  }
+  window.addEventListener("scroll", updateStatusStrip, {passive:true});
+  window.addEventListener("resize", updateStatusStrip);
+  updateStatusStrip();
+
+  function tickClock(){
+    var el = document.getElementById("clockLocal");
+    if (!el) return;
+    var d = new Date();
+    el.textContent = String(d.getHours()).padStart(2,"0") + ":" +
+                      String(d.getMinutes()).padStart(2,"0") + ":" +
+                      String(d.getSeconds()).padStart(2,"0");
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  (function setLocalOffset(){
+    var el = document.getElementById("clockOffset");
+    if (!el) return;
+    var offsetMin = -new Date().getTimezoneOffset();
+    var sign = offsetMin >= 0 ? "+" : "-";
+    var abs = Math.abs(offsetMin);
+    el.textContent = "UTC" + sign +
+      String(Math.floor(abs/60)).padStart(2,"0") + ":" +
+      String(abs%60).padStart(2,"0");
+  })();
+
+  /* REVEAL-UP — lightweight IntersectionObserver, no animation
+     library required for a simple fade-up-on-scroll */
+  var revealEls = document.querySelectorAll(".reveal-up");
+  if (reduceMotion || !("IntersectionObserver" in window)){
+    revealEls.forEach(function(el){ el.classList.add("is-visible"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
 </body>
 </html>

@@ -1,485 +1,2063 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vector Workflows</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vector Workflows — Core / 2026</title>
+<meta name="description" content="Vector Workflows. Code repositories, process documentation, and digital systems.">
 
-    <!-- FAVICON: This is what shows up in the browser tab -->
-    <link rel="icon" type="image/png" href="site_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    
-    <!-- GOOGLE FONTS: Anton for bold headers, Inter for clean paragraph text -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- FONT AWESOME: This link provides the icons (YouTube, GitHub, etc.) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* =========================================
-           1. COLOR PALETTE & VARIABLES
-           Change these hex codes to alter the whole site's color scheme!
-           ========================================= */
-        :root {
-            /* Changed to an ultra-dark violet/black to match the logo's vibe */
-            --bg-color: #08070b; 
-            /* The color of the Bento boxes */
-            --surface-color: #121016; 
-            /* The neon purple glow matching your logo */
-            --accent-glow: #6f59cc; 
-            /* Main readable text color */
-            --text-main: #f4f4f5; 
-            /* Greyed out text for descriptions */
-            --text-muted: #8a8f98; 
-            /* The subtle borders around boxes */
-            --border-light: rgba(255, 255, 255, 0.06); 
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-        /* =========================================
-           2. BASE STYLES & RESET
-           Cleans up default browser spacing
-           ========================================= */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth; /* Enables smooth scrolling when clicking nav links */
-        }
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --void:      #050505;
+  --surface:   #0c0a10;
+  --surface-2: #110d17;
+  --accent:    #6f59cc;
+  --accent-2:  #a594f0;
+  --ink:       #f4f4f5;
+  --ink-dim:   #6b6d76;
+  --line:      rgba(244,244,245,0.08);
+  --line-strong: rgba(244,244,245,0.16);
 
-        /* Changes the highlight color when you drag your mouse over text */
-        ::selection {
-            background-color: var(--accent-glow);
-            color: #fff;
-        }
+  --f-display: 'Anton', sans-serif;
+  --f-body:    'Space Grotesk', sans-serif;
+  --f-mono:    'JetBrains Mono', monospace;
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevents horizontal scrolling */
-        }
+*{margin:0;padding:0;box-sizing:border-box;}
+::selection{background:var(--accent);color:#fff;}
 
-        h1, h2, h3 {
-            font-family: 'Anton', sans-serif;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-weight: normal;
-        }
+html{background:var(--void);}
+html.lenis, html.lenis body{height:auto;}
+.lenis.lenis-smooth{scroll-behavior:auto !important;}
 
-        a {
-            text-decoration: none;
-            color: inherit; /* Links inherit the color of their parent container */
-        }
+body{
+  font-family:var(--f-body);
+  background:var(--void);
+  color:var(--ink);
+  overflow-x:clip;
+  cursor:none;
+}
+@media (max-width: 860px), (hover:none){
+  body{cursor:auto;}
+}
 
-        /* =========================================
-           3. NAVIGATION BAR
-           Fixed at the top, frosted glass effect
-           ========================================= */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%; /* 20px top/bottom, 5% left/right */
-            background: rgba(8, 7, 11, 0.8); /* Semi-transparent background */
-            backdrop-filter: blur(12px); /* The frosted glass blur effect */
-            -webkit-backdrop-filter: blur(12px); /* For Safari support */
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000; /* Keeps it on top of other elements */
-            border-bottom: 1px solid var(--border-light);
-        }
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;background:none;border:none;color:inherit;cursor:none;}
+@media (max-width: 860px), (hover:none){button{cursor:pointer;}}
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px; /* Space between logo image and text */
-        }
+h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:400;letter-spacing:0.01em;}
 
-        .logo-img {
-            height: 40px; /* Adjust this to make the logo bigger/smaller */
-            width: auto;
-        }
+.mono{font-family:var(--f-mono);}
 
-        .logo-text {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            color: var(--text-main);
-            display: flex;
-            gap: 6px;
-        }
+/* ============================================================
+   GRAIN / NOISE — tactile film texture over everything
+   ============================================================ */
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:9990;
+  pointer-events:none;
+  opacity:0.05;
+  mix-blend-mode:overlay;
+}
 
-        /* Button style for the nav */
-        .nav-btn {
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 10px 20px;
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
-            transition: all 0.3s ease; /* Smooth hover transition */
-        }
+/* ============================================================
+   AMBIENT CANVAS — slow violet fluid mesh behind content
+   ============================================================ */
+#ambient{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:0.85;
+}
 
-        .nav-btn:hover {
-            border-color: var(--accent-glow);
-            background: rgba(111, 89, 204, 0.1); /* Very faint purple background on hover */
-        }
+/* ============================================================
+   PRELOADER
+   ============================================================ */
+#preloader{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  background:var(--void);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2rem;
+}
+#preloader .pl-count{
+  font-family:var(--f-display);
+  font-size:clamp(4rem,14vw,9rem);
+  line-height:0.9;
+  color:var(--ink);
+  letter-spacing:-0.02em;
+  font-variant-numeric:tabular-nums;
+}
+#preloader .pl-count .pct{font-size:0.35em;color:var(--accent-2);vertical-align:super;margin-left:0.1em;}
+#preloader .pl-label{
+  font-family:var(--f-mono);
+  font-size:0.7rem;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+}
+#preloader .pl-bar-track{
+  width:min(360px,60vw);
+  height:1px;
+  background:var(--line);
+  position:relative;
+}
+#preloader .pl-bar-fill{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:0%;
+  background:var(--accent);
+  box-shadow:0 0 12px var(--accent);
+}
+.pl-curtain{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:var(--accent);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  pointer-events:none;
+}
 
-        /* =========================================
-           4. HERO SECTION (Main Header)
-           ========================================= */
-        .hero {
-            min-height: 100vh; /* Takes up 100% of the screen height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 0 5%;
-        }
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+.cursor-dot,.cursor-ring{
+  position:fixed;
+  top:0;left:0;
+  pointer-events:none;
+  z-index:9998;
+  border-radius:2px;
+  will-change:transform;
+}
+.cursor-dot{
+  width:6px;height:6px;
+  background:var(--accent-2);
+  transform:translate(-50%,-50%);
+}
+.cursor-ring{
+  width:36px;height:36px;
+  border:1px solid var(--line-strong);
+  transform:translate(-50%,-50%) rotate(45deg);
+  transition:width .25s cubic-bezier(.16,1,.3,1),height .25s cubic-bezier(.16,1,.3,1),
+             border-color .25s ease, background-color .25s ease;
+}
+.cursor-ring.is-active{
+  width:64px;height:64px;
+  border-color:var(--accent);
+  background:rgba(111,89,204,0.12);
+}
+.cursor-ring.is-invert{
+  background:var(--ink);
+  border-color:var(--ink);
+  mix-blend-mode:difference;
+}
+@media (max-width: 860px), (hover:none){
+  .cursor-dot,.cursor-ring{display:none;}
+}
 
-        /* THE PURPLE GLOW: This creates the glowing orb behind the text */
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(111,89,204,0.15) 0%, rgba(8,7,11,0) 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1; /* Puts it behind the text */
-            border-radius: 50%;
-        }
+/* ============================================================
+   STATUS STRIP — signature element. Persistent instrument readout.
+   ============================================================ */
+#status-strip{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:500;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px clamp(1.25rem,4vw,2.5rem);
+  font-family:var(--f-mono);
+  font-size:0.68rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  background:linear-gradient(to bottom, rgba(5,5,5,0.9), rgba(5,5,5,0));
+  pointer-events:none;
+}
+#status-strip span{color:var(--ink);}
+#status-strip .divider{color:var(--line-strong);margin:0 0.6em;}
+.status-group{display:flex;align-items:center;}
+#status-strip .status-live-dot{
+  display:inline-block;width:5px;height:5px;background:var(--accent-2);
+  border-radius:50%;margin-right:0.5em;
+  box-shadow:0 0 6px var(--accent-2);
+}
+@media (max-width: 640px){
+  #status-strip .status-hide-mobile{display:none;}
+}
 
-        .hero-content {
-            max-width: 900px;
-            text-align: center;
-            margin-top: 50px;
-        }
+/* ============================================================
+   NAV
+   ============================================================ */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:400;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:44px clamp(1.25rem,4vw,2.5rem) 20px;
+}
+.logo-mark{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  font-family:var(--f-display);
+  font-size:1.05rem;
+  letter-spacing:0.02em;
+}
+.logo-mark .lm-dot{color:var(--accent-2);}
+.nav-cta{
+  font-family:var(--f-mono);
+  font-size:0.7rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:11px 20px;
+  border:1px solid var(--line-strong);
+  border-radius:2px;
+  transition:border-color .3s ease, background-color .3s ease;
+}
+.nav-cta:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);}
 
-        .hero-tag {
-            font-size: 0.85rem;
-            color: var(--accent-glow);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: block;
-        }
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:120px clamp(1.25rem,4vw,2.5rem) 60px;
+  z-index:10;
+}
+.hero-eyebrow{
+  font-family:var(--f-mono);
+  font-size:0.72rem;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.hero-eyebrow::before{
+  content:'';
+  width:28px;height:1px;
+  background:var(--accent);
+}
+.hero-title{
+  font-size:clamp(3.4rem,11.5vw,10.5rem);
+  line-height:0.86;
+  color:var(--ink);
+  overflow:hidden;
+}
+.hero-title .line{overflow:hidden;display:block;}
+.hero-title .char{display:inline-block;will-change:transform;}
+.hero-title .line-2{color:transparent;-webkit-text-stroke:1.5px var(--ink);}
 
-        .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem); /* Scales text size dynamically based on screen width */
-            line-height: 1;
-            margin-bottom: 30px;
-            color: #fff;
-        }
+.hero-foot{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:2rem;
+  margin-top:56px;
+  flex-wrap:wrap;
+}
+.hero-desc{
+  max-width:420px;
+  font-size:1.05rem;
+  font-weight:300;
+  color:var(--ink-dim);
+  line-height:1.6;
+}
+.hero-scroll-hint{
+  font-family:var(--f-mono);
+  font-size:0.68rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;
+}
+.hero-scroll-hint .hs-line{
+  width:1px;height:34px;
+  background:var(--line-strong);
+  position:relative;
+  overflow:hidden;
+}
+.hero-scroll-hint .hs-line::after{
+  content:'';
+  position:absolute;
+  top:-100%;left:0;right:0;height:100%;
+  background:var(--accent);
+  animation:scrollDrip 1.8s ease-in-out infinite;
+}
+@keyframes scrollDrip{
+  0%{top:-100%;}
+  60%{top:100%;}
+  100%{top:100%;}
+}
 
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 500px;
-            margin: 0 auto 50px auto;
-            font-weight: 300;
-        }
+/* ============================================================
+   MARQUEE DIVIDER
+   ============================================================ */
+.marquee-wrap{
+  position:relative;
+  z-index:10;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:18px 0;
+  overflow:hidden;
+  background:var(--void);
+}
+.marquee-track{
+  display:flex;
+  width:max-content;
+  gap:3rem;
+  will-change:transform;
+}
+.marquee-track span{
+  font-family:var(--f-mono);
+  font-size:0.85rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  display:flex;
+  align-items:center;
+  gap:3rem;
+  white-space:nowrap;
+}
+.marquee-track span em{
+  font-style:normal;
+  color:var(--accent-2);
+}
 
-        /* =========================================
-           5. BENTO BOX GRID (Your Links)
-           ========================================= */
-        .work-section {
-            padding: 100px 5%;
-            max-width: 1400px;
-            margin: 0 auto; /* Centers the grid */
-        }
+/* ============================================================
+   MODULE INDEX (formerly "bento grid")
+   ============================================================ */
+.index-section{
+  position:relative;
+  z-index:10;
+  padding:140px clamp(1.25rem,4vw,2.5rem);
+  max-width:1500px;
+  margin:0 auto;
+}
+/* Mask-closed state is a class, NOT the element's default — added by
+   JS immediately before the reveal animation is wired up (see
+   initScrollAnims). If JavaScript fails to load entirely, the section
+   never receives this class and simply renders fully visible with no
+   reveal effect, rather than being stuck permanently clipped to 10%
+   of its area. Progressive enhancement, not a hard dependency on JS
+   for basic content visibility. */
+.index-section.mask-ready{
+  clip-path: inset(45% 45% 45% 45% round 12px);
+}
+.index-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:64px;
+  gap:2rem;
+  flex-wrap:wrap;
+}
+.index-head h2{
+  font-size:clamp(2.2rem,5.5vw,4rem);
+  line-height:0.95;
+}
+.index-head .index-count{
+  font-family:var(--f-mono);
+  font-size:0.75rem;
+  letter-spacing:0.15em;
+  color:var(--ink-dim);
+  text-transform:uppercase;
+  padding-bottom:0.5rem;
+}
+.index-head .index-count span{color:var(--ink);}
 
-        .section-header {
-            margin-bottom: 60px;
-        }
+.module-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:220px;
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+}
+.module{
+  position:relative;
+  background:var(--surface);
+  padding:36px;
+  min-height:260px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.module::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%), rgba(111,89,204,0.14), transparent 45%);
+  opacity:0;
+  transition:opacity .35s ease;
+  pointer-events:none;
+}
+.module:hover::before{opacity:1;}
+.module .m-index{
+  font-family:var(--f-mono);
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  color:var(--ink-dim);
+}
+.module .m-icon{
+  font-size:2rem;
+  color:var(--ink-dim);
+  transition:color .35s ease, transform .35s ease;
+}
+.module:hover .m-icon{color:var(--accent-2);}
+.module h3{
+  font-size:1.6rem;
+  margin-bottom:8px;
+  transform:translateZ(30px);
+}
+.module p{
+  color:var(--ink-dim);
+  font-size:0.92rem;
+  font-weight:300;
+  max-width:32ch;
+}
+.module .m-arrow{
+  position:absolute;
+  top:36px;right:36px;
+  font-size:0.9rem;
+  color:var(--ink-dim);
+  transform:rotate(0deg);
+  transition:transform .4s cubic-bezier(.16,1,.3,1), color .35s ease;
+}
+.module:hover .m-arrow{transform:rotate(45deg) translate(2px,-2px);color:var(--accent);}
 
-        .section-header h2 {
-            font-size: 2rem;
-            color: #fff;
-        }
+/*
+  Explicit placement on a 4-column base — asymmetric, deterministic.
+  Row 1-2, cols 1-2: mod-video (tall, the anchor)
+  Row 1,   cols 3-4: mod-repo
+  Row 2,   col 3:    mod-docs
+  Row 2,   col 4:    mod-social
+  Row 3,   cols 1-4: mod-status (full-width instrument readout)
+*/
+.mod-video{grid-column:1 / span 2;grid-row:1 / span 2;min-height:460px;}
+.mod-video .m-icon{font-size:3.2rem;}
+.mod-video h3{font-size:2.4rem;}
+.mod-repo{grid-column:3 / span 2;grid-row:1;}
+.mod-docs{grid-column:3;grid-row:2;}
+.mod-social{grid-column:4;grid-row:2;}
+.mod-status{
+  grid-column:1 / span 4;grid-row:3;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  cursor:default;
+}
+.mod-status:hover::before{opacity:0;}
 
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Divides grid into 4 equal columns */
-            grid-auto-rows: 280px; /* Base height for all boxes */
-            gap: 20px; /* Spacing between boxes */
-        }
+@media (max-width:1024px){
+  .module-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:240px;}
+  .mod-video{grid-column:1 / span 2;grid-row:1 / span 1;min-height:320px;}
+  .mod-repo{grid-column:1;grid-row:2;}
+  .mod-docs{grid-column:2;grid-row:2;}
+  .mod-social{grid-column:1;grid-row:3;}
+  .mod-status{
+    grid-column:1 / span 2;grid-row:4;
+    flex-direction:column;align-items:flex-start;gap:8px;
+  }
+}
+@media (max-width:640px){
+  .module-grid{grid-template-columns:1fr;}
+  .mod-video,.mod-repo,.mod-docs,.mod-social,.mod-status{grid-column:1;}
+  .mod-video{grid-row:1;}
+  .mod-repo{grid-row:2;}
+  .mod-docs{grid-row:3;}
+  .mod-social{grid-row:4;}
+  .mod-status{grid-row:5;}
+  .module{padding:28px;}
+}
 
-        /* Base styles for every box */
-        .bento-item {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-light);
-            border-radius: 12px; /* Rounded corners */
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Advanced smooth hover */
-            position: relative;
-            overflow: hidden;
-        }
+/* ============================================================
+   THE PROTOCOL — pinned horizontal methodology
+   Desktop: GSAP pins this section vertically and drives horizontal
+   scroll through the three panels (see initHorizontalPin in JS).
+   Mobile/touch: horizontal scroll-jacking via a vertical swipe
+   gesture is a well-documented UX failure — the two axes fight the
+   user's own gesture. Below the breakpoint this collapses to a
+   plain vertical stack instead, see the media query at the bottom
+   of this block. This is a deliberate scope decision, not a
+   fallback born of a technical limitation.
+   ============================================================ */
+.protocol-section{
+  position:relative;
+  z-index:10;
+  overflow:hidden;
+}
+.protocol-pin-target{
+  height:100vh;
+  display:flex;
+  flex-direction:column; /* Stacks header neatly ABOVE the panels */
+  justify-content:center;
+  padding:80px 0 40px 0;
+  box-sizing:border-box;
+}
+.protocol-head{
+  position:relative; /* Changed from absolute to prevent overlap on zoom */
+  top:auto;
+  left:0;
+  padding-left:clamp(1.25rem,4vw,2.5rem);
+  margin-bottom:40px;
+  z-index:2;
+  flex-shrink:0;
+}
+.protocol-head .eyebrow{
+  font-family:var(--f-mono);
+  font-size:0.72rem;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:12px;
+  display:block;
+}
+.protocol-head h2{
+  font-size:clamp(2rem,4.5vw,3.2rem);
+}
+.protocol-track{
+  display:flex;
+  will-change:transform;
+  padding-left:clamp(1.25rem,4vw,2.5rem);
+  flex-grow:0;
+}
+.protocol-panel{
+  flex:0 0 auto;
+  width:min(640px,86vw);
+  padding-right:clamp(3rem,8vw,7rem);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.protocol-panel .p-num{
+  font-family:var(--f-display);
+  font-size:clamp(5rem,10vw,8rem);
+  line-height:0.85;
+  color:transparent;
+  -webkit-text-stroke:1.5px var(--line-strong);
+  margin-bottom:24px;
+}
+.protocol-panel h3{
+  font-size:clamp(1.8rem,3.5vw,2.6rem);
+  margin-bottom:18px;
+}
+.protocol-panel p{
+  color:var(--ink-dim);
+  font-size:1rem;
+  font-weight:300;
+  max-width:44ch;
+  line-height:1.65;
+}
+@media (max-width:900px), (hover:none){
+  .protocol-pin-target{height:auto;display:block;padding:140px clamp(1.25rem,4vw,2.5rem) 40px;}
+  .protocol-head{position:static;margin-bottom:56px;}
+  .protocol-track{display:flex;flex-direction:column;padding-left:0;gap:56px;}
+  .protocol-panel{width:100%;padding-right:0;}
+}
 
-        /* Box Hover effects */
-        .bento-item:hover {
-            border-color: rgba(111, 89, 204, 0.4); /* Purple border on hover */
-            transform: translateY(-4px); /* Lifts the box up slightly */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Adds a drop shadow */
-        }
+/* ============================================================
+   THE ARSENAL — tech manifest
+   ============================================================ */
+.arsenal-section{
+  position:relative;
+  z-index:10;
+  padding:160px clamp(1.25rem,4vw,2.5rem);
+  max-width:1400px;
+  margin:0 auto;
+  border-top:1px solid var(--line);
+}
+.arsenal-head{
+  margin-bottom:64px;
+}
+.arsenal-head .eyebrow{
+  font-family:var(--f-mono);
+  font-size:0.72rem;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:14px;
+  display:block;
+}
+.arsenal-head h2{
+  font-size:clamp(2.2rem,5.5vw,4rem);
+}
+.arsenal-list{
+  border-top:1px solid var(--line);
+}
+.arsenal-row{
+  display:grid;
+  grid-template-columns:2.5rem 1fr auto;
+  align-items:baseline;
+  gap:24px;
+  padding:22px 0;
+  border-bottom:1px solid var(--line);
+  transition:padding-left .3s ease;
+}
+.arsenal-row:hover{padding-left:12px;}
+.arsenal-row .a-index{
+  font-family:var(--f-mono);
+  font-size:0.75rem;
+  color:var(--ink-dim);
+}
+.arsenal-row .a-name{
+  font-family:var(--f-display);
+  font-size:clamp(1.3rem,2.8vw,2rem);
+  text-transform:uppercase;
+}
+.arsenal-row .a-type{
+  font-family:var(--f-mono);
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  white-space:nowrap;
+}
+.arsenal-row:hover .a-name{color:var(--accent-2);}
 
-        .bento-item i {
-            font-size: 2.5rem;
-            color: var(--text-main);
-            transition: color 0.4s ease;
-        }
+/* ============================================================
+   SYSTEM TELEMETRY — expanded instrument readout
+   Escalates the same mono/live-data visual language as the
+   persistent top status strip, scaled up as its own section rather
+   than duplicating the idea — the status strip is the ambient,
+   always-on version; this is the dedicated, detailed one.
+   ============================================================ */
+.telemetry-section{
+  position:relative;
+  z-index:10;
+  padding:120px clamp(1.25rem,4vw,2.5rem);
+  max-width:1400px;
+  margin:0 auto;
+}
+.telemetry-head{
+  margin-bottom:48px;
+}
+.telemetry-head .eyebrow{
+  font-family:var(--f-mono);
+  font-size:0.72rem;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:14px;
+  display:block;
+}
+.telemetry-head h2{
+  font-size:clamp(2rem,4.5vw,3.2rem);
+}
+.telemetry-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+}
+.telemetry-cell{
+  background:var(--surface);
+  padding:32px 28px;
+}
+.telemetry-cell .t-label{
+  font-family:var(--f-mono);
+  font-size:0.68rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  margin-bottom:16px;
+  display:block;
+}
+.telemetry-cell .t-value{
+  font-family:var(--f-mono);
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+}
+.telemetry-cell .t-value .t-unit{
+  font-size:0.5em;
+  color:var(--accent-2);
+}
+.telemetry-cell .t-value .t-live-dot{
+  display:inline-block;width:6px;height:6px;background:var(--accent-2);
+  border-radius:50%;margin-right:4px;
+  box-shadow:0 0 6px var(--accent-2);
+}
+@media (max-width:900px){
+  .telemetry-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:520px){
+  .telemetry-grid{grid-template-columns:1fr;}
+}
 
-        .bento-item:hover i {
-            color: var(--accent-glow); /* Icon turns purple on hover */
-        }
 
-        .bento-text h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
+.manifesto{
+  position:relative;
+  z-index:10;
+  padding:160px clamp(1.25rem,4vw,2.5rem);
+  max-width:1400px;
+  margin:0 auto;
+  overflow:hidden;
+}
+.manifesto-text{
+  font-family:var(--f-display);
+  font-size:clamp(2rem,6vw,5rem);
+  line-height:1.08;
+  max-width:16ch;
+}
+/* Per-word spans, added by splitWords() in JS. Base/unlit state lives
+   here in CSS so the manifesto reads correctly (fully dim, legible,
+   intentional-looking) even before any JS runs — same progressive-
+   enhancement principle as .index-section.mask-ready earlier: the
+   no-JS fallback is a valid, complete visual state, not a broken one.
+   GSAP then animates each word's color from this dim state toward
+   either --ink (white) or --accent-2 (violet), scrubbed to scroll. */
+.manifesto-text .m-word{
+  color: var(--ink-dim);
+  opacity: 0.45;
+}
+.manifesto-num{
+  position:absolute;
+  top:100px;right:5%;
+  font-family:var(--f-mono);
+  font-size:clamp(6rem,18vw,16rem);
+  color:transparent;
+  -webkit-text-stroke:1px var(--line-strong);
+  line-height:1;
+  pointer-events:none;
+  z-index:-1;
+}
 
-        .bento-text p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-section{
+  position:relative;
+  z-index:10;
+  padding:180px clamp(1.25rem,4vw,2.5rem) 140px;
+  text-align:center;
+  border-top:1px solid var(--line);
+}
+.contact-eyebrow{
+  font-family:var(--f-mono);
+  font-size:0.72rem;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:24px;
+}
+.contact-section h2{
+  font-size:clamp(2.6rem,9vw,7rem);
+  line-height:0.92;
+  margin-bottom:28px;
+}
+.contact-section > p{
+  color:var(--ink-dim);
+  max-width:460px;
+  margin:0 auto 56px;
+  font-weight:300;
+  font-size:1.05rem;
+}
+.contact-btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:14px;
+  padding:22px 46px;
+  border:1px solid var(--line-strong);
+  border-radius:2px;
+  font-family:var(--f-mono);
+  font-size:0.8rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  overflow:hidden;
+  transition:border-color .4s ease;
+}
+.contact-btn::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--accent);
+  transform:translateY(101%);
+  transition:transform .45s cubic-bezier(.16,1,.3,1);
+  z-index:-1;
+}
+.contact-btn:hover{border-color:var(--accent);color:#fff;}
+.contact-btn:hover::before{transform:translateY(0);}
+.contact-btn i{transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.contact-btn:hover i{transform:translate(3px,-3px);}
 
-        /* 
-           GRID SIZING LOGIC 
-           'span 2' means it takes up 2 blocks. 'span 1' takes up 1 block.
-        */
-        
-        /* YouTube Card: Takes up 2 columns and 2 rows (Large Square) */
-        .item-yt { 
-            grid-column: span 2; 
-            grid-row: span 2; 
-            /* HERE IS YOUR BANNER! Darkened to 90% opacity over the image */
-            background: linear-gradient(rgba(14, 12, 19, 0.9), rgba(14, 12, 19, 0.9)), url('banner.png') center/cover; 
-        }
-        
-        /* GitHub Card: Takes up 2 columns, 1 row (Wide Rectangle) */
-        .item-gh { grid-column: span 2; grid-row: span 1; }
-        
-        /* Notion & IG Cards: Take up 1 column, 1 row (Small Squares) */
-        .item-nt { grid-column: span 1; grid-row: span 1; }
-        .item-ig { grid-column: span 1; grid-row: span 1; }
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  position:relative;
+  z-index:10;
+  padding:32px clamp(1.25rem,4vw,2.5rem);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-top:1px solid var(--line);
+  font-family:var(--f-mono);
+  font-size:0.68rem;
+  letter-spacing:0.08em;
+  color:var(--ink-dim);
+  text-transform:uppercase;
+  flex-wrap:wrap;
+  gap:12px;
+}
+footer a{transition:color .3s ease;}
+footer a:hover{color:var(--accent-2);}
 
-        /* Specific adjustments for the large YouTube card */
-        .item-yt i { font-size: 4rem; }
-        .item-yt .bento-text h3 { font-size: 2.5rem; }
+/* ============================================================
+   REVEAL UTILITY (non-hero elements)
+   ============================================================ */
+.reveal-up{opacity:0;transform:translateY(40px);}
 
-        /* =========================================
-           6. CONTACT SECTION & FOOTER
-           ========================================= */
-        .contact-section {
-            padding: 120px 5%;
-            text-align: center;
-            border-top: 1px solid var(--border-light);
-            background: linear-gradient(180deg, var(--bg-color) 0%, #050507 100%);
-        }
+/* ============================================================
+   FOCUS STATE — accessibility floor
+   ============================================================ */
+a:focus-visible,button:focus-visible{
+  outline:2px solid var(--accent-2);
+  outline-offset:4px;
+}
 
-        .contact-section h2 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .contact-section p {
-            color: var(--text-muted);
-            margin-bottom: 40px;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            padding: 16px 36px;
-            background-color: var(--text-main);
-            color: var(--bg-color);
-            font-family: 'Anton', sans-serif;
-            font-size: 1.2rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-glow);
-            color: #fff;
-            transform: scale(1.02); /* Makes the button slightly larger on hover */
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid var(--border-light);
-            color: #555;
-            font-size: 0.85rem;
-            background-color: #050507;
-        }
-
-        /* =========================================
-           7. ANIMATION CLASSES
-           These classes are triggered by the Javascript at the bottom
-           ========================================= */
-        .reveal {
-            opacity: 0; /* Hidden by default */
-            transform: translateY(30px); /* Pushed down by 30px */
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1; /* Fully visible */
-            transform: translateY(0); /* Moved back to original position */
-        }
-
-        /* =========================================
-           8. RESPONSIVE DESIGN (Mobile/Tablet rules)
-           ========================================= */
-        
-        /* TABLETS */
-        @media (max-width: 900px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr); /* Changes grid to 2 columns */
-            }
-            .item-yt, .item-gh { grid-column: span 2; }
-            .item-nt, .item-ig { grid-column: span 1; }
-        }
-
-        /* PHONES */
-        @media (max-width: 600px) {
-            .bento-grid {
-                grid-template-columns: 1fr; /* Changes grid to 1 column */
-                grid-auto-rows: 250px;
-            }
-            /* Make all items take up full width on phones */
-            .item-yt, .item-gh, .item-nt, .item-ig {
-                grid-column: span 1;
-                grid-row: span 1;
-            }
-            .item-yt .bento-text h3 { font-size: 1.8rem; }
-        }
-    </style>
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important;}
+  .reveal-up{opacity:1;transform:none;}
+}
+</style>
 </head>
 <body>
 
-    <!-- NAVIGATION HTML -->
-    <nav>
-        <div class="logo-container">
-            <!-- Ensure site_logo.png is in the same folder as this HTML file -->
-            <img src="site_logo.png" alt="Vector Workflows Logo" class="logo-img">
-            <!-- Added "WORKFLOWS" to the logo text here -->
-            <div class="logo-text"><strong>VECTOR</strong> WORKFLOWS</div>
-        </div>
-        <a href="#contact" class="nav-btn">Start a Conversation</a>
-    </nav>
+<!-- GRAIN OVERLAY -->
+<canvas id="grain" class="grain"></canvas>
 
-    <!-- HERO SECTION HTML -->
-    <section class="hero">
-        <div class="hero-content reveal">
-            <span class="hero-tag">Core / 2026</span>
-            <h1>Digital<br>Workflows.</h1>
-            <p>An archive of code repositories, process documentation, and digital systems.</p>
-        </div>
-    </section>
+<!-- AMBIENT BACKGROUND -->
+<canvas id="ambient"></canvas>
 
-    <!-- BENTO GRID SECTION HTML -->
-    <section id="work" class="work-section">
-        <div class="section-header reveal">
-            <h2>Index</h2>
-        </div>
-        
-        <div class="bento-grid">
-            <!-- 1. YouTube Box (Using the banner.jpg as background) -->
-            <a href="https://www.youtube.com/@vectorworkflows" target="_blank" class="bento-item item-yt reveal">
-                <i class="fa-brands fa-youtube"></i>
-                <div class="bento-text">
-                    <h3>Video Log</h3>
-                    <p>Process, breakdowns, and visual updates.</p>
-                </div>
-            </a>
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-            <!-- 2. GitHub Box -->
-            <a href="https://github.com/VectorWorkflows" target="_blank" class="bento-item item-gh reveal" style="transition-delay: 0.1s;">
-                <i class="fa-brands fa-github"></i>
-                <div class="bento-text">
-                    <h3>Repositories</h3>
-                    <p>Open-source code and technical architecture.</p>
-                </div>
-            </a>
+<!-- PRELOADER -->
+<div id="preloader" aria-hidden="true">
+  <div class="pl-count"><span id="plNum">0</span><span class="pct">%</span></div>
+  <div class="pl-bar-track"><div class="pl-bar-fill" id="plBar"></div></div>
+  <div class="pl-label">Initializing Core Systems</div>
+</div>
+<div class="pl-curtain" id="curtain"></div>
 
-            <!-- 3. Notion Box (Text updated to 'Documentation') -->
-            <a href="https://app.notion.com/p/3a7d07dc818580b6bf8afab5dde00c17?v=3a7d07dc818580d78fa6000c60bc6eac&source=copy_link" target="_blank" class="bento-item item-nt reveal" style="transition-delay: 0.2s;">
-                <i class="fa-solid fa-book-open"></i>
-                <div class="bento-text">
-                    <h3>Documentation</h3>
-                    <p>Public notes & docs.</p>
-                </div>
-            </a>
+<!-- STATUS STRIP — signature instrument readout -->
+<div id="status-strip">
+  <div class="status-group">
+    <span class="status-live-dot"></span>
+    <span id="clockLocal">00:00:00</span>
+    <span class="divider">/</span>
+    <span class="status-hide-mobile" id="clockOffset">UTC+00:00</span>
+  </div>
+  <div class="status-group">
+    <span class="status-hide-mobile">SEC <span id="secIndex">01</span>/<span id="secTotal">--</span></span>
+    <span class="divider status-hide-mobile">/</span>
+    <span>SCROLL <span id="scrollPct">000</span></span>
+  </div>
+</div>
 
-            <!-- 4. Instagram Box -->
-            <a href="https://www.instagram.com/vectorworkflows/" target="_blank" class="bento-item item-ig reveal" style="transition-delay: 0.3s;">
-                <i class="fa-brands fa-instagram"></i>
-                <div class="bento-text">
-                    <h3>Social</h3>
-                    <p>Behind the scenes.</p>
-                </div>
-            </a>
-        </div>
-    </section>
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo-mark" aria-label="Vector Workflows home">
+    VECTOR<span class="lm-dot">·</span>WORKFLOWS
+  </a>
+  <a href="#contact" class="nav-cta" data-cursor="link"><span data-magnetic-text>Start a Conversation</span></a>
+</nav>
 
-    <!-- CONTACT SECTION HTML -->
-    <section id="contact" class="contact-section reveal">
-        <h2>Inquiries</h2>
-        <p>Currently open for discussions regarding technical solutions and collaborations.</p>
-        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=core@vectoworkflows.com&su=Project%20Inquiry&body=Hi%20there!" target="_blank" class="btn-primary">
-            Initialize Contact
-        </a>
-    </section>
+<!-- HERO -->
+<section class="hero" data-section-name="Hero">
+  <span class="hero-eyebrow">Core / 2026 — Systems Index</span>
+  <h1 class="hero-title" id="heroTitle">
+    <span class="line line-1">Vector</span>
+    <span class="line line-2">Workflows.</span>
+  </h1>
+  <div class="hero-foot">
+   <p class="hero-desc reveal-up" id="heroDesc">An engineering studio building custom B2B automation pipelines, intelligent messaging bots, and seamless API integrations for modern operations.</p>
+    <div class="hero-scroll-hint reveal-up" id="heroScrollHint">
+      <span class="hs-line"></span>
+      Scroll to Index
+    </div>
+  </div>
+</section>
 
-    <!-- FOOTER HTML -->
-    <footer>
-        <p>VECTOR WORKFLOWS &copy; 2026. CORE STREAM DRIVE.</p>
-        <div style="margin-top: 10px; display: flex; justify-content: center; gap: 20px;">
-            <a href="privacy/" style="color: var(--text-muted); transition: color 0.3s ease; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem;">Privacy Policy</a>
-        </div>
-    </footer>
+<!-- MARQUEE -->
+<div class="marquee-wrap" id="marqueeWrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>REPOSITORIES <em>/</em> DOCUMENTATION <em>/</em> VIDEO LOG <em>/</em> SOCIAL <em>/</em> INQUIRIES <em>/</em></span>
+    <span>REPOSITORIES <em>/</em> DOCUMENTATION <em>/</em> VIDEO LOG <em>/</em> SOCIAL <em>/</em> INQUIRIES <em>/</em></span>
+  </div>
+</div>
 
-    <!-- JAVASCRIPT FOR SCROLL ANIMATIONS -->
-    <!-- This script detects when elements with the 'reveal' class enter the screen and fades them in -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Find every element with the class "reveal"
-            const reveals = document.querySelectorAll('.reveal');
+<!-- MODULE INDEX -->
+<section id="work" class="index-section" data-section-name="Index">
+  <div class="index-head reveal-up">
+    <h2>System<br>Modules</h2>
+    <div class="index-count">ACTIVE NODES — <span>04</span></div>
+  </div>
 
-            // Setup an observer to watch when they scroll onto the screen
-            const revealOnScroll = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    // If the element is visible on the screen...
-                    if (entry.isIntersecting) {
-                        // Add the 'active' class (which triggers the CSS fade-in)
-                        entry.target.classList.add('active');
-                        // Stop watching it so it doesn't animate every time you scroll up and down
-                        observer.unobserve(entry.target); 
-                    }
-                });
-            }, {
-                threshold: 0.1, // Trigger when 10% of the element is visible
-                rootMargin: "0px 0px -50px 0px" // Triggers slightly before the element hits the bottom of the screen
-            });
+  <div class="module-grid">
+    <a href="https://www.youtube.com/@vectorworkflows" target="_blank" rel="noopener" class="module mod-video reveal-up" data-cursor="link" data-tilt>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <span class="m-index">M.01 — VIDEO</span>
+        <i class="fa-brands fa-youtube m-icon"></i>
+      </div>
+      <div>
+        <h3>Video Log</h3>
+        <p>Process, breakdowns, and visual updates from active builds.</p>
+      </div>
+      <i class="fa-solid fa-arrow-up m-arrow"></i>
+    </a>
 
-            // Tell the observer to watch all the reveal elements
-            reveals.forEach(reveal => {
-                revealOnScroll.observe(reveal);
-            });
-            
-            // Immediately fade in the main header text since it's at the very top
-            setTimeout(() => {
-                document.querySelector('.hero-content').classList.add('active');
-            }, 100);
+    <a href="https://github.com/VectorWorkflows" target="_blank" rel="noopener" class="module mod-repo reveal-up" data-cursor="link" data-tilt>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <span class="m-index">M.02 — CODE</span>
+        <i class="fa-brands fa-github m-icon"></i>
+      </div>
+      <div>
+        <h3>Repositories</h3>
+        <p>Open-source code and technical architecture.</p>
+      </div>
+      <i class="fa-solid fa-arrow-up m-arrow"></i>
+    </a>
+
+    <a href="https://app.notion.com/p/3a7d07dc818580b6bf8afab5dde00c17?v=3a7d07dc818580d78fa6000c60bc6eac&source=copy_link" target="_blank" rel="noopener" class="module mod-docs reveal-up" data-cursor="link" data-tilt>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <span class="m-index">M.03 — DOCS</span>
+        <i class="fa-solid fa-book-open m-icon"></i>
+      </div>
+      <div>
+        <h3>Documentation</h3>
+        <p>Public notes and process documentation.</p>
+      </div>
+      <i class="fa-solid fa-arrow-up m-arrow"></i>
+    </a>
+
+    <a href="https://www.instagram.com/vectorworkflows/" target="_blank" rel="noopener" class="module mod-social reveal-up" data-cursor="link" data-tilt>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <span class="m-index">M.04 — SOCIAL</span>
+        <i class="fa-brands fa-instagram m-icon"></i>
+      </div>
+      <div>
+        <h3>Social</h3>
+        <p>Behind the scenes.</p>
+      </div>
+      <i class="fa-solid fa-arrow-up m-arrow"></i>
+    </a>
+
+    <div class="module mod-status reveal-up">
+    <span class="m-index">SYS — STATUS</span>
+     <div>
+    <h3 style="font-size:1.4rem;">All Systems Operational</h3>
+     <p>Index last synced <span id="lastSyncTime" style="color:var(--accent-2); font-family:var(--f-mono); font-weight:500;">JUST NOW</span> — Four active nodes, zero incidents.</p>
+     </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROTOCOL -->
+<section class="protocol-section" data-section-name="Protocol" id="protocol">
+  <div class="protocol-pin-target" id="protocolPinTarget">
+    <div class="protocol-head">
+      <span class="eyebrow">Methodology</span>
+      <h2>The Protocol</h2>
+    </div>
+    <div class="protocol-track" id="protocolTrack">
+      <div class="protocol-panel">
+        <span class="p-num">01</span>
+        <h3>Deterministic Automation</h3>
+        <p>No brittle generative guesses where strict code is required. We engineer zero-hallucination logic pipelines that execute 100% deterministically—handling data entry, field reports, and schedule calculations flawlessly every single time.</p>
+      </div>
+      <div class="protocol-panel">
+        <span class="p-num">02</span>
+        <h3>Seamless API Interoperability</h3>
+        <p>We bridge isolated enterprise systems—WhatsApp, Telegram, Google Workspace, CRMs, and databases—into unified webhook pipelines. Your team works in the messaging apps they already use, while our backend manages the raw data behind the scenes.</p>
+      </div>
+      <div class="protocol-panel">
+        <span class="p-num">03</span>
+        <h3>Production-Grade Infrastructure</h3>
+        <p>Shipped means resilient. Every system is deployed on dedicated persistent cloud servers with automated retry logic, token refresh handling, rate-limit protection, and zero cold-start delays. Built to run 24/7/365 without manual intervention.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- THE ARSENAL -->
+<section class="arsenal-section" data-section-name="Arsenal" id="arsenal">
+  <div class="arsenal-head reveal-up">
+    <span class="eyebrow">Tech Manifest</span>
+    <h2>The Arsenal</h2>
+  </div>
+  <div class="arsenal-list">
+    <div class="arsenal-row reveal-up">
+      <span class="a-index">A.1</span>
+      <span class="a-name">Python 3.11 / FastAPI</span>
+      <span class="a-type">Core — High-Performance Async Backend</span>
+    </div>
+    <div class="arsenal-row reveal-up">
+      <span class="a-index">A.2</span>
+      <span class="a-name">Meta WhatsApp Cloud API</span>
+      <span class="a-type">Messaging — Enterprise Field & Client Webhooks</span>
+    </div>
+    <div class="arsenal-row reveal-up">
+      <span class="a-index">A.3</span>
+      <span class="a-name">Telegram Bot API</span>
+      <span class="a-type">Interface — Instant Custom UI & Real-Time Alerts</span>
+    </div>
+    <div class="arsenal-row reveal-up">
+      <span class="a-index">A.4</span>
+      <span class="a-name">Google Cloud Platform</span>
+      <span class="a-type">Integrations — Sheets, Drive, Calendar & OAuth 2.0</span>
+    </div>
+    <div class="arsenal-row reveal-up">
+      <span class="a-index">A.5</span>
+      <span class="a-name">MongoDB & SQLite</span>
+      <span class="a-type">Persistence — User State & Multi-Tenant Data</span>
+    </div>
+    <div class="arsenal-row reveal-up">
+      <span class="a-index">A.6</span>
+      <span class="a-name">Docker & Linux VPS</span>
+      <span class="a-type">Infra — 24/7 Persistent Cloud Deployment</span>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM TELEMETRY -->
+<section class="telemetry-section" data-section-name="Telemetry" id="telemetry">
+  <div class="telemetry-head reveal-up">
+    <span class="eyebrow">Live Readout</span>
+    <h2>System Telemetry</h2>
+  </div>
+  <div class="telemetry-grid">
+    <div class="telemetry-cell reveal-up">
+      <span class="t-label">Uptime</span>
+      <div class="t-value"><span class="t-live-dot"></span><span id="telUptime">99.98</span><span class="t-unit">%</span></div>
+    </div>
+    <div class="telemetry-cell reveal-up">
+      <span class="t-label">Response</span>
+      <div class="t-value"><span id="telPing">14</span><span class="t-unit">ms</span></div>
+    </div>
+    <div class="telemetry-cell reveal-up">
+      <span class="t-label">Active Nodes</span>
+      <div class="t-value"><span id="telNodes">04</span><span class="t-unit">/ 04</span></div>
+    </div>
+    <div class="telemetry-cell reveal-up">
+      <span class="t-label">Session Clock</span>
+      <div class="t-value"><span id="telSession">00:00:00</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO / PARALLAX -->
+<section class="manifesto" data-section-name="Manifesto">
+  <span class="manifesto-num" data-speed="0.85">VW</span>
+  <p class="manifesto-text" id="manifestoText">We automate the unglamorous operational friction — so your business scales effortlessly.</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section" data-section-name="Contact">
+  <div class="contact-eyebrow reveal-up">Open Channel</div>
+  <h2 class="reveal-up">Inquiries</h2>
+  <p class="reveal-up">Currently open for discussions regarding technical solutions and collaborations.</p>
+  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=core@vectorworkflows.com&su=Project%20Inquiry&body=Hi%20there!" target="_blank" rel="noopener" class="contact-btn reveal-up" data-cursor="link">
+    <span data-magnetic-text style="display:inline-flex;align-items:center;gap:14px;">
+      Initialize Contact
+      <i class="fa-solid fa-arrow-up" style="transform:rotate(45deg);"></i>
+    </span>
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>Vector Workflows &copy; 2026. Core Stream Drive.</span>
+  <a href="privacy/" data-cursor="link">Privacy Policy</a>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var isCoarse = window.matchMedia("(hover:none), (max-width:860px)").matches;
+
+  /* ============================================================
+     0. UTIL — split text into char spans (no external SplitText plugin)
+     ============================================================ */
+  function splitChars(el){
+    var text = el.textContent;
+    el.textContent = "";
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < text.length; i++){
+      var ch = text[i];
+      var span = document.createElement("span");
+      span.className = "char";
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      frag.appendChild(span);
+    }
+    el.appendChild(frag);
+    return el.querySelectorAll(".char");
+  }
+
+  // splitWords — wraps each word in its own span while preserving the
+  // original whitespace between them as plain text nodes (not spans).
+  // A naive text.split(" ") would collapse multiple/irregular spaces
+  // and lose exactly which characters were whitespace; regex-splitting
+  // with a capture group keeps the separators as their own array
+  // entries so they can be re-inserted verbatim, unwrapped, between
+  // word spans — words animate individually, spacing stays untouched.
+  function splitWords(el){
+    var text = el.textContent;
+    el.textContent = "";
+    var parts = text.split(/(\s+)/); // capture group keeps whitespace tokens in the array
+    var frag = document.createDocumentFragment();
+    var wordSpans = [];
+    for (var i = 0; i < parts.length; i++){
+      var part = parts[i];
+      if (part === "") continue;
+      if (/^\s+$/.test(part)){
+        frag.appendChild(document.createTextNode(part));
+      } else {
+        var span = document.createElement("span");
+        span.className = "m-word";
+        span.textContent = part;
+        frag.appendChild(span);
+        wordSpans.push(span);
+      }
+    }
+    el.appendChild(frag);
+    return wordSpans;
+  }
+
+  var line1Chars = splitChars(document.querySelector(".line-1"));
+  var line2Chars = splitChars(document.querySelector(".line-2"));
+
+  if (!reduceMotion){
+    gsap.set(line1Chars, {yPercent:120, opacity:0});
+    gsap.set(line2Chars, {yPercent:120, opacity:0});
+  }
+
+  /* ============================================================
+     1. AMBIENT WEBGL — volumetric violet fluid via GLSL simplex noise
+     Fullscreen shader plane. fBm (fractal Brownian motion) built from
+     3D simplex noise gives the layered, drifting-smoke look. The third
+     noise dimension is time, so the field evolves continuously rather
+     than just translating. Mouse position is passed as a uniform and
+     nudges the noise-sampling origin, so the fluid subtly bends toward
+     the cursor without a full physics simulation.
+     ============================================================ */
+  (function ambientWebGL(){
+    var canvas = document.getElementById("ambient");
+    if (!window.THREE){
+      // CDN failed to load — fail silently to a flat background rather
+      // than a blank/broken canvas. The CSS var(--void) body background
+      // still reads as intentional, not broken.
+      return;
+    }
+
+    var renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      alpha: true,
+      antialias: false,
+      powerPreference: "low-power"
+    });
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    renderer.setPixelRatio(dpr);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    var mouseTarget = new THREE.Vector2(0.5, 0.5);
+    var mouseCurrent = new THREE.Vector2(0.5, 0.5);
+
+    var uniforms = {
+      u_time:       { value: 0 },
+      u_resolution: { value: new THREE.Vector2(1, 1) },
+      u_mouse:      { value: mouseCurrent },
+      // Colors pulled directly from the page's own token system —
+      // the shader is not decorated with arbitrary GLSL-native colors,
+      // it is the --void / --accent / --accent-2 tokens rendered in 3D.
+      u_colorVoid:    { value: new THREE.Color(0x050505) },
+      u_colorAccent:  { value: new THREE.Color(0x6f59cc) },
+      u_colorAccent2: { value: new THREE.Color(0xa594f0) }
+    };
+
+    var vertexShader = [
+      "varying vec2 vUv;",
+      "void main(){",
+      "  vUv = uv;",
+      "  gl_Position = vec4(position, 1.0);",
+      "}"
+    ].join("\n");
+
+    // Simplex noise (Ashima Arts / Ian McEwan implementation) — the
+    // standard, verified GLSL reference implementation. Reimplementing
+    // this by hand is a well-known source of subtle permutation-table
+    // bugs, so the canonical version is used rather than an
+    // approximation written from memory.
+    var simplexNoise3D = [
+      "vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }",
+      "vec4 mod289(vec4 x){ return x - floor(x * (1.0/289.0)) * 289.0; }",
+      "vec4 permute(vec4 x){ return mod289(((x*34.0)+1.0)*x); }",
+      "vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }",
+      "float snoise(vec3 v){",
+      "  const vec2 C = vec2(1.0/6.0, 1.0/3.0);",
+      "  const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);",
+      "  vec3 i  = floor(v + dot(v, C.yyy));",
+      "  vec3 x0 = v - i + dot(i, C.xxx);",
+      "  vec3 g = step(x0.yzx, x0.xyz);",
+      "  vec3 l = 1.0 - g;",
+      "  vec3 i1 = min(g.xyz, l.zxy);",
+      "  vec3 i2 = max(g.xyz, l.zxy);",
+      "  vec3 x1 = x0 - i1 + C.xxx;",
+      "  vec3 x2 = x0 - i2 + C.yyy;",
+      "  vec3 x3 = x0 - D.yyy;",
+      "  i = mod289(i);",
+      "  vec4 p = permute(permute(permute(",
+      "            i.z + vec4(0.0, i1.z, i2.z, 1.0))",
+      "          + i.y + vec4(0.0, i1.y, i2.y, 1.0))",
+      "          + i.x + vec4(0.0, i1.x, i2.x, 1.0));",
+      "  float n_ = 0.142857142857;",
+      "  vec3 ns = n_ * D.wyz - D.xzx;",
+      "  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);",
+      "  vec4 x_ = floor(j * ns.z);",
+      "  vec4 y_ = floor(j - 7.0 * x_);",
+      "  vec4 x = x_ *ns.x + ns.yyyy;",
+      "  vec4 y = y_ *ns.x + ns.yyyy;",
+      "  vec4 h = 1.0 - abs(x) - abs(y);",
+      "  vec4 b0 = vec4(x.xy, y.xy);",
+      "  vec4 b1 = vec4(x.zw, y.zw);",
+      "  vec4 s0 = floor(b0)*2.0 + 1.0;",
+      "  vec4 s1 = floor(b1)*2.0 + 1.0;",
+      "  vec4 sh = -step(h, vec4(0.0));",
+      "  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;",
+      "  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;",
+      "  vec3 p0 = vec3(a0.xy, h.x);",
+      "  vec3 p1 = vec3(a0.zw, h.y);",
+      "  vec3 p2 = vec3(a1.xy, h.z);",
+      "  vec3 p3 = vec3(a1.zw, h.w);",
+      "  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));",
+      "  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;",
+      "  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);",
+      "  m = m * m;",
+      "  return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));",
+      "}"
+    ].join("\n");
+
+    var fragmentShader = [
+      "precision mediump float;",
+      "varying vec2 vUv;",
+      "uniform float u_time;",
+      "uniform vec2 u_resolution;",
+      "uniform vec2 u_mouse;",
+      "uniform vec3 u_colorVoid;",
+      "uniform vec3 u_colorAccent;",
+      "uniform vec3 u_colorAccent2;",
+
+      simplexNoise3D,
+
+      // fBm: layered noise octaves at increasing frequency, decreasing
+      // amplitude — this is what turns a single noise field into
+      // something that reads as volumetric smoke rather than a flat
+      // Perlin gradient.
+      "float fbm(vec3 p){",
+      "  float value = 0.0;",
+      "  float amplitude = 0.5;",
+      "  for (int i = 0; i < 5; i++){",
+      "    value += amplitude * snoise(p);",
+      "    p *= 2.02;",
+      "    amplitude *= 0.5;",
+      "  }",
+      "  return value;",
+      "}",
+
+      "void main(){",
+      "  vec2 uv = vUv;",
+      "  float aspect = u_resolution.x / u_resolution.y;",
+      "  vec2 st = vec2(uv.x * aspect, uv.y);",
+
+      // Mouse gently biases the sampling origin rather than driving a
+      // sharp cursor-follow blob — keeps the 'subtly reacts' framing
+      // from the brief instead of an obvious mouse-paint effect.
+      "  vec2 mouseBias = (u_mouse - 0.5) * 0.35;",
+      "  vec3 noiseCoord = vec3(st * 1.6 + mouseBias, u_time * 0.035);",
+
+      "  float n1 = fbm(noiseCoord);",
+      "  float n2 = fbm(noiseCoord * 1.8 + vec3(5.2, 1.3, u_time * 0.02));",
+      "  float density = fbm(vec3(st * 2.4, u_time * 0.05) + n1 * 0.6);",
+
+      // Remap noise (-1..1 roughly) into a 0..1 density field, then
+      // shape it so most of the frame stays near-void with violet
+      // concentrating in drifting pockets — reads as 'dark volumetric
+      // fluid', not a full-frame gradient wash.
+      "  density = smoothstep(0.15, 0.85, density * 0.5 + 0.5);",
+
+      "  vec3 color = mix(u_colorVoid, u_colorAccent, density * 0.55);",
+      "  float highlight = smoothstep(0.55, 0.95, n2 * 0.5 + 0.5);",
+      "  color = mix(color, u_colorAccent2, highlight * 0.28);",
+
+      // Vignette — keeps energy concentrated away from the viewport
+      // edges so the effect reads as depth behind the content, not a
+      // flat texture tiling to the frame edge.
+      "  float vignette = 1.0 - smoothstep(0.4, 1.1, distance(uv, vec2(0.5)));",
+      "  color *= mix(0.55, 1.0, vignette);",
+
+      "  gl_FragColor = vec4(color, 1.0);",
+      "}"
+    ].join("\n");
+
+    var material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      depthWrite: false,
+      depthTest: false
+    });
+
+    var geometry = new THREE.PlaneGeometry(2, 2);
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    function resize(){
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      uniforms.u_resolution.value.set(w * dpr, h * dpr);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    window.addEventListener("mousemove", function(e){
+      mouseTarget.x = e.clientX / window.innerWidth;
+      mouseTarget.y = 1.0 - (e.clientY / window.innerHeight);
+    });
+
+    var clock = new THREE.Clock();
+
+    // Pause the render loop when the tab is hidden — a fullscreen
+    // fragment shader running every frame on a backgrounded tab is
+    // pure wasted GPU/battery for zero visible benefit.
+    var isVisible = true;
+    document.addEventListener("visibilitychange", function(){
+      isVisible = document.visibilityState === "visible";
+    });
+
+    function animate(){
+      requestAnimationFrame(animate);
+      if (!isVisible) return;
+
+      // LERP the mouse uniform toward its target — matches the same
+      // buttery-lag language used everywhere else on the page (cursor,
+      // tilt) instead of snapping the fluid origin on every mousemove.
+      mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.04;
+      mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.04;
+
+      uniforms.u_time.value = clock.getElapsedTime();
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion){
+      // Render one static frame instead of a continuous loop.
+      uniforms.u_time.value = 2.0;
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
+  })();
+
+  /* ============================================================
+     2. GRAIN CANVAS — animated noise, tactile film texture
+     ============================================================ */
+  (function grain(){
+    var canvas = document.getElementById("grain");
+    var ctx = canvas.getContext("2d");
+    var w, h;
+    function resize(){
+      w = canvas.width = Math.floor(window.innerWidth / 2);
+      h = canvas.height = Math.floor(window.innerHeight / 2);
+      canvas.style.width = "100vw";
+      canvas.style.height = "100vh";
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    var frame = 0;
+    function render(){
+      frame++;
+      if (frame % 2 === 0){
+        var imgData = ctx.createImageData(w,h);
+        var buf = imgData.data;
+        for (var i=0; i<buf.length; i+=4){
+          var v = (Math.random()*255)|0;
+          buf[i]=v; buf[i+1]=v; buf[i+2]=v; buf[i+3]=22;
+        }
+        ctx.putImageData(imgData,0,0);
+      }
+      requestAnimationFrame(render);
+    }
+    render();
+  })();
+
+  /* ============================================================
+     3. PRELOADER — counter 0→100, then curtain reveal
+     ============================================================ */
+  function runPreloader(onDone){
+    var numEl = document.getElementById("plNum");
+    var barEl = document.getElementById("plBar");
+    var counter = {v:0};
+
+    if (reduceMotion){
+      numEl.textContent = "100";
+      barEl.style.width = "100%";
+      onDone();
+      return;
+    }
+
+    gsap.to(counter, {
+      v:100,
+      duration:1.9,
+      ease:"power2.inOut",
+      onUpdate:function(){
+        var val = Math.round(counter.v);
+        numEl.textContent = val;
+        barEl.style.width = val + "%";
+      },
+      onComplete:function(){
+        // Curtain is already covering the screen (set at scaleY:1 here, BEFORE
+        // the preloader fades) so there is no gap where the hero flashes visible
+        // underneath. It then wipes away top-to-bottom with a single, unchanging
+        // transform-origin so the animation reads as one continuous motion.
+        var tl = gsap.timeline({onComplete:onDone});
+        tl.set("#curtain", {display:"block", transformOrigin:"top", scaleY:1})
+          .to("#preloader", {opacity:0, duration:0.35, ease:"power1.out"}, "<")
+          .set("#preloader", {display:"none"})
+          .to("#curtain", {
+            scaleY:0,
+            duration:0.9,
+            ease:"power4.inOut"
+          }, "-=0.05")
+          .set("#curtain", {display:"none"});
+      }
+    });
+  }
+
+  /* ============================================================
+     4. LENIS — smooth scroll, wired to ScrollTrigger + status strip
+     Driven by exactly one clock: gsap.ticker (already RAF-synced
+     internally). A previous version of this file also ran a second,
+     independent requestAnimationFrame loop calling lenis.raf() —
+     that meant Lenis's internal clock was being advanced twice per
+     actual browser frame from two different time sources, which
+     would make the smooth-scroll easing feel inconsistent depending
+     on which loop fired first. Fixed by removing the redundant loop.
+     ============================================================ */
+  var lenis = null;
+  var scrollVelocity = 0; // used by velocity-based skew below
+
+  function initLenis(){
+    if (isCoarse || reduceMotion){
+      // Native scroll on touch / reduced-motion — Lenis fights touch scrolling
+      // and reduced-motion users want direct, immediate response.
+      document.addEventListener("scroll", updateStatusStrip, {passive:true});
+      return;
+    }
+    lenis = new Lenis({
+      duration:1.15,
+      easing:function(t){ return Math.min(1, 1.001 - Math.pow(2, -10*t)); },
+      smoothWheel:true
+    });
+    lenis.on("scroll", function(e){
+      ScrollTrigger.update();
+      updateStatusStrip();
+      // Lenis exposes velocity directly on the scroll event payload —
+      // this is the single source of truth for scroll speed, read
+      // once here rather than re-derived elsewhere from position deltas.
+      scrollVelocity = e && typeof e.velocity === "number" ? e.velocity : 0;
+    });
+
+    gsap.ticker.add(function(time){
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  /* ============================================================
+     4b. VELOCITY-BASED SKEW — scroll speed distorts large text
+     Deliberately scoped to elements with NO competing hover-driven
+     transform (hero title, marquee track). The module grid already
+     runs a full tilt + magnetic-pull transform system on hover
+     (see initTilt below); layering an independent skewY write onto
+     the same elements from a separate ticker would fight that
+     system for control of the CSS transform on every frame,
+     producing visible jitter rather than a clean effect. Skew and
+     tilt each get their own elements instead of sharing.
+     ============================================================ */
+  function initVelocitySkew(){
+    if (isCoarse || reduceMotion) return;
+
+    var skewTargets = [
+      document.getElementById("heroTitle"),
+      document.getElementById("marqueeWrap")
+    ].filter(Boolean);
+
+    if (!skewTargets.length) return;
+
+    var currentSkew = 0;
+
+    gsap.ticker.add(function(){
+      var targetSkew = gsap.utils.clamp(-6, 6, scrollVelocity * 0.6);
+      currentSkew += (targetSkew - currentSkew) * 0.15;
+
+      // Driven through gsap.set() rather than a raw style.transform
+      // write. Both targets already carry other GSAP-driven transform
+      // properties elsewhere in this file (heroTitle: yPercent from the
+      // scroll-parallax tween; marqueeWrap's child track: x from the
+      // infinite-scroll tween). GSAP composes multiple transform
+      // properties on the same element correctly as long as every
+      // write goes through its own engine — mixing in a raw
+      // style.transform write from outside GSAP would silently
+      // overwrite whatever GSAP last computed, breaking that other
+      // animation. skewY here is a property GSAP tracks separately
+      // from x/y/yPercent, so it composes cleanly alongside them.
+      gsap.set(skewTargets, { skewY: currentSkew });
+    });
+  }
+
+  /* ============================================================
+     5. STATUS STRIP — live instrument readout (signature element)
+     ============================================================ */
+  var sections = Array.prototype.slice.call(document.querySelectorAll("[data-section-name]"));
+  var secIndexEl = document.getElementById("secIndex");
+  var secTotalEl = document.getElementById("secTotal");
+  var scrollPctEl = document.getElementById("scrollPct");
+
+  if (secTotalEl){
+    secTotalEl.textContent = String(sections.length).padStart(2, "0");
+  }
+
+  function updateStatusStrip(){
+    var doc = document.documentElement;
+    var scrollTop = window.scrollY || doc.scrollTop;
+    var max = (doc.scrollHeight - window.innerHeight) || 1;
+    var pct = Math.min(100, Math.max(0, Math.round((scrollTop/max)*100)));
+    scrollPctEl.textContent = String(pct).padStart(3,"0");
+
+    var current = 1;
+    for (var i=0;i<sections.length;i++){
+      var r = sections[i].getBoundingClientRect();
+      if (r.top < window.innerHeight*0.5) current = i+1;
+    }
+    secIndexEl.textContent = String(current).padStart(2,"0");
+  }
+  window.addEventListener("scroll", updateStatusStrip, {passive:true});
+  window.addEventListener("resize", updateStatusStrip);
+
+  function tickClock(){
+    var el = document.getElementById("clockLocal");
+    if (!el) return;
+    var d = new Date();
+    var hh = String(d.getHours()).padStart(2,"0");
+    var mm = String(d.getMinutes()).padStart(2,"0");
+    var ss = String(d.getSeconds()).padStart(2,"0");
+    el.textContent = hh+":"+mm+":"+ss;
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  (function setLocalOffset(){
+    var el = document.getElementById("clockOffset");
+    if (!el) return;
+    var offsetMin = -new Date().getTimezoneOffset();
+    var sign = offsetMin >= 0 ? "+" : "-";
+    var abs = Math.abs(offsetMin);
+    var oh = String(Math.floor(abs/60)).padStart(2,"0");
+    var om = String(abs%60).padStart(2,"0");
+    el.textContent = "UTC"+sign+oh+":"+om;
+  })();
+
+  // Telemetry "Session Clock" — genuinely elapsed time since this page
+  // loaded, not a fabricated number. Consistent with the same
+  // real-data principle already applied to the status strip's UTC
+  // offset: an instrument readout is only worth having if what it
+  // reads out is actually true for the person looking at it.
+  (function tickSessionClock(){
+    var el = document.getElementById("telSession");
+    if (!el) return;
+    var startTime = Date.now();
+    function tick(){
+      var elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+      var hh = String(Math.floor(elapsedSec / 3600)).padStart(2, "0");
+      var mm = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, "0");
+      var ss = String(elapsedSec % 60).padStart(2, "0");
+      el.textContent = hh + ":" + mm + ":" + ss;
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  // Live Sync Timer (Stopwatch style)
+(function initLiveSyncTimestamp(){
+  var el = document.getElementById("lastSyncTime");
+  if (!el) return;
+  
+  var loadTime = Date.now();
+  
+  function updateSyncText(){
+    var diffSec = Math.floor((Date.now() - loadTime) / 1000);
+    
+    var mm = Math.floor(diffSec / 60);
+    var ss = diffSec % 60;
+    
+    // Formats as: 02m 05s ago
+    var formatted = (mm < 10 ? "0" + mm : mm) + "m " + 
+                    (ss < 10 ? "0" + ss : ss) + "s ago";
+                    
+    el.textContent = formatted;
+  }
+  
+  updateSyncText();
+  setInterval(updateSyncText, 1000);
+})();
+  // Telemetry "Response" (ping) — the section's eyebrow explicitly
+  // claims "Live Readout", so a number that never once moves reads as
+  // a static label wearing a live-data costume. This is a small,
+  // clearly-bounded simulated jitter around the base value already in
+  // the HTML — not a real network measurement, and not dressed up
+  // with false precision beyond what a glance-able UI number needs.
+  (function jitterPing(){
+    var el = document.getElementById("telPing");
+    if (!el) return;
+    var base = parseInt(el.textContent, 10) || 14;
+    setInterval(function(){
+      var jitter = Math.round((Math.random() - 0.5) * 6); // ±3ms
+      el.textContent = Math.max(8, base + jitter);
+    }, 2400);
+  })();
+
+  /* ============================================================
+     6. CUSTOM CURSOR — magnetic follower, inverts on text
+     ============================================================ */
+  function initCursor(){
+    if (isCoarse) return;
+    var dot = document.getElementById("cursorDot");
+    var ring = document.getElementById("cursorRing");
+    var mx=window.innerWidth/2, my=window.innerHeight/2;
+    var rx=mx, ry=my;
+    var magnetTarget = null;
+
+    window.addEventListener("mousemove", function(e){
+      mx = e.clientX; my = e.clientY;
+      gsap.to(dot, {x:mx, y:my, duration:0.08, ease:"power1.out"});
+    });
+
+    function loop(){
+      var tx = mx, ty = my;
+      if (magnetTarget){
+        var rect = magnetTarget.getBoundingClientRect();
+        var cx = rect.left + rect.width/2;
+        var cy = rect.top + rect.height/2;
+        tx = cx + (mx-cx)*0.35;
+        ty = cy + (my-cy)*0.35;
+      }
+      rx += (tx-rx)*0.18;
+      ry += (ty-ry)*0.18;
+      gsap.set(ring, {x:rx, y:ry});
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // Cursor 2.0 — links get BOTH the ring size-expansion (is-active)
+    // AND mix-blend-mode:difference (is-invert) together, per brief.
+    // Previously is-invert only fired on plain text hover; it's now
+    // shared between the two triggers rather than duplicated into a
+    // second CSS class, since the visual (blend-mode difference) is
+    // identical in both cases — only the ring SIZE differs, and that's
+    // already handled by is-active being independently toggled.
+    var interactive = document.querySelectorAll('a, button, [data-cursor="link"]');
+    interactive.forEach(function(el){
+      el.addEventListener("mouseenter", function(){
+        ring.classList.add("is-active", "is-invert");
+        magnetTarget = el;
+      });
+      el.addEventListener("mouseleave", function(){
+        ring.classList.remove("is-active", "is-invert");
+        magnetTarget = null;
+        // Reset any magnetic text-pull this element was carrying —
+        // mouseleave can fire after a fast cursor exit, before the
+        // element's own pull-reset below has a chance to run, so this
+        // is a belt-and-suspenders return-to-rest.
+        var puller = el.querySelector("[data-magnetic-text]");
+        if (puller) gsap.to(puller, {x:0, y:0, duration:0.6, ease:"elastic.out(1,0.5)"});
+      });
+
+      // Magnetic text-pull — the text INSIDE an interactive element
+      // moves toward the cursor independently from the ring's own
+      // magnetic snap to the element's center. Two different transform
+      // targets (ring vs. the inner text span), so there is no
+      // conflict: the ring is magnetized to the button, the button's
+      // text is magnetized to the raw cursor position, at a smaller
+      // pull radius so it reads as a secondary, subtler motion layered
+      // under the ring's larger movement.
+      var textPuller = el.querySelector("[data-magnetic-text]");
+      if (textPuller){
+        el.addEventListener("mousemove", function(e){
+          var rect = el.getBoundingClientRect();
+          var relX = e.clientX - (rect.left + rect.width/2);
+          var relY = e.clientY - (rect.top + rect.height/2);
+          gsap.to(textPuller, {
+            x: relX * 0.28,
+            y: relY * 0.28,
+            duration: 0.4,
+            ease: "power2.out"
+          });
         });
-    </script>
+      }
+    });
+
+    var textEls = document.querySelectorAll("h1, h2, h3, p");
+    textEls.forEach(function(el){
+      el.addEventListener("mouseenter", function(){ ring.classList.add("is-invert"); });
+      el.addEventListener("mouseleave", function(){ ring.classList.remove("is-invert"); });
+    });
+  }
+
+  /* ============================================================
+     7. TILT + MAGNETIC PULL — module grid
+     ============================================================ */
+  function initTilt(){
+    var items = document.querySelectorAll("[data-tilt]");
+    items.forEach(function(el){
+      var bound = null;
+      function onMove(e){
+        bound = el.getBoundingClientRect();
+        var px = (e.clientX - bound.left) / bound.width;
+        var py = (e.clientY - bound.top) / bound.height;
+        el.style.setProperty("--mx", (px*100)+"%");
+        el.style.setProperty("--my", (py*100)+"%");
+
+        if (isCoarse) return;
+        var rotX = (py-0.5) * -8;
+        var rotY = (px-0.5) * 8;
+        var pullX = (px-0.5) * 10;
+        var pullY = (py-0.5) * 10;
+        gsap.to(el, {
+          rotateX:rotX, rotateY:rotY,
+          x:pullX, y:pullY,
+          duration:0.5, ease:"power2.out",
+          transformPerspective:900
+        });
+      }
+      function onLeave(){
+        gsap.to(el, {rotateX:0, rotateY:0, x:0, y:0, duration:0.7, ease:"elastic.out(1,0.6)"});
+      }
+      el.addEventListener("mousemove", onMove);
+      el.addEventListener("mouseleave", onLeave);
+    });
+  }
+
+  /* ============================================================
+     8. GSAP SCROLL ANIMATIONS — reveals, parallax, marquee
+     ============================================================ */
+  function initScrollAnims(){
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ----------------------------------------------------------
+       SECTION MASKING — clip-path unmask, Hero → Index section.
+       The closed state is added as a class right here, immediately
+       before GSAP takes over animating it — see the CSS comment on
+       .index-section.mask-ready for why this order matters (no-JS
+       fallback stays fully visible instead of stuck clipped).
+       scrub binds the mask's open/close progress directly and
+       bidirectionally to scroll position: scrolling down opens it,
+       scrolling back up smoothly re-closes it in step with the
+       scrollbar, matching motion exactly rather than firing as a
+       one-shot animation. (toggleActions has no effect once scrub
+       is set — scrub is itself the continuous progress binding, so
+       it isn't included here.)
+       ---------------------------------------------------------- */
+    var maskSection = document.getElementById("work");
+    if (maskSection){
+      maskSection.classList.add("mask-ready");
+      gsap.fromTo(maskSection,
+        { clipPath: "inset(45% 45% 45% 45% round 12px)" },
+        {
+          clipPath: "inset(0% 0% 0% 0% round 12px)",
+          ease: "power3.inOut",
+          scrollTrigger: {
+            trigger: maskSection,
+            start: "top 95%",
+            end: "top 35%",
+            scrub: 0.7
+          }
+        }
+      );
+    }
+
+    /* ----------------------------------------------------------
+       HORIZONTAL PINNING — The Protocol section.
+       Deliberately desktop/hover-only (isCoarse check below), matching
+       the CSS media query `(max-width:900px), (hover:none)` that
+       already collapses .protocol-track back to a plain vertical
+       stack for touch devices. Forcing horizontal movement out of a
+       vertical touch-scroll gesture is a well-documented mobile UX
+       failure — this is a deliberate scope decision stated here, not
+       a technical shortfall. Touch users get the same three panels,
+       same copy, just read top-to-bottom instead of pinned-horizontal.
+
+       Pin distance is computed from the track's actual rendered
+       width, not a guessed/hardcoded pixel value — .protocol-panel
+       widths are set in CSS via min(640px,86vw), which varies by
+       viewport, so scrollWidth must be measured live after layout,
+       and re-measured on resize (see ScrollTrigger.refresh() call in
+       the resize handler below — a stale pin distance from a resize
+       that changed panel width would either strand the last panel
+       off-screen or leave dead scroll distance after it).
+       ---------------------------------------------------------- */
+    if (!isCoarse){
+      var pinTarget = document.getElementById("protocolPinTarget");
+      var track = document.getElementById("protocolTrack");
+
+      if (pinTarget && track){
+        var getScrollDistance = function(){
+          // How far the track must translate left so its final panel's
+          // right edge reaches the viewport's right edge. If the track
+          // is already narrower than the viewport (very wide screens,
+          // short content), this is 0 or negative — clamped to 0 so
+          // ScrollTrigger never gets a negative pin duration.
+          return Math.max(0, track.scrollWidth - window.innerWidth);
+        };
+
+        var protocolST = ScrollTrigger.create({
+          trigger: pinTarget,
+          start: "top top",
+          end: function(){ return "+=" + getScrollDistance(); },
+          pin: true,
+          scrub: 0.8,
+          invalidateOnRefresh: true, // recompute end/positions on resize
+          onUpdate: function(self){
+            gsap.set(track, { x: -getScrollDistance() * self.progress });
+          }
+        });
+
+        // getScrollDistance() depends on window width; a resize can
+        // change it (panel width is min(640px,86vw)). invalidateOnRefresh
+        // handles ScrollTrigger's own internal start/end recalculation,
+        // but the explicit refresh call on resize is what actually
+        // triggers that recalculation to run — invalidateOnRefresh alone
+        // only marks it as needing to happen on the NEXT refresh, it
+        // does not schedule one itself.
+        window.addEventListener("resize", function(){
+          ScrollTrigger.refresh();
+        });
+      }
+    }
+
+    /* ----------------------------------------------------------
+       REVEAL-UP — the generic fade-up-on-scroll used across every
+       section (hero desc, section heads, arsenal rows, telemetry
+       cells, contact block, etc.). This loop was inadvertently
+       dropped during an earlier edit to this function and is
+       restored here. Its absence did not throw any error — a
+       missing forEach doesn't break JS syntax — so it went
+       undetected by syntax checks alone; caught only by directly
+       auditing which .reveal-up elements actually had a driving
+       animation, which is why that audit is worth doing explicitly
+       rather than trusting "it parses" as "it works."
+       ---------------------------------------------------------- */
+    gsap.utils.toArray(".reveal-up").forEach(function(el){
+      gsap.to(el, {
+        opacity:1, y:0,
+        duration:0.9, ease:"power3.out",
+        scrollTrigger:{ trigger:el, start:"top 88%" }
+      });
+    });
+
+
+    gsap.utils.toArray(".module").forEach(function(el, i){
+      gsap.set(el, {opacity:0, y:50});
+      gsap.to(el, {
+        opacity:1, y:0,
+        duration:0.8, delay:(i%3)*0.08,
+        ease:"power3.out",
+        scrollTrigger:{ trigger:el, start:"top 90%" }
+      });
+    });
+
+    // Parallax on manifesto watermark number
+    gsap.utils.toArray("[data-speed]").forEach(function(el){
+      var speed = parseFloat(el.getAttribute("data-speed")) || 0.8;
+      gsap.to(el, {
+        yPercent: (1-speed) * -60,
+        ease:"none",
+        scrollTrigger:{
+          trigger: el.closest("section"),
+          start:"top bottom",
+          end:"bottom top",
+          scrub:0.6
+        }
+      });
+    });
+
+    // Manifesto — scrubbed word-by-word fill. Words start dim (see
+    // .manifesto-text .m-word base state in CSS) and progressively
+    // reach full color in reading order as the user scrolls; a single
+    // GSAP timeline with a staggered .to() is bound to a scrubbed
+    // ScrollTrigger, so the whole staggered sequence's playhead
+    // tracks scroll position directly — not a series of independent
+    // per-word triggers, which would fire based on each word's own
+    // viewport position rather than one continuous scroll-bound fill.
+    var manifestoEl = document.getElementById("manifestoText");
+    if (manifestoEl){
+      var manifestoWords = splitWords(manifestoEl);
+
+      if (reduceMotion){
+        // Full color immediately, no scrubbed motion.
+        manifestoWords.forEach(function(w, i){
+          w.style.color = (i === 3 || i >= 7) ? "var(--accent-2)" : "var(--ink)";
+          w.style.opacity = "1";
+        });
+      } else if (manifestoWords.length){
+        var fillTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".manifesto",
+            start: "top 75%",
+            end: "top 20%",
+            scrub: 0.6
+          }
+        });
+        manifestoWords.forEach(function(word, i){
+          // Word index 3 = "unglamorous"; indices 7-10 = "so the rest
+          // works." — the same two accent phrases the previous static
+          // markup hand-designated, now driven by index rather than a
+          // hardcoded span, since the text is split programmatically.
+          var isAccentWord = (i === 3 || i >= 7);
+          fillTl.to(word, {
+            color: isAccentWord ? "#a594f0" : "#f4f4f5",
+            opacity: 1,
+            ease: "none"
+          }, i * 0.9); // explicit position on the timeline = the "stagger",
+                       // spaced so the fill reads word-by-word rather than
+                       // all words racing to completion at once
+        });
+      }
+    }
+
+    // Marquee infinite scroll
+    var track = document.getElementById("marqueeTrack");
+    var trackWidth = track.scrollWidth / 2;
+    gsap.to(track, {
+      x: -trackWidth,
+      duration: 22,
+      ease:"none",
+      repeat:-1
+    });
+
+    // Hero parallax fade on scroll past
+    gsap.to(".hero-title", {
+      yPercent:-12,
+      opacity:0.3,
+      ease:"none",
+      scrollTrigger:{
+        trigger:".hero",
+        start:"top top",
+        end:"bottom top",
+        scrub:0.5
+      }
+    });
+  }
+
+  /* ============================================================
+     9. HERO ENTRANCE TIMELINE
+     ============================================================ */
+  function playHeroEntrance(){
+    if (reduceMotion){
+      gsap.set([line1Chars, line2Chars], {yPercent:0, opacity:1});
+      gsap.set(["#heroDesc","#heroScrollHint"], {opacity:1, y:0});
+      return;
+    }
+    var tl = gsap.timeline({defaults:{ease:"power4.out"}});
+    tl.to(line1Chars, {yPercent:0, opacity:1, duration:1, stagger:0.035})
+      .to(line2Chars, {yPercent:0, opacity:1, duration:1, stagger:0.035}, "-=0.75")
+      .to("#heroDesc", {opacity:1, y:0, duration:0.8}, "-=0.5")
+      .to("#heroScrollHint", {opacity:1, y:0, duration:0.8}, "-=0.6");
+  }
+
+  /* ============================================================
+     BOOT SEQUENCE
+     ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    initCursor();
+    initTilt();
+    initScrollAnims();
+
+    runPreloader(function(){
+      initLenis();
+      initVelocitySkew();
+      playHeroEntrance();
+      updateStatusStrip();
+
+      // The Protocol's horizontal-pin distance is measured from
+      // track.scrollWidth, which depends on the Anton display font
+      // having actually loaded (it's used at a large size in .p-num
+      // and would reflow measurably on font-swap). The preloader's
+      // ~2s runtime usually gives web fonts enough time to load, but
+      // that's an implicit, not-guaranteed proxy — document.fonts.ready
+      // is the actual signal, so the refresh explicitly waits on it
+      // rather than assuming the preloader was long enough.
+      if (document.fonts && document.fonts.ready){
+        document.fonts.ready.then(function(){ ScrollTrigger.refresh(); });
+      } else {
+        ScrollTrigger.refresh();
+      }
+    });
+  });
+
+})();
+</script>
 </body>
 </html>
