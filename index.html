@@ -554,9 +554,10 @@ nav{
 }
 .protocol-track{
   display:flex;
+  flex-wrap:nowrap;
+  width:max-content; /* This is the magic line that fixes the GSAP math */
   will-change:transform;
   padding-left:clamp(1.25rem,4vw,2.5rem);
-  flex-grow:0;
 }
 .protocol-panel{
   flex:0 0 auto;
@@ -1783,7 +1784,7 @@ a:focus-visible,button:focus-visible{
         if (isCoarse) return;
         var rotX = (py-0.5) * -8;
         var rotY = (px-0.5) * 8;
-        var pullX = (px-0.5) * 10;
+        var pullX = (px-0.5) * -10;
         var pullY = (py-0.5) * 10;
         gsap.to(el, {
           rotateX:rotX, rotateY:rotY,
@@ -1800,7 +1801,7 @@ a:focus-visible,button:focus-visible{
     });
   }
 
-  /* ============================================================
+ /* ============================================================
      8. GSAP SCROLL ANIMATIONS — reveals, parallax, marquee
      ============================================================ */
   function initScrollAnims(){
@@ -1808,17 +1809,6 @@ a:focus-visible,button:focus-visible{
 
     /* ----------------------------------------------------------
        SECTION MASKING — clip-path unmask, Hero → Index section.
-       The closed state is added as a class right here, immediately
-       before GSAP takes over animating it — see the CSS comment on
-       .index-section.mask-ready for why this order matters (no-JS
-       fallback stays fully visible instead of stuck clipped).
-       scrub binds the mask's open/close progress directly and
-       bidirectionally to scroll position: scrolling down opens it,
-       scrolling back up smoothly re-closes it in step with the
-       scrollbar, matching motion exactly rather than firing as a
-       one-shot animation. (toggleActions has no effect once scrub
-       is set — scrub is itself the continuous progress binding, so
-       it isn't included here.)
        ---------------------------------------------------------- */
     var maskSection = document.getElementById("work");
     if (maskSection){
@@ -1839,58 +1829,38 @@ a:focus-visible,button:focus-visible{
     }
 
     /* ----------------------------------------------------------
-       HORIZONTAL PINNING — The Protocol section.
-       Deliberately desktop/hover-only (isCoarse check below), matching
-       the CSS media query `(max-width:900px), (hover:none)` that
-       already collapses .protocol-track back to a plain vertical
-       stack for touch devices. Forcing horizontal movement out of a
-       vertical touch-scroll gesture is a well-documented mobile UX
-       failure — this is a deliberate scope decision stated here, not
-       a technical shortfall. Touch users get the same three panels,
-       same copy, just read top-to-bottom instead of pinned-horizontal.
-
-       Pin distance is computed from the track's actual rendered
-       width, not a guessed/hardcoded pixel value — .protocol-panel
-       widths are set in CSS via min(640px,86vw), which varies by
-       viewport, so scrollWidth must be measured live after layout,
-       and re-measured on resize (see ScrollTrigger.refresh() call in
-       the resize handler below — a stale pin distance from a resize
-       that changed panel width would either strand the last panel
-       off-screen or leave dead scroll distance after it).
+       BULLETPROOF HORIZONTAL PINNING — The Protocol section.
        ---------------------------------------------------------- */
-    if (!isCoarse){
+    if (window.innerWidth > 900) {
       var pinTarget = document.getElementById("protocolPinTarget");
-      var track = document.getElementById("protocolTrack");
+      var protocolTrack = document.getElementById("protocolTrack");
 
-      if (pinTarget && track){
-        var getScrollDistance = function(){
-          // How far the track must translate left so its final panel's
-          // right edge reaches the viewport's right edge. If the track
-          // is already narrower than the viewport (very wide screens,
-          // short content), this is 0 or negative — clamped to 0 so
-          // ScrollTrigger never gets a negative pin duration.
-          return Math.max(0, track.scrollWidth - window.innerWidth);
-        };
+      if (pinTarget && protocolTrack) {
+        
+        // Calculate the exact distance to slide left
+        function getScrollAmount() {
+          var trackWidth = protocolTrack.scrollWidth;
+          var windowWidth = window.innerWidth;
+          return -(trackWidth - windowWidth);
+        }
 
-        var protocolST = ScrollTrigger.create({
-          trigger: pinTarget,
-          start: "top top",
-          end: function(){ return "+=" + getScrollDistance(); },
-          pin: true,
-          scrub: 0.8,
-          invalidateOnRefresh: true, // recompute end/positions on resize
-          onUpdate: function(self){
-            gsap.set(track, { x: -getScrollDistance() * self.progress });
-          }
+        // Create the slide animation
+        var slideTween = gsap.to(protocolTrack, {
+          x: getScrollAmount,
+          ease: "none"
         });
 
-        // getScrollDistance() depends on window width; a resize can
-        // change it (panel width is min(640px,86vw)). invalidateOnRefresh
-        // handles ScrollTrigger's own internal start/end recalculation,
-        // but the explicit refresh call on resize is what actually
-        // triggers that recalculation to run — invalidateOnRefresh alone
-        // only marks it as needing to happen on the NEXT refresh, it
-        // does not schedule one itself.
+        // Bind the animation to the scroll action
+        ScrollTrigger.create({
+          trigger: pinTarget,
+          start: "top top",
+          end: () => "+=" + (protocolTrack.scrollWidth - window.innerWidth),
+          pin: true,
+          animation: slideTween,
+          scrub: 1, // Smooth dragging
+          invalidateOnRefresh: true
+        });
+
         window.addEventListener("resize", function(){
           ScrollTrigger.refresh();
         });
@@ -1898,16 +1868,7 @@ a:focus-visible,button:focus-visible{
     }
 
     /* ----------------------------------------------------------
-       REVEAL-UP — the generic fade-up-on-scroll used across every
-       section (hero desc, section heads, arsenal rows, telemetry
-       cells, contact block, etc.). This loop was inadvertently
-       dropped during an earlier edit to this function and is
-       restored here. Its absence did not throw any error — a
-       missing forEach doesn't break JS syntax — so it went
-       undetected by syntax checks alone; caught only by directly
-       auditing which .reveal-up elements actually had a driving
-       animation, which is why that audit is worth doing explicitly
-       rather than trusting "it parses" as "it works."
+       REVEAL-UP — the generic fade-up-on-scroll
        ---------------------------------------------------------- */
     gsap.utils.toArray(".reveal-up").forEach(function(el){
       gsap.to(el, {
@@ -1916,7 +1877,6 @@ a:focus-visible,button:focus-visible{
         scrollTrigger:{ trigger:el, start:"top 88%" }
       });
     });
-
 
     gsap.utils.toArray(".module").forEach(function(el, i){
       gsap.set(el, {opacity:0, y:50});
@@ -1943,20 +1903,12 @@ a:focus-visible,button:focus-visible{
       });
     });
 
-    // Manifesto — scrubbed word-by-word fill. Words start dim (see
-    // .manifesto-text .m-word base state in CSS) and progressively
-    // reach full color in reading order as the user scrolls; a single
-    // GSAP timeline with a staggered .to() is bound to a scrubbed
-    // ScrollTrigger, so the whole staggered sequence's playhead
-    // tracks scroll position directly — not a series of independent
-    // per-word triggers, which would fire based on each word's own
-    // viewport position rather than one continuous scroll-bound fill.
+    // Manifesto — scrubbed word-by-word fill.
     var manifestoEl = document.getElementById("manifestoText");
     if (manifestoEl){
       var manifestoWords = splitWords(manifestoEl);
 
       if (reduceMotion){
-        // Full color immediately, no scrubbed motion.
         manifestoWords.forEach(function(w, i){
           w.style.color = (i === 3 || i >= 7) ? "var(--accent-2)" : "var(--ink)";
           w.style.opacity = "1";
@@ -1971,31 +1923,27 @@ a:focus-visible,button:focus-visible{
           }
         });
         manifestoWords.forEach(function(word, i){
-          // Word index 3 = "unglamorous"; indices 7-10 = "so the rest
-          // works." — the same two accent phrases the previous static
-          // markup hand-designated, now driven by index rather than a
-          // hardcoded span, since the text is split programmatically.
           var isAccentWord = (i === 3 || i >= 7);
           fillTl.to(word, {
             color: isAccentWord ? "#a594f0" : "#f4f4f5",
             opacity: 1,
             ease: "none"
-          }, i * 0.9); // explicit position on the timeline = the "stagger",
-                       // spaced so the fill reads word-by-word rather than
-                       // all words racing to completion at once
+          }, i * 0.9); 
         });
       }
     }
 
     // Marquee infinite scroll
-    var track = document.getElementById("marqueeTrack");
-    var trackWidth = track.scrollWidth / 2;
-    gsap.to(track, {
-      x: -trackWidth,
-      duration: 22,
-      ease:"none",
-      repeat:-1
-    });
+    var marqueeTrack = document.getElementById("marqueeTrack");
+    if (marqueeTrack) {
+        var trackWidth = marqueeTrack.scrollWidth / 2;
+        gsap.to(marqueeTrack, {
+          x: -trackWidth,
+          duration: 22,
+          ease:"none",
+          repeat:-1
+        });
+    }
 
     // Hero parallax fade on scroll past
     gsap.to(".hero-title", {
@@ -2010,6 +1958,8 @@ a:focus-visible,button:focus-visible{
       }
     });
   }
+
+
 
   /* ============================================================
      9. HERO ENTRANCE TIMELINE
