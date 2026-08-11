@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy | Vector Workflows</title>
-<meta name="description" content="How Vector Workflows handles your data across every product we build — what's collected, why, and how to delete it.">
+<title>Terms of Service | Vector Workflows</title>
+<meta name="description" content="The terms that govern use of any Vector Workflows product — what we provide, what you're responsible for, and how the relationship works.">
 
 <link rel="icon" type="image/png" href="../site_logo.png">
 
@@ -15,12 +15,8 @@
 
 <style>
 /* ============================================================
-   TOKENS — identical to the main site's system. --ink-soft is the
-   one addition: long-form legal paragraphs need higher contrast
-   than the marketing copy's --ink-dim (~3.8:1, fine for short
-   labels, too low for dense reading text). --ink-soft sits between
-   --ink and --ink-dim at ~11:1 against --void so policy text stays
-   easy to read without breaking from the palette's character.
+   TOKENS — identical to the privacy policy / main site system,
+   carried over 1:1 so this page reads as the same document family.
    ============================================================ */
 :root{
   --void:      #050505;
@@ -55,7 +51,6 @@ a{color:inherit;text-decoration:none;}
 h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:400;letter-spacing:0.01em;color:var(--ink);}
 .mono{font-family:var(--f-mono);}
 
-/* Skip link — quality-floor accessibility addition, hidden until focused */
 .skip-link{
   position:absolute; left:1rem; top:-60px;
   background:var(--accent); color:#fff;
@@ -64,21 +59,11 @@ h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:40
 }
 .skip-link:focus{top:1rem;}
 
-/* ============================================================
-   GRAIN — same tactile film texture as the main site
-   ============================================================ */
 .grain{
   position:fixed; inset:0; z-index:9990;
   pointer-events:none; opacity:0.05; mix-blend-mode:overlay;
 }
 
-/* ============================================================
-   AMBIENT GLOW — a CSS-only stand-in for the homepage's WebGL
-   fluid shader. A legal page's job is to be read quickly and
-   trusted, not to carry a full render loop, so this keeps the same
-   violet/void mood as a couple of static, blurred radial gradients
-   with a slow transform drift, instead of loading Three.js for it.
-   ============================================================ */
 .ambient-glow{
   position:fixed; inset:-15%; z-index:0; pointer-events:none;
   background:
@@ -92,10 +77,6 @@ h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:40
   100%{transform:translate(-3%,2.5%) scale(1.04);}
 }
 
-/* ============================================================
-   STATUS STRIP — identical language to the main site's instrument
-   readout: live dot, clock, UTC offset, section index, scroll %.
-   ============================================================ */
 #status-strip{
   position:fixed; top:0; left:0; right:0; z-index:500;
   display:flex; justify-content:space-between; align-items:center;
@@ -114,13 +95,6 @@ h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:40
 }
 @media (max-width:640px){ #status-strip .status-hide-mobile{display:none;} }
 
-/* ============================================================
-   NAV — same logo mark and CTA button as the main site. Given
-   solid content sits directly beneath (no full-bleed hero), the
-   bar carries a blurred backdrop here so scrolled text stays
-   legible under it; the homepage nav can stay transparent because
-   its hero is dark edge-to-edge already.
-   ============================================================ */
 nav{
   position:fixed; top:0; left:0; right:0; z-index:400;
   display:flex; justify-content:space-between; align-items:center;
@@ -143,11 +117,6 @@ nav{
 }
 .nav-cta:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);}
 
-/* ============================================================
-   PAGE HEAD — compact analogue of the homepage hero: same eyebrow
-   + stroked second-line title treatment, scaled down since this
-   page isn't a full-bleed entry point.
-   ============================================================ */
 .page-head{
   position:relative; z-index:10;
   padding:200px clamp(1.25rem,4vw,2.5rem) 60px;
@@ -172,11 +141,6 @@ nav{
   line-height:1.75;
 }
 
-/* ============================================================
-   MARQUEE — pure CSS infinite scroll (no measured-width JS needed
-   since the track holds two identical copies of the content and
-   -50% always equals exactly one copy's width).
-   ============================================================ */
 .marquee-wrap{
   position:relative; z-index:10;
   border-top:1px solid var(--line); border-bottom:1px solid var(--line);
@@ -194,9 +158,6 @@ nav{
 .marquee-track span em{font-style:normal;color:var(--accent-2);}
 @keyframes marqueeScroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
-/* ============================================================
-   POLICY SECTIONS — shared shell for every clause of the policy
-   ============================================================ */
 .policy-main{
   position:relative; z-index:10;
   max-width:1100px; margin:0 auto;
@@ -220,7 +181,7 @@ nav{
 .policy-note em{color:var(--ink); font-style:normal;}
 .policy-note:last-child{margin-bottom:0;}
 
-/* ---- non-interactive spec cards (What We Process / Your Control) ---- */
+/* ---- non-interactive spec cards ---- */
 .spec-grid{
   display:grid; grid-template-columns:repeat(2,1fr);
   gap:1px; background:var(--line); border:1px solid var(--line);
@@ -228,7 +189,7 @@ nav{
 .spec-grid.cols-3{grid-template-columns:repeat(3,1fr);}
 .spec-card{
   background:var(--surface); padding:32px;
-  display:flex; flex-direction:column; gap:14px; min-height:220px;
+  display:flex; flex-direction:column; gap:14px; min-height:200px;
 }
 .spec-card .s-index{
   font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.1em;
@@ -240,7 +201,7 @@ nav{
 @media (max-width:640px){ .spec-grid{grid-template-columns:1fr;} .spec-grid.cols-3{grid-template-columns:1fr;} }
 @media (max-width:900px){ .spec-grid.cols-3{grid-template-columns:repeat(2,1fr);} }
 
-/* ---- indexed row list (How Your Data Is Used) ---- */
+/* ---- indexed row list ---- */
 .policy-list{border-top:1px solid var(--line);}
 .policy-row{
   display:grid; grid-template-columns:2.5rem 1fr; gap:24px;
@@ -253,7 +214,7 @@ nav{
 .policy-row:hover h4{color:var(--accent-2);}
 .policy-row p{color:var(--ink-soft);font-weight:400;font-size:0.98rem;line-height:1.75;max-width:64ch;}
 
-/* ---- guarantee grid (reuses the telemetry instrument-readout language) ---- */
+/* ---- telemetry / guarantee grid ---- */
 .telemetry-grid{
   display:grid; grid-template-columns:repeat(4,1fr);
   gap:1px; background:var(--line); border:1px solid var(--line);
@@ -275,7 +236,7 @@ nav{
 @media (max-width:900px){ .telemetry-grid{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:520px){ .telemetry-grid{grid-template-columns:1fr;} }
 
-/* ---- numbered clause list (used for account-level explanations) ---- */
+/* ---- numbered clause list (Acceptable Use / Liability etc.) ---- */
 .clause-block{margin-bottom:28px;}
 .clause-block:last-child{margin-bottom:0;}
 .clause-block h4{
@@ -286,7 +247,7 @@ nav{
 .clause-block h4 .c-num{color:var(--accent-2);}
 .clause-block p{color:var(--ink-soft);font-weight:400;font-size:0.98rem;line-height:1.75;max-width:70ch;}
 
-/* ---- security badges ---- */
+/* ---- security badges (reused for entitlement / restriction tags) ---- */
 .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
 .badge{
   font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.08em;
@@ -295,6 +256,8 @@ nav{
   padding:9px 16px; display:inline-flex; align-items:center; gap:8px;
 }
 .badge i{color:var(--accent-2);}
+.badge.deny{color:#e0a0a0;}
+.badge.deny i{color:#c97f7f;}
 
 /* ---- contact card ---- */
 .contact-card{
@@ -330,7 +293,7 @@ nav{
   color:var(--ink-dim); margin-top:8px;
 }
 
-/* ---- cross-link card to Terms of Service ---- */
+/* ---- cross-link card to Privacy Policy ---- */
 .crosslink-card{
   display:flex; align-items:center; justify-content:space-between; gap:24px;
   background:var(--surface); border:1px solid var(--line);
@@ -351,9 +314,6 @@ nav{
 }
 .crosslink-card .cl-arrow:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);}
 
-/* ============================================================
-   FOOTER — identical to the main site
-   ============================================================ */
 footer{
   position:relative; z-index:10;
   padding:32px clamp(1.25rem,4vw,2.5rem);
@@ -366,9 +326,6 @@ footer a{transition:color .3s ease;}
 footer a:hover{color:var(--accent-2);}
 footer .current{color:var(--accent-2);}
 
-/* ============================================================
-   REVEAL UTILITY
-   ============================================================ */
 .reveal-up{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease;}
 .reveal-up.is-visible{opacity:1;transform:translateY(0);}
 
@@ -412,221 +369,209 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
 
 <header class="page-head" data-section-name="Overview">
   <div class="page-eyebrow">Legal — Effective Jul 31, 2026</div>
-  <h1>Privacy &amp;<br><span class="stroke">Transparency.</span></h1>
-  <p class="page-lede">This policy explains what any product, bot, or workflow built by Vector Workflows collects, why, and how you stay in control of it — one policy, applied consistently across everything we ship.</p>
+  <h1>Terms of<br><span class="stroke">Service.</span></h1>
+  <p class="page-lede">These terms govern your use of any product, bot, or workflow built and operated by Vector Workflows. One agreement, applied consistently across everything we ship — so you never have to read a separate policy for each tool.</p>
 </header>
 
 <div class="marquee-wrap">
   <div class="marquee-track">
-    <span>MINIMUM DATA ONLY <em>/</em> ZERO AD SALES <em>/</em> ZERO AI TRAINING <em>/</em> ZERO DATA SALES <em>/</em> INSTANT DELETION <em>/</em></span>
-    <span>MINIMUM DATA ONLY <em>/</em> ZERO AD SALES <em>/</em> ZERO AI TRAINING <em>/</em> ZERO DATA SALES <em>/</em> INSTANT DELETION <em>/</em></span>
+    <span>ONE AGREEMENT, ALL PRODUCTS <em>/</em> NO HIDDEN FEES <em>/</em> CANCEL ANYTIME <em>/</em> YOUR DATA, YOUR RULES <em>/</em> PLAIN-LANGUAGE TERMS <em>/</em></span>
+    <span>ONE AGREEMENT, ALL PRODUCTS <em>/</em> NO HIDDEN FEES <em>/</em> CANCEL ANYTIME <em>/</em> YOUR DATA, YOUR RULES <em>/</em> PLAIN-LANGUAGE TERMS <em>/</em></span>
   </div>
 </div>
 
 <main id="main" class="policy-main">
 
-  <section class="policy-section" data-section-name="Scope">
+  <section class="policy-section" data-section-name="Agreement">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 01 — Scope</span>
-      <h2>What This<br>Policy Covers</h2>
+      <span class="eyebrow">Clause 01 — Agreement</span>
+      <h2>What This<br>Agreement Covers</h2>
     </div>
-    <p class="policy-note reveal-up">This Privacy Policy applies to every product, bot, integration, or workflow published under the Vector Workflows name — current and future — collectively referred to here as our "Services." <em>Rather than drafting a fresh policy per tool, one consistent standard governs how we handle data everywhere.</em></p>
+    <p class="policy-note reveal-up">These Terms of Service ("Terms") apply to every product, bot, integration, or workflow published under the Vector Workflows name — current and future — collectively referred to here as our "Services." <em>By connecting an account, messaging a bot, or otherwise using any Service, you agree to these Terms.</em></p>
 
     <div class="spec-grid reveal-up">
       <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-layer-group"></i>S.01 — CONSISTENCY</span>
-        <h3>One Standard, Every Product</h3>
-        <p>Whatever Service you connect to — today or one we launch later — the same collection principles, guarantees, and deletion rights apply. Where a Service touches something genuinely specific, we'll note it plainly inside that Service itself.</p>
+        <span class="s-index"><i class="fa-solid fa-layer-group"></i>A.01 — SCOPE</span>
+        <h3>One Set of Terms</h3>
+        <p>Rather than drafting a fresh agreement per tool, these Terms apply uniformly across the Vector Workflows catalog. Individual Services may publish a short supplementary notice for anything genuinely specific to that product, but the core rules here always hold.</p>
       </div>
       <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-hand"></i>S.02 — MINIMUM NECESSARY</span>
-        <h3>Only What's Functionally Required</h3>
-        <p>Every Service is built around a simple rule: request only the access, credentials, or identifiers required to do the specific job it exists to do — never more.</p>
+        <span class="s-index"><i class="fa-solid fa-file-signature"></i>A.02 — ACCEPTANCE</span>
+        <h3>How You Accept</h3>
+        <p>Authorizing a Service through OAuth, starting a conversation with a bot, or otherwise actively using a Service constitutes acceptance. If you don't agree, simply don't connect or continue using it.</p>
       </div>
     </div>
+    <p class="policy-note reveal-up" style="margin-top:28px;margin-bottom:0;"><em>You must be at least 18 years old, or the age of legal majority in your jurisdiction, to use any Vector Workflows Service.</em></p>
   </section>
 
-  <section class="policy-section" data-section-name="Data Collected">
+  <section class="policy-section" data-section-name="Using the Services">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 02 — Collection</span>
-      <h2>What Information<br>We Process</h2>
+      <span class="eyebrow">Clause 02 — Use</span>
+      <h2>Using Our<br>Services</h2>
     </div>
-    <p class="policy-note reveal-up">Across our Services, the categories of data we handle generally fall into a few functional groups — <em>always the minimum required to operate.</em></p>
-
-    <div class="spec-grid reveal-up">
-      <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-key"></i>D.01 — CREDENTIALS</span>
-        <h3>Authorization Tokens</h3>
-        <p>Where a Service connects to a platform you already use — a calendar, a messaging app, a productivity tool — we store the secure OAuth or API tokens needed to perform the specific actions that Service is designed for, and nothing beyond that scope.</p>
-      </div>
-      <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-id-badge"></i>D.02 — IDENTIFIERS</span>
-        <h3>Account &amp; Platform IDs</h3>
-        <p>A platform-issued identifier (such as a messaging user ID) and the timestamps of your interactions with a Service, so it knows who to respond to and when.</p>
-      </div>
-      <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-sliders"></i>D.03 — PREFERENCES</span>
-        <h3>Configuration &amp; Settings</h3>
-        <p>Any preferences or settings you explicitly configure within a Service, so it behaves the way you've set it up to.</p>
-      </div>
-      <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-envelope"></i>D.04 — SUPPORT CONTACT</span>
-        <h3>Contact Details You Provide</h3>
-        <p>If you reach out for support, the email address or contact information you send us, used only to respond to that request.</p>
-      </div>
-    </div>
-    <p class="policy-note reveal-up" style="margin-top:28px;margin-bottom:0;"><em>We never request access to contacts, emails, location, or any connected platform's data beyond what a given Service explicitly needs to function.</em></p>
-  </section>
-
-  <section class="policy-section" data-section-name="Data Usage">
-    <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 03 — Usage</span>
-      <h2>How Your Data<br>Is Used</h2>
-    </div>
-    <p class="policy-note reveal-up">Every piece of data processed has a single, functional purpose tied directly to the Service you're using.</p>
+    <p class="policy-note reveal-up">We build tools meant to run quietly and reliably in the background of your day. In return, we ask for a few basics.</p>
 
     <div class="policy-list reveal-up">
       <div class="policy-row">
         <span class="p-index">01</span>
         <div>
-          <h4>Operating the Service You've Connected</h4>
-          <p>Reading and writing only the specific data a Service needs to carry out the function you've enabled it for — nothing beyond that stated purpose.</p>
+          <h4>Accurate Account Information</h4>
+          <p>Any account, integration, or credential you connect must belong to you, and any information you provide us must be accurate and kept up to date.</p>
         </div>
       </div>
       <div class="policy-row">
         <span class="p-index">02</span>
         <div>
-          <h4>Session Management</h4>
-          <p>Storing encrypted access tokens so a Service can keep working on your behalf without forcing you to re-authenticate constantly.</p>
+          <h4>Personal, Non-Commercial Use</h4>
+          <p>Unless we've agreed otherwise in writing, our Services are provided for your own personal use — not for resale, sublicensing, or operating a competing product on top of ours.</p>
         </div>
       </div>
       <div class="policy-row">
         <span class="p-index">03</span>
         <div>
-          <h4>Support &amp; Troubleshooting</h4>
-          <p>Using account identifiers and interaction timestamps to diagnose issues if something isn't working as expected, or if you reach out for help.</p>
+          <h4>Respecting Rate Limits &amp; Fair Use</h4>
+          <p>Services that depend on third-party APIs (like Google or Telegram) inherit those platforms' rate limits. Deliberately circumventing throttling, scraping, or overloading a Service isn't permitted.</p>
         </div>
       </div>
       <div class="policy-row">
         <span class="p-index">04</span>
         <div>
-          <h4>Keeping the Service Reliable</h4>
-          <p>Basic operational logging — errors, uptime, request volume — used to keep a Service stable and secure, never to build a profile of you.</p>
+          <h4>One Account, One Person</h4>
+          <p>Credentials and sessions are tied to you individually. Sharing login access or session tokens with others isn't covered under these Terms and may result in suspension.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Guarantees">
+  <section class="policy-section" data-section-name="Acceptable Use">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 04 — Limited Use</span>
-      <h2>Our Data<br>Guarantees</h2>
+      <span class="eyebrow">Clause 03 — Boundaries</span>
+      <h2>Acceptable<br>Use</h2>
     </div>
-    <p class="policy-note reveal-up">Across every Service we operate, the same guarantees hold. Where a Service connects to Google, this also means we strictly comply with the Google API Services User Data Policy, including its Limited Use requirements.</p>
+    <p class="policy-note reveal-up">Our Services are built to be genuinely useful — automating routines, saving you time, keeping your data intact. In using them, you agree not to:</p>
+
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">01</span> Misuse Connected Platforms</h4>
+      <p>Use any Vector Workflows Service to violate the terms of a connected platform — including Google's or Telegram's own policies — or to send spam, unsolicited messages, or automated abuse through those platforms.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">02</span> Reverse Engineer or Extract Source</h4>
+      <p>Attempt to reverse-engineer, decompile, or extract the underlying logic, models, or source code of any Service, except where applicable law expressly permits it.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">03</span> Interfere With Infrastructure</h4>
+      <p>Probe, disrupt, or attempt unauthorized access to the servers, databases, or infrastructure that power our Services.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">04</span> Use for Unlawful Purposes</h4>
+      <p>Use any Service in a manner that violates applicable law, infringes on the rights of others, or facilitates harmful, fraudulent, or deceptive activity.</p>
+    </div>
+
+    <div class="badge-row reveal-up">
+      <span class="badge"><i class="fa-solid fa-check"></i>Personal automation — welcome</span>
+      <span class="badge"><i class="fa-solid fa-check"></i>Reasonable API usage — welcome</span>
+      <span class="badge deny"><i class="fa-solid fa-xmark"></i>Spam or abuse — not permitted</span>
+      <span class="badge deny"><i class="fa-solid fa-xmark"></i>Reselling access — not permitted</span>
+    </div>
+  </section>
+
+  <section class="policy-section" data-section-name="Data & Third Parties">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 04 — Data</span>
+      <h2>Your Data &amp;<br>Third-Party Platforms</h2>
+    </div>
+    <p class="policy-note reveal-up">Our Services typically operate by connecting to platforms you already use — a calendar, a messaging app, a productivity tool. What we collect and how it's handled is governed by our <a href="../privacy/" style="color:var(--accent-2);">Privacy Policy</a>, but a few points belong here as well.</p>
 
     <div class="telemetry-grid reveal-up">
       <div class="telemetry-cell">
-        <span class="t-label">Advertising</span>
-        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
-        <p>Your data is never used to serve ads, build ad profiles, or target marketing.</p>
+        <span class="t-label">Data Ownership</span>
+        <div class="t-value"><span class="t-live-dot"></span>Yours</div>
+        <p>You retain ownership of any data you connect to or generate through our Services.</p>
       </div>
       <div class="telemetry-cell">
-        <span class="t-label">Data Sales</span>
-        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
-        <p>We do not sell, rent, trade, or transfer your data to any third party.</p>
+        <span class="t-label">Third-Party Terms</span>
+        <div class="t-value"><span class="t-live-dot"></span>Apply</div>
+        <p>Connected platforms (Google, Telegram, etc.) have their own terms, which continue to apply alongside ours.</p>
       </div>
       <div class="telemetry-cell">
-        <span class="t-label">AI Model Training</span>
-        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
-        <p>Your personal data is never fed into AI or machine learning models.</p>
+        <span class="t-label">Revocation</span>
+        <div class="t-value"><span class="t-live-dot"></span>Anytime</div>
+        <p>You may disconnect any Service or revoke access at any time, without needing to justify why.</p>
       </div>
       <div class="telemetry-cell">
-        <span class="t-label">Human Inspection</span>
-        <div class="t-value"><span class="t-live-dot"></span>Zero</div>
-        <p>No member of the Vector Workflows team reads your data without your explicit written permission.</p>
+        <span class="t-label">Deletion</span>
+        <div class="t-value"><span class="t-live-dot"></span>On request</div>
+        <p>Deleting your account or connection removes your stored credentials and session data from our systems.</p>
       </div>
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Sharing">
+  <section class="policy-section" data-section-name="Availability & Changes">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 05 — Sharing</span>
-      <h2>Third Parties &amp;<br>Disclosure</h2>
+      <span class="eyebrow">Clause 05 — Availability</span>
+      <h2>Availability,<br>Changes &amp; Fees</h2>
     </div>
 
     <div class="clause-block reveal-up">
-      <h4><span class="c-num">01</span> Connected Platforms</h4>
-      <p>To function, a Service may exchange data with the platform you've connected it to (such as Google or Telegram), strictly limited to the actions you've authorized. That platform's own privacy policy governs its handling of your data on its end.</p>
+      <h4><span class="c-num">01</span> Service Availability</h4>
+      <p>We work to keep our Services reliable, but we don't guarantee uninterrupted or error-free operation. Downstream outages on connected platforms (Google, Telegram, or others) are outside our control and may affect functionality temporarily.</p>
     </div>
     <div class="clause-block reveal-up">
-      <h4><span class="c-num">02</span> Service Providers</h4>
-      <p>We may use infrastructure providers (hosting, encrypted storage) to operate our Services. These providers process data strictly on our behalf and are not permitted to use it for their own purposes.</p>
+      <h4><span class="c-num">02</span> Changes to a Service</h4>
+      <p>We may update, modify, or discontinue a feature or an entire Service at our discretion. Where a change is material, we'll make reasonable efforts to notify active users in advance.</p>
     </div>
     <div class="clause-block reveal-up">
-      <h4><span class="c-num">03</span> Legal Requirements</h4>
-      <p>We may disclose limited data if required to comply with applicable law, a valid legal process, or to protect the rights, safety, or property of Vector Workflows or others.</p>
+      <h4><span class="c-num">03</span> Fees, If Any</h4>
+      <p>Many Vector Workflows Services are offered free of charge. Where a Service involves a fee or subscription, the pricing, billing cadence, and cancellation terms will be clearly presented before you're charged — nothing billed by surprise.</p>
     </div>
     <div class="clause-block reveal-up">
-      <h4><span class="c-num">04</span> Never Otherwise</h4>
-      <p>Outside of the above, your data is not shared, sold, or disclosed to any third party.</p>
+      <h4><span class="c-num">04</span> Changes to These Terms</h4>
+      <p>We may revise these Terms from time to time. Material changes will be reflected by an updated effective date on this page, and where practical, communicated directly. Continued use of a Service after changes take effect constitutes acceptance of the revised Terms.</p>
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Your Control">
+  <section class="policy-section" data-section-name="Liability">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 06 — Deletion</span>
-      <h2>You Stay<br>In Control</h2>
+      <span class="eyebrow">Clause 06 — Liability</span>
+      <h2>Disclaimers &amp;<br>Limitation of Liability</h2>
     </div>
-    <p class="policy-note reveal-up">You can disconnect any Service and wipe your data from our systems whenever you choose.</p>
 
-    <div class="spec-grid reveal-up">
-      <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-trash-can"></i>C.01 — IN-SERVICE</span>
-        <h3>One-Click Wipe</h3>
-        <p>Use the built-in delete or disconnect option inside any Service's own interface. This immediately purges your stored tokens and session credentials from our servers.</p>
-      </div>
-      <div class="spec-card">
-        <span class="s-index"><i class="fa-solid fa-shield-halved"></i>C.02 — PLATFORM</span>
-        <h3>Platform Security Settings</h3>
-        <p>You can also revoke access directly from the connected platform's own security settings — for example, your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener" style="color:var(--accent-2);">Google Security Dashboard</a> — at any time.</p>
-      </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">01</span> Provided "As Is"</h4>
+      <p>Our Services are provided on an "as is" and "as available" basis, without warranties of any kind, express or implied, including — to the extent permitted by law — any implied warranty of merchantability, fitness for a particular purpose, or non-infringement.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">02</span> Limitation of Liability</h4>
+      <p>To the maximum extent permitted by applicable law, Vector Workflows will not be liable for any indirect, incidental, special, or consequential damages arising from your use of, or inability to use, a Service — including missed events, scheduling errors, or data loss caused by a connected third-party platform.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">03</span> Your Responsibility</h4>
+      <p>You remain responsible for reviewing anything a Service writes to your calendar, messages, or connected accounts on your behalf, particularly for time-sensitive or high-stakes commitments.</p>
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Security">
+  <section class="policy-section" data-section-name="Termination">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 07 — Security</span>
-      <h2>Encryption</h2>
+      <span class="eyebrow">Clause 07 — Termination</span>
+      <h2>Suspension &amp;<br>Termination</h2>
     </div>
-    <p class="policy-note reveal-up" style="margin-bottom:0;">All communication between a connected platform, our servers, and any third-party API is protected using industry-standard encryption in transit. Your secret tokens are stored in isolated environment variables and encrypted datastores, regardless of which Service you're using.</p>
-    <div class="badge-row reveal-up">
-      <span class="badge"><i class="fa-solid fa-lock"></i>TLS / HTTPS in transit</span>
-      <span class="badge"><i class="fa-solid fa-database"></i>Encrypted at rest</span>
-    </div>
+    <p class="policy-note reveal-up">You can stop using any Service and disconnect your data at any time — see our <a href="../privacy/" style="color:var(--accent-2);">Privacy Policy</a> for exact deletion steps. We may suspend or terminate access to a Service if these Terms are violated, if required by law, or if a connected platform revokes the underlying API access that a Service depends on. Where reasonably possible, we'll aim to give notice first.</p>
   </section>
 
-  <section class="policy-section" data-section-name="Children">
+  <section class="policy-section" data-section-name="Governing Law">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 08 — Eligibility</span>
-      <h2>Children's<br>Privacy</h2>
+      <span class="eyebrow">Clause 08 — Governing Law</span>
+      <h2>Governing<br>Law</h2>
     </div>
-    <p class="policy-note reveal-up" style="margin-bottom:0;">Our Services are not directed at children, and we do not knowingly collect data from anyone under the age of 18, or the age of legal majority in their jurisdiction. If you believe a child has provided us data, contact us and we'll remove it.</p>
-  </section>
-
-  <section class="policy-section" data-section-name="Changes">
-    <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 09 — Updates</span>
-      <h2>Changes To<br>This Policy</h2>
-    </div>
-    <p class="policy-note reveal-up" style="margin-bottom:0;">We may revise this policy from time to time as our Services evolve. Material changes will be reflected by an updated effective date on this page, and where practical, communicated directly. Continued use of a Service after changes take effect constitutes acceptance of the revised policy.</p>
+    <p class="policy-note reveal-up" style="margin-bottom:0;">These Terms are governed by applicable law without regard to conflict-of-law principles, and any dispute arising from them will be handled in good faith directly with our team before any formal proceeding, wherever possible.</p>
   </section>
 
   <section class="policy-section" data-section-name="Contact">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 10 — Contact</span>
+      <span class="eyebrow">Clause 09 — Contact</span>
       <h2>Questions or<br>Support?</h2>
     </div>
-    <p class="policy-note reveal-up">If you ever have questions about how your data is handled, reach out directly.</p>
+    <p class="policy-note reveal-up">If anything here is unclear, reach out directly — we'd rather explain it plainly than leave it ambiguous.</p>
 
     <div class="contact-card reveal-up">
       <p><strong>Studio:</strong> Vector Workflows</p>
@@ -644,9 +589,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     <div class="crosslink-card reveal-up" style="margin-top:56px;">
       <div class="cl-text">
         <span class="cl-label">Related</span>
-        <span class="cl-title">Terms of Service</span>
+        <span class="cl-title">Privacy Policy</span>
       </div>
-      <a href="../terms/" class="cl-arrow">
+      <a href="../privacy/" class="cl-arrow">
         Read it <i class="fa-solid fa-arrow-up" style="transform:rotate(45deg);"></i>
       </a>
     </div>
@@ -659,9 +604,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
   <span>
     <a href="../">Home</a>
     &nbsp;·&nbsp;
-    <span class="current">Privacy Policy</span>
+    <a href="../privacy/">Privacy Policy</a>
     &nbsp;·&nbsp;
-    <a href="../terms/">Terms of Service</a>
+    <span class="current">Terms of Service</span>
   </span>
 </footer>
 
