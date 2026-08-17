@@ -457,7 +457,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <div class="spec-card">
         <span class="s-index"><i class="fa-solid fa-key"></i>D.01 — CREDENTIALS</span>
         <h3>Authorization Tokens</h3>
-        <p>Where a Service connects to a platform you already use — a calendar, a messaging app, a productivity tool — we store the secure OAuth or API tokens needed to perform the specific actions that Service is designed for, and nothing beyond that scope.</p>
+        <p>Where a Service connects to a platform you already use — a calendar, a messaging app, a productivity tool — we store the secure OAuth or API tokens needed to perform the specific actions that Service is designed for, and nothing beyond that scope. <em>For Google Calendar specifically, see Clause 04 for the exact data accessed.</em></p>
       </div>
       <div class="spec-card">
         <span class="s-index"><i class="fa-solid fa-id-badge"></i>D.02 — IDENTIFIERS</span>
@@ -522,7 +522,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <span class="eyebrow">Clause 04 — Limited Use</span>
       <h2>Our Data<br>Guarantees</h2>
     </div>
-    <p class="policy-note reveal-up">Across every Service we operate, the same guarantees hold. Where a Service connects to Google, this also means we strictly comply with the Google API Services User Data Policy, including its Limited Use requirements.</p>
+    <p class="policy-note reveal-up">Across every Service we operate, the same guarantees hold. Where a Service connects to Google, this also means we strictly comply with the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener" style="color:var(--accent-2);">Google API Services User Data Policy</a>, including its Limited Use requirements.</p>
 
     <div class="telemetry-grid reveal-up">
       <div class="telemetry-cell">
@@ -544,6 +544,14 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
         <span class="t-label">Human Inspection</span>
         <div class="t-value"><span class="t-live-dot"></span>Zero</div>
         <p>No member of the Vector Workflows team reads your data without your explicit written permission.</p>
+      </div>
+    </div>
+
+    <div class="spec-grid reveal-up" style="margin-top:1px;">
+      <div class="spec-card" style="grid-column:1 / -1;">
+        <span class="s-index"><i class="fa-brands fa-google"></i>G.01 — CONNECTED SERVICES</span>
+        <h3>Google Workspace Integrations</h3>
+        <p>Where a Service connects to Google Calendar on your behalf, the Google user data it accesses is limited to: calendar event details (titles and descriptions), event date and time, and calendar schedule availability — used solely to read, create, update, or reschedule the specific events that Service is built to manage. This data is never used for advertising, is never used to train AI or machine learning models, and is never sold or shared beyond what's needed to operate that Service. Our use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener" style="color:var(--accent-2);">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
       </div>
     </div>
   </section>
