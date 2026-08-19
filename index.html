@@ -1127,6 +1127,121 @@
     }
 
     /* ============================================================
+   WHATSAPP FLOAT — persistent, low-friction second contact channel.
+   Native to the void-black/violet system rather than a bolted-on
+   green widget. Entrance is handled in JS after the preloader
+   completes (see BOOT SEQUENCE), so it stays hidden here by default.
+   ============================================================ */
+    .wa-float {
+      position: fixed;
+      right: clamp(1.25rem, 4vw, 2.5rem);
+      bottom: clamp(1.1rem, 3.5vw, 2rem);
+      z-index: 450;
+      display: inline-flex;
+      align-items: center;
+      padding: 13px 22px 13px 18px;
+      background: rgba(12, 10, 16, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      font-family: var(--f-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: border-color .35s ease, box-shadow .35s ease;
+    }
+
+    .wa-float::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateY(101%);
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+      z-index: -1;
+    }
+
+    .wa-float:hover {
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 30px rgba(111, 89, 204, 0.28);
+    }
+
+    .wa-float:hover::before {
+      transform: translateY(0);
+    }
+
+    .wa-float-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      flex-shrink: 0;
+      margin-right: 10px;
+      background: var(--accent-2);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-2);
+      animation: waPulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes waPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.35;
+      }
+    }
+
+    .wa-float i {
+      font-size: 0.95rem;
+      margin-right: 10px;
+      color: var(--accent-2);
+      transition: color .35s ease, transform .4s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .wa-float:hover i {
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .wa-float-text {
+      white-space: nowrap;
+    }
+
+    @media (max-width:640px) {
+      .wa-float {
+        padding: 12px 14px;
+      }
+
+      .wa-float i {
+        margin-right: 0;
+      }
+
+      .wa-float-text {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wa-float {
+        opacity: 1;
+        transform: none;
+      }
+
+      .wa-float-dot {
+        animation: none;
+      }
+    }
+
+    /* ============================================================
    FOCUS STATE — accessibility floor
    ============================================================ */
     a:focus-visible,
@@ -1401,6 +1516,17 @@
     </a>
     <a href="#contact" class="nav-cta" data-cursor="link"><span data-magnetic-text>Start a Conversation</span></a>
   </nav>
+
+  <!-- WHATSAPP — persistent, low-friction second contact channel -->
+  <a href="https://wa.me/919311550616?text=Hey!%20Saw%20Vector%20Workflows.%20My%20work%20mostly%20revolves%20around%20%5BApp%201%5D%20and%20%5BApp%202%5D%20%E2%80%94%20any%20obvious%20automations%20I%27m%20missing%20out%20on%3F"
+    target="_blank" rel="noopener" class="wa-float" id="waFloat" data-cursor="link"
+    aria-label="Message Vector Workflows on WhatsApp">
+    <span data-magnetic-text style="display:inline-flex; align-items:center;">
+      <span class="wa-float-dot" aria-hidden="true"></span>
+      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      <span class="wa-float-text">Message Us</span>
+    </span>
+  </a>
 
   <!-- HERO -->
   <section class="hero" data-section-name="Hero">
@@ -1717,8 +1843,13 @@
   <section id="contact" class="contact-section" data-section-name="Contact">
     <div class="contact-eyebrow reveal-up">Open Channel</div>
     <h2 class="reveal-up">Inquiries</h2>
-    <p class="reveal-up">Have a process that needs automating? Let's talk about whether we're the right fit.</p>
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=core@vectorworkflows.com&su=Project%20Inquiry&body=Hi%20there!"
+    <p class="reveal-up">
+  Have a process that needs automating? Let's talk about whether we're the right fit.<br><br><br>
+  <strong>Business Inquiry:</strong>
+  <a href="mailto:business@mydomain.com">business@mydomain.com</a>
+</p>
+
+    <a href="https://wa.me/919311550616?text=Hey!%20Saw%20Vector%20Workflows.%20My%20work%20mostly%20revolves%20around%20%5BApp%201%5D%20and%20%5BApp%202%5D%20%E2%80%94%20any%20obvious%20automations%20I%27m%20missing%20out%20on%3F"
       target="_blank" rel="noopener" class="contact-btn reveal-up" data-cursor="link">
       <span data-magnetic-text style="display:inline-flex;align-items:center;gap:14px;">
         Initialize Contact
@@ -2597,6 +2728,21 @@
       }
 
       /* ============================================================
+         WHATSAPP FLOAT — entrance, timed to land after the preloader
+         curtain clears (not mid-load) and slightly after the hero
+         copy so it doesn't compete with the headline for attention.
+         ============================================================ */
+      function showWaFloat() {
+        var el = document.getElementById("waFloat");
+        if (!el) return;
+        if (reduceMotion) {
+          gsap.set(el, { opacity: 1, y: 0 });
+          return;
+        }
+        gsap.to(el, { opacity: 1, y: 0, duration: 0.9, delay: 0.6, ease: "power4.out" });
+      }
+
+      /* ============================================================
          BOOT SEQUENCE
          ============================================================ */
       document.addEventListener("DOMContentLoaded", function () {
@@ -2608,6 +2754,7 @@
           initLenis();
           initVelocitySkew();
           playHeroEntrance();
+          showWaFloat();
           updateStatusStrip();
 
           // The Protocol's horizontal-pin distance is measured from
