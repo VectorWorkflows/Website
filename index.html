@@ -1430,6 +1430,34 @@
       color: var(--accent-2);
     }
 
+    .cs-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 28px;
+      margin-top: 24px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background-color .3s ease;
+    }
+
+    .cs-cta:hover {
+      background: var(--accent-2);
+    }
+
+    .cs-cta i {
+      transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .cs-cta:hover i {
+      transform: translateX(4px);
+    }
+
     .cs-status-badge {
       display: inline-flex;
       align-items: center;
@@ -1611,15 +1639,15 @@
           <span class="cs-label">What We Built</span>
           <h3>A Bot That Adapts Instead of Breaking</h3>
           <p>A Telegram bot that creates and dynamically reschedules Google Calendar events on request. When a task
-            needs to move, you tell the bot in plain language and it rearranges your calendar to match — adapting to
+            needs to move, you send the bot the clear and add command and it rearranges your calendar to match — adapting to
             reality instead of pretending it didn't change. No new app to learn; it lives inside Telegram.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">How It Works</span>
           <h3>Plain Language. Real Calendar Changes.</h3>
-          <p>Send a message — "push my 3pm to tomorrow morning" — and the bot parses the intent, finds the relevant
-            event, and moves it in Google Calendar. It can create new events, reschedule existing ones, and keep your
+          <p>Send a message — "Clear Day", "Add Task" — and the bot parses the intent, finds the relevant
+            event, and deletes or adds it in Google Calendar. It can create new events, reschedule existing ones, and keep your
             day coherent as things shift. The walkthrough video shows the full flow: a Miro board framing the rigid vs.
             dynamic scheduling problem, followed by a live calendar demo.</p>
         </div>
@@ -1627,9 +1655,9 @@
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
           <div class="cs-status-badge"><span class="cs-status-dot"></span>Self-initiated — in active development</div>
-          <p>This was built by the studio as a self-initiated project, not for a paying client. It's a working system —
-            the video shows it running against a real Google Calendar. We're currently testing it with real users to
-            understand how it holds up outside a controlled demo environment.</p>
+          <p>This was built by the studio as a self-initiated project initally for personal use, not for a paying client.
+            But many people still found it useful and came forward to test it after learning about it. So, we made it public for the enthusiasts to try.
+            FOR A CUSTOM BUILD PRESS "I want this".</p>
           <div class="cs-links">
             <a href="https://github.com/VectorWorkflows/Dynamic-Scheduler-Bot" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
@@ -1653,6 +1681,11 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen loading="lazy"></iframe>
           </div>
+
+          <!-- CTA Button (Scheduler) -->
+          <a href="https://tally.so/r/Y57qNv" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
+            I Want This <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
 
         
@@ -1702,8 +1735,8 @@
           <p>This is a self-initiated project — built to prove the pattern before bringing it to a client. The bot is
             complete and tested end-to-end. Like any WhatsApp Business integration, it needs to be connected to a
             dedicated business number to go live — standard setup for any client deployment, done at onboarding rather
-            than in advance for a demo. Separately, we're also building a dedicated number for Vector Workflows itself,
-            for direct client-facing use.</p>
+            than in advance for a demo. 
+            FOR A CUSTOM BUILD PRESS "I want this".</p>
           <div class="cs-links">
             <a href="https://github.com/VectorWorkflows/WA-ProjectSite-Tracker" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
@@ -1726,6 +1759,10 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen loading="lazy"></iframe>
           </div>
+          <!-- CTA Button (Tracker) -->
+          <a href="https://tally.so/r/44lzd5" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
+            I Want This <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
       </div>
     </div>
