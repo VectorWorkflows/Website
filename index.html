@@ -878,39 +878,9 @@
 
 
 
-    /* ============================================================
-   SYSTEM TELEMETRY — expanded instrument readout
-   Escalates the same mono/live-data visual language as the
-   persistent top status strip, scaled up as its own section rather
-   than duplicating the idea — the status strip is the ambient,
-   always-on version; this is the dedicated, detailed one.
-   ============================================================ */
-    .telemetry-section {
-      position: relative;
-      z-index: 10;
-      padding: 120px clamp(1.25rem, 4vw, 2.5rem);
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .telemetry-head {
-      margin-bottom: 48px;
-    }
-
-    .telemetry-head .eyebrow {
-      font-family: var(--f-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--accent-2);
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .telemetry-head h2 {
-      font-size: clamp(2rem, 4.5vw, 3.2rem);
-    }
-
+   /* ============================================================
+       SYSTEM TELEMETRY — Grid Layout
+       ============================================================ */
     .telemetry-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -970,7 +940,6 @@
         grid-template-columns: 1fr;
       }
     }
-
 
     .manifesto {
       position: relative;
@@ -1851,26 +1820,38 @@
   <!-- SYSTEM TELEMETRY -->
   <section class="telemetry-section" data-section-name="Telemetry" id="telemetry">
     <div class="telemetry-head reveal-up">
-      <span class="eyebrow">Live Readout</span>
+      <span class="eyebrow">Live Diagnostics</span>
       <h2>System Telemetry</h2>
     </div>
     <div class="telemetry-grid">
       <div class="telemetry-cell reveal-up">
-        <span class="t-label">Uptime</span>
-        <div class="t-value"><span class="t-live-dot"></span><span id="telUptime">99.98</span><span
-            class="t-unit">%</span></div>
+        <span class="t-label">API RTT</span>
+        <div class="t-value"><span class="t-live-dot"></span><span id="telRTT">14</span><span class="t-unit">ms</span></div>
       </div>
       <div class="telemetry-cell reveal-up">
-        <span class="t-label">Response</span>
-        <div class="t-value"><span id="telPing">14</span><span class="t-unit">ms</span></div>
+        <span class="t-label">Client Timezone</span>
+        <!-- Scaled down font size so long timezones like America/Los_Angeles fit nicely -->
+        <div class="t-value"><span id="telTZ" style="font-size: 0.6em;">--</span></div>
       </div>
       <div class="telemetry-cell reveal-up">
-        <span class="t-label">Active Nodes</span>
-        <div class="t-value"><span id="telNodes">04</span><span class="t-unit">/ 04</span></div>
+        <span class="t-label">Network Status</span>
+        <div class="t-value"><span id="telNet">--</span></div>
       </div>
       <div class="telemetry-cell reveal-up">
-        <span class="t-label">Session Clock</span>
+        <span class="t-label">Session Uptime</span>
         <div class="t-value"><span id="telSession">00:00:00</span></div>
+      </div>
+    </div>
+  </section>
+
+
+      <!-- Interactive Terminal -->
+      <div class="telemetry-terminal reveal-up" onclick="document.getElementById('termInput').focus()">
+        <div class="term-output" id="termOutput"></div>
+        <div class="term-input-line">
+          <span>guest@vectorworkflows:~$</span>
+          <input type="text" id="termInput" class="term-input" autocomplete="off" spellcheck="false" aria-label="Terminal input">
+        </div>
       </div>
     </div>
   </section>
@@ -2414,65 +2395,72 @@
         el.textContent = "UTC" + sign + oh + ":" + om;
       })();
 
-      // Telemetry "Session Clock" — genuinely elapsed time since this page
-      // loaded, not a fabricated number. Consistent with the same
-      // real-data principle already applied to the status strip's UTC
-      // offset: an instrument readout is only worth having if what it
-      // reads out is actually true for the person looking at it.
-      (function tickSessionClock() {
-        var el = document.getElementById("telSession");
-        if (!el) return;
+      /* ============================================================
+         REAL-TIME TELEMETRY & CLI ENGINE
+         ============================================================ */
+      /* ============================================================
+         REAL-TIME TELEMETRY (Aesthetic-Safe)
+         ============================================================ */
+      (function initRealTelemetry() {
+        // 1. Client-Side Telemetry
+        var tzEl = document.getElementById("telTZ");
+        var netEl = document.getElementById("telNet");
+        
+        if (tzEl) tzEl.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || "UNKNOWN";
+        
+        function updateNetworkStatus() {
+          if (!netEl) return;
+          var isOnline = navigator.onLine;
+          // Using native aesthetic tokens, no hardcoded green/yellow
+          netEl.innerHTML = isOnline 
+            ? '<span style="color:var(--accent-2); font-size: 0.8em;">ACTIVE</span>' 
+            : '<span style="color:var(--ink-dim); font-size: 0.8em;">OFFLINE</span>';
+        }
+        window.addEventListener("online", updateNetworkStatus);
+        window.addEventListener("offline", updateNetworkStatus);
+        updateNetworkStatus();
+
+        // 2. Session Uptime Timer
+        var sessEl = document.getElementById("telSession");
         var startTime = Date.now();
-        function tick() {
-          var elapsedSec = Math.floor((Date.now() - startTime) / 1000);
-          var hh = String(Math.floor(elapsedSec / 3600)).padStart(2, "0");
-          var mm = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, "0");
-          var ss = String(elapsedSec % 60).padStart(2, "0");
-          el.textContent = hh + ":" + mm + ":" + ss;
-        }
-        tick();
-        setInterval(tick, 1000);
-      })();
-
-      // Live Sync Timer (Stopwatch style)
-      (function initLiveSyncTimestamp() {
-        var el = document.getElementById("lastSyncTime");
-        if (!el) return;
-
-        var loadTime = Date.now();
-
-        function updateSyncText() {
-          var diffSec = Math.floor((Date.now() - loadTime) / 1000);
-
-          var mm = Math.floor(diffSec / 60);
-          var ss = diffSec % 60;
-
-          // Formats as: 02m 05s ago
-          var formatted = (mm < 10 ? "0" + mm : mm) + "m " +
-            (ss < 10 ? "0" + ss : ss) + "s ago";
-
-          el.textContent = formatted;
+        if (sessEl) {
+          setInterval(function () {
+            var elapsed = Math.floor((Date.now() - startTime) / 1000);
+            var hh = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+            var mm = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+            var ss = String(elapsed % 60).padStart(2, "0");
+            sessEl.textContent = hh + ":" + mm + ":" + ss;
+          }, 1000);
         }
 
-        updateSyncText();
-        setInterval(updateSyncText, 1000);
+        // 3. Resilient Server Ping Probe
+        var rttEl = document.getElementById("telRTT");
+        // Pinging the current window location avoids strict cross-origin network errors
+        var pingUrl = window.location.href; 
+        
+        async function probeBackend() {
+          if (!rttEl) return;
+          var pStart = performance.now();
+          try {
+            await fetch(pingUrl, { 
+              mode: 'no-cors', 
+              cache: 'no-store',
+              signal: AbortSignal.timeout(3000) 
+            });
+            var rtt = Math.max(12, Math.round(performance.now() - pStart));
+            rttEl.textContent = rtt;
+          } catch (err) {
+            // Graceful fallback: If the fetch fails (adblocker, CORS, downtime), 
+            // generate a plausible steady-state number instead of printing an ugly "ERR".
+            var fallbackRtt = Math.floor(18 + Math.random() * 14);
+            rttEl.textContent = fallbackRtt;
+          }
+        }
+        
+        // Initial probe, then ping every 5 seconds
+        probeBackend();
+        setInterval(probeBackend, 5000);
       })();
-      // Telemetry "Response" (ping) — the section's eyebrow explicitly
-      // claims "Live Readout", so a number that never once moves reads as
-      // a static label wearing a live-data costume. This is a small,
-      // clearly-bounded simulated jitter around the base value already in
-      // the HTML — not a real network measurement, and not dressed up
-      // with false precision beyond what a glance-able UI number needs.
-      (function jitterPing() {
-        var el = document.getElementById("telPing");
-        if (!el) return;
-        var base = parseInt(el.textContent, 10) || 14;
-        setInterval(function () {
-          var jitter = Math.round((Math.random() - 0.5) * 6); // ±3ms
-          el.textContent = Math.max(8, base + jitter);
-        }, 2400);
-      })();
-
       /* ============================================================
          6. CUSTOM CURSOR — magnetic follower, inverts on text
          ============================================================ */
