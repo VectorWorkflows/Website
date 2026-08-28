@@ -42,7 +42,8 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 ::selection{background:var(--accent);color:#fff;}
 
-html{background:var(--void);}
+html{background:var(--void);scroll-behavior:smooth;}
+[id]{scroll-margin-top:130px;}
 body{
   font-family:var(--f-body);
   background:var(--void);
@@ -193,6 +194,62 @@ nav{
 }
 .marquee-track span em{font-style:normal;color:var(--accent-2);}
 @keyframes marqueeScroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+/* ============================================================
+   PROJECT JUMP — pill nav that anchor-scrolls to each project's
+   own disclosures, the same way a homepage link like "/contact"
+   scrolls to a section, just scoped to this one page.
+   ============================================================ */
+.project-jump{
+  position:relative; z-index:10;
+  max-width:1100px; margin:0 auto; padding:28px clamp(1.25rem,4vw,2.5rem) 0;
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.pj-label{
+  width:100%; font-family:var(--f-mono); font-size:0.68rem; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--ink-dim); margin-bottom:4px;
+}
+.pj-pill{
+  font-family:var(--f-mono); font-size:0.72rem; letter-spacing:0.06em;
+  text-transform:uppercase; padding:10px 18px;
+  border:1px solid var(--line-strong); border-radius:100px;
+  color:var(--ink-soft); transition:border-color .3s ease, background-color .3s ease, color .3s ease;
+}
+.pj-pill:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);color:var(--ink);}
+.pj-pill i{color:var(--accent-2);margin-right:8px;font-size:0.85em;}
+
+/* ============================================================
+   APPENDIX BLOCKS — per-project disclosures, same visual language
+   as the general clauses so they read as one continuous policy.
+   ============================================================ */
+.appendix-section{background:var(--surface);}
+.appendix-tag{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--f-mono); font-size:0.68rem; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--void); background:var(--accent-2);
+  padding:6px 14px; border-radius:100px; margin-bottom:18px;
+}
+.scope-badge-row{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 4px;}
+.scope-badge{
+  font-family:var(--f-mono); font-size:0.76rem; color:var(--ink);
+  border:1px solid var(--accent); border-radius:2px; background:rgba(111,89,204,0.1);
+  padding:10px 16px; display:inline-flex; align-items:center; gap:10px; word-break:break-all;
+}
+.scope-badge i{color:var(--accent-2);flex-shrink:0;}
+.project-index-list{border-top:1px solid var(--line);}
+.project-index-row{
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+  padding:24px 0; border-bottom:1px solid var(--line); flex-wrap:wrap;
+}
+.project-index-row .pi-text h4{font-size:1.15rem;letter-spacing:0.03em;margin-bottom:6px;color:var(--ink);font-family:var(--f-display);text-transform:uppercase;}
+.project-index-row .pi-text p{color:var(--ink-soft);font-weight:400;font-size:0.95rem;max-width:56ch;}
+.project-index-row .pi-arrow{
+  font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.12em;
+  text-transform:uppercase; padding:10px 18px; flex-shrink:0;
+  border:1px solid var(--line-strong); border-radius:2px;
+  transition:border-color .3s ease, background-color .3s ease;
+}
+.project-index-row .pi-arrow:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);}
 
 /* ============================================================
    POLICY SECTIONS — shared shell for every clause of the policy
@@ -411,9 +468,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
 </nav>
 
 <header class="page-head" data-section-name="Overview">
-  <div class="page-eyebrow">Legal — Effective Jul 31, 2026</div>
+  <div class="page-eyebrow">Legal — Effective July 1, 2026</div>
   <h1>Privacy &amp;<br><span class="stroke">Transparency.</span></h1>
-  <p class="page-lede">This policy explains what any product, bot, or workflow built by Vector Workflows collects, why, and how you stay in control of it — one policy, applied consistently across everything we ship.</p>
+  <p class="page-lede">This policy explains what any product, bot, or workflow built by Vector Workflows collects, why, and how you stay in control of it — one general standard, applied consistently across everything we ship, plus a specific data-access disclosure below for each product we currently operate.</p>
 </header>
 
 <div class="marquee-wrap">
@@ -423,9 +480,18 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
   </div>
 </div>
 
+<nav class="project-jump" aria-label="Jump to a section of this policy">
+  <span class="pj-label">Jump to —</span>
+  <a href="#general-policy" class="pj-pill"><i class="fa-solid fa-scale-balanced"></i>General Policy</a>
+  <a href="#appendix-scheduler" class="pj-pill"><i class="fa-solid fa-calendar-days"></i>Calendar Scheduler</a>
+  <a href="#appendix-tracker" class="pj-pill"><i class="fa-brands fa-whatsapp"></i>WA Site Tracker</a>
+  <a href="#appendix-missed-lead" class="pj-pill"><i class="fa-solid fa-phone-slash"></i>Missed Lead Responder</a>
+  <a href="#contact" class="pj-pill"><i class="fa-solid fa-envelope"></i>Contact</a>
+</nav>
+
 <main id="main" class="policy-main">
 
-  <section class="policy-section" data-section-name="Scope">
+  <section class="policy-section" id="general-policy" data-section-name="Scope">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 01 — Scope</span>
       <h2>What This<br>Policy Covers</h2>
@@ -446,7 +512,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Data Collected">
+  <section class="policy-section" id="data-collected" data-section-name="Data Collected">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 02 — Collection</span>
       <h2>What Information<br>We Process</h2>
@@ -457,7 +523,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <div class="spec-card">
         <span class="s-index"><i class="fa-solid fa-key"></i>D.01 — CREDENTIALS</span>
         <h3>Authorization Tokens</h3>
-        <p>Where a Service connects to a platform you already use — a calendar, a messaging app, a productivity tool — we store the secure OAuth or API tokens needed to perform the specific actions that Service is designed for, and nothing beyond that scope. <em>For Google Calendar specifically, see Clause 04 for the exact data accessed.</em></p>
+        <p>Where a Service connects to a platform you already use — a calendar, a messaging app, a productivity tool — we store the secure OAuth or API tokens needed to perform the specific actions that Service is designed for, and nothing beyond that scope. <em>For the exact Google API scopes and data fields each of our products accesses, see that product's disclosure below.</em></p>
       </div>
       <div class="spec-card">
         <span class="s-index"><i class="fa-solid fa-id-badge"></i>D.02 — IDENTIFIERS</span>
@@ -478,7 +544,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     <p class="policy-note reveal-up" style="margin-top:28px;margin-bottom:0;"><em>We never request access to contacts, emails, location, or any connected platform's data beyond what a given Service explicitly needs to function.</em></p>
   </section>
 
-  <section class="policy-section" data-section-name="Data Usage">
+  <section class="policy-section" id="data-usage" data-section-name="Data Usage">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 03 — Usage</span>
       <h2>How Your Data<br>Is Used</h2>
@@ -517,7 +583,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Guarantees">
+  <section class="policy-section" id="guarantees" data-section-name="Guarantees">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 04 — Limited Use</span>
       <h2>Our Data<br>Guarantees</h2>
@@ -551,12 +617,12 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <div class="spec-card" style="grid-column:1 / -1;">
         <span class="s-index"><i class="fa-brands fa-google"></i>G.01 — CONNECTED SERVICES</span>
         <h3>Google Workspace Integrations</h3>
-        <p>Where a Service connects to Google Calendar on your behalf, the Google user data it accesses is limited to: calendar event details (titles and descriptions), event date and time, and calendar schedule availability — used solely to read, create, update, or reschedule the specific events that Service is built to manage. This data is never used for advertising, is never used to train AI or machine learning models, and is never sold or shared beyond what's needed to operate that Service. Our use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener" style="color:var(--accent-2);">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+        <p>Where a Service connects to a Google product on your behalf — Calendar, Sheets, or Drive — the exact Google user data it accesses, the exact API scope it requests, and what it's used for is listed in that Service's own disclosure below, not buried in general language here. This data is never used for advertising, is never used to train AI or machine learning models, and is never sold or shared beyond what's needed to operate that Service. Our use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener" style="color:var(--accent-2);">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
       </div>
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Sharing">
+  <section class="policy-section" id="sharing" data-section-name="Sharing">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 05 — Sharing</span>
       <h2>Third Parties &amp;<br>Disclosure</h2>
@@ -580,7 +646,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Your Control">
+  <section class="policy-section" id="your-control" data-section-name="Your Control">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 06 — Deletion</span>
       <h2>You Stay<br>In Control</h2>
@@ -601,7 +667,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Security">
+  <section class="policy-section" id="security" data-section-name="Security">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 07 — Security</span>
       <h2>Encryption</h2>
@@ -613,25 +679,138 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Children">
+  <section class="policy-section" data-section-name="Product Disclosures">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 08 — Eligibility</span>
+      <span class="eyebrow">Clause 08 — Product Disclosures</span>
+      <h2>Per-Product<br>Data Disclosures</h2>
+    </div>
+    <p class="policy-note reveal-up">The clauses above are the general rules that govern every Service we operate. Because what one Service actually touches — a calendar, a spreadsheet, a phone line — is different from another, each product below has its own plain disclosure of exactly what it accesses and why, in addition to (not instead of) everything above.</p>
+
+    <div class="project-index-list reveal-up">
+      <div class="project-index-row">
+        <div class="pi-text">
+          <h4>Google Calendar Scheduler</h4>
+          <p>Builds your day's schedule on top of your connected Google Calendar.</p>
+        </div>
+        <a href="#appendix-scheduler" class="pi-arrow">Read disclosure</a>
+      </div>
+      <div class="project-index-row">
+        <div class="pi-text">
+          <h4>WA Site Tracker</h4>
+          <p>Organizes site photos and updates from your engineers into your own Google Sheet and Drive folder.</p>
+        </div>
+        <a href="#appendix-tracker" class="pi-arrow">Read disclosure</a>
+      </div>
+      <div class="project-index-row">
+        <div class="pi-text">
+          <h4>Missed Lead Responder</h4>
+          <p>Texts back and logs details from callers your business line couldn't answer.</p>
+        </div>
+        <a href="#appendix-missed-lead" class="pi-arrow">Read disclosure</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="policy-section appendix-section" id="appendix-scheduler" data-section-name="Scheduler Disclosure">
+    <div class="policy-head reveal-up">
+      <span class="appendix-tag"><i class="fa-solid fa-calendar-days"></i>Appendix A</span>
+      <span class="eyebrow">Google API Data Disclosure</span>
+      <h2>Google Calendar<br>Scheduler</h2>
+    </div>
+    <p class="policy-note reveal-up">This Service connects to your Google Calendar so you can build out your entire day's schedule with a single click — adding tasks, clearing a day, planning future days, and managing your account settings and profile, all from one place.</p>
+
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">A.1</span> Google API Scope Requested</h4>
+      <p>This is the only Google scope our application requests or calls. It does not match, and is narrower than, full calendar read/write access.</p>
+      <div class="scope-badge-row">
+        <span class="scope-badge"><i class="fa-solid fa-key"></i>https://www.googleapis.com/auth/calendar.events</span>
+      </div>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">A.2</span> Google User Data We Access</h4>
+      <p>Within that scope, we read and write: event titles and descriptions, event start and end date/time, and the free/busy availability implied by your existing events. We do not access your Gmail, Drive, Contacts, or any other Google product through this Service, and we do not read calendar data outside of events (such as calendar settings or other calendars you haven't connected).</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">A.3</span> How It's Used</h4>
+      <p>Solely to perform the actions you trigger — creating, updating, clearing, or rescheduling events when you add a task, clear your day, or plan a future day. Nothing here is used for advertising, is fed into any AI or machine-learning model, or is shared with anyone else.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">A.4</span> Your Controls</h4>
+      <p>In-app settings let you reset your profile, adjust preferences, or delete your data outright. Disconnecting the Service immediately revokes our stored tokens and deletes your cached schedule data from our systems; you can also revoke access anytime from your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener" style="color:var(--accent-2);">Google Security Dashboard</a>.</p>
+    </div>
+  </section>
+
+  <section class="policy-section appendix-section" id="appendix-tracker" data-section-name="Site Tracker Disclosure">
+    <div class="policy-head reveal-up">
+      <span class="appendix-tag"><i class="fa-brands fa-whatsapp"></i>Appendix B</span>
+      <span class="eyebrow">Google API Data Disclosure</span>
+      <h2>WA Site<br>Tracker</h2>
+    </div>
+    <p class="policy-note reveal-up">You create a Google Sheet and Drive folder for your project (or ask us to create one), then share that Sheet and folder with our service account. Your engineers send photos and descriptions to a WhatsApp bot, and the Service files them into your Sheet and Drive in an organized, per-site structure. You control who can use the bot and can configure project name, engineer names, site location, and similar settings.</p>
+
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">B.1</span> Google Data We Access</h4>
+      <p>Only the specific Google Sheet(s) and Drive folder(s) you have explicitly shared with our service account — never your wider Drive, other Sheets, or any file you haven't shared with us. Access is scoped through Google's own file-sharing permissions, not a broad account-wide OAuth grant.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">B.2</span> WhatsApp &amp; Bot Data</h4>
+      <p>The phone numbers of engineers and other users you've authorized to use the bot, the photos and text descriptions they send, and the settings you configure (project name, engineer names, site location, and similar). This is used only to route each submission into the correct row and folder in your Sheet and Drive.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">B.3</span> Sharing</h4>
+      <p>Submitted photos and data are written only into your own Google Sheet and Drive folder — storage you own and control. We do not share this data with any other party.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">B.4</span> Your Controls</h4>
+      <p>Remove the service account's access from your Sheet or Drive's own sharing settings at any time to cut off access immediately. Contact us to have your access-list and configuration data deleted from our systems.</p>
+    </div>
+  </section>
+
+  <section class="policy-section appendix-section" id="appendix-missed-lead" data-section-name="Missed Lead Disclosure">
+    <div class="policy-head reveal-up">
+      <span class="appendix-tag"><i class="fa-solid fa-phone-slash"></i>Appendix C</span>
+      <span class="eyebrow">Client Product Disclosure</span>
+      <h2>Missed Lead<br>Responder</h2>
+    </div>
+    <p class="policy-note reveal-up">When a call to a connected business line rings and goes unanswered, this Service automatically texts the caller back, and sends the business owner a Telegram message with the caller's contact details and anything else the caller shared. Business owners can optionally configure a custom greeting and keypad menu for callers.</p>
+
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">C.1</span> Data We Collect</h4>
+      <p>The caller's phone number, the automatic SMS exchange, and any additional information the caller chooses to share — such as answers to a general query form, a keypad selection, or a voice note — along with the time of the call.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">C.2</span> How It's Used</h4>
+      <p>To send the caller an automatic SMS response, to notify the business owner via Telegram with the caller's details, and to log the same information to a Google Sheet the business owner has connected for their own records. Where a business owner enables a custom greeting, it is used only to greet and route that caller according to the owner's configuration — never to build a profile of the caller or to train any model.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">C.3</span> Google Data We Access</h4>
+      <p>Only the specific Google Sheet the business owner connects for lead logging, and only to append new rows — no other Sheets, Drive files, or Google data are accessed.</p>
+    </div>
+    <div class="clause-block reveal-up">
+      <h4><span class="c-num">C.4</span> Sharing &amp; Retention</h4>
+      <p>Caller details are shared only with the business owner who received the missed call, via Telegram and their connected Sheet. This is a client-configured business tool, not a public consumer app; the business owner can request deletion of stored lead records at any time.</p>
+    </div>
+  </section>
+
+  <section class="policy-section" id="children" data-section-name="Children">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 09 — Eligibility</span>
       <h2>Children's<br>Privacy</h2>
     </div>
     <p class="policy-note reveal-up" style="margin-bottom:0;">Our Services are not directed at children, and we do not knowingly collect data from anyone under the age of 18, or the age of legal majority in their jurisdiction. If you believe a child has provided us data, contact us and we'll remove it.</p>
   </section>
 
-  <section class="policy-section" data-section-name="Changes">
+  <section class="policy-section" id="changes" data-section-name="Changes">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 09 — Updates</span>
+      <span class="eyebrow">Clause 10 — Updates</span>
       <h2>Changes To<br>This Policy</h2>
     </div>
-    <p class="policy-note reveal-up" style="margin-bottom:0;">We may revise this policy from time to time as our Services evolve. Material changes will be reflected by an updated effective date on this page, and where practical, communicated directly. Continued use of a Service after changes take effect constitutes acceptance of the revised policy.</p>
+    <p class="policy-note reveal-up" style="margin-bottom:0;">We may revise this policy from time to time as our Services evolve. Material changes will be reflected by a last updated date on this page, and where practical, communicated directly. Continued use of a Service after changes take effect constitutes acceptance of the revised policy.</p>
   </section>
 
-  <section class="policy-section" data-section-name="Contact">
+  <section class="policy-section" id="contact" data-section-name="Contact">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 10 — Contact</span>
+      <span class="eyebrow">Clause 11 — Contact</span>
       <h2>Questions or<br>Support?</h2>
     </div>
     <p class="policy-note reveal-up">If you ever have questions about how your data is handled, reach out directly.</p>
@@ -647,7 +826,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <i class="fa-solid fa-arrow-up" style="transform:rotate(45deg);"></i>
     </a>
 
-    <p class="effective-note reveal-up">Effective July 31, 2026</p>
+    <p class="effective-note reveal-up">Last updated: August 28, 2026</p>
 
     <div class="crosslink-card reveal-up" style="margin-top:56px;">
       <div class="cl-text">
