@@ -1096,65 +1096,98 @@
     }
 
     /* ============================================================
-   WHATSAPP FLOAT — persistent, low-friction second contact channel.
-   Native to the void-black/violet system rather than a bolted-on
-   green widget. Entrance is handled in JS after the preloader
-   completes (see BOOT SEQUENCE), so it stays hidden here by default.
+   CONTACT DOCK — a single "Contact" toggle, bottom-right, that
+   reveals the Call + WhatsApp channels on hover (pointer devices)
+   or tap (touch devices). Replaces two independently-sized pills
+   with one consistent entry point; the two channel buttons underneath
+   are equal-sized circles so neither reads as more important than
+   the other. `bottom` is nudged upward by JS (see adjustDockPosition)
+   whenever the footer scrolls into range, so the dock never sits on
+   top of the footer links. Entrance is handled in JS after the
+   preloader completes (see BOOT SEQUENCE), so it stays hidden here
+   by default.
    ============================================================ */
-    .wa-float {
+    .contact-dock {
       position: fixed;
       right: clamp(1.25rem, 4vw, 2.5rem);
       bottom: clamp(1.1rem, 3.5vw, 2rem);
       z-index: 450;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .dock-options {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .3s ease, transform .35s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    @media (hover:hover) {
+
+      .contact-dock:hover .dock-options,
+      .contact-dock:focus-within .dock-options {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+    }
+
+    .contact-dock.is-open .dock-options {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Equal-sized circular channel buttons — Call + WhatsApp */
+    .dock-btn {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      padding: 13px 22px 13px 18px;
-      background: rgba(12, 10, 16, 0.82);
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      background: rgba(12, 10, 16, 0.88);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--line-strong);
-      border-radius: 2px;
-      font-family: var(--f-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink);
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: border-color .35s ease, box-shadow .35s ease;
+      border-radius: 50%;
+      font-size: 1.05rem;
+      color: var(--accent-2);
+      transition: border-color .3s ease, box-shadow .3s ease, background .3s ease, color .3s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
     }
 
-    .wa-float::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--accent);
-      transform: translateY(101%);
-      transition: transform .45s cubic-bezier(.16, 1, .3, 1);
-      z-index: -1;
-    }
-
-    .wa-float:hover {
+    .dock-btn:hover {
       border-color: var(--accent);
+      background: var(--accent);
       color: #fff;
-      box-shadow: 0 8px 30px rgba(111, 89, 204, 0.28);
+      transform: scale(1.08);
+      box-shadow: 0 8px 26px rgba(111, 89, 204, 0.32);
     }
 
-    .wa-float:hover::before {
-      transform: translateY(0);
-    }
-
-    .wa-float-dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      flex-shrink: 0;
-      margin-right: 10px;
+    .dock-btn-dot {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 7px;
+      height: 7px;
       background: var(--accent-2);
       border-radius: 50%;
       box-shadow: 0 0 6px var(--accent-2);
       animation: waPulse 2.4s ease-in-out infinite;
+    }
+
+    .dock-btn:hover .dock-btn-dot {
+      background: #fff;
+      box-shadow: 0 0 6px #fff;
     }
 
     @keyframes waPulse {
@@ -1169,43 +1202,93 @@
       }
     }
 
-    .wa-float i {
-      font-size: 0.95rem;
-      margin-right: 10px;
-      color: var(--accent-2);
-      transition: color .35s ease, transform .4s cubic-bezier(.16, 1, .3, 1);
+    /* Main "Contact" toggle — same pill language the rest of the
+   site uses (mono label, fill-on-hover), so it reads as part of
+   the system rather than a bolted-on widget. */
+    .dock-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 24px 15px 20px;
+      background: rgba(12, 10, 16, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      font-family: var(--f-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      overflow: hidden;
+      transition: border-color .35s ease, box-shadow .35s ease, color .35s ease;
     }
 
-    .wa-float:hover i {
+    .dock-toggle::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateY(101%);
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+      z-index: -1;
+    }
+
+    .contact-dock:hover .dock-toggle,
+    .contact-dock:focus-within .dock-toggle,
+    .contact-dock.is-open .dock-toggle {
+      border-color: var(--accent);
       color: #fff;
-      transform: scale(1.1);
+      box-shadow: 0 8px 30px rgba(111, 89, 204, 0.28);
     }
 
-    .wa-float-text {
+    .contact-dock:hover .dock-toggle::before,
+    .contact-dock:focus-within .dock-toggle::before,
+    .contact-dock.is-open .dock-toggle::before {
+      transform: translateY(0);
+    }
+
+    .dock-toggle-icon i {
+      font-size: 0.95rem;
+      color: var(--accent-2);
+      display: inline-block;
+      transition: color .35s ease, transform .35s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .contact-dock:hover .dock-toggle-icon i,
+    .contact-dock:focus-within .dock-toggle-icon i,
+    .contact-dock.is-open .dock-toggle-icon i {
+      color: #fff;
+      transform: rotate(90deg);
+    }
+
+    .dock-toggle-text {
       white-space: nowrap;
     }
 
     @media (max-width:640px) {
-      .wa-float {
-        padding: 12px 14px;
+      .dock-toggle {
+        padding: 14px 16px;
       }
 
-      .wa-float i {
-        margin-right: 0;
-      }
-
-      .wa-float-text {
+      .dock-toggle-text {
         display: none;
+      }
+
+      .dock-btn {
+        width: 44px;
+        height: 44px;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .wa-float {
+      .contact-dock {
         opacity: 1;
         transform: none;
       }
 
-      .wa-float-dot {
+      .dock-btn-dot {
         animation: none;
       }
     }
@@ -1427,6 +1510,195 @@
       transform: translateX(4px);
     }
 
+    /* CTA ROW — primary "Build This For Me" + secondary "Try For Free"
+       sit side by side, wrapping to stacked on narrow columns. */
+    .cs-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .cs-cta-row .cs-cta {
+      margin-top: 0;
+    }
+
+    .cs-cta-secondary {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 28px;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--f-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      transition: border-color .3s ease, background-color .3s ease, color .3s ease;
+    }
+
+    .cs-cta-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(111, 89, 204, 0.08);
+      color: var(--accent-2);
+    }
+
+    .cs-cta-secondary i {
+      transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .cs-cta-secondary:hover i {
+      transform: translateX(4px);
+    }
+
+    /* Disabled variant — trial access closed on this bot. Still a real
+       link (routes to the test-user waitlist form) so mobile visitors,
+       who never see a :hover state, still land somewhere useful. The
+       greyed-out styling + tooltip is what communicates "not open yet"
+       on desktop before they click. */
+    .cs-cta-secondary.is-disabled {
+      border-color: var(--line);
+      color: var(--ink-dim);
+      opacity: 0.55;
+    }
+
+    .cs-cta-secondary.is-disabled:hover {
+      border-color: var(--accent);
+      background: rgba(111, 89, 204, 0.06);
+      color: var(--ink-dim);
+      opacity: 0.85;
+    }
+
+    .cs-cta-secondary.is-disabled i {
+      transform: none;
+    }
+
+    .cs-tooltip {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 12px);
+      transform: translateX(-50%) translateY(6px);
+      width: 240px;
+      padding: 12px 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      font-family: var(--f-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      line-height: 1.55;
+      color: var(--ink);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease;
+      text-align: left;
+      z-index: 20;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .cs-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--surface-2);
+    }
+
+    .cs-cta-secondary.is-disabled:hover .cs-tooltip,
+    .cs-cta-secondary.is-disabled:focus-visible .cs-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width:480px) {
+      .cs-tooltip {
+        width: 200px;
+        font-size: 0.63rem;
+      }
+    }
+
+    /* VIDEO PLACEHOLDER — same box as the live iframe embeds (identical
+       .cs-video-wrap proportions) so a not-yet-uploaded walkthrough
+       doesn't read as a broken embed while the real video is pending. */
+    .cs-video-placeholder-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background:
+        radial-gradient(480px circle at 50% 35%, rgba(111, 89, 204, 0.16), transparent 60%),
+        var(--surface);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .cs-vp-icon {
+      font-size: 2.4rem;
+      color: var(--ink-dim);
+    }
+
+    .cs-vp-label {
+      font-family: var(--f-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+
+    .cs-vp-countdown {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .cs-vp-countdown-caption {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--f-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+
+    .cs-vp-countdown-caption::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 6px var(--accent-2);
+      animation: waPulse 2.4s ease-in-out infinite;
+    }
+
+    .cs-vp-timer {
+      font-family: var(--f-mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--accent-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cs-vp-countdown-caption::before {
+        animation: none;
+      }
+    }
+
     .cs-status-badge {
       display: inline-flex;
       align-items: center;
@@ -1514,16 +1786,29 @@
     <a href="#contact" class="nav-cta" data-cursor="link"><span data-magnetic-text>Start a Conversation</span></a>
   </nav>
 
-  <!-- WHATSAPP — persistent, low-friction second contact channel -->
-  <a href="https://wa.me/919311550616?text=Hey!%20Saw%20Vector%20Workflows.%20My%20work%20mostly%20revolves%20around%20%5BApp%201%5D%20and%20%5BApp%202%5D%20%E2%80%94%20any%20obvious%20automations%20I%27m%20missing%20out%20on%3F"
-    target="_blank" rel="noopener" class="wa-float" id="waFloat" data-cursor="link"
-    aria-label="Message Vector Workflows on WhatsApp">
-    <span data-magnetic-text style="display:inline-flex; align-items:center;">
-      <span class="wa-float-dot" aria-hidden="true"></span>
-      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-      <span class="wa-float-text">Message Us</span>
-    </span>
-  </a>
+  <!-- CONTACT DOCK — single "Contact" toggle; reveals Call + WhatsApp
+       as two equal-sized circular buttons on hover (pointer) or tap (touch) -->
+  <div class="contact-dock" id="contactDock">
+    <div class="dock-options" id="dockOptions">
+      <a href="tel:+14704706323" class="dock-btn" id="callFloat" data-cursor="link"
+        aria-label="Call Vector Workflows at +1 470 470 6323">
+        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+      </a>
+      <a href="https://wa.me/919311550616?text=Hey!%20Saw%20Vector%20Workflows.%20My%20work%20mostly%20revolves%20around%20%5BApp%201%5D%20and%20%5BApp%202%5D%20%E2%80%94%20any%20obvious%20automations%20I%27m%20missing%20out%20on%3F"
+        target="_blank" rel="noopener" class="dock-btn" id="waFloat" data-cursor="link"
+        aria-label="Message Vector Workflows on WhatsApp">
+        <span class="dock-btn-dot" aria-hidden="true"></span>
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      </a>
+    </div>
+    <button type="button" class="dock-toggle" id="dockToggle" data-cursor="link"
+      aria-haspopup="true" aria-expanded="false" aria-controls="dockOptions">
+      <span data-magnetic-text style="display:inline-flex; align-items:center; gap:12px;">
+        <span class="dock-toggle-icon"><i class="fa-solid fa-headset" aria-hidden="true"></i></span>
+        <span class="dock-toggle-text">Contact</span>
+      </span>
+    </button>
+  </div>
 
   <!-- HERO -->
   <section class="hero" data-section-name="Hero">
@@ -1626,7 +1911,7 @@
           <div class="cs-status-badge"><span class="cs-status-dot"></span>Self-initiated — in active development</div>
           <p>This was built by the studio as a self-initiated project initally for personal use, not for a paying client.
             Built for personal use — a couple of friends heard about it and asked to try it, so it's now open for anyone who wants to try.
-            FOR A CUSTOM BUILD PRESS "I want this".</p>
+            FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
             <a href="https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
@@ -1651,13 +1936,17 @@
               allowfullscreen loading="lazy"></iframe>
           </div>
 
-          <!-- CTA Button (Scheduler) -->
-          <a href="https://tally.so/r/Y57qNv" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
-            I Want This <i class="fa-solid fa-arrow-right"></i>
-          </a>
+          <!-- CTA Buttons (Scheduler) -->
+          <div class="cs-cta-row">
+            <a href="https://tally.so/r/Y57qNv" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
+              Build This For Me <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="https://t.me/vector_86k_bot" target="_blank" rel="noopener" class="cs-cta-secondary"
+              data-cursor="link" aria-label="Try the Dynamic Scheduler bot for free on Telegram">
+              Try For Free <i class="fa-brands fa-telegram"></i>
+            </a>
+          </div>
         </div>
-
-        
 
       </div>
     </div>
@@ -1705,7 +1994,7 @@
             complete and tested end-to-end. Like any WhatsApp Business integration, it needs to be connected to a
             dedicated business number to go live — standard setup for any client deployment, done at onboarding rather
             than in advance for a demo. 
-            FOR A CUSTOM BUILD PRESS "I want this".</p>
+            FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
             <a href="https://github.com/VectorWorkflows/WA-ProjectSite-Tracker" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
@@ -1728,10 +2017,99 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen loading="lazy"></iframe>
           </div>
-          <!-- CTA Button (Tracker) -->
-          <a href="https://tally.so/r/44lzd5" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
-            I Want This <i class="fa-solid fa-arrow-right"></i>
-          </a>
+          <!-- CTA Buttons (Tracker) -->
+          <div class="cs-cta-row">
+            <a href="https://tally.so/r/44lzd5" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
+              Build This For Me <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="https://tally.so/r/0QRgZN" target="_blank" rel="noopener" class="cs-cta-secondary is-disabled"
+              data-cursor="link"
+              aria-label="Try for free — not currently open on this bot. This links to the test-user waitlist form.">
+              Try For Free <i class="fa-solid fa-lock"></i>
+              <span class="cs-tooltip">We're not accepting free users on this bot right now — this button takes you
+                to the test-user form instead.</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUILD LOG C — MISSED LEAD RESPONDER -->
+  <section class="case-study-section" data-section-name="Build Log C" id="case-study-leadgen">
+    <div class="cs-head reveal-up">
+      <span class="eyebrow">Build Log — 03</span>
+      <h2>Missed Lead<br>Responder</h2>
+    </div>
+    <div class="cs-grid">
+      <div class="cs-prose">
+
+        <div class="cs-block reveal-up">
+          <span class="cs-label">The Problem</span>
+          <h3>A Missed Call Is a Lost Customer</h3>
+          <p>For most local and service businesses, an unanswered phone is one of the most expensive gaps in the whole
+            operation. A caller who doesn't leave a voicemail is a caller who just tried the next business on the
+            list instead. By the time anyone notices the missed call sitting in the log, the window to win that
+            customer back has usually already closed.</p>
+        </div>
+
+        <div class="cs-block reveal-up">
+          <span class="cs-label">What We Built</span>
+          <h3>Instant Follow-Up, Zero Manual Chasing</h3>
+          <p>A responder that watches for missed calls the moment they happen and fires back an automatic follow-up
+            within seconds — acknowledging the caller, answering the obvious first question, and logging the contact
+            as a lead — so nothing falls through the gap between "the phone rang" and "someone followed up."</p>
+        </div>
+
+        <div class="cs-block reveal-up">
+          <span class="cs-label">How It Works</span>
+          <h3>Missed Call In. Structured Lead Out.</h3>
+          <p>The moment a call goes unanswered, the responder triggers an automatic reply to the caller and writes a
+            structured lead record — number, timestamp, and status — so the business always has a live, current list
+            of who called and whether they've been brought back into the conversation.</p>
+        </div>
+
+        <div class="cs-block reveal-up">
+          <span class="cs-label">Status</span>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span>Self-initiated — in active development
+          </div>
+          <p>This is a self-initiated project, built by the studio to prove the pattern before bringing it to a
+            client. The walkthrough video is being finalized now — check back shortly, or reach out directly.
+            FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
+          <div class="cs-links">
+            <a href="https://github.com/VectorWorkflows/Missed-Lead-Responder" target="_blank" rel="noopener"
+              class="cs-link" data-cursor="link">
+              <i class="fa-brands fa-github"></i>&nbsp;Repository
+            </a>
+            <a href="https://app.notion.com/p/Missed-Lead-Responder-3c9d07dc818580419ae4df23fe5a5ff1?source=copy_link"
+              target="_blank" rel="noopener" class="cs-link" data-cursor="link">
+              <i class="fa-solid fa-book-open"></i>&nbsp;Documentation
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cs-video-col">
+        <div class="reveal-up">
+          <span class="cs-label">Walkthrough Video</span>
+          <div class="cs-video-wrap cs-video-placeholder" id="leadgenVideoPlaceholder"
+            data-deadline="2026-08-30T00:00:00Z">
+            <div class="cs-video-placeholder-inner">
+              <i class="fa-brands fa-youtube cs-vp-icon" aria-hidden="true"></i>
+              <span class="cs-vp-label">Walkthrough — Uploading Soon</span>
+              <div class="cs-vp-countdown">
+                <span class="cs-vp-countdown-caption">Video will be uploaded in</span>
+                <span class="cs-vp-timer" id="leadgenCountdown">36:00:00</span>
+              </div>
+            </div>
+          </div>
+          <!-- CTA Button (Missed Lead Generator) -->
+          <div class="cs-cta-row">
+            <a href="https://tally.so/r/2EGzLM" class="cs-cta" data-cursor="link">
+              Build This For Me <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -1870,7 +2248,9 @@
     <p class="reveal-up">
   Have a process that needs automating? Let's talk about whether we're the right fit.<br><br><br>
   <strong>Business Inquiry:</strong>
-  <a href="mailto:business@vectorworkflows.com">business@vectorworkflows.com</a>
+  <a href="mailto:business@vectorworkflows.com">business@vectorworkflows.com</a><br>
+  <strong>Call:</strong>
+  <a href="tel:+14704706323">+1 470 470 6323</a>
 </p>
 
     <a href="https://wa.me/919311550616?text=Hey!%20Saw%20Vector%20Workflows.%20My%20work%20mostly%20revolves%20around%20%5BApp%201%5D%20and%20%5BApp%202%5D%20%E2%80%94%20any%20obvious%20automations%20I%27m%20missing%20out%20on%3F"
@@ -1883,11 +2263,11 @@
   </section>
 
   <!-- FOOTER -->
-  <footer>
+  <footer id="siteFooter">
     <span>Vector Workflows &copy; 2026. Core Stream Drive.</span>
-    <div style="display:flex; gap:16px;"></div>
-    <a href="privacy/" data-cursor="link">Privacy Policy</a>
-    <a href="terms/" data-cursor="link">Terms of Service</a>
+    <div style="display:flex; gap:16px;">
+      <a href="privacy/" data-cursor="link">Privacy Policy</a>
+      <a href="terms/" data-cursor="link">Terms of Service</a>
     </div>
   </footer>
   <!-- stack footnote: Python / FastAPI · WhatsApp Cloud API · Telegram Bot API · Google Cloud Platform · MongoDB · Docker -->
@@ -2396,6 +2776,48 @@
       })();
 
       /* ============================================================
+         VIDEO-PLACEHOLDER COUNTDOWN — any .cs-video-placeholder with a
+         data-deadline (ISO timestamp) counts itself down to that
+         moment. Purely additive: a case study with a real embedded
+         iframe never has this class, so this never touches those.
+         Editing the reveal date later is a one-attribute change on
+         the element — no JS edit required.
+         ============================================================ */
+      (function initVideoCountdowns() {
+        var placeholders = document.querySelectorAll(".cs-video-placeholder[data-deadline]");
+        if (!placeholders.length) return;
+
+        function render(el) {
+          var timerEl = el.querySelector(".cs-vp-timer");
+          var captionEl = el.querySelector(".cs-vp-countdown-caption");
+          if (!timerEl) return;
+          var deadline = new Date(el.getAttribute("data-deadline")).getTime();
+          var remaining = deadline - Date.now();
+
+          if (isNaN(deadline) || remaining <= 0) {
+            timerEl.textContent = "Any moment now";
+            if (captionEl) captionEl.textContent = "Walkthrough video";
+            return false; // stop ticking
+          }
+
+          var totalSeconds = Math.floor(remaining / 1000);
+          var hh = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+          var mm = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+          var ss = String(totalSeconds % 60).padStart(2, "0");
+          timerEl.textContent = hh + ":" + mm + ":" + ss;
+          return true; // keep ticking
+        }
+
+        placeholders.forEach(function (el) {
+          render(el);
+          var intervalId = setInterval(function () {
+            var keepGoing = render(el);
+            if (keepGoing === false) clearInterval(intervalId);
+          }, 1000);
+        });
+      })();
+
+      /* ============================================================
          REAL-TIME TELEMETRY & CLI ENGINE
          ============================================================ */
       /* ============================================================
@@ -2759,18 +3181,104 @@
       }
 
       /* ============================================================
-         WHATSAPP FLOAT — entrance, timed to land after the preloader
+         CONTACT DOCK — entrance, timed to land after the preloader
          curtain clears (not mid-load) and slightly after the hero
          copy so it doesn't compete with the headline for attention.
          ============================================================ */
       function showWaFloat() {
-        var el = document.getElementById("waFloat");
-        if (!el) return;
+        var dock = document.getElementById("contactDock");
+        if (!dock) return;
         if (reduceMotion) {
-          gsap.set(el, { opacity: 1, y: 0 });
+          gsap.set(dock, { opacity: 1, y: 0 });
           return;
         }
-        gsap.to(el, { opacity: 1, y: 0, duration: 0.9, delay: 0.6, ease: "power4.out" });
+        gsap.to(dock, { opacity: 1, y: 0, duration: 0.9, delay: 0.5, ease: "power4.out" });
+      }
+
+      /* ============================================================
+         CONTACT DOCK — open/close toggle (tap-to-reveal on touch;
+         hover already handles pointer devices via CSS). A click
+         outside, or Escape, closes it again.
+         ============================================================ */
+      function initContactDock() {
+        var dock = document.getElementById("contactDock");
+        var toggle = document.getElementById("dockToggle");
+        if (!dock || !toggle) return;
+
+        function closeDock() {
+          dock.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
+        }
+        function openDock() {
+          dock.classList.add("is-open");
+          toggle.setAttribute("aria-expanded", "true");
+        }
+
+        toggle.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (dock.classList.contains("is-open")) closeDock();
+          else openDock();
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!dock.contains(e.target)) closeDock();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeDock();
+        });
+      }
+
+      /* ============================================================
+         CONTACT DOCK — footer-avoidance. The dock is position:fixed
+         so it stays put while the footer scrolls up underneath it;
+         at the very bottom of the page that puts it right on top of
+         the footer links. Instead of guessing a magic scroll number,
+         this measures the live gap between the footer's top edge and
+         the bottom of the viewport each frame and nudges the dock's
+         `bottom` up by exactly that much once the footer starts
+         intruding — so it lifts smoothly and settles just above the
+         footer rather than covering it.
+         ============================================================ */
+      function initDockFooterAvoidance() {
+        var dock = document.getElementById("contactDock");
+        var footer = document.getElementById("siteFooter");
+        if (!dock || !footer) return;
+
+        var baseBottom = 0;
+        var ticking = false;
+
+        function cacheBaseBottom() {
+          dock.style.bottom = "";
+          baseBottom = parseFloat(getComputedStyle(dock).bottom) || 0;
+        }
+
+        function adjust() {
+          ticking = false;
+          var footerTop = footer.getBoundingClientRect().top;
+          var overlap = window.innerHeight - footerTop;
+          if (overlap > 0) {
+            dock.style.bottom = (baseBottom + overlap + 16) + "px";
+          } else {
+            dock.style.bottom = "";
+          }
+        }
+
+        function requestAdjust() {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(adjust);
+          }
+        }
+
+        cacheBaseBottom();
+        adjust();
+
+        window.addEventListener("scroll", requestAdjust, { passive: true });
+        window.addEventListener("resize", function () {
+          cacheBaseBottom();
+          requestAdjust();
+        });
       }
 
       /* ============================================================
@@ -2780,6 +3288,8 @@
         initCursor();
         initTilt();
         initScrollAnims();
+        initContactDock();
+        initDockFooterAvoidance();
 
         runPreloader(function () {
           initLenis();
