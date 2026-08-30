@@ -38,7 +38,8 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 ::selection{background:var(--accent);color:#fff;}
 
-html{background:var(--void);}
+html{background:var(--void);scroll-behavior:smooth;}
+[id]{scroll-margin-top:130px;}
 body{
   font-family:var(--f-body);
   background:var(--void);
@@ -157,6 +158,44 @@ nav{
 }
 .marquee-track span em{font-style:normal;color:var(--accent-2);}
 @keyframes marqueeScroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+/* ============================================================
+   PROJECT JUMP — same anchor-pill pattern as the privacy policy,
+   so this page navigates and feels like part of the same document.
+   ============================================================ */
+.project-jump{
+  position:relative; z-index:10;
+  max-width:1100px; margin:0 auto; padding:28px clamp(1.25rem,4vw,2.5rem) 0;
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.pj-label{
+  width:100%; font-family:var(--f-mono); font-size:0.68rem; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--ink-dim); margin-bottom:4px;
+}
+.pj-pill{
+  font-family:var(--f-mono); font-size:0.72rem; letter-spacing:0.06em;
+  text-transform:uppercase; padding:10px 18px;
+  border:1px solid var(--line-strong); border-radius:100px;
+  color:var(--ink-soft); transition:border-color .3s ease, background-color .3s ease, color .3s ease;
+}
+.pj-pill:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);color:var(--ink);}
+.pj-pill i{color:var(--accent-2);margin-right:8px;font-size:0.85em;}
+
+/* ---- product index rows (reused from the privacy policy) ---- */
+.project-index-list{border-top:1px solid var(--line);}
+.project-index-row{
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+  padding:24px 0; border-bottom:1px solid var(--line); flex-wrap:wrap;
+}
+.project-index-row .pi-text h4{font-size:1.15rem;letter-spacing:0.03em;margin-bottom:6px;color:var(--ink);font-family:var(--f-display);text-transform:uppercase;}
+.project-index-row .pi-text p{color:var(--ink-soft);font-weight:400;font-size:0.95rem;max-width:56ch;}
+.project-index-row .pi-arrow{
+  font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.12em;
+  text-transform:uppercase; padding:10px 18px; flex-shrink:0;
+  border:1px solid var(--line-strong); border-radius:2px;
+  transition:border-color .3s ease, background-color .3s ease;
+}
+.project-index-row .pi-arrow:hover{border-color:var(--accent);background:rgba(111,89,204,0.08);}
 
 .policy-main{
   position:relative; z-index:10;
@@ -368,9 +407,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
 </nav>
 
 <header class="page-head" data-section-name="Overview">
-  <div class="page-eyebrow">Legal — Effective Jul 31, 2026</div>
+  <div class="page-eyebrow">Legal — Effective Aug 28, 2026</div>
   <h1>Terms of<br><span class="stroke">Service.</span></h1>
-  <p class="page-lede">These terms govern your use of any product, bot, or workflow built and operated by Vector Workflows. One agreement, applied consistently across everything we ship — so you never have to read a separate policy for each tool.</p>
+  <p class="page-lede">These terms govern your use of any product, bot, or workflow built and operated by Vector Workflows — currently our Google Calendar Scheduler, WA Site Tracker, and Missed Lead Responder. One agreement, applied consistently across everything we ship — so you never have to read a separate policy for each tool.</p>
 </header>
 
 <div class="marquee-wrap">
@@ -380,9 +419,18 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
   </div>
 </div>
 
+<nav class="project-jump" aria-label="Jump to a section of these terms">
+  <span class="pj-label">Jump to —</span>
+  <a href="#agreement" class="pj-pill"><i class="fa-solid fa-file-signature"></i>Agreement</a>
+  <a href="#our-services" class="pj-pill"><i class="fa-solid fa-layer-group"></i>Our Services</a>
+  <a href="#acceptable-use" class="pj-pill"><i class="fa-solid fa-shield-halved"></i>Acceptable Use</a>
+  <a href="#liability" class="pj-pill"><i class="fa-solid fa-scale-balanced"></i>Liability</a>
+  <a href="#contact" class="pj-pill"><i class="fa-solid fa-envelope"></i>Contact</a>
+</nav>
+
 <main id="main" class="policy-main">
 
-  <section class="policy-section" data-section-name="Agreement">
+  <section class="policy-section" id="agreement" data-section-name="Agreement">
     <div class="policy-head reveal-up">
       <span class="eyebrow">Clause 01 — Agreement</span>
       <h2>What This<br>Agreement Covers</h2>
@@ -393,7 +441,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <div class="spec-card">
         <span class="s-index"><i class="fa-solid fa-layer-group"></i>A.01 — SCOPE</span>
         <h3>One Set of Terms</h3>
-        <p>Rather than drafting a fresh agreement per tool, these Terms apply uniformly across the Vector Workflows catalog. Individual Services may publish a short supplementary notice for anything genuinely specific to that product, but the core rules here always hold.</p>
+        <p>Rather than drafting a fresh agreement per tool, these Terms apply uniformly across the Vector Workflows catalog. Individual Services may publish a short supplementary notice for anything genuinely specific to that product, but the core rules here always hold. For what data a given Service actually accesses, see its disclosure in our <a href="../privacy/" style="color:var(--accent-2);">Privacy Policy</a>.</p>
       </div>
       <div class="spec-card">
         <span class="s-index"><i class="fa-solid fa-file-signature"></i>A.02 — ACCEPTANCE</span>
@@ -404,9 +452,41 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     <p class="policy-note reveal-up" style="margin-top:28px;margin-bottom:0;"><em>You must be at least 18 years old, or the age of legal majority in your jurisdiction, to use any Vector Workflows Service.</em></p>
   </section>
 
-  <section class="policy-section" data-section-name="Using the Services">
+  <section class="policy-section" id="our-services" data-section-name="Our Services">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 02 — Use</span>
+      <span class="eyebrow">Clause 02 — Our Services</span>
+      <h2>What We<br>Currently Operate</h2>
+    </div>
+    <p class="policy-note reveal-up">These Terms are written to cover any Service we build, but so this page doesn't read as abstract or out of date, here's what's actually live today. Each one also has its own data-access disclosure in the <a href="../privacy/" style="color:var(--accent-2);">Privacy Policy</a>.</p>
+
+    <div class="project-index-list reveal-up">
+      <div class="project-index-row">
+        <div class="pi-text">
+          <h4>Google Calendar Scheduler</h4>
+          <p>Connects to your Google Calendar to build your day's schedule with a single click — add tasks, clear a day, or plan ahead.</p>
+        </div>
+        <a href="../privacy/#appendix-scheduler" class="pi-arrow">Data disclosure</a>
+      </div>
+      <div class="project-index-row">
+        <div class="pi-text">
+          <h4>WA Site Tracker</h4>
+          <p>A WhatsApp bot that files site photos and updates from your engineers into your own Google Sheet and Drive folder.</p>
+        </div>
+        <a href="../privacy/#appendix-tracker" class="pi-arrow">Data disclosure</a>
+      </div>
+      <div class="project-index-row">
+        <div class="pi-text">
+          <h4>Missed Lead Responder</h4>
+          <p>Texts back and logs details from callers your business line couldn't answer, and notifies you on Telegram.</p>
+        </div>
+        <a href="../privacy/#appendix-missed-lead" class="pi-arrow">Data disclosure</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="policy-section" id="using-the-services" data-section-name="Using the Services">
+    <div class="policy-head reveal-up">
+      <span class="eyebrow">Clause 03 — Use</span>
       <h2>Using Our<br>Services</h2>
     </div>
     <p class="policy-note reveal-up">We build tools meant to run quietly and reliably in the background of your day. In return, we ask for a few basics.</p>
@@ -443,16 +523,16 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Acceptable Use">
+  <section class="policy-section" id="acceptable-use" data-section-name="Acceptable Use">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 03 — Boundaries</span>
+      <span class="eyebrow">Clause 04 — Boundaries</span>
       <h2>Acceptable<br>Use</h2>
     </div>
     <p class="policy-note reveal-up">Our Services are built to be genuinely useful — automating routines, saving you time, keeping your data intact. In using them, you agree not to:</p>
 
     <div class="clause-block reveal-up">
       <h4><span class="c-num">01</span> Misuse Connected Platforms</h4>
-      <p>Use any Vector Workflows Service to violate the terms of a connected platform — including Google's or Telegram's own policies — or to send spam, unsolicited messages, or automated abuse through those platforms.</p>
+      <p>Use any Vector Workflows Service to violate the terms of a connected platform — including Google's, Telegram's, Meta/WhatsApp's, or a telephony/SMS provider's own policies — or to send spam, unsolicited messages, or automated abuse through those platforms.</p>
     </div>
     <div class="clause-block reveal-up">
       <h4><span class="c-num">02</span> Reverse Engineer or Extract Source</h4>
@@ -475,9 +555,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Data & Third Parties">
+  <section class="policy-section" id="data-third-parties" data-section-name="Data & Third Parties">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 04 — Data</span>
+      <span class="eyebrow">Clause 05 — Data</span>
       <h2>Your Data &amp;<br>Third-Party Platforms</h2>
     </div>
     <p class="policy-note reveal-up">Our Services typically operate by connecting to platforms you already use — a calendar, a messaging app, a productivity tool. What we collect and how it's handled is governed by our <a href="../privacy/" style="color:var(--accent-2);">Privacy Policy</a>, but a few points belong here as well.</p>
@@ -491,7 +571,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <div class="telemetry-cell">
         <span class="t-label">Third-Party Terms</span>
         <div class="t-value"><span class="t-live-dot"></span>Apply</div>
-        <p>Connected platforms (Google, Telegram, etc.) have their own terms, which continue to apply alongside ours.</p>
+        <p>Connected platforms (Google, Telegram, Meta/WhatsApp, SMS/telephony providers, etc.) have their own terms, which continue to apply alongside ours.</p>
       </div>
       <div class="telemetry-cell">
         <span class="t-label">Revocation</span>
@@ -506,15 +586,15 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Availability & Changes">
+  <section class="policy-section" id="availability-changes" data-section-name="Availability & Changes">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 05 — Availability</span>
+      <span class="eyebrow">Clause 06 — Availability</span>
       <h2>Availability,<br>Changes &amp; Fees</h2>
     </div>
 
     <div class="clause-block reveal-up">
       <h4><span class="c-num">01</span> Service Availability</h4>
-      <p>We work to keep our Services reliable, but we don't guarantee uninterrupted or error-free operation. Downstream outages on connected platforms (Google, Telegram, or others) are outside our control and may affect functionality temporarily.</p>
+      <p>We work to keep our Services reliable, but we don't guarantee uninterrupted or error-free operation. Downstream outages on connected platforms (Google, Telegram, Meta/WhatsApp, SMS/telephony providers, or others) are outside our control and may affect functionality temporarily.</p>
     </div>
     <div class="clause-block reveal-up">
       <h4><span class="c-num">02</span> Changes to a Service</h4>
@@ -530,9 +610,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Liability">
+  <section class="policy-section" id="liability" data-section-name="Liability">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 06 — Liability</span>
+      <span class="eyebrow">Clause 07 — Liability</span>
       <h2>Disclaimers &amp;<br>Limitation of Liability</h2>
     </div>
 
@@ -550,25 +630,25 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     </div>
   </section>
 
-  <section class="policy-section" data-section-name="Termination">
+  <section class="policy-section" id="termination" data-section-name="Termination">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 07 — Termination</span>
+      <span class="eyebrow">Clause 08 — Termination</span>
       <h2>Suspension &amp;<br>Termination</h2>
     </div>
     <p class="policy-note reveal-up">You can stop using any Service and disconnect your data at any time — see our <a href="../privacy/" style="color:var(--accent-2);">Privacy Policy</a> for exact deletion steps. We may suspend or terminate access to a Service if these Terms are violated, if required by law, or if a connected platform revokes the underlying API access that a Service depends on. Where reasonably possible, we'll aim to give notice first.</p>
   </section>
 
-  <section class="policy-section" data-section-name="Governing Law">
+  <section class="policy-section" id="governing-law" data-section-name="Governing Law">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 08 — Governing Law</span>
+      <span class="eyebrow">Clause 09 — Governing Law</span>
       <h2>Governing<br>Law</h2>
     </div>
     <p class="policy-note reveal-up" style="margin-bottom:0;">These Terms are governed by applicable law without regard to conflict-of-law principles, and any dispute arising from them will be handled in good faith directly with our team before any formal proceeding, wherever possible.</p>
   </section>
 
-  <section class="policy-section" data-section-name="Contact">
+  <section class="policy-section" id="contact" data-section-name="Contact">
     <div class="policy-head reveal-up">
-      <span class="eyebrow">Clause 09 — Contact</span>
+      <span class="eyebrow">Clause 10 — Contact</span>
       <h2>Questions or<br>Support?</h2>
     </div>
     <p class="policy-note reveal-up">If anything here is unclear, reach out directly — we'd rather explain it plainly than leave it ambiguous.</p>
@@ -584,7 +664,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
       <i class="fa-solid fa-arrow-up" style="transform:rotate(45deg);"></i>
     </a>
 
-    <p class="effective-note reveal-up">Effective July 31, 2026</p>
+    <p class="effective-note reveal-up">Effective August 28, 2026</p>
 
     <div class="crosslink-card reveal-up" style="margin-top:56px;">
       <div class="cl-text">
