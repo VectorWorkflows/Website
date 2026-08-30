@@ -638,8 +638,8 @@
   Row 1-2, cols 1-2: mod-video (tall, the anchor)
   Row 1,   cols 3-4: mod-repo
   Row 2,   col 3:    mod-docs
-  Row 2,   col 4:    mod-social
-  Row 3,   cols 1-4: mod-status (full-width instrument readout)
+  Row 2,   col 4:    mod-social (Instagram)
+  Row 3,   cols 1-4: mod-x (full-width, X/Twitter)
 */
     .mod-video {
       grid-column: 1 / span 2;
@@ -670,18 +670,14 @@
       grid-row: 2;
     }
 
-    .mod-status {
+    .mod-x {
       grid-column: 1 / span 4;
       grid-row: 3;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      cursor: default;
+      min-height: 180px;
     }
 
-    .mod-status:hover::before {
-      opacity: 0;
+    .mod-x > div:first-child {
+      margin-bottom: 8px;
     }
 
     @media (max-width:1024px) {
@@ -711,12 +707,9 @@
         grid-row: 3;
       }
 
-      .mod-status {
-        grid-column: 1 / span 2;
-        grid-row: 4;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+      .mod-x {
+        grid-column: 2;
+        grid-row: 3;
       }
     }
 
@@ -729,7 +722,7 @@
       .mod-repo,
       .mod-docs,
       .mod-social,
-      .mod-status {
+      .mod-x {
         grid-column: 1;
       }
 
@@ -749,7 +742,7 @@
         grid-row: 4;
       }
 
-      .mod-status {
+      .mod-x {
         grid-row: 5;
       }
 
@@ -883,7 +876,7 @@
        ============================================================ */
     .telemetry-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 1px;
       background: var(--line);
       border: 1px solid var(--line);
@@ -929,12 +922,6 @@
       box-shadow: 0 0 6px var(--accent-2);
     }
 
-    @media (max-width:900px) {
-      .telemetry-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
     @media (max-width:520px) {
       .telemetry-grid {
         grid-template-columns: 1fr;
@@ -967,19 +954,6 @@
     .manifesto-text .m-word {
       color: var(--ink-dim);
       opacity: 0.45;
-    }
-
-    .manifesto-num {
-      position: absolute;
-      top: 100px;
-      right: 5%;
-      font-family: var(--f-mono);
-      font-size: clamp(6rem, 18vw, 16rem);
-      color: transparent;
-      -webkit-text-stroke: 1px var(--line-strong);
-      line-height: 1;
-      pointer-events: none;
-      z-index: -1;
     }
 
     /* ============================================================
@@ -1611,8 +1585,8 @@
       border-top-color: var(--surface-2);
     }
 
-    .cs-cta-secondary.is-disabled:hover .cs-tooltip,
-    .cs-cta-secondary.is-disabled:focus-visible .cs-tooltip {
+    .cs-cta-secondary:hover .cs-tooltip,
+    .cs-cta-secondary:focus-visible .cs-tooltip {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
@@ -1909,7 +1883,7 @@
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
           <div class="cs-status-badge"><span class="cs-status-dot"></span>Self-initiated — in active development</div>
-          <p>This was built by the studio as a self-initiated project initally for personal use, not for a paying client.
+          <p>This was built by the studio as a self-initiated project initially for personal use, not for a paying client.
             Built for personal use — a couple of friends heard about it and asked to try it, so it's now open for anyone who wants to try.
             FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
@@ -2100,8 +2074,14 @@
           </div>
           <!-- CTA Button (Missed Lead Generator) -->
           <div class="cs-cta-row">
-            <a href="https://tally.so/r/2EGzLM" class="cs-cta" data-cursor="link">
+            <a href="https://tally.so/r/2EGzLM" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
               Build This For Me <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="https://tally.so/r/0QRgZN" target="_blank" rel="noopener" class="cs-cta-secondary"
+              data-cursor="link"
+              aria-label="Fill out the form below to get the free trial setup for your business.">
+              Try For Free <i class="fa-solid fa-lock"></i>
+              <span class="cs-tooltip">Get a 14 days free trial. No payment required.</span>
             </a>
           </div>
         </div>
@@ -2113,7 +2093,7 @@
   <section id="work" class="index-section" data-section-name="Index">
     <div class="index-head reveal-up">
       <h2>Explore<br>Further</h2>
-      <div class="index-count">GO DEEPER — <span>04</span></div>
+      <div class="index-count">GO DEEPER — <span>05</span></div>
     </div>
 
     <div class="module-grid">
@@ -2159,25 +2139,29 @@
       <a href="https://www.instagram.com/vectorworkflows/" target="_blank" rel="noopener"
         class="module mod-social reveal-up" data-cursor="link" data-tilt>
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <span class="m-index">M.04 — SOCIAL</span>
+          <span class="m-index">M.04 — INSTAGRAM</span>
           <i class="fa-brands fa-instagram m-icon"></i>
         </div>
         <div>
-          <h3>Social</h3>
+          <h3>Instagram</h3>
           <p>Behind-the-scenes updates on Instagram.</p>
         </div>
         <i class="fa-solid fa-arrow-up m-arrow"></i>
       </a>
 
-      <div class="module mod-status reveal-up">
-        <span class="m-index">SYS — STATUS</span>
-        <div>
-          <h3 style="font-size:1.4rem;">All Systems Operational</h3>
-          <p>Index last synced <span id="lastSyncTime"
-              style="color:var(--accent-2); font-family:var(--f-mono); font-weight:500;">JUST NOW</span> — Four active
-            nodes, zero incidents.</p>
+      <a href="https://x.com/VectorWorkflows" target="_blank" rel="noopener"
+        class="module mod-x reveal-up" data-cursor="link" data-tilt>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <span class="m-index">M.05 — X</span>
+          <i class="fa-brands fa-x-twitter m-icon"></i>
         </div>
-      </div>
+        <div>
+          <h3>X</h3>
+          <p>Quick updates and build notes on X.</p>
+        </div>
+        <i class="fa-solid fa-arrow-up m-arrow"></i>
+      </a>
+
     </div>
   </section>
 
@@ -2197,17 +2181,9 @@
     </div>
     <div class="telemetry-grid">
       <div class="telemetry-cell reveal-up">
-        <span class="t-label">API RTT</span>
-        <div class="t-value"><span class="t-live-dot"></span><span id="telRTT">14</span><span class="t-unit">ms</span></div>
-      </div>
-      <div class="telemetry-cell reveal-up">
         <span class="t-label">Client Timezone</span>
         <!-- Scaled down font size so long timezones like America/Los_Angeles fit nicely -->
         <div class="t-value"><span id="telTZ" style="font-size: 0.6em;">--</span></div>
-      </div>
-      <div class="telemetry-cell reveal-up">
-        <span class="t-label">Network Status</span>
-        <div class="t-value"><span id="telNet">--</span></div>
       </div>
       <div class="telemetry-cell reveal-up">
         <span class="t-label">Session Uptime</span>
@@ -2216,21 +2192,8 @@
     </div>
   </section>
 
-
-      <!-- Interactive Terminal -->
-      <div class="telemetry-terminal reveal-up" onclick="document.getElementById('termInput').focus()">
-        <div class="term-output" id="termOutput"></div>
-        <div class="term-input-line">
-          <span>guest@vectorworkflows:~$</span>
-          <input type="text" id="termInput" class="term-input" autocomplete="off" spellcheck="false" aria-label="Terminal input">
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- MANIFESTO / PARALLAX -->
   <section class="manifesto" data-section-name="Manifesto">
-    <span class="manifesto-num" data-speed="0.85">VW</span>
     <p class="manifesto-text" id="manifestoText">We build the automation that removes the repetitive work — so you can
       focus on what actually matters.</p>
   </section>
@@ -2812,31 +2775,14 @@
       })();
 
       /* ============================================================
-         REAL-TIME TELEMETRY & CLI ENGINE
-         ============================================================ */
-      /* ============================================================
-         REAL-TIME TELEMETRY (Aesthetic-Safe)
+         REAL-TIME TELEMETRY — only genuinely real, verifiable values
          ============================================================ */
       (function initRealTelemetry() {
-        // 1. Client-Side Telemetry
+        // 1. Client Timezone — read directly from the browser, always accurate
         var tzEl = document.getElementById("telTZ");
-        var netEl = document.getElementById("telNet");
-        
         if (tzEl) tzEl.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || "UNKNOWN";
-        
-        function updateNetworkStatus() {
-          if (!netEl) return;
-          var isOnline = navigator.onLine;
-          // Using native aesthetic tokens, no hardcoded green/yellow
-          netEl.innerHTML = isOnline 
-            ? '<span style="color:var(--accent-2); font-size: 0.8em;">ACTIVE</span>' 
-            : '<span style="color:var(--ink-dim); font-size: 0.8em;">OFFLINE</span>';
-        }
-        window.addEventListener("online", updateNetworkStatus);
-        window.addEventListener("offline", updateNetworkStatus);
-        updateNetworkStatus();
 
-        // 2. Session Uptime Timer
+        // 2. Session Uptime Timer — counts up from page load, always accurate
         var sessEl = document.getElementById("telSession");
         var startTime = Date.now();
         if (sessEl) {
@@ -2848,34 +2794,6 @@
             sessEl.textContent = hh + ":" + mm + ":" + ss;
           }, 1000);
         }
-
-        // 3. Resilient Server Ping Probe
-        var rttEl = document.getElementById("telRTT");
-        // Pinging the current window location avoids strict cross-origin network errors
-        var pingUrl = window.location.href; 
-        
-        async function probeBackend() {
-          if (!rttEl) return;
-          var pStart = performance.now();
-          try {
-            await fetch(pingUrl, { 
-              mode: 'no-cors', 
-              cache: 'no-store',
-              signal: AbortSignal.timeout(3000) 
-            });
-            var rtt = Math.max(12, Math.round(performance.now() - pStart));
-            rttEl.textContent = rtt;
-          } catch (err) {
-            // Graceful fallback: If the fetch fails (adblocker, CORS, downtime), 
-            // generate a plausible steady-state number instead of printing an ugly "ERR".
-            var fallbackRtt = Math.floor(18 + Math.random() * 14);
-            rttEl.textContent = fallbackRtt;
-          }
-        }
-        
-        // Initial probe, then ping every 5 seconds
-        probeBackend();
-        setInterval(probeBackend, 5000);
       })();
       /* ============================================================
          6. CUSTOM CURSOR — magnetic follower, inverts on text
