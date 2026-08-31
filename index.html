@@ -1826,7 +1826,7 @@
           <h3>Consistent, Not Guesswork</h3>
           <p>Automation only earns its keep if it produces the same result every time. Every system we build follows
             strict, rule-based logic — no improvisation, no surprises. You can rely on the output whether it runs once
-            or ten thousand times.</p>
+            or ten thousand times, no "let me just go verify that" moment.</p>
         </div>
         <div class="protocol-panel">
           <span class="p-num">02</span>
@@ -1837,10 +1837,10 @@
         </div>
         <div class="protocol-panel">
           <span class="p-num">03</span>
-          <h3>Built to Run, Not Just to Demo</h3>
+          <h3>Runs Without You Watching It</h3>
           <p>A system that works in a presentation but needs babysitting in production isn't finished. What we ship runs
             on dedicated cloud servers, stays up around the clock, and handles edge cases without needing someone to
-            restart it manually.</p>
+            maintain it manually.</p>
         </div>
       </div>
     </div>
@@ -1857,35 +1857,38 @@
 
         <div class="cs-block reveal-up">
           <span class="cs-label">The Problem</span>
-          <h3>Rigid Schedules Fail Real Life</h3>
-          <p>Most scheduling tools assume your day will go exactly as planned. When something runs over, gets cancelled,
-            or needs rearranging, a static calendar stays where it is — leaving you with a plan that no longer fits your
-            actual day. The cycle: build a schedule, fall behind, abandon it, repeat.</p>
+          <h3>Every Day Doesn't Start the Same Way</h3>
+          <p>Most calendars assume you'll wake up at the same time and follow the same plan every day. Wake up late
+            once, and the whole day's schedule is already wrong before you've had coffee — and manually re-editing every
+            event is its own chore, so most people just stop bothering.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">What We Built</span>
-          <h3>A Bot That Adapts Instead of Breaking</h3>
-          <p>A Telegram bot that creates and dynamically reschedules Google Calendar events on request. When a task
-            needs to move, you send the bot the clear and add command and it rearranges your calendar to match — adapting to
-            reality instead of pretending it didn't change. No new app to learn; it lives inside Telegram.</p>
+          <h3>A Schedule That Adapts to How Your Day Starts</h3>
+          <p>A Telegram bot built around one specific idea: your day looks different depending on when it starts.
+            Message /awake and it detects the time and applies the right version of your schedule — an early, normal, or
+            late-start template, each one you define ahead of time. Add tasks, clear a day, or plan a future date, all
+            with a short command inside Telegram.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">How It Works</span>
-          <h3>Plain Language. Real Calendar Changes.</h3>
-          <p>Send a message — "Clear Day", "Add Task" — and the bot parses the intent, finds the relevant
-            event, and deletes or adds it in Google Calendar. It can create new events, reschedule existing ones, and keep your
-            day coherent as things shift. The walkthrough video shows the full flow: a Miro board framing the rigid vs.
-            dynamic scheduling problem, followed by a live calendar demo.</p>
+          <h3>Set Templates Once, Adapt Every Day</h3>
+          <p>Build a schedule for a date manually and save it as one of your three templates (early / normal / late) —
+            or use the defaults. From then on, /awake checks the time and applies the matching template. Clear Day
+            empties a date, Add Task drops something into today's plan, and setting a future wake-up time preps a day in
+            advance. It's built for the specific problem of a schedule adjusting to when your day actually starts — not
+            a general-purpose natural-language calendar assistant. Custom builds can go further — see "Build This For
+            Me."</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
-          <div class="cs-status-badge"><span class="cs-status-dot"></span>Self-initiated — in active development</div>
-          <p>This was built by the studio as a self-initiated project initially for personal use, not for a paying client.
-            Built for personal use — a couple of friends heard about it and asked to try it, so it's now open for anyone who wants to try.
-            FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span>Live — Open for Public Use</div>
+          <p>Built by the studio as a self-initiated project, originally for personal use rather than a paying client.
+            A couple of friends heard about it and asked to try it, so it's now live on Telegram and open to anyone who
+            wants to use it. FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
             <a href="https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
@@ -1946,24 +1949,23 @@
         <div class="cs-block reveal-up">
           <span class="cs-label">What We Built</span>
           <h3>Photo In, Structured Record Out</h3>
-          <p>A WhatsApp bot where field staff photograph a site fault and send it directly from the app already on their
-            phones. The bot passes each image through an AI vision model, extracts the relevant details, and logs a
-            structured row into a shared Google Sheet — no manual data entry, no missed fields, no chasing anyone to
-            fill in a form.</p>
+          <p>A WhatsApp bot that turns a photo and a quick note into a clean, structured row in your team's Google
+            Sheet — sent from the WhatsApp app your field staff already have open, no new software to install.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">How It Works</span>
-          <h3>Send a Photo. Get a Logged Record.</h3>
-          <p>A field worker photographs the fault and sends it to the WhatsApp number. The bot receives the image, runs
-            it through a vision model to identify and describe what's wrong, then appends a timestamped structured row
-            to a Google Sheet — fault description, severity, and photo reference all captured automatically, with no
-            human in the loop.</p>
+          <h3>Send a Photo, Get a Logged Record</h3>
+          <p>A field worker snaps a photo of the fault and sends it along with a short note describing what's wrong.
+            The bot logs the photo and your team's own description directly, and pulls out a few extra details
+            automatically where it can — like an address mentioned in the message — plus a rough severity flag based on
+            the image, useful as a first-pass indicator rather than a precise rating, given how much photo quality and
+            conditions vary. Everything lands as one timestamped row, ready for someone to review.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
-          <div class="cs-status-badge"><span class="cs-status-dot"></span>Fully Built — Deployment-Ready</div>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span>Built &amp; Tested — Ready for Onboarding</div>
           <p>This is a self-initiated project — built to prove the pattern before bringing it to a client. The bot is
             complete and tested end-to-end. Like any WhatsApp Business integration, it needs to be connected to a
             dedicated business number to go live — standard setup for any client deployment, done at onboarding rather
@@ -2045,11 +2047,12 @@
 
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
-          <div class="cs-status-badge"><span class="cs-status-dot"></span>Self-initiated — in active development
+          <div class="cs-status-badge"><span class="cs-status-dot"></span>Built &amp; Tested — Ready for Onboarding
           </div>
-          <p>This is a self-initiated project, built by the studio to prove the pattern before bringing it to a
-            client. The walkthrough video outlines the complete flow from missed call to logged lead.
-            FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
+          <p>This is a self-initiated project — built to prove the pattern before bringing it to a client. The system is
+            complete and tested end-to-end; it just needs to be connected to a specific client's number and account to
+            go live for them, which is a standard onboarding step. The walkthrough video outlines the complete flow from
+            missed call to logged lead. FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
             <a href="https://github.com/VectorWorkflows/Missed-Lead-Responder" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
