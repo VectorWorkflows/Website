@@ -202,6 +202,24 @@
       pointer-events: none;
     }
 
+
+    /* ============================================================
+   DEEP-LINK ANCHORS
+   Every id lands below the fixed status strip + nav instead of
+   underneath them. .anchor-alias elements are zero-height markers
+   that give a section a second, shorter, shareable name.
+   ============================================================ */
+    [id] {
+      scroll-margin-top: 120px;
+    }
+
+    .anchor-alias {
+      display: block;
+      height: 0;
+      overflow: hidden;
+      scroll-margin-top: 120px;
+    }
+
     /* ============================================================
    CUSTOM CURSOR
    ============================================================ */
@@ -1804,7 +1822,7 @@
   </div>
 
   <!-- HERO -->
-  <section class="hero" data-section-name="Hero">
+  <section class="hero" id="top" data-section-name="Hero">
     <span class="hero-eyebrow">Workflow Automation Studio — 2026</span>
     <h1 class="hero-title" id="heroTitle">
       <span class="line line-1">Vector</span>
@@ -1865,55 +1883,55 @@
     </div>
   </section>
 
-  <!-- CASE STUDY A — DYNAMIC SCHEDULER -->
-  <section class="case-study-section" data-section-name="Case Study A" id="case-study-scheduler">
+  <span class="anchor-alias" id="missed-lead" aria-hidden="true"></span>
+  <!-- CASE STUDY A — MISSED LEAD RESPONDER -->
+  <section class="case-study-section" data-section-name="Case Study A" id="case-study-leadgen">
     <div class="cs-head reveal-up">
       <span class="eyebrow">Case Study — 01</span>
-      <h2>Dynamic<br>Scheduler</h2>
+      <h2>Missed Lead<br>Responder</h2>
     </div>
     <div class="cs-grid">
       <div class="cs-prose">
 
         <div class="cs-block reveal-up">
           <span class="cs-label">The Problem</span>
-          <h3>Every Day Doesn't Start the Same Way</h3>
-          <p>Most calendars assume you'll wake up at the same time and follow the same plan every day. Wake up late
-            once, and the whole day's schedule is already wrong before you've had coffee — and manually re-editing every
-            event is its own chore, so most people just stop bothering.</p>
+          <h3>A Missed Call Is a Lost Customer</h3>
+          <p>For most local and service businesses, an unanswered phone is one of the most expensive gaps in the whole
+            operation. A caller who doesn't leave a voicemail is a caller who just tried the next business on the
+            list instead. By the time anyone notices the missed call sitting in the log, the window to win that
+            customer back has usually already closed.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">What We Built</span>
-          <h3>A Schedule That Adapts to How Your Day Starts</h3>
-          <p>A Telegram bot built around one specific idea: your day looks different depending on when it starts.
-            Message /awake and it detects the time and applies the right version of your schedule — an early, normal, or
-            late-start template, each one you define ahead of time. Add tasks, clear a day, or plan a future date, all
-            with a short command inside Telegram.</p>
+          <h3>Instant Follow-Up, Zero Manual Chasing</h3>
+          <p>A responder that watches for missed calls the moment they happen and fires back an automatic follow-up
+            within seconds — acknowledging the caller, answering the obvious first question, and logging the contact
+            as a lead — so nothing falls through the gap between "the phone rang" and "someone followed up."</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">How It Works</span>
-          <h3>Set Templates Once, Adapt Every Day</h3>
-          <p>Build a schedule for a date manually and save it as one of your three templates (early / normal / late) —
-            or use the defaults. From then on, /awake checks the time and applies the matching template. Clear Day
-            empties a date, Add Task drops something into today's plan, and setting a future wake-up time preps a day in
-            advance. It's built for the specific problem of a schedule adjusting to when your day actually starts — not
-            a general-purpose natural-language calendar assistant. Custom builds can go further — see "Build This For
-            Me."</p>
+          <h3>Missed Call In. Structured Lead Out.</h3>
+          <p>The moment a call goes unanswered, the responder triggers an automatic reply to the caller and writes a
+            structured lead record — number, timestamp, and status — so the business always has a live, current list
+            of who called and whether they've been brought back into the conversation.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
-          <div class="cs-status-badge"><span class="cs-status-dot"></span>Live — Open for Public Use</div>
-          <p>Built by the studio as a self-initiated project, originally for personal use rather than a paying client.
-            A couple of friends heard about it and asked to try it, so it's now live on Telegram and open to anyone who
-            wants to use it. FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span>Built &amp; Tested — Ready for Onboarding
+          </div>
+          <p>This is a self-initiated project — built to prove the pattern before bringing it to a client. The system is
+            complete and tested end-to-end; it just needs to be connected to a specific client's number and account to
+            go live for them, which is a standard onboarding step. The walkthrough video outlines the complete flow from
+            missed call to logged lead. FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
-            <a href="https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT" target="_blank" rel="noopener"
+            <a href="https://github.com/VectorWorkflows/Missed-Lead-Responder" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
               <i class="fa-brands fa-github"></i>&nbsp;Repository
             </a>
-            <a href="https://app.notion.com/p/Dynamic-Scheduler-Bot-3b9d07dc818580b5ab2dec4c95e80547?source=copy_link"
+            <a href="https://app.notion.com/p/Missed-Lead-Responder-3c9d07dc818580419ae4df23fe5a5ff1?source=copy_link"
               target="_blank" rel="noopener" class="cs-link" data-cursor="link">
               <i class="fa-solid fa-book-open"></i>&nbsp;Documentation
             </a>
@@ -1923,31 +1941,31 @@
       </div>
 
       <div class="cs-video-col">
-
         <div class="reveal-up">
           <span class="cs-label">Walkthrough Video</span>
           <div class="cs-video-wrap">
-            <iframe src="https://www.youtube.com/embed/naB59uo86v4" title="Dynamic Scheduler Bot — Walkthrough"
+            <iframe src="https://www.youtube.com/embed/wNvYonYUA-w" title="Missed Lead Responder — Walkthrough"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen loading="lazy"></iframe>
           </div>
-
-          <!-- CTA Buttons (Scheduler) -->
+  <!-- CASE STUDY A — MISSED LEAD RESPONDER -->
           <div class="cs-cta-row">
-            <a href="https://tally.so/r/Y57qNv" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
+            <a href="https://tally.so/r/2EGzLM" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
               Build This For Me <i class="fa-solid fa-arrow-right"></i>
             </a>
-            <a href="https://t.me/vector_86k_bot" target="_blank" rel="noopener" class="cs-cta-secondary"
-              data-cursor="link" aria-label="Try the Dynamic Scheduler bot for free on Telegram">
-              Try For Free <i class="fa-brands fa-telegram"></i>
+            <a href="https://tally.so/r/0QRgZN" target="_blank" rel="noopener" class="cs-cta-secondary"
+              data-cursor="link"
+              aria-label="Fill out the form below to get the free trial setup for your business.">
+              Try For Free <i class="fa-solid fa-lock"></i>
+              <span class="cs-tooltip">Get a 14 days free trial. No payment required.</span>
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
+  <span class="anchor-alias" id="site-tracker" aria-hidden="true"></span>
   <!-- BUILD LOG B — SITE FAULT TRACKER -->
   <section class="case-study-section" data-section-name="Build Log B" id="case-study-tracker">
     <div class="cs-head reveal-up">
@@ -2012,7 +2030,7 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen loading="lazy"></iframe>
           </div>
-          <!-- CTA Buttons (Tracker) -->
+  <!-- BUILD LOG B — SITE FAULT TRACKER -->
           <div class="cs-cta-row">
             <a href="https://tally.so/r/44lzd5" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
               Build This For Me <i class="fa-solid fa-arrow-right"></i>
@@ -2030,54 +2048,56 @@
     </div>
   </section>
 
-  <!-- BUILD LOG C — MISSED LEAD RESPONDER -->
-  <section class="case-study-section" data-section-name="Build Log C" id="case-study-leadgen">
+  <span class="anchor-alias" id="scheduler" aria-hidden="true"></span>
+  <!-- BUILD LOG C — DYNAMIC SCHEDULER -->
+  <section class="case-study-section" data-section-name="Build Log C" id="case-study-scheduler">
     <div class="cs-head reveal-up">
       <span class="eyebrow">Build Log — 03</span>
-      <h2>Missed Lead<br>Responder</h2>
+      <h2>Dynamic<br>Scheduler</h2>
     </div>
     <div class="cs-grid">
       <div class="cs-prose">
 
         <div class="cs-block reveal-up">
           <span class="cs-label">The Problem</span>
-          <h3>A Missed Call Is a Lost Customer</h3>
-          <p>For most local and service businesses, an unanswered phone is one of the most expensive gaps in the whole
-            operation. A caller who doesn't leave a voicemail is a caller who just tried the next business on the
-            list instead. By the time anyone notices the missed call sitting in the log, the window to win that
-            customer back has usually already closed.</p>
+          <h3>Every Day Doesn't Start the Same Way</h3>
+          <p>Most calendars assume you'll wake up at the same time and follow the same plan every day. Wake up late
+            once, and the whole day's schedule is already wrong before you've had coffee — and manually re-editing every
+            event is its own chore, so most people just stop bothering.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">What We Built</span>
-          <h3>Instant Follow-Up, Zero Manual Chasing</h3>
-          <p>A responder that watches for missed calls the moment they happen and fires back an automatic follow-up
-            within seconds — acknowledging the caller, answering the obvious first question, and logging the contact
-            as a lead — so nothing falls through the gap between "the phone rang" and "someone followed up."</p>
+          <h3>A Schedule That Adapts to How Your Day Starts</h3>
+          <p>A Telegram bot built around one specific idea: your day looks different depending on when it starts.
+            Message /awake and it detects the time and applies the right version of your schedule — an early, normal, or
+            late-start template, each one you define ahead of time. Add tasks, clear a day, or plan a future date, all
+            with a short command inside Telegram.</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">How It Works</span>
-          <h3>Missed Call In. Structured Lead Out.</h3>
-          <p>The moment a call goes unanswered, the responder triggers an automatic reply to the caller and writes a
-            structured lead record — number, timestamp, and status — so the business always has a live, current list
-            of who called and whether they've been brought back into the conversation.</p>
+          <h3>Set Templates Once, Adapt Every Day</h3>
+          <p>Build a schedule for a date manually and save it as one of your three templates (early / normal / late) —
+            or use the defaults. From then on, /awake checks the time and applies the matching template. Clear Day
+            empties a date, Add Task drops something into today's plan, and setting a future wake-up time preps a day in
+            advance. It's built for the specific problem of a schedule adjusting to when your day actually starts — not
+            a general-purpose natural-language calendar assistant. Custom builds can go further — see "Build This For
+            Me."</p>
         </div>
 
         <div class="cs-block reveal-up">
           <span class="cs-label">Status</span>
-          <div class="cs-status-badge"><span class="cs-status-dot"></span>Built &amp; Tested — Ready for Onboarding
-          </div>
-          <p>This is a self-initiated project — built to prove the pattern before bringing it to a client. The system is
-            complete and tested end-to-end; it just needs to be connected to a specific client's number and account to
-            go live for them, which is a standard onboarding step. The walkthrough video outlines the complete flow from
-            missed call to logged lead. FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span>Live — Open for Public Use</div>
+          <p>Built by the studio as a self-initiated project, originally for personal use rather than a paying client.
+            A couple of friends heard about it and asked to try it, so it's now live on Telegram and open to anyone who
+            wants to use it. FOR A CUSTOM BUILD PRESS "Build This For Me".</p>
           <div class="cs-links">
-            <a href="https://github.com/VectorWorkflows/Missed-Lead-Responder" target="_blank" rel="noopener"
+            <a href="https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT" target="_blank" rel="noopener"
               class="cs-link" data-cursor="link">
               <i class="fa-brands fa-github"></i>&nbsp;Repository
             </a>
-            <a href="https://app.notion.com/p/Missed-Lead-Responder-3c9d07dc818580419ae4df23fe5a5ff1?source=copy_link"
+            <a href="https://app.notion.com/p/Dynamic-Scheduler-Bot-3b9d07dc818580b5ab2dec4c95e80547?source=copy_link"
               target="_blank" rel="noopener" class="cs-link" data-cursor="link">
               <i class="fa-solid fa-book-open"></i>&nbsp;Documentation
             </a>
@@ -2087,26 +2107,27 @@
       </div>
 
       <div class="cs-video-col">
+
         <div class="reveal-up">
           <span class="cs-label">Walkthrough Video</span>
           <div class="cs-video-wrap">
-            <iframe src="https://www.youtube.com/embed/wNvYonYUA-w" title="Missed Lead Responder — Walkthrough"
+            <iframe src="https://www.youtube.com/embed/naB59uo86v4" title="Dynamic Scheduler Bot — Walkthrough"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen loading="lazy"></iframe>
           </div>
-          <!-- CTA Button (Missed Lead Generator) -->
+
+  <!-- BUILD LOG C — DYNAMIC SCHEDULER -->
           <div class="cs-cta-row">
-            <a href="https://tally.so/r/2EGzLM" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
+            <a href="https://tally.so/r/Y57qNv" target="_blank" rel="noopener" class="cs-cta" data-cursor="link">
               Build This For Me <i class="fa-solid fa-arrow-right"></i>
             </a>
-            <a href="https://tally.so/r/0QRgZN" target="_blank" rel="noopener" class="cs-cta-secondary"
-              data-cursor="link"
-              aria-label="Fill out the form below to get the free trial setup for your business.">
-              Try For Free <i class="fa-solid fa-lock"></i>
-              <span class="cs-tooltip">Get a 14 days free trial. No payment required.</span>
+            <a href="https://t.me/vector_86k_bot" target="_blank" rel="noopener" class="cs-cta-secondary"
+              data-cursor="link" aria-label="Try the Dynamic Scheduler bot for free on Telegram">
+              Try For Free <i class="fa-brands fa-telegram"></i>
             </a>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -2215,7 +2236,7 @@
   </section>
 
   <!-- MANIFESTO / PARALLAX -->
-  <section class="manifesto" data-section-name="Manifesto">
+  <section class="manifesto" id="manifesto" data-section-name="Manifesto">
     <p class="manifesto-text" id="manifestoText">We build the automation that removes the repetitive work — so you can
       focus on what actually matters.</p>
   </section>
@@ -3216,6 +3237,59 @@
       }
 
       /* ============================================================
+         DEEP LINKS — #hash scrolling
+         Anchor clicks and an on-load #hash both route through Lenis so
+         they use the same easing as the rest of the page; without this a
+         hash jump is instant and fights the smooth-scroll wrapper.
+         The initial jump waits for fonts + ScrollTrigger.refresh(), since
+         the Protocol section is pinned horizontally and every section
+         below it moves once that pin distance is measured — jumping
+         earlier lands at the wrong offset.
+         ============================================================ */
+      function initAnchors() {
+        var NAV_OFFSET = -110;
+
+        function scrollToEl(el, immediate) {
+          if (lenis) {
+            lenis.scrollTo(el, { offset: NAV_OFFSET, immediate: !!immediate, duration: 1.2 });
+          } else {
+            var top = el.getBoundingClientRect().top + (window.scrollY || 0) + NAV_OFFSET;
+            window.scrollTo({ top: top, behavior: immediate ? "auto" : "smooth" });
+          }
+        }
+
+        document.addEventListener("click", function (e) {
+          var link = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+          if (!link) return;
+          var raw = link.getAttribute("href");
+          if (!raw || raw === "#") return;            // logo "back to top" link
+          var id = decodeURIComponent(raw.slice(1));
+          var el = document.getElementById(id);
+          if (!el) return;                            // let the browser handle it
+          e.preventDefault();
+          scrollToEl(el, false);
+          // Keep the URL shareable — the visitor can copy whatever section
+          // they are reading straight out of the address bar.
+          if (history.replaceState) history.replaceState(null, "", raw);
+        });
+
+        if (!window.location.hash) return;
+        var target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        if (!target) return;
+
+        function jump() {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () { scrollToEl(target, true); });
+          });
+        }
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(jump);
+        } else {
+          jump();
+        }
+      }
+
+      /* ============================================================
          BOOT SEQUENCE
          ============================================================ */
       document.addEventListener("DOMContentLoaded", function () {
@@ -3231,6 +3305,7 @@
           playHeroEntrance();
           showWaFloat();
           updateStatusStrip();
+          initAnchors();
 
           // The Protocol's horizontal-pin distance is measured from
           // track.scrollWidth, which depends on the Anton display font
