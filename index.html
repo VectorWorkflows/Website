@@ -1712,6 +1712,25 @@
         padding: 100px clamp(1.25rem, 4vw, 2.5rem);
       }
     }
+  
+    /* ===== Disable text selection for casual users ===== */
+    html, body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    img, svg, a { -webkit-user-drag: none; user-drag: none; }
+    /* Keep real inputs and anything opted-in selectable */
+    input, textarea, select, option,
+    [contenteditable="true"], [contenteditable=""],
+    .selectable, .selectable * {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
   </style>
 </head>
 

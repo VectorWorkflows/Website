@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
 /* ============================================================
@@ -80,13 +81,11 @@ h1,h2,h3,h4{font-family:var(--f-display);text-transform:uppercase;font-weight:40
    violet/void mood as a couple of static, blurred radial gradients
    with a slow transform drift, instead of loading Three.js for it.
    ============================================================ */
-.ambient-glow{
-  position:fixed; inset:-15%; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(600px circle at 18% 15%, rgba(111,89,204,0.22), transparent 60%),
-    radial-gradient(560px circle at 82% 65%, rgba(165,148,240,0.14), transparent 60%);
-  filter:blur(70px);
-  animation:ambientDrift 34s ease-in-out infinite alternate;
+/* AMBIENT CANVAS — the main site's WebGL fluid mesh, same element and
+   same tokens, so this page's backdrop is identical to the homepage's. */
+#ambient{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  opacity:0.85;
 }
 @keyframes ambientDrift{
   0%{transform:translate(0,0) scale(1);}
@@ -127,9 +126,12 @@ nav{
   display:flex; justify-content:space-between; align-items:center;
   padding:20px clamp(1.25rem,4vw,2.5rem);
   margin-top:38px;
-  background:rgba(5,5,5,0.72);
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--line);
+  /* No backdrop panel: the ambient WebGL mesh now runs behind this page
+     the same way it does on the homepage, so the opaque bar that used to
+     keep scrolled text legible just reads as a black slab over it. The
+     homepage nav is transparent for the same reason. NOTE: this element
+     selector also matched .project-jump below (a <nav>), which is why the
+     jump-to pills were sitting on a black panel too. */
 }
 .logo-mark{
   display:flex; align-items:baseline; gap:10px;
@@ -222,7 +224,13 @@ nav{
    APPENDIX BLOCKS — per-project disclosures, same visual language
    as the general clauses so they read as one continuous policy.
    ============================================================ */
-.appendix-section{background:var(--surface);}
+/* Appendix sections used a --surface fill to separate per-product
+   disclosures from the general clauses. Against the ambient mesh that
+   fill reads as a black box around the text, and the general clauses on
+   this page (and every section on the terms page) sit directly on the
+   background — so the sections are transparent and the .appendix-tag
+   pill carries the distinction instead. Card grids keep their --surface
+   fills; there the panel is the component, not a wrapper around prose. */
 .appendix-tag{
   display:inline-flex; align-items:center; gap:8px;
   font-family:var(--f-mono); font-size:0.68rem; letter-spacing:0.14em;
@@ -434,17 +442,81 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
   .reveal-up{opacity:1;transform:none;}
-  .ambient-glow{animation:none;}
   .marquee-track{animation:none;}
+}
+
+    /* ===== Disable text selection for casual users ===== */
+    html, body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    img, svg, a { -webkit-user-drag: none; user-drag: none; }
+    /* Keep real inputs and anything opted-in selectable */
+    input, textarea, select, option,
+    [contenteditable="true"], [contenteditable=""],
+    .selectable, .selectable * {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+  
+/* ============================================================
+   CUSTOM CURSOR — matches the main site's dot + rotated ring
+   ============================================================ */
+body{cursor:none;}
+button, a, [data-cursor="link"]{cursor:none;}
+.cursor-dot,
+.cursor-ring{
+  position:fixed; top:0; left:0;
+  pointer-events:none;
+  z-index:9998;
+  border-radius:2px;
+  will-change:transform;
+}
+.cursor-dot{
+  width:6px; height:6px;
+  background:var(--accent-2);
+  transform:translate(-50%,-50%);
+}
+.cursor-ring{
+  width:36px; height:36px;
+  border:1px solid var(--line-strong);
+  transform:translate(-50%,-50%) rotate(45deg);
+  transition:width .25s cubic-bezier(.16,1,.3,1), height .25s cubic-bezier(.16,1,.3,1),
+             border-color .25s ease, background-color .25s ease;
+}
+.cursor-ring.is-active{
+  width:64px; height:64px;
+  border-color:var(--accent);
+  background:rgba(111,89,204,0.12);
+}
+.cursor-ring.is-invert{
+  background:var(--ink);
+  border-color:var(--ink);
+  mix-blend-mode:difference;
+}
+@media (max-width:860px), (hover:none){
+  body, button, a, [data-cursor="link"]{cursor:auto;}
+  button, a, [data-cursor="link"]{cursor:pointer;}
+  .cursor-dot, .cursor-ring{display:none;}
 }
 </style>
 </head>
 <body>
 
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+
 <a href="#main" class="skip-link">Skip to content</a>
 
 <canvas id="grain" class="grain"></canvas>
-<div class="ambient-glow" aria-hidden="true"></div>
+<canvas id="ambient" aria-hidden="true"></canvas>
 
 <div id="status-strip">
   <div class="status-group">
@@ -949,6 +1021,292 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-o
     }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
     revealEls.forEach(function(el){ io.observe(el); });
   }
+
+  /* ============================================================
+     CUSTOM CURSOR — dot + magnetic ring. Same behaviour as the
+     main site, written without GSAP since this page doesn't load
+     it: a rAF lerp drives both elements instead of a tween.
+     ============================================================ */
+  (function initCursor(){
+    var isCoarse = window.matchMedia("(hover:none), (max-width:860px)").matches;
+    if (isCoarse) return;
+    var dot  = document.getElementById("cursorDot");
+    var ring = document.getElementById("cursorRing");
+    if (!dot || !ring) return;
+
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var dx = mx, dy = my, rx = mx, ry = my;
+    var magnetTarget = null;
+
+    window.addEventListener("mousemove", function(e){
+      mx = e.clientX; my = e.clientY;
+    }, { passive: true });
+
+    function loop(){
+      // Ring aims at the magnet target's centre when hovering something
+      // interactive, otherwise straight at the pointer.
+      var tx = mx, ty = my;
+      if (magnetTarget){
+        var rect = magnetTarget.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        tx = cx + (mx - cx) * 0.35;
+        ty = cy + (my - cy) * 0.35;
+      }
+      dx += (mx - dx) * 0.35;   // dot: tight follow
+      dy += (my - dy) * 0.35;
+      rx += (tx - rx) * 0.18;   // ring: laggy, magnetic
+      ry += (ty - ry) * 0.18;
+      dot.style.transform  = "translate(-50%,-50%) translate3d(" + dx + "px," + dy + "px,0)";
+      ring.style.transform = "translate(-50%,-50%) translate3d(" + rx + "px," + ry + "px,0) rotate(45deg)";
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    var interactive = document.querySelectorAll('a, button, [data-cursor="link"]');
+    interactive.forEach(function(el){
+      el.addEventListener("mouseenter", function(){
+        ring.classList.add("is-active", "is-invert");
+        magnetTarget = el;
+      });
+      el.addEventListener("mouseleave", function(){
+        ring.classList.remove("is-active", "is-invert");
+        magnetTarget = null;
+      });
+    });
+
+    var textEls = document.querySelectorAll("h1, h2, h3, p");
+    textEls.forEach(function(el){
+      el.addEventListener("mouseenter", function(){ ring.classList.add("is-invert"); });
+      el.addEventListener("mouseleave", function(){ ring.classList.remove("is-invert"); });
+    });
+  })();
+
+
+  /* ============================================================
+     AMBIENT WEBGL MESH — ported verbatim from the main site so the
+     backdrop (and therefore the difference-blended cursor) matches
+     exactly. Replaces the CSS-gradient stand-in.
+     ============================================================ */
+  (function ambientWebGL() {
+    var canvas = document.getElementById("ambient");
+    if (!window.THREE) {
+      // CDN failed to load — fail silently to a flat background rather
+      // than a blank/broken canvas. The CSS var(--void) body background
+      // still reads as intentional, not broken.
+      return;
+    }
+
+    var renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      alpha: true,
+      antialias: false,
+      powerPreference: "low-power"
+    });
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    renderer.setPixelRatio(dpr);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    var mouseTarget = new THREE.Vector2(0.5, 0.5);
+    var mouseCurrent = new THREE.Vector2(0.5, 0.5);
+
+    var uniforms = {
+      u_time: { value: 0 },
+      u_resolution: { value: new THREE.Vector2(1, 1) },
+      u_mouse: { value: mouseCurrent },
+      // Colors pulled directly from the page's own token system —
+      // the shader is not decorated with arbitrary GLSL-native colors,
+      // it is the --void / --accent / --accent-2 tokens rendered in 3D.
+      u_colorVoid: { value: new THREE.Color(0x050505) },
+      u_colorAccent: { value: new THREE.Color(0x6f59cc) },
+      u_colorAccent2: { value: new THREE.Color(0xa594f0) }
+    };
+
+    var vertexShader = [
+      "varying vec2 vUv;",
+      "void main(){",
+      "  vUv = uv;",
+      "  gl_Position = vec4(position, 1.0);",
+      "}"
+    ].join("\n");
+
+    // Simplex noise (Ashima Arts / Ian McEwan implementation) — the
+    // standard, verified GLSL reference implementation. Reimplementing
+    // this by hand is a well-known source of subtle permutation-table
+    // bugs, so the canonical version is used rather than an
+    // approximation written from memory.
+    var simplexNoise3D = [
+      "vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }",
+      "vec4 mod289(vec4 x){ return x - floor(x * (1.0/289.0)) * 289.0; }",
+      "vec4 permute(vec4 x){ return mod289(((x*34.0)+1.0)*x); }",
+      "vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }",
+      "float snoise(vec3 v){",
+      "  const vec2 C = vec2(1.0/6.0, 1.0/3.0);",
+      "  const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);",
+      "  vec3 i  = floor(v + dot(v, C.yyy));",
+      "  vec3 x0 = v - i + dot(i, C.xxx);",
+      "  vec3 g = step(x0.yzx, x0.xyz);",
+      "  vec3 l = 1.0 - g;",
+      "  vec3 i1 = min(g.xyz, l.zxy);",
+      "  vec3 i2 = max(g.xyz, l.zxy);",
+      "  vec3 x1 = x0 - i1 + C.xxx;",
+      "  vec3 x2 = x0 - i2 + C.yyy;",
+      "  vec3 x3 = x0 - D.yyy;",
+      "  i = mod289(i);",
+      "  vec4 p = permute(permute(permute(",
+      "            i.z + vec4(0.0, i1.z, i2.z, 1.0))",
+      "          + i.y + vec4(0.0, i1.y, i2.y, 1.0))",
+      "          + i.x + vec4(0.0, i1.x, i2.x, 1.0));",
+      "  float n_ = 0.142857142857;",
+      "  vec3 ns = n_ * D.wyz - D.xzx;",
+      "  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);",
+      "  vec4 x_ = floor(j * ns.z);",
+      "  vec4 y_ = floor(j - 7.0 * x_);",
+      "  vec4 x = x_ *ns.x + ns.yyyy;",
+      "  vec4 y = y_ *ns.x + ns.yyyy;",
+      "  vec4 h = 1.0 - abs(x) - abs(y);",
+      "  vec4 b0 = vec4(x.xy, y.xy);",
+      "  vec4 b1 = vec4(x.zw, y.zw);",
+      "  vec4 s0 = floor(b0)*2.0 + 1.0;",
+      "  vec4 s1 = floor(b1)*2.0 + 1.0;",
+      "  vec4 sh = -step(h, vec4(0.0));",
+      "  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;",
+      "  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;",
+      "  vec3 p0 = vec3(a0.xy, h.x);",
+      "  vec3 p1 = vec3(a0.zw, h.y);",
+      "  vec3 p2 = vec3(a1.xy, h.z);",
+      "  vec3 p3 = vec3(a1.zw, h.w);",
+      "  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));",
+      "  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;",
+      "  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);",
+      "  m = m * m;",
+      "  return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));",
+      "}"
+    ].join("\n");
+
+    var fragmentShader = [
+      "precision mediump float;",
+      "varying vec2 vUv;",
+      "uniform float u_time;",
+      "uniform vec2 u_resolution;",
+      "uniform vec2 u_mouse;",
+      "uniform vec3 u_colorVoid;",
+      "uniform vec3 u_colorAccent;",
+      "uniform vec3 u_colorAccent2;",
+
+      simplexNoise3D,
+
+      // fBm: layered noise octaves at increasing frequency, decreasing
+      // amplitude — this is what turns a single noise field into
+      // something that reads as volumetric smoke rather than a flat
+      // Perlin gradient.
+      "float fbm(vec3 p){",
+      "  float value = 0.0;",
+      "  float amplitude = 0.5;",
+      "  for (int i = 0; i < 5; i++){",
+      "    value += amplitude * snoise(p);",
+      "    p *= 2.02;",
+      "    amplitude *= 0.5;",
+      "  }",
+      "  return value;",
+      "}",
+
+      "void main(){",
+      "  vec2 uv = vUv;",
+      "  float aspect = u_resolution.x / u_resolution.y;",
+      "  vec2 st = vec2(uv.x * aspect, uv.y);",
+
+      // Mouse gently biases the sampling origin rather than driving a
+      // sharp cursor-follow blob — keeps the 'subtly reacts' framing
+      // from the brief instead of an obvious mouse-paint effect.
+      "  vec2 mouseBias = (u_mouse - 0.5) * 0.35;",
+      "  vec3 noiseCoord = vec3(st * 1.6 + mouseBias, u_time * 0.035);",
+
+      "  float n1 = fbm(noiseCoord);",
+      "  float n2 = fbm(noiseCoord * 1.8 + vec3(5.2, 1.3, u_time * 0.02));",
+      "  float density = fbm(vec3(st * 2.4, u_time * 0.05) + n1 * 0.6);",
+
+      // Remap noise (-1..1 roughly) into a 0..1 density field, then
+      // shape it so most of the frame stays near-void with violet
+      // concentrating in drifting pockets — reads as 'dark volumetric
+      // fluid', not a full-frame gradient wash.
+      "  density = smoothstep(0.15, 0.85, density * 0.5 + 0.5);",
+
+      "  vec3 color = mix(u_colorVoid, u_colorAccent, density * 0.55);",
+      "  float highlight = smoothstep(0.55, 0.95, n2 * 0.5 + 0.5);",
+      "  color = mix(color, u_colorAccent2, highlight * 0.28);",
+
+      // Vignette — keeps energy concentrated away from the viewport
+      // edges so the effect reads as depth behind the content, not a
+      // flat texture tiling to the frame edge.
+      "  float vignette = 1.0 - smoothstep(0.4, 1.1, distance(uv, vec2(0.5)));",
+      "  color *= mix(0.55, 1.0, vignette);",
+
+      "  gl_FragColor = vec4(color, 1.0);",
+      "}"
+    ].join("\n");
+
+    var material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      depthWrite: false,
+      depthTest: false
+    });
+
+    var geometry = new THREE.PlaneGeometry(2, 2);
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    function resize() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      uniforms.u_resolution.value.set(w * dpr, h * dpr);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    window.addEventListener("mousemove", function (e) {
+      mouseTarget.x = e.clientX / window.innerWidth;
+      mouseTarget.y = 1.0 - (e.clientY / window.innerHeight);
+    });
+
+    var clock = new THREE.Clock();
+
+    // Pause the render loop when the tab is hidden — a fullscreen
+    // fragment shader running every frame on a backgrounded tab is
+    // pure wasted GPU/battery for zero visible benefit.
+    var isVisible = true;
+    document.addEventListener("visibilitychange", function () {
+      isVisible = document.visibilityState === "visible";
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!isVisible) return;
+
+      // LERP the mouse uniform toward its target — matches the same
+      // buttery-lag language used everywhere else on the page (cursor,
+      // tilt) instead of snapping the fluid origin on every mousemove.
+      mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.04;
+      mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.04;
+
+      uniforms.u_time.value = clock.getElapsedTime();
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion) {
+      // Render one static frame instead of a continuous loop.
+      uniforms.u_time.value = 2.0;
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
+  })();
+
 })();
 </script>
 </body>
