@@ -302,11 +302,11 @@ def page_index():
       <article class="disc" data-reveal>
         <div class="disc__row">
           <div class="disc__n">{n}</div>
-          <div>
+          <div class="disc__head">
             <h3 class="disc__title">{title}</h3>
             <p class="disc__lead">{lead}</p>
           </div>
-          <div>
+          <div class="disc__text">
             <p class="disc__body">{body}</p>
             <div class="disc__tags">{tagged}</div>
           </div>
@@ -354,7 +354,28 @@ def page_index():
 
   <!-- ============================================================ HERO -->
   <section class="hero">
-    <canvas class="hero__canvas" aria-hidden="true"></canvas>
+    <div class="hero__stage" aria-hidden="true">
+      <figure class="hero__slide" data-cap="Balayage, long waves">
+        <img src="assets/img/hero/hero-01.jpg"
+             srcset="assets/img/hero/hero-01-800.jpg 800w, assets/img/hero/hero-01.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" fetchpriority="high" decoding="async" data-no-ph>
+      </figure>
+      <figure class="hero__slide" data-cap="Copper red, glossed" data-hold="11500">
+        <img src="assets/img/hero/hero-02.jpg"
+             srcset="assets/img/hero/hero-02-800.jpg 800w, assets/img/hero/hero-02.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
+      </figure>
+      <figure class="hero__slide" data-cap="A blunt bob, one length">
+        <img src="assets/img/hero/hero-03.jpg"
+             srcset="assets/img/hero/hero-03-800.jpg 800w, assets/img/hero/hero-03.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
+      </figure>
+      <figure class="hero__slide" data-cap="Bronde, long layers">
+        <img src="assets/img/hero/hero-04.jpg"
+             srcset="assets/img/hero/hero-04-800.jpg 800w, assets/img/hero/hero-04.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
+      </figure>
+    </div>
     <div class="hero__veil" aria-hidden="true"></div>
     <div class="hero__in">
       <div>
@@ -377,6 +398,12 @@ def page_index():
       </dl>
     </div>
     <div class="scrollcue"><span>Scroll</span><i></i></div>
+
+    <button class="hero__meta" data-hero-next aria-label="Next photograph">
+      <span class="hero__cap" data-hero-cap></span>
+      <span class="hero__count"><b data-hero-index>01</b> / 04</span>
+      <span class="hero__bar"><i data-hero-bar></i></span>
+    </button>
   </section>
 
   <!-- ========================================================= MARQUEE -->
@@ -722,15 +749,15 @@ def page_houses():
 
   <section class="section--tight" style="padding-top:0">
     <div class="shell">
-      <div class="split">
-        <div class="split__text" style="grid-column:1 / 7">
+      <div class="split split--flip">
+        <div class="split__text">
           <p class="label" data-reveal>How we choose</p>
           <h2 class="quote" data-reveal style="--rd:100ms;margin-top:1rem">
             A product earns its place on our shelf by <em style="color:var(--champagne)">surviving
             a Dubai summer</em> — not by winning an award.
           </h2>
         </div>
-        <div class="split__media" style="grid-column:8 / 13">
+        <div class="split__media">
           <div class="frame frame--16x9 rv-img" style="margin-bottom:var(--s-5)">
             <img src="assets/img/editorial/houses-lead.jpg" alt="Colour work in progress"
                  loading="lazy" decoding="async" data-ph="On the floor" data-ph-sub="Photograph to follow">

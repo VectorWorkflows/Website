@@ -41,7 +41,7 @@ assets/css/
 assets/js/
   data.js           ALL CONTENT. Prices, team, brands, hours, gallery config.
   app.js            Preloader, cursor, nav, reveals, parallax, chrome
-  hero.js           The hero canvas ("Strands")
+  hero.js           The hero photographic plate (cross-dissolve + parallax)
   pricing.js        Price list rendering, tabs, live search
   gallery.js        Masonry build, self-healing image probe, lightbox
   booking.js        Five-step appointment request flow
@@ -65,6 +65,11 @@ fifteen custom properties. Changing `--champagne` restyles the entire site.
 
 **Photos** — see `assets/img/README.txt`.
 
+**Hero images** — `assets/img/hero/`. Four plates at 1400x1867 plus 800w
+variants. To swap one, replace the pair and edit the `data-cap` on its
+`.hero__slide` in `build.py`. Sources are 3:4, which every phone photo already
+is, so nothing distorts.
+
 **The colour reveal** on the home page (panel 02) is a `.swatch`: a monochrome
 image stacked over its colour original, lifted on hover, keyboard focus or tap.
 To add another, copy the markup in `build.py` and drop in the two files.
@@ -75,10 +80,23 @@ To add another, copy the markup in `build.py` and drop in the two files.
 
 ## What's actually built
 
-- **Hero canvas** — a field of drifting filaments, rendered in 2D canvas, that
-  reacts to the pointer. Pauses when off-screen or when the tab is hidden.
-- **Custom cursor** — dot and ring with lag, expanding on links, turning into a
-  "VIEW" disc over gallery tiles. Disabled on touch and under reduced-motion.
+- **Hero** — a full-height photographic plate of the salon's own work sitting
+  behind the headline. Four images cross-dissolve on a ~7s hold, each with a
+  slow continuous push-in so it never reads as a static crop; the plate rises
+  on load, lags the page on scroll, and its scrim deepens as you leave. Its
+  inner edge is masked so it dissolves into the ink rather than butting against
+  it. Counter, caption and progress bar bottom right, click to step.
+  Responsive `srcset` (800w / 1400w). Pauses off-screen and when the tab is
+  hidden; holds a single still frame under reduced-motion.
+
+  There is deliberately no generative/canvas background. An abstract animation
+  is what you reach for when you have no photography — this salon has plenty,
+  and the work is more persuasive than any effect.
+- **Custom cursor** — dot and ring with lag, expanding on links, a "VIEW" disc
+  over gallery tiles, a caret over text fields. The native pointer is hidden
+  (`html.has-cursor`), and that class is only added once ours is on screen, so
+  a failure can never leave the page with no pointer. Off on touch and under
+  reduced-motion, where the native cursor stays.
 - **Reveal system** — IntersectionObserver, line-by-line masked text, staggered
   children via `data-stagger`, image clip reveals.
 - **Price list** — four tabs, live search across all four at once, match

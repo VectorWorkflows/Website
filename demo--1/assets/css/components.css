@@ -329,7 +329,7 @@ body.cur-hidden .cursor, body.cur-hidden .cursor-ring { opacity: 0; }
 .disc:last-child { border-bottom: 1px solid var(--line-soft); }
 .disc__row {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  grid-template-columns: 4rem minmax(0, 0.9fr) minmax(0, 1.5fr) auto;
   gap: var(--s-5);
   align-items: start;
 }
@@ -340,9 +340,22 @@ body.cur-hidden .cursor, body.cur-hidden .cursor-ring { opacity: 0; }
 .disc__tags { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-4); }
 .disc__cta { align-self: center; }
 @media (max-width: 60rem) {
-  .disc__row { grid-template-columns: 2.5rem 1fr; }
-  .disc__body { grid-column: 2; }
-  .disc__cta { grid-column: 2; justify-self: start; margin-top: var(--s-4); }
+  .disc__row {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: var(--s-2) var(--s-4);
+  }
+  .disc__head,
+  .disc__text,
+  .disc__cta { grid-column: 2; }
+  .disc__n { padding-top: 0.35em; }
+  .disc__text { margin-top: var(--s-4); }
+  .disc__cta { justify-self: start; margin-top: var(--s-5); }
+}
+@media (max-width: 30rem) {
+  .disc__row { grid-template-columns: minmax(0, 1fr); gap: var(--s-3); }
+  .disc__n, .disc__head, .disc__text, .disc__cta { grid-column: 1; }
+  .disc__n { padding-top: 0; }
+  .disc__text { margin-top: 0; }
 }
 
 .tag {
@@ -677,3 +690,26 @@ body.cur-hidden .cursor, body.cur-hidden .cursor-ring { opacity: 0; }
 .notice b { color: var(--champagne); font-weight: 400; font-style: normal; }
 .notice a { color: var(--bone-70); }
 .notice a:hover { color: var(--champagne); }
+
+/* ---- hide the native pointer once ours is live ------------------------ */
+html.has-cursor,
+html.has-cursor body,
+html.has-cursor a,
+html.has-cursor button,
+html.has-cursor input,
+html.has-cursor select,
+html.has-cursor textarea,
+html.has-cursor label,
+html.has-cursor [role="button"],
+html.has-cursor * { cursor: none; }
+
+/* over a text field the ring becomes a caret, so the field still reads as
+   something you can type into */
+body.cur-text .cursor-ring {
+  width: 2px; height: 32px;
+  margin: -16px 0 0 -1px;
+  border-radius: 1px;
+  background: var(--bone);
+  border-color: transparent;
+}
+body.cur-text .cursor { opacity: 0; }

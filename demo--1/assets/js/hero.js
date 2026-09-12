@@ -1,140 +1,145 @@
 /* ==========================================================================
-   HERO CANVAS — "Strands"
-   A field of slow, hair-like filaments drifting across the canvas. Reacts
-   gently to the pointer. Pauses when off-screen or when the tab is hidden.
-   Falls back to a static CSS gradient under prefers-reduced-motion.
+   HERO — the photographic plate
+   ---------------------------------------------------------------------------
+   A full-height column of the salon's own work, sitting behind the headline.
+   No generative background: the photographs are the asset, so they carry it.
+
+     · the plate rises on load, the image settling out of a slow push-in
+     · each image drifts continuously, so it is never a static crop
+     · plates cross-dissolve every few seconds, the incoming one already moving
+     · scrolling pulls the plate at a different rate to the type, and deepens
+       the scrim over it
+
+   Everything is transform and opacity, so it stays on the compositor. Under
+   prefers-reduced-motion it settles to a single still frame and stops.
    ========================================================================== */
 (function () {
   'use strict';
 
-  var canvas = document.querySelector('.hero__canvas');
-  if (!canvas || !canvas.getContext) return;
+  var stage = document.querySelector('.hero__stage');
+  if (!stage) return;
+
+  var hero = document.querySelector('.hero');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('.hero__slide'));
+  if (!slides.length) return;
+
+  var idxEl = document.querySelector('[data-hero-index]');
+  var barEl = document.querySelector('[data-hero-bar]');
+  var capEl = document.querySelector('[data-hero-cap]');
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var ctx = canvas.getContext('2d', { alpha: true });
-  var W = 0, H = 0, DPR = 1;
-  var strands = [];
-  var t = 0;
-  var mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
-  var running = true;
+  var HOLD = 6500;              // default ms a plate is held
+  var holdNow = HOLD;           // the current plate's own hold
+  var current = 0;
+  var timer = null;
+  var startedAt = 0;
   var rafId = null;
 
-  var PALETTE = [
-    'rgba(216,195,165,',   // champagne
-    'rgba(184,149,106,',   // gold
-    'rgba(201,148,143,',   // rose
-    'rgba(242,235,225,'    // bone
-  ];
-
-  function size() {
-    DPR = Math.min(window.devicePixelRatio || 1, 1.75);
-    var r = canvas.getBoundingClientRect();
-    W = Math.max(r.width, 1);
-    H = Math.max(r.height, 1);
-    canvas.width = Math.floor(W * DPR);
-    canvas.height = Math.floor(H * DPR);
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  /* --------------------------------------------------------------- advance */
+  function paint(i) {
+    slides.forEach(function (s, n) {
+      s.classList.toggle('is-on', n === i);
+      // the outgoing plate keeps drifting, so the change never reads as a cut
+      s.classList.toggle('is-out', n === current && n !== i);
+    });
+    if (idxEl) idxEl.textContent = ('0' + (i + 1)).slice(-2);
+    if (capEl) capEl.textContent = slides[i].getAttribute('data-cap') || '';
+    current = i;
+    // a plate can ask to be held longer than the rest — some photographs
+    // simply earn more time on screen than others
+    holdNow = parseInt(slides[i].getAttribute('data-hold'), 10) || HOLD;
+    startedAt = performance.now();
   }
 
-  function build() {
-    strands = [];
-    var count = W < 700 ? 26 : W < 1200 ? 40 : 58;
-    for (var i = 0; i < count; i++) {
-      strands.push({
-        x0: (Math.random() * 1.5 - 0.28) * W,
-        amp: 34 + Math.random() * 190,
-        freq: 0.0016 + Math.random() * 0.0042,
-        speed: 0.0016 + Math.random() * 0.0055,
-        phase: Math.random() * Math.PI * 2,
-        drift: (Math.random() - 0.5) * 0.22,
-        width: 0.35 + Math.random() * 1.5,
-        alpha: 0.035 + Math.random() * 0.15,
-        hue: PALETTE[(Math.random() * PALETTE.length) | 0],
-        tilt: (Math.random() - 0.5) * 0.55,
-        depth: Math.random()
-      });
+  function next() { paint((current + 1) % slides.length); }
+
+  function schedule() {
+    clearTimeout(timer);
+    timer = setTimeout(function () { next(); schedule(); }, holdNow);
+  }
+
+  function play() {
+    if (REDUCED || slides.length < 2) return;
+    stop();
+    startedAt = performance.now();
+    schedule();
+    if (barEl && rafId === null) rafId = requestAnimationFrame(tickBar);
+  }
+  function stop() {
+    if (timer) { clearTimeout(timer); timer = null; }
+  }
+
+  function tickBar(now) {
+    if (barEl) {
+      var k = timer ? Math.min((now - startedAt) / holdNow, 1) : 0;
+      barEl.style.transform = 'scaleX(' + k.toFixed(4) + ')';
     }
+    rafId = requestAnimationFrame(tickBar);
   }
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-
-    // soft warm bloom behind the strands
-    var g = ctx.createRadialGradient(W * 0.22, H * 0.26, 0, W * 0.22, H * 0.26, Math.max(W, H) * 0.8);
-    g.addColorStop(0, 'rgba(184,149,106,0.14)');
-    g.addColorStop(0.45, 'rgba(184,149,106,0.03)');
-    g.addColorStop(1, 'rgba(6,5,5,0)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
-
-    var mdx = (mouse.x - 0.5) * 90;
-    var mdy = (mouse.y - 0.5) * 50;
-    var step = H / 22;
-
-    ctx.lineCap = 'round';
-
-    for (var i = 0; i < strands.length; i++) {
-      var s = strands[i];
-      var px = s.x0 + t * s.drift + mdx * (0.25 + s.depth * 0.9);
-      ctx.beginPath();
-      for (var y = -step; y <= H + step; y += step) {
-        var n =
-          Math.sin(y * s.freq + t * s.speed + s.phase) * s.amp +
-          Math.sin(y * s.freq * 2.35 + t * s.speed * 1.6 + s.phase * 1.7) * s.amp * 0.32;
-        var x = px + n + y * s.tilt + mdy * s.depth * 0.35;
-        if (y <= -step) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.strokeStyle = s.hue + s.alpha.toFixed(3) + ')';
-      ctx.lineWidth = s.width;
-      ctx.stroke();
-    }
+  /* --------------------------------------------------------------- parallax */
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      if (!hero) return;
+      var y = window.pageYOffset;
+      var h = hero.offsetHeight || 1;
+      if (y > h * 1.2) return;                  // stop working once it's gone
+      var k = Math.min(y / h, 1);
+      // the plate lags the page, and the scrim deepens over it
+      stage.style.transform = 'translate3d(0,' + (y * 0.16).toFixed(1) + 'px,0) scale(' + (1 + k * 0.06).toFixed(4) + ')';
+      stage.style.setProperty('--scrim', (k * 0.55).toFixed(3));
+    });
   }
 
-  function loop() {
-    if (!running) { rafId = null; return; }
-    mouse.x += (mouse.tx - mouse.x) * 0.045;
-    mouse.y += (mouse.ty - mouse.y) * 0.045;
-    t += 1;
-    draw();
-    rafId = requestAnimationFrame(loop);
-  }
-
-  function start() {
-    if (running && rafId !== null) return;
-    running = true;
-    if (rafId === null) rafId = requestAnimationFrame(loop);
-  }
-  function stop() { running = false; }
-
+  /* ------------------------------------------------------------------- init */
   function init() {
-    size();
-    build();
-    if (REDUCED) { draw(); return; }
-    start();
+    // decode the first plate before revealing, so it never flashes in empty
+    var first = slides[0].querySelector('img');
+    function reveal() {
+      stage.classList.add('is-ready');
+      paint(0);
+      if (!REDUCED) play();
+    }
+    if (first && first.decode) first.decode().then(reveal).catch(reveal);
+    else if (first && first.complete) reveal();
+    else if (first) { first.addEventListener('load', reveal); first.addEventListener('error', reveal); }
+    else reveal();
+
+    // bring the rest in quietly once the page is settled
+    window.addEventListener('load', function () {
+      slides.slice(1).forEach(function (s) {
+        var im = s.querySelector('img');
+        if (im && im.getAttribute('loading') === 'lazy') im.setAttribute('loading', 'eager');
+      });
+    });
+
+    if (!REDUCED) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
   }
 
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt);
-    rt = setTimeout(function () { size(); build(); if (REDUCED) draw(); }, 180);
-  });
-
-  window.addEventListener('mousemove', function (e) {
-    mouse.tx = e.clientX / window.innerWidth;
-    mouse.ty = e.clientY / window.innerHeight;
-  }, { passive: true });
-
+  /* pause when it isn't being looked at */
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) stop(); else if (!REDUCED) start();
+    if (document.hidden) stop(); else if (!REDUCED) play();
   });
-
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (en) {
-      if (en[0].isIntersecting) { if (!REDUCED) start(); }
-      else stop();
-    }, { threshold: 0.01 }).observe(canvas);
+      if (en[0].isIntersecting) { if (!REDUCED) play(); } else stop();
+    }, { threshold: 0.05 }).observe(stage);
   }
+
+  /* let people step through them */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-hero-next]');
+    if (!b) return;
+    next();
+    if (!REDUCED) play();
+  });
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

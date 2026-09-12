@@ -61,6 +61,9 @@
     var lab = D.createElement('span'); lab.className = 'cursor-ring__label';
     ring.appendChild(lab);
     D.body.appendChild(dot); D.body.appendChild(ring);
+    // the native cursor is hidden only once ours is actually on screen, so a
+    // failure here can never leave the page with no pointer at all
+    D.documentElement.classList.add('has-cursor');
 
     var mx = window.innerWidth / 2, my = window.innerHeight / 2;
     var rx = mx, ry = my;
@@ -82,12 +85,15 @@
         if (el.__curBound) return;
         el.__curBound = true;
         var mode = el.getAttribute('data-cursor');
+        var isText = /^(INPUT|TEXTAREA)$/.test(el.tagName) &&
+                     !/^(checkbox|radio|button|submit|range)$/i.test(el.type || '');
         el.addEventListener('mouseenter', function () {
-          if (mode) { D.body.classList.add('cur-view'); lab.textContent = mode; }
+          if (isText) D.body.classList.add('cur-text');
+          else if (mode) { D.body.classList.add('cur-view'); lab.textContent = mode; }
           else D.body.classList.add('cur-link');
         });
         el.addEventListener('mouseleave', function () {
-          D.body.classList.remove('cur-link', 'cur-view');
+          D.body.classList.remove('cur-link', 'cur-view', 'cur-text');
         });
       });
     }

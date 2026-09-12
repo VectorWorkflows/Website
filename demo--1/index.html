@@ -78,7 +78,28 @@
 
   <!-- ============================================================ HERO -->
   <section class="hero">
-    <canvas class="hero__canvas" aria-hidden="true"></canvas>
+    <div class="hero__stage" aria-hidden="true">
+      <figure class="hero__slide" data-cap="Balayage, long waves">
+        <img src="assets/img/hero/hero-01.jpg"
+             srcset="assets/img/hero/hero-01-800.jpg 800w, assets/img/hero/hero-01.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" fetchpriority="high" decoding="async" data-no-ph>
+      </figure>
+      <figure class="hero__slide" data-cap="Copper red, glossed" data-hold="11500">
+        <img src="assets/img/hero/hero-02.jpg"
+             srcset="assets/img/hero/hero-02-800.jpg 800w, assets/img/hero/hero-02.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
+      </figure>
+      <figure class="hero__slide" data-cap="A blunt bob, one length">
+        <img src="assets/img/hero/hero-03.jpg"
+             srcset="assets/img/hero/hero-03-800.jpg 800w, assets/img/hero/hero-03.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
+      </figure>
+      <figure class="hero__slide" data-cap="Bronde, long layers">
+        <img src="assets/img/hero/hero-04.jpg"
+             srcset="assets/img/hero/hero-04-800.jpg 800w, assets/img/hero/hero-04.jpg 1400w"
+             sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
+      </figure>
+    </div>
     <div class="hero__veil" aria-hidden="true"></div>
     <div class="hero__in">
       <div>
@@ -101,6 +122,12 @@
       </dl>
     </div>
     <div class="scrollcue"><span>Scroll</span><i></i></div>
+
+    <button class="hero__meta" data-hero-next aria-label="Next photograph">
+      <span class="hero__cap" data-hero-cap></span>
+      <span class="hero__count"><b data-hero-index>01</b> / 04</span>
+      <span class="hero__bar"><i data-hero-bar></i></span>
+    </button>
   </section>
 
   <!-- ========================================================= MARQUEE -->
@@ -160,11 +187,11 @@
       <article class="disc" data-reveal>
         <div class="disc__row">
           <div class="disc__n">01</div>
-          <div>
+          <div class="disc__head">
             <h3 class="disc__title">Hair</h3>
             <p class="disc__lead">Cut, colour and correction</p>
           </div>
-          <div>
+          <div class="disc__text">
             <p class="disc__body">Precision cutting, the curly method, thermal scissor work and colour that is engineered rather than guessed — airtouch, balayage, babylights, hand-free painting, and the kind of colour correction other salons send people to us for.</p>
             <div class="disc__tags"><span class="tag">Precision cutting</span><span class="tag">Airtouch</span><span class="tag">Balayage</span><span class="tag">Colour correction</span><span class="tag">Curly method</span></div>
           </div>
@@ -176,11 +203,11 @@
       <article class="disc" data-reveal>
         <div class="disc__row">
           <div class="disc__n">02</div>
-          <div>
+          <div class="disc__head">
             <h3 class="disc__title">Skin</h3>
             <p class="disc__lead">Guinot &amp; Dermalogica</p>
           </div>
-          <div>
+          <div class="disc__text">
             <p class="disc__body">A skin treatment is specific to the client it was designed for. Our therapists trained at the Guinot Institute in Paris and the Dermalogica Institute, and they read your skin before they touch it — not after.</p>
             <div class="disc__tags"><span class="tag">Hydradermie</span><span class="tag">Age Summum</span><span class="tag">Deep extraction</span><span class="tag">Vitamin C</span><span class="tag">Ultracalming</span></div>
           </div>
@@ -192,11 +219,11 @@
       <article class="disc" data-reveal>
         <div class="disc__row">
           <div class="disc__n">03</div>
-          <div>
+          <div class="disc__head">
             <h3 class="disc__title">Nails</h3>
             <p class="disc__lead">Luxio, Gelish &amp; Shellac</p>
           </div>
-          <div>
+          <div class="disc__text">
             <p class="disc__body">Fourteen-day wear as a floor, not a ceiling. Vegan, hypoallergenic, solvent-free gel systems, spa manicures and pedicures, extensions and nail art that survives a Dubai summer.</p>
             <div class="disc__tags"><span class="tag">Spa manicure</span><span class="tag">Gelish</span><span class="tag">Shellac</span><span class="tag">Extensions</span><span class="tag">Nail art</span></div>
           </div>
@@ -208,11 +235,11 @@
       <article class="disc" data-reveal>
         <div class="disc__row">
           <div class="disc__n">04</div>
-          <div>
+          <div class="disc__head">
             <h3 class="disc__title">Body</h3>
             <p class="disc__lead">Massage &amp; wellness</p>
           </div>
-          <div>
+          <div class="disc__text">
             <p class="disc__body">Deep tissue, Swedish, Thai, lymphatic drainage with tools, pre- and post-natal, couples and four-hands. Reflexology, cupping, ear candling — sixty, ninety or a hundred and twenty minutes of properly trained hands.</p>
             <div class="disc__tags"><span class="tag">Deep tissue</span><span class="tag">Lymphatic drainage</span><span class="tag">Reflexology</span><span class="tag">Pre-natal</span><span class="tag">Four hands</span></div>
           </div>
