@@ -13,10 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0908'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' fill='%23D8C3A5' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/css/tokens.css">
-<link rel="stylesheet" href="assets/css/base.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="stylesheet" href="resources/site.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -80,23 +77,23 @@
   <section class="hero">
     <div class="hero__stage" aria-hidden="true">
       <figure class="hero__slide" data-cap="Balayage, long waves">
-        <img src="assets/img/hero/hero-01.jpg"
-             srcset="assets/img/hero/hero-01-800.jpg 800w, assets/img/hero/hero-01.jpg 1400w"
+        <img src="images/hero-01.jpg"
+             srcset="images/hero-01-800.jpg 800w, images/hero-01.jpg 1400w"
              sizes="(max-width: 62rem) 100vw, 52vw" alt="" fetchpriority="high" decoding="async" data-no-ph>
       </figure>
       <figure class="hero__slide" data-cap="Copper red, glossed" data-hold="11500">
-        <img src="assets/img/hero/hero-02.jpg"
-             srcset="assets/img/hero/hero-02-800.jpg 800w, assets/img/hero/hero-02.jpg 1400w"
+        <img src="images/hero-02.jpg"
+             srcset="images/hero-02-800.jpg 800w, images/hero-02.jpg 1400w"
              sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
       </figure>
       <figure class="hero__slide" data-cap="A blunt bob, one length">
-        <img src="assets/img/hero/hero-03.jpg"
-             srcset="assets/img/hero/hero-03-800.jpg 800w, assets/img/hero/hero-03.jpg 1400w"
+        <img src="images/hero-03.jpg"
+             srcset="images/hero-03-800.jpg 800w, images/hero-03.jpg 1400w"
              sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
       </figure>
       <figure class="hero__slide" data-cap="Bronde, long layers">
-        <img src="assets/img/hero/hero-04.jpg"
-             srcset="assets/img/hero/hero-04-800.jpg 800w, assets/img/hero/hero-04.jpg 1400w"
+        <img src="images/hero-04.jpg"
+             srcset="images/hero-04-800.jpg 800w, images/hero-04.jpg 1400w"
              sizes="(max-width: 62rem) 100vw, 52vw" alt="" loading="lazy" decoding="async" data-no-ph>
       </figure>
     </div>
@@ -140,7 +137,7 @@
     <div class="shell">
       <div class="split">
         <div class="split__media">
-          <div class="frame frame--4x5 rv-img"><img src="assets/img/editorial/salon.jpg" alt="Inside the salon at Jumeirah Centre" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/sliders/003.jpg" data-ph="The Salon" data-ph-sub="Interior photograph" data-para="0.06"></div>
+          <div class="frame frame--4x5 rv-img"><img src="images/editorial-salon.jpg" alt="Inside the salon at Jumeirah Centre" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/sliders/003.jpg" data-ph="The Salon" data-ph-sub="Interior photograph" data-para="0.06"></div>
         </div>
         <div class="split__text">
           <p class="label" data-reveal>01 — The salon</p>
@@ -259,15 +256,15 @@
     <div class="shell">
       <div class="showcase">
         <figure class="showcase__a" style="margin:0">
-          <div class="frame frame--4x5 rv-img"><img src="assets/img/editorial/work-01.jpg" alt="A sharp one-length bob, finished" loading="lazy" decoding="async" data-ph="Cut" data-ph-sub="Photograph to follow"></div>
+          <div class="frame frame--4x5 rv-img"><img src="images/editorial-work-01.jpg" alt="A sharp one-length bob, finished" loading="lazy" decoding="async" data-ph="Cut" data-ph-sub="Photograph to follow"></div>
           <figcaption class="cap"><b>01</b> Cut &amp; finish</figcaption>
         </figure>
         <figure class="showcase__b" style="margin:0">
           <div class="frame frame--4x5 swatch" data-reveal="scale" tabindex="0" role="button"
                aria-label="Reveal the colour version of this photograph">
-            <img class="swatch__colour" src="assets/img/editorial/work-02-colour.jpg"
+            <img class="swatch__colour" src="images/editorial-work-02-colour.jpg"
                  alt="Long layered colour work, in colour" loading="lazy" decoding="async" data-no-ph>
-            <img class="swatch__mono" src="assets/img/editorial/work-02.jpg"
+            <img class="swatch__mono" src="images/editorial-work-02.jpg"
                  alt="Long layered colour work" loading="lazy" decoding="async"
                  data-ph="Colour" data-ph-sub="Photograph to follow">
             <span class="swatch__hint"><i></i>Hold to see the colour</span>
@@ -275,7 +272,7 @@
           <figcaption class="cap"><b>02</b> Colour</figcaption>
         </figure>
         <figure class="showcase__c" style="margin:0">
-          <div class="frame frame--1x1 rv-img"><img src="assets/img/editorial/work-03.jpg" alt="Natural curl, cut dry" loading="lazy" decoding="async" data-ph="Texture" data-ph-sub="Photograph to follow"></div>
+          <div class="frame frame--1x1 rv-img"><img src="images/editorial-work-03.jpg" alt="Natural curl, cut dry" loading="lazy" decoding="async" data-ph="Texture" data-ph-sub="Photograph to follow"></div>
           <figcaption class="cap"><b>03</b> Texture</figcaption>
         </figure>
       </div>
@@ -306,7 +303,7 @@
       <div class="team-grid" data-stagger="110">
         <a class="person card-link" href="team.html">
           <div class="person__media frame frame--3x4 rv-img">
-            <img src="assets/img/team/emiliya.jpg" alt="Emiliya Allahverdova" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/emiliya.jpg" data-ph="Emiliya" data-ph-sub="Portrait to follow">
+            <img src="images/team-emiliya.jpg" alt="Emiliya Allahverdova" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/emiliya.jpg" data-ph="Emiliya" data-ph-sub="Portrait to follow">
             <span class="person__veil">
               <span class="person__name">Emiliya Allahverdova</span>
               <span class="person__role">Certified Hair Artist</span>
@@ -315,7 +312,7 @@
         </a>
         <a class="person card-link" href="team.html">
           <div class="person__media frame frame--3x4 rv-img">
-            <img src="assets/img/team/angelica.jpg" alt="Angelica Aganova" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/Angelica.jpg" data-ph="Angelica" data-ph-sub="Portrait to follow">
+            <img src="images/team-angelica.jpg" alt="Angelica Aganova" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/Angelica.jpg" data-ph="Angelica" data-ph-sub="Portrait to follow">
             <span class="person__veil">
               <span class="person__name">Angelica Aganova</span>
               <span class="person__role">Stylist &amp; Colorist</span>
@@ -324,7 +321,7 @@
         </a>
         <a class="person card-link" href="team.html">
           <div class="person__media frame frame--3x4 rv-img">
-            <img src="assets/img/team/natalia.jpg" alt="Natalia Hosteva" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/Natalia.jpg" data-ph="Natalia" data-ph-sub="Portrait to follow">
+            <img src="images/team-natalia.jpg" alt="Natalia Hosteva" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/Natalia.jpg" data-ph="Natalia" data-ph-sub="Portrait to follow">
             <span class="person__veil">
               <span class="person__name">Natalia Hosteva</span>
               <span class="person__role">Stylist &amp; Colorist</span>
@@ -333,7 +330,7 @@
         </a>
         <a class="person card-link" href="team.html">
           <div class="person__media frame frame--3x4 rv-img">
-            <img src="assets/img/team/yvonne.jpg" alt="Yvonne Fernandez" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/rishi.jpg" data-ph="Yvonne" data-ph-sub="Portrait to follow">
+            <img src="images/team-yvonne.jpg" alt="Yvonne Fernandez" loading="lazy" decoding="async" data-fallback="https://www.cutabove-salon.com/images/rishi.jpg" data-ph="Yvonne" data-ph-sub="Portrait to follow">
             <span class="person__veil">
               <span class="person__name">Yvonne Fernandez</span>
               <span class="person__role">Dermalogica Therapist</span>
@@ -353,7 +350,7 @@
         <p class="sec-head__aside">A fraction of it. More on <a class="tlink" data-biz-ig href="#" target="_blank" rel="noopener">Instagram</a>.</p>
       </div>
       <div class="ig-strip" data-reveal>
-        <a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="assets/img/gallery/01.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="01.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="assets/img/gallery/02.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="02.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="assets/img/gallery/03.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="03.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="assets/img/gallery/04.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="04.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="assets/img/gallery/05.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="05.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="assets/img/gallery/06.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="06.jpg"></a>
+        <a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="images/gallery-01.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="01.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="images/gallery-02.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="02.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="images/gallery-03.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="03.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="images/gallery-04.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="04.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="images/gallery-05.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="05.jpg"></a><a class="ig-tile" data-biz-ig href="#" target="_blank" rel="noopener" data-cursor="View"><img src="images/gallery-06.jpg" alt="Recent work" loading="lazy" data-ph="Cut Above" data-ph-sub="06.jpg"></a>
       </div>
       <p style="margin-top:2.5rem" data-reveal><a class="tlink" href="gallery.html">Open the gallery <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M1 6.5h10M7 2.5l4 4-4 4"/></svg></a></p>
     </div>
@@ -464,9 +461,7 @@
 </footer>
 
 <button class="totop" aria-label="Back to top"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M6.5 12V1M2.5 5l4-4 4 4"/></svg></button>
-<script src="assets/js/data.js"></script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/hero.js"></script>
-<script src="assets/js/booking.js"></script>
+<script src="resources/content.js"></script>
+<script src="resources/site.js"></script>
 </body>
 </html>
