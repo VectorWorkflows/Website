@@ -1,0 +1,254 @@
+/* ==========================================================================
+   HEADER: detached glass islands, never an edge-to-edge bar.
+   Brand island (left) · nav island (centre, ≥64rem) · action island (right).
+   The wrapper ignores the pointer, so the gaps between islands stay
+   clickable; only the islands take input.
+   ========================================================================== */
+@layer components {
+  .site-header {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+    padding: var(--space-s) var(--page-gutter) 0;
+    pointer-events: none;
+    view-transition-name: site-header;
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2xs);
+    inline-size: 100%;
+    max-inline-size: var(--grid-max);
+    margin-inline: auto;
+  }
+
+  .island {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3125rem;
+    border-radius: var(--radius-pill);
+    pointer-events: auto;
+  }
+  .island::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: color-mix(in oklch, var(--c-ground) 72%, transparent);
+    -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+    backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+    box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit);
+  }
+
+  /* The glass firms up over the first 8rem of scroll: zero JS, tied to the
+     scroll position. Without support the glass is simply always solid. */
+  @supports (animation-timeline: scroll()) {
+    .site-header .island::before {
+      animation: island-solidify var(--ease-out) both;
+      animation-timeline: scroll(root);
+      animation-range: 0 8rem;
+    }
+  }
+  @keyframes island-solidify { from { opacity: 0.4; } to { opacity: 1; } }
+
+  /* Brand ------------------------------------------------------------- */
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-block-size: 2.75rem;
+    padding: 0 1rem 0 0.5rem;
+    border-radius: var(--radius-pill);
+    color: var(--c-bone);
+    font-weight: var(--weight-medium);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .brand__mark { inline-size: auto; block-size: 1.75rem; }
+  .brand__word span { color: var(--c-bone-3); }
+
+  /* Primary nav island ------------------------------------------------ */
+  .nav-island { display: none; }
+  .nav-island ul { display: flex; gap: 0.125rem; }
+
+  .nav-link {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 2.75rem;
+    padding-inline: 1.125rem;
+    border-radius: var(--radius-pill);
+    color: var(--c-bone-2);
+    font-weight: var(--weight-medium);
+    font-size: var(--step--1);
+    transition: color var(--dur-hover) var(--ease-out-soft);
+  }
+  .nav-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--c-raised-2);
+    box-shadow: var(--edge-lit);
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity var(--dur-hover) var(--ease-out-soft),
+                transform var(--dur-state) var(--ease-out-soft);
+  }
+  @media (hover: hover) {
+    .nav-link:hover { color: var(--c-bone); }
+    .nav-link:hover::before { opacity: 0.7; transform: scale(1); }
+  }
+  .nav-link[aria-current="page"] { color: var(--c-bone); }
+  .nav-link[aria-current="page"]::before { opacity: 1; transform: scale(1); }
+  .nav-link[aria-current="page"]::after {
+    content: "";
+    order: -1;
+    inline-size: 0.3125rem;
+    block-size: 0.3125rem;
+    border-radius: 50%;
+    background: var(--c-lilac);
+  }
+
+  /* Actions ----------------------------------------------------------- */
+  .header-cta { display: none; }
+
+  .menu-toggle {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: 50%;
+    background: var(--c-bone-veil);
+    box-shadow: inset 0 0 0 1px var(--edge);
+    color: var(--c-bone);
+  }
+  .menu-lines {
+    position: relative;
+    inline-size: 1.125rem;
+    block-size: 0.5rem;
+  }
+  .menu-lines::before,
+  .menu-lines::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    block-size: 1.25px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: transform var(--dur-state) var(--ease-shift);
+  }
+  .menu-lines::before { inset-block-start: 0; }
+  .menu-lines::after  { inset-block-end: 0; }
+  @media (hover: hover) {
+    .menu-toggle:hover .menu-lines::before { transform: translateX(0.1875rem); }
+    .menu-toggle:hover .menu-lines::after  { transform: translateX(-0.1875rem); }
+  }
+
+  /* Close state: the same two lines, crossed. They animate in from the
+     hamburger position, so opening reads as one continuous morph. */
+  .menu-lines--close::before { transform: translateY(0.1875rem) rotate(45deg); }
+  .menu-lines--close::after  { transform: translateY(-0.1875rem) rotate(-45deg); }
+  @starting-style {
+    .site-menu[open] .menu-lines--close::before,
+    .site-menu[open] .menu-lines--close::after { transform: none; }
+  }
+
+  @media (min-width: 40rem) {
+    .header-cta { display: inline-flex; }
+  }
+  @media (min-width: 64rem) {
+    .nav-island { display: flex; }
+    .menu-toggle { display: none; }
+  }
+
+  /* No JS: the dialog can't open, so show the nav island at every width */
+  .no-js .menu-toggle { display: none; }
+  .no-js .nav-island { display: flex; }
+  .no-js .header-row { flex-wrap: wrap; }
+
+  /* ==========================================================================
+     SITE MENU: a full-screen modal <dialog> (inert background, Esc to close,
+     focus returns to the toggle). Entry is pure CSS via @starting-style.
+     ========================================================================== */
+  .site-menu {
+    position: fixed;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100dvh;
+    margin: 0;
+    padding: var(--space-s) var(--page-gutter) var(--space-l);
+    flex-direction: column;
+    background: color-mix(in oklch, var(--c-ground) 90%, transparent);
+    -webkit-backdrop-filter: blur(28px);
+    backdrop-filter: blur(28px);
+    opacity: 0;
+    transition:
+      opacity var(--dur-state) var(--ease-out-soft),
+      overlay var(--dur-state) allow-discrete,
+      display var(--dur-state) allow-discrete;
+  }
+  .site-menu[open] { display: flex; opacity: 1; }
+  @starting-style { .site-menu[open] { opacity: 0; } }
+  .site-menu::backdrop { background: transparent; }
+
+  .site-menu .island::before { animation: none; }
+
+  .site-menu__nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: var(--space-xl) var(--space-l);
+  }
+
+  .site-menu__links { display: grid; gap: 0.25rem; }
+  .site-menu__links li { overflow: hidden; padding-block-end: 0.08em; }
+
+  .site-menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    font-family: var(--font-display);
+    font-size: var(--step-6);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+    color: var(--c-bone);
+    transform: translateY(0);
+    transition:
+      transform var(--dur-reveal) var(--ease-out),
+      color var(--dur-hover) var(--ease-out-soft);
+    transition-delay: calc(80ms + var(--i, 0) * var(--stagger)), 0ms;
+  }
+  @starting-style {
+    .site-menu[open] .site-menu__link { transform: translateY(105%); }
+  }
+  .site-menu__link .t-label { transform: translateY(-0.9em); }
+  .site-menu__link[aria-current="page"] { color: var(--c-lilac); }
+  @media (hover: hover) {
+    .site-menu__link:hover { color: var(--c-lilac); }
+  }
+
+  .site-menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: var(--space-m);
+  }
+  .site-menu__contact { display: grid; gap: 0.25rem; }
+
+  html:has(.site-menu[open]) { overflow: hidden; }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Vector Workflows",
+  "url": "https://vectorworkflows.com",
+  "locale": "en",
+  "year": "2026",
+  "theme_color": "#0B0B0F",
+
+  "email": "business@vectorworkflows.com",
+  "phone_display": "+1 470 470 6323",
+  "phone_tel": "+14704706323",
+  "whatsapp_number": "919311550616",
+  "whatsapp_text": "Hi, saw Vector Workflows — I'd like to ask about automation for my business.",
+
+  "social": {
+    "github": "https://github.com/VectorWorkflows",
+    "youtube": "https://www.youtube.com/@vectorworkflows",
+    "instagram": "https://www.instagram.com/vectorworkflows/",
+    "x": "https://x.com/VectorWorkflows"
+  },
+
+  "routes": {
+    "home": "/",
+    "work": "/work/",
+    "services": "/services/",
+    "studio": "/studio/",
+    "start": "/start/",
+    "privacy": "/privacy/",
+    "terms": "/terms/"
+  },
+
+  "protected_dirs": ["cutabove"],
+  "planned_routes": ["/", "/work/", "/services/", "/studio/", "/start/", "/privacy/", "/terms/"]
+}

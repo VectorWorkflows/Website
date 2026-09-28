@@ -1,0 +1,65 @@
+<header class="site-header">
+  <div class="header-row">
+    <div class="island">
+      <a class="brand" href="/" aria-label="Vector Workflows, home">
+        {{{ brand_mark }}}
+        <span class="brand__word" aria-hidden="true">Vector <span>Workflows</span></span>
+      </a>
+    </div>
+
+    <nav class="island nav-island" aria-label="Primary">
+      <ul role="list">
+        <li><a class="nav-link" data-nav="work" href="{{ site.routes.work }}">Work</a></li>
+        <li><a class="nav-link" data-nav="services" href="{{ site.routes.services }}">Services</a></li>
+        <li><a class="nav-link" data-nav="studio" href="{{ site.routes.studio }}">Studio</a></li>
+      </ul>
+    </nav>
+
+    <div class="island">
+      <a class="btn btn--primary btn--sm header-cta" data-nav="start" href="{{ site.routes.start }}">
+        <span class="btn__label">Start a project</span>
+        <span class="btn__icon">{% icon "arrow-up-right" %}</span>
+      </a>
+      <button class="menu-toggle" type="button" data-menu-open aria-controls="site-menu" aria-expanded="false">
+        <span class="sr-only">Open menu</span>
+        <span class="menu-lines" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog class="site-menu" id="site-menu" aria-label="Site menu">
+  <div class="header-row">
+    <div class="island">
+      <a class="brand" href="/" aria-label="Vector Workflows, home">
+        {{{ brand_mark }}}
+        <span class="brand__word" aria-hidden="true">Vector <span>Workflows</span></span>
+      </a>
+    </div>
+    <div class="island">
+      <button class="menu-toggle" type="button" data-menu-close autofocus>
+        <span class="sr-only">Close menu</span>
+        <span class="menu-lines menu-lines--close" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="site-menu__nav" aria-label="Menu">
+    <ol class="site-menu__links" role="list">
+      <li><a class="site-menu__link" style="--i:0" data-nav="home" href="{{ site.routes.home }}"><span class="t-label">01</span>Index</a></li>
+      <li><a class="site-menu__link" style="--i:1" data-nav="work" href="{{ site.routes.work }}"><span class="t-label">02</span>Work</a></li>
+      <li><a class="site-menu__link" style="--i:2" data-nav="services" href="{{ site.routes.services }}"><span class="t-label">03</span>Services</a></li>
+      <li><a class="site-menu__link" style="--i:3" data-nav="studio" href="{{ site.routes.studio }}"><span class="t-label">04</span>Studio</a></li>
+      <li><a class="site-menu__link" style="--i:4" data-nav="start" href="{{ site.routes.start }}"><span class="t-label">05</span>Start a project</a></li>
+    </ol>
+  </nav>
+
+  <div class="site-menu__foot">
+    <div class="site-menu__contact">
+      <a class="link-arrow" href="mailto:{{ site.email }}">{{ site.email }}</a>
+      <a class="link-arrow" href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a>
+      <a class="link-arrow" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp {% icon "arrow-up-right" %}</a>
+    </div>
+    <p class="t-label">Automation &amp; web engineering studio</p>
+  </div>
+</dialog>

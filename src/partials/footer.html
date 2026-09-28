@@ -1,0 +1,48 @@
+<footer class="site-footer frame">
+  <div class="footer-inner">
+    <p class="index-label"><span class="index-label__num">&rarr;</span><span class="index-label__rule"></span>Start a conversation</p>
+    <p class="footer-mail-line">
+      <a class="footer-mail" href="mailto:{{ site.email }}">{{ site.email }}</a>
+    </p>
+
+    <div class="grid footer-grid">
+      <div class="footer-lede">
+        <p class="t-small">A one-person automation and web engineering studio. Backend systems, messaging bots, telephony pipelines and hand-built websites for service businesses.</p>
+      </div>
+
+      <div class="footer-col">
+        <h2>Contact</h2>
+        <ul role="list">
+          <li><a href="mailto:{{ site.email }}">{% icon "envelope-simple" %}Email</a></li>
+          <li><a href="tel:{{ site.phone_tel }}">{% icon "phone" %}{{ site.phone_display }}</a></li>
+          <li><a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">{% icon "whatsapp-logo" %}WhatsApp</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Elsewhere</h2>
+        <ul role="list">
+          <li><a href="{{ site.social.github }}" target="_blank" rel="noopener">{% icon "github-logo" %}GitHub</a></li>
+          <li><a href="{{ site.social.youtube }}" target="_blank" rel="noopener">{% icon "youtube-logo" %}YouTube</a></li>
+          <li><a href="{{ site.social.instagram }}" target="_blank" rel="noopener">{% icon "instagram-logo" %}Instagram</a></li>
+          <li><a href="{{ site.social.x }}" target="_blank" rel="noopener">{% icon "x-logo" %}X</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Index</h2>
+        <ul role="list">
+          <li><a href="{{ site.routes.work }}">Work</a></li>
+          <li><a href="{{ site.routes.services }}">Services</a></li>
+          <li><a href="{{ site.routes.studio }}">Studio</a></li>
+          <li><a href="{{ site.routes.start }}">Start a project</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="colophon">
+      <p class="t-label">&copy; {{ site.year }} {{ site.name }} &middot; <a href="{{ site.routes.privacy }}">Privacy</a> &middot; <a href="{{ site.routes.terms }}">Terms</a></p>
+      <p class="t-label">Hand-built static HTML &middot; No cookies, no trackers &middot; This page: <!--PAGE_WEIGHT--> gzipped</p>
+    </div>
+  </div>
+</footer>

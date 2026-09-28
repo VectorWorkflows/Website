@@ -1,0 +1,81 @@
+/* ==========================================================================
+   LAYOUT: the grid system
+
+   FRAME  Every section is a .frame: a 3-track grid with named lines
+          [full-start | content-start … content-end | full-end]. Children sit
+          on the content track; .bleed children run edge to edge.
+
+   GRID   Inside the content track: 4 columns under 40rem, 8 up to 64rem,
+          12 beyond. Gutter 16→24px, page margin 20→56px, capped at 1680px.
+
+   REGIONS  Named placements that encode the studio's asymmetry.
+          12-col          8-col        4-col
+          rail   1–3      1–2          full   mono metadata rail
+          body   4–12     3–8          full   primary content
+          text   5–11     3–8          full   reading column (hangs on col 5)
+          major  1–7      1–5          full   dominant half of a split
+          minor  9–12     6–8          full   subordinate half (col 8 empty)
+          wide   2–12     1–8          full   near-full media
+   ========================================================================== */
+@layer layout {
+  .frame {
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(var(--page-gutter), 1fr)
+      [content-start] min(100% - 2 * var(--page-gutter), var(--grid-max)) [content-end]
+      minmax(var(--page-gutter), 1fr) [full-end];
+  }
+  .frame > * { grid-column: content; min-inline-size: 0; }
+  .frame > .bleed { grid-column: full; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    row-gap: var(--row-gap, var(--space-l));
+    align-items: start;
+  }
+  .grid > * { grid-column: 1 / -1; min-inline-size: 0; }
+
+  @media (min-width: 40rem) {
+    .grid > .g-rail  { grid-column: 1 / span 2; }
+    .grid > .g-body  { grid-column: 3 / -1; }
+    .grid > .g-text  { grid-column: 3 / -1; }
+    .grid > .g-major { grid-column: 1 / span 5; }
+    .grid > .g-minor { grid-column: 6 / -1; }
+    .grid > .g-wide  { grid-column: 1 / -1; }
+  }
+
+  @media (min-width: 64rem) {
+    .grid > .g-rail  { grid-column: 1 / span 3; }
+    .grid > .g-body  { grid-column: 4 / -1; }
+    .grid > .g-text  { grid-column: 5 / span 7; }
+    .grid > .g-major { grid-column: 1 / span 7; }
+    .grid > .g-minor { grid-column: 9 / -1; }
+    .grid > .g-wide  { grid-column: 2 / -1; }
+
+    /* Free placement for one-off compositions: style="--start:6; --span:5" */
+    .grid > .g-free  { grid-column: var(--start, 1) / span var(--span, 12); }
+  }
+
+  /* ---------------------------------------------------------------------
+     Vertical rhythm
+     --------------------------------------------------------------------- */
+  .section       { padding-block: var(--section-y); }
+  .section-tight { padding-block: var(--section-y-tight); }
+
+  /* Flow: consistent space between siblings. Tune with .flow-* utilities. */
+  .stack > * + * { margin-block-start: var(--space-m); }
+
+  .cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap, var(--space-s));
+  }
+
+  .measure        { max-inline-size: var(--measure); }
+  .measure-narrow { max-inline-size: var(--measure-narrow); }
+
+  main { display: block; }
+}

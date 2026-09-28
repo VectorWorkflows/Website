@@ -1,0 +1,4 @@
+/* Cascade layer order: declared once, first. Later layers win regardless of
+   specificity, so utilities never need !important and page CSS never fights
+   the base. */
+@layer reset, tokens, base, layout, components, pages, utilities;
