@@ -70,11 +70,11 @@
     gap: var(--space-s);
   }
   .card__title {
-    font-family: var(--font-display);
-    font-weight: var(--weight-regular);
+    font-family: var(--font-ui);
+    font-weight: var(--weight-medium);
     font-size: var(--step-3);
-    line-height: var(--leading-heading);
-    letter-spacing: var(--tracking-heading);
+    line-height: 1.06;
+    letter-spacing: -0.035em;
     color: var(--c-bone);
     text-wrap: balance;
   }

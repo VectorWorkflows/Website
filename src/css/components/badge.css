@@ -20,7 +20,8 @@
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+    max-inline-size: 100%;
+    text-wrap: balance;
   }
 
   .badge--accent {

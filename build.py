@@ -616,6 +616,8 @@ RE_INCLUDE = re.compile(r'{%\s*include\s+"([\w\-/]+)"\s*%}')
 RE_IF = re.compile(r'{%\s*if\s+(not\s+)?([\w.]+)\s*%}((?:(?!{%\s*if\b).)*?){%\s*endif\s*%}', re.S)
 RE_ICON = re.compile(r'{%\s*icon\s+"([\w\-]+)"(?:\s+class="([^"]*)")?\s*%}')
 RE_VALUE = re.compile(r"{{{\s*([\w.]+)\s*}}}|{{\s*([\w.]+)\s*}}")
+RE_REPLAY = re.compile(r'{%\s*replay\s+"([\w\-]+)"(?:\s+id="([\w\-]+)")?\s*%}')
+RE_LOGREEL = re.compile(r'{%\s*logreel\s+"([\w\-, ]+)"\s*%}')
 
 
 def lookup(ctx: dict, dotted: str, where: str, strict: bool = True):
@@ -641,6 +643,8 @@ def render(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int 
         return render(p.read_text("utf-8"), ctx, icons, used, f"partials/{m.group(1)}.html", depth + 1)
 
     text = RE_INCLUDE.sub(include, text)
+    text = RE_REPLAY.sub(lambda m: render_replay(m.group(1), where, m.group(2) or ""), text)
+    text = RE_LOGREEL.sub(lambda m: render_log_reel([s.strip() for s in m.group(1).split(",")], where), text)
 
     def cond(m):
         negate, key, body = m.group(1), m.group(2), m.group(3)
@@ -695,6 +699,222 @@ def out_path_for(url_path: str) -> str:
 
 def split_list(value: str | None) -> list[str]:
     return [v.strip() for v in (value or "").split(",") if v.strip()]
+
+
+# ---------------------------------------------------------------------------
+# Replays: data-driven re-enactments of one system handling one event.
+#
+# Each src/replays/<name>.json is a list of timestamped steps. The build
+# renders the complete FINAL state as static HTML (so no-JS and reduced-motion
+# visitors get a fully populated, readable replay, and crawlers see content).
+# replay.js then resets it and plays it back. Values that later steps change
+# (sheet status, calendar blocks) are "muts": they carry their whole value
+# history in data-values, and the step that changes them carries data-apply.
+# ---------------------------------------------------------------------------
+
+_esc = lambda s: html.escape(str(s), quote=True)  # noqa: E731
+
+
+def _secs(t: str) -> int:
+    m, s = t.split(":")
+    return int(m) * 60 + int(s)
+
+
+def _wall(base: str, t: str) -> str:
+    h, m, s = (int(x) for x in base.split(":"))
+    total = h * 3600 + m * 60 + s + _secs(t)
+    return f"{total // 3600 % 24:02d}:{total // 60 % 60:02d}:{total % 60:02d}"
+
+
+def load_replay(name: str, where: str) -> dict:
+    p = SRC / "replays" / f"{name}.json"
+    if not p.exists():
+        raise BuildError(f"{where}: unknown replay '{name}' (add src/replays/{name}.json)")
+    data = json.loads(p.read_text("utf-8"))
+    # Playback schedule (ms): real gaps compressed into a watchable rhythm
+    at, prev = 700, None
+    for step in data["steps"]:
+        sec = _secs(step["t"])
+        if prev is not None:
+            gap = sec - prev
+            at += 520 if gap == 0 else int(min(2400, max(1100, gap * 420)))
+        step["_at"] = at
+        prev = sec
+    data["_duration"] = at
+    return data
+
+
+def _collect_muts(data: dict) -> dict[str, list]:
+    """First pass: every mutable value's history, [[text, tone], ...]."""
+    muts: dict[str, list] = {}
+    for step in data["steps"]:
+        kind, op = step["type"], step.get("op", "add")
+        if kind == "sheet" and op == "add":
+            for col in step["columns"]:
+                muts[f'{step["id"]}.{col["key"]}'] = [[step["row"][col["key"]], step.get("tones", {}).get(col["key"], "")]]
+        elif kind == "calendar" and op == "add":
+            muts[f'{step["id"]}.template'] = [[step["template"], "ok"]]
+            for i, (tm, label) in enumerate(step["blocks"]):
+                muts[f'{step["id"]}.b{i}.time'] = [[tm, ""]]
+                muts[f'{step["id"]}.b{i}.label'] = [[label, ""]]
+        step["_apply"] = {}
+        if kind == "sheet" and op == "update":
+            for key, val in step["set"].items():
+                mid = f'{step["target"]}.{key}'
+                muts[mid].append([val, step.get("tones", {}).get(key, "")])
+                step["_apply"][mid] = len(muts[mid]) - 1
+        elif kind == "calendar" and op == "shift":
+            updates = {f'{step["target"]}.template': [step["template"], "ok"]}
+            for i, (tm, label) in enumerate(step["blocks"]):
+                updates[f'{step["target"]}.b{i}.time'] = [tm, ""]
+                updates[f'{step["target"]}.b{i}.label'] = [label, ""]
+            for mid, val in updates.items():
+                muts[mid].append(val)
+                step["_apply"][mid] = len(muts[mid]) - 1
+    return muts
+
+
+def _mut(muts: dict, mid: str, cls: str = "") -> str:
+    history = muts[mid]
+    text, tone = history[-1]
+    tone_cls = f" rp-pill rp-pill--{tone}" if tone else ""
+    return (f'<span class="rp-mut{tone_cls}{(" " + cls) if cls else ""}" data-mut="{_esc(mid)}" '
+            f"data-values='{_esc(json.dumps(history, ensure_ascii=False))}'>{_esc(text)}</span>")
+
+
+def _artifact(step: dict, muts: dict, data: dict) -> str:
+    """Owner-view markup for one step ('' for steps that only mutate)."""
+    kind, op = step["type"], step.get("op", "add")
+    at = f'data-at="{step["_at"]}"'
+    wall = _wall(data["base"], step["t"])[:5]
+    if kind == "call":
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-call">'
+                f'<span class="rp-call__icon">{{% icon "phone-x" %}}</span>'
+                f'<span class="rp-call__body"><span class="rp-kicker">{_esc(step.get("label", "Incoming call"))} · {wall}</span>'
+                f'<span class="rp-call__num">{_esc(step["from"])}</span></span>'
+                f'<span class="rp-pill rp-pill--warn">{_esc(step["status"])}</span></div></li>')
+    if kind in ("sms", "whatsapp") or (kind == "telegram" and step.get("dir")):
+        side = "out" if step["dir"] == "out" else "in"
+        photo = ""
+        if step.get("photo"):
+            photo = ('<figure class="rp-photo" aria-label="Photo attachment">'
+                     '<svg viewBox="0 0 160 110" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'
+                     '<rect width="160" height="110" fill="#1c1c24"/>'
+                     '<g stroke="#2e2e38" stroke-width="1">' + "".join(
+                         f'<path d="M{x} 0 L{x - 40} 110"/>' for x in range(20, 220, 14)) + '</g>'
+                     '<rect x="28" y="18" width="104" height="74" rx="4" fill="#23232b" stroke="#3a3a46"/>'
+                     '<path d="M70 18 L78 40 L72 52 L84 70 L80 92" fill="none" stroke="#bcb4f4" stroke-width="1.25"/>'
+                     '</svg><figcaption class="rp-meta">IMG · site_photo.jpg</figcaption></figure>')
+        fields = ""
+        if step.get("fields"):
+            rows = "".join(
+                f'<div class="rp-field"><dt>{_esc(f["k"])}</dt><dd>{_esc(f["v"])}'
+                + (f' <span class="rp-note">{_esc(f["note"])}</span>' if f.get("note") else "") + "</dd></div>"
+                for f in step["fields"])
+            fields = f'<dl class="rp-fields">{rows}</dl>'
+        text = f'<p>{_esc(step["text"])}</p>' if step.get("text") else ""
+        channel = {"sms": "SMS", "whatsapp": "WhatsApp", "telegram": "Telegram"}[kind]
+        meta = step.get("meta", f"{channel} · {wall}")
+        return (f'<li class="rp-item rp-msg rp-msg--{side} rp-msg--{kind}" {at}>'
+                f'<div class="rp-bubble">{photo}{text}{fields}</div>'
+                f'<span class="rp-meta">{_esc(meta)}</span></li>')
+    if kind == "telegram":
+        buttons = "".join(f"<span>{_esc(b)}</span>" for b in step.get("buttons", []))
+        buttons = f'<div class="rp-tg__btns" aria-label="Inline buttons">{buttons}</div>' if buttons else ""
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-tg">'
+                f'<div class="rp-tg__head"><span class="rp-avatar">{{% icon "telegram-logo" %}}</span>'
+                f'<span class="rp-tg__name">{_esc(step["from"])}</span><span class="rp-tag">bot</span>'
+                f'<span class="rp-meta">{wall}</span></div>'
+                f'<p class="rp-tg__text">{_esc(step["text"])}</p>{buttons}</div></li>')
+    if kind == "sheet" and op == "add":
+        head = "".join(f'<th scope="col">{_esc(c["label"])}</th>' for c in step["columns"])
+        cells = "".join(f'<td data-label="{_esc(c["label"])}">{_mut(muts, step["id"] + "." + c["key"])}</td>'
+                        for c in step["columns"])
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-sheet">'
+                f'<div class="rp-sheet__tab">{{% icon "table" %}}<span>{_esc(step["sheet"])}</span>'
+                f'<span class="rp-meta">Google Sheets</span></div>'
+                f'<table><thead><tr>{head}</tr></thead><tbody><tr>{cells}</tr></tbody></table></div></li>')
+    if kind == "calendar" and op == "add":
+        blocks = "".join(
+            f'<li class="rp-block" style="--i:{i}">{_mut(muts, f"{step["id"]}.b{i}.time", "rp-block__time")}'
+            f'{_mut(muts, f"{step["id"]}.b{i}.label", "rp-block__label")}</li>'
+            for i in range(len(step["blocks"])))
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-cal" data-cal="{_esc(step["id"])}">'
+                f'<div class="rp-cal__head">{{% icon "calendar-blank" %}}<span>{_esc(step["title"])}</span>'
+                f'{_mut(muts, step["id"] + ".template")}</div><ol class="rp-cal__list" role="list">{blocks}</ol></div></li>')
+    if kind == "event":
+        return f'<li class="rp-item rp-event" {at}><span aria-hidden="true">↳</span> {_esc(step["text"])}</li>'
+    return ""
+
+
+def _log_line(step: dict, data: dict, extra_cls: str = "") -> str:
+    log = step["log"]
+    kv = " ".join(
+        f'<span class="k">{_esc(k)}</span>=<span class="v">{_esc(v if " " not in str(v) else chr(34) + str(v) + chr(34))}</span>'
+        for k, v in log.get("kv", {}).items())
+    apply = f" data-apply='{_esc(json.dumps(step['_apply']))}'" if step.get("_apply") else ""
+    return (f'<li class="log-line{extra_cls}" data-at="{step["_at"]}" data-t="{step["t"]}"{apply}>'
+            f'<span class="log-ts">{_wall(data["base"], step["t"])}</span>'
+            f'<span class="log-sys">{_esc(log["sys"])}</span>'
+            f'<span class="log-ev">{_esc(log["event"])}</span>'
+            f'<span class="log-kv">{kv}</span></li>')
+
+
+def render_replay(name: str, where: str, dom_id: str = "") -> str:
+    data = load_replay(name, where)
+    muts = _collect_muts(data)
+    rid = dom_id or f"replay-{name}"
+    lanes = []
+    for lane in data["lanes"]:
+        items = "".join(_artifact(s, muts, data) for s in data["steps"] if s.get("lane") == lane["id"])
+        h = lane["height"]
+        lanes.append(
+            f'<section class="replay__lane" aria-label="{_esc(lane["label"])}">'
+            f'<p class="replay__lane-label">{{% icon "{lane.get("icon", "eye")}" %}}{_esc(lane["label"])}</p>'
+            f'<ol class="replay__feed" role="list" data-anchor="{lane.get("anchor", "bottom")}" '
+            f'style="--h-n:{h["narrow"]};--h-w:{h["wide"]}">{items}</ol></section>')
+    log = "".join(_log_line(s, data) for s in data["steps"])
+    final_t = data["steps"][-1]["t"]
+    return f'''<figure class="replay" id="{rid}" data-replay data-duration="{data["_duration"]}" data-view="owner" aria-labelledby="{rid}-name">
+  <div class="replay__core">
+    <div class="replay__bar">
+      <div class="replay__id">
+        <span class="replay__name" id="{rid}-name">{_esc(data["title"])}</span>
+        <span class="replay__sim">Simulated data · real system flow</span>
+      </div>
+      <span class="replay__clock" data-clock aria-hidden="true">{final_t}</span>
+      <div class="replay__views" role="group" aria-label="Replay view">
+        <button type="button" data-view-btn="owner" aria-pressed="true">Owner<span class="replay__vw"> view</span></button>
+        <button type="button" data-view-btn="engineer" aria-pressed="false">Engineer<span class="replay__vw"> view</span></button>
+      </div>
+      <button type="button" class="replay__play" data-play aria-label="Pause replay">
+        <span class="replay__icon-pause">{{% icon "pause" %}}</span><span class="replay__icon-play">{{% icon "play" %}}</span>
+      </button>
+    </div>
+    <div class="replay__stage">
+      <div class="replay__view replay__view--owner" data-panel="owner">{"".join(lanes)}</div>
+      <div class="replay__view replay__view--engineer" data-panel="engineer">
+        <ol class="replay__log" role="list" aria-label="Event log">{log}<li class="log-caret" aria-hidden="true"></li></ol>
+      </div>
+    </div>
+  </div>
+  <figcaption class="sr-only">{_esc(data["summary"])}</figcaption>
+</figure>'''
+
+
+def render_log_reel(names: list[str], where: str) -> str:
+    """'Under the hood': every replay's engineer log, back to back, cycling."""
+    lines = []
+    for name in names:
+        data = load_replay(name, where)
+        _collect_muts(data)
+        lines.append(f'<li class="log-line log-line--rule"><span class="log-sys">── {_esc(data["system"])}</span></li>')
+        lines += [_log_line(s, data) for s in data["steps"]]
+    return ('<div class="logreel" data-logreel><div class="logreel__bar"><span class="replay__sim">'
+            'Simulated data · real system flows</span><button type="button" class="replay__play" data-play '
+            'aria-label="Pause log">'
+            '<span class="replay__icon-pause">{% icon "pause" %}</span><span class="replay__icon-play">{% icon "play" %}</span>'
+            f'</button></div><ol class="logreel__list" role="list" aria-label="Event log, all systems">{"".join(lines)}</ol></div>')
 
 
 # ---------------------------------------------------------------------------
@@ -763,10 +983,6 @@ def build() -> int:
             f'<link rel="stylesheet" href="{u}" media="print" onload="this.media=\'all\'">\n'
             f'<noscript><link rel="stylesheet" href="{u}"></noscript>\n' for u in deferred_urls)
         page_js = SITE_JS + [f"{n}.js" if not n.endswith(".js") else n for n in split_list(meta.get("js"))]
-        for n in page_js:
-            if n not in js_urls:
-                raise BuildError(f"{where}: unknown script '{n}'")
-        scripts = "\n".join(f'<script type="module" src="{js_urls[n]}"></script>' for n in page_js)
 
         og_rel = f"assets/img/og/{meta.get('og_image', 'default')}.png"
         ctx = {
@@ -780,13 +996,21 @@ def build() -> int:
             "preloads": preloads,
             "critical_css": crit,
             "deferred_css": deferred_tags,
-            "scripts": scripts,
             "brand_mark": brand_mark_html(img),
             "font_status": font_status_html(fonts_cfg, font_report),
             "build_date": date.today().isoformat(),
         }
         content = render(body, ctx, icons, used, where)
         ctx["content"] = content
+
+        # Scripts are chosen after the body renders, so components pull in
+        # their own behaviour (a page with a Replay gets replay.js).
+        if ("data-replay" in content or "data-logreel" in content) and "replay.js" not in page_js:
+            page_js.append("replay.js")
+        for n in page_js:
+            if n not in js_urls:
+                raise BuildError(f"{where}: unknown script '{n}'")
+        ctx["scripts"] = "\n".join(f'<script type="module" src="{js_urls[n]}"></script>' for n in page_js)
         doc = render((SRC / "partials" / "layout.html").read_text("utf-8"), ctx, icons, used, "partials/layout.html")
 
         # Current-page marker on every nav link that points here

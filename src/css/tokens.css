@@ -64,8 +64,14 @@
        Metric-matched fallbacks (declared in fonts.css) sit second in each
        stack so the swap to the real face causes no layout shift.
        ------------------------------------------------------------------ */
+    /* display: scalpel-cut serif for h1/h2 and the wordmark's italic half
+       ui:      ink-trapped sans with character: wordmark, nav, buttons,
+                subheads, card titles, leads, footer, Replay artifacts
+       body:    the same skeleton without traps, quiet for long reading
+       mono:    metadata, labels, the engineer-view log */
     --font-display: "GT Sectra Display", "GT Sectra Display Fallback", Georgia, serif;
-    --font-body:    "GT America Standard", "GT America Standard Fallback", system-ui, sans-serif;
+    --font-ui:      "ABC Whyte Inktrap", "ABC Whyte Inktrap Fallback", system-ui, sans-serif;
+    --font-body:    "ABC Whyte", "ABC Whyte Fallback", system-ui, sans-serif;
     --font-mono:    "GT America Mono", "GT America Mono Fallback", ui-monospace, monospace;
 
     --weight-regular: 400;

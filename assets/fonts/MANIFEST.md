@@ -23,7 +23,7 @@ _'Display' is GT Sectra's large-size optical cut (the family also ships GT Sectr
 - **CSS style:** normal
 - **Folder:** `assets/fonts/GT-Sectra-Display/400-Regular/`
 - **Expected file:** `font.woff2`
-- **Used for:** h1 and h2 display headings: hero lines, section titles, case-study titles, the closing statement
+- **Used for:** h1 and h2 display headings, the footer email line, and the italic half of the wordmark
 - **Preloaded:** yes (once installed)
 - **Status:** Installed (44.6 kB)
 
@@ -39,65 +39,103 @@ _'Display' is GT Sectra's large-size optical cut (the family also ships GT Sectr
 - **CSS style:** italic
 - **Folder:** `assets/fonts/GT-Sectra-Display/400-Regular-Italic/`
 - **Expected file:** `font.woff2`
-- **Used for:** Single emphasised words inside display headings (<em> within h1/h2)
-- **Preloaded:** no
+- **Used for:** Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark
+- **Preloaded:** yes (once installed)
 - **Status:** Installed (48.5 kB)
 
-Fallback: `GT Sectra Display Fallback` → local Times New Roman, TimesNewRomanPSMT (provisional metrics), then Georgia, serif.
+Fallback: `GT Sectra Display Fallback` → local Times New Roman, TimesNewRomanPSMT (calibrated), then Georgia, serif.
 
-## GT America Standard
+## ABC Whyte Inktrap
 
-_'Standard' is GT America's width subfamily (alongside Compressed, Condensed, Extended, Expanded and Mono). It is not a weight. The CSS family name is 'GT America Standard'; Regular = 400, Medium = 500._
+_'Inktrap' is the ink-trapped cut of ABC Whyte, a separate family with notched joins. The CSS family name is 'ABC Whyte Inktrap'; Regular = 400, Medium = 500._
 
-### GT America Standard Regular
+### ABC Whyte Inktrap Regular
 
-- **Font family:** GT America Standard
-- **Foundry:** Grilli Type
-- **Role:** Body / UI
-- **License/vendor:** Grilli Type (licence arranged by the site owner)
+- **Font family:** ABC Whyte Inktrap
+- **Foundry:** Dinamo
+- **Role:** UI / subheads (the characterful sans)
+- **License/vendor:** Dinamo (licence arranged by the site owner)
 - **Weight:** Regular
 - **CSS weight:** 400
 - **Style:** Normal
 - **CSS style:** normal
-- **Folder:** `assets/fonts/GT-America-Standard/400-Regular/`
+- **Folder:** `assets/fonts/ABC-Whyte-Inktrap/400-Regular/`
 - **Expected file:** `font.woff2`
-- **Used for:** Body copy, lead paragraphs, form input text, legal pages
-- **Preloaded:** yes (once installed)
-- **Status:** Installed (13.3 kB)
-
-### GT America Standard Regular Italic
-
-- **Font family:** GT America Standard
-- **Foundry:** Grilli Type
-- **Role:** Body / UI
-- **License/vendor:** Grilli Type (licence arranged by the site owner)
-- **Weight:** Regular
-- **CSS weight:** 400
-- **Style:** Italic
-- **CSS style:** italic
-- **Folder:** `assets/fonts/GT-America-Standard/400-Regular-Italic/`
-- **Expected file:** `font.woff2`
-- **Used for:** <em> in running text (the privacy and terms pages use whole emphasised sentences, kept verbatim)
+- **Used for:** Lead paragraphs, footer links, the Replay artifacts (chat bubbles, cards, sheet cells), intake-flow answer options
 - **Preloaded:** no
-- **Status:** Installed (34.9 kB)
+- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
 
-### GT America Standard Medium
+### ABC Whyte Inktrap Medium
 
-- **Font family:** GT America Standard
-- **Foundry:** Grilli Type
-- **Role:** Body / UI
-- **License/vendor:** Grilli Type (licence arranged by the site owner)
+- **Font family:** ABC Whyte Inktrap
+- **Foundry:** Dinamo
+- **Role:** UI / subheads (the characterful sans)
+- **License/vendor:** Dinamo (licence arranged by the site owner)
 - **Weight:** Medium
 - **CSS weight:** 500
 - **Style:** Normal
 - **CSS style:** normal
-- **Folder:** `assets/fonts/GT-America-Standard/500-Medium/`
+- **Folder:** `assets/fonts/ABC-Whyte-Inktrap/500-Medium/`
 - **Expected file:** `font.woff2`
-- **Used for:** h3/h4 subheads, buttons, navigation, <strong>, form labels
-- **Preloaded:** no
-- **Status:** Installed (14.1 kB)
+- **Used for:** 'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, pillar names, form labels
+- **Preloaded:** yes (once installed)
+- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
 
-Fallback: `GT America Standard Fallback` → local Arial, ArialMT (provisional metrics), then system-ui, sans-serif.
+Fallback: `ABC Whyte Inktrap Fallback` → local Arial, ArialMT (provisional metrics), then system-ui, sans-serif.
+
+## ABC Whyte
+
+_ABC Whyte is the plain (un-trapped) cut, used for long reading text. The CSS family name is 'ABC Whyte'. Dinamo names the upright 'Regular' and the italic 'Italic'; the italic is the Regular-weight italic, so it maps to 400 italic (folder 400-Regular-Italic). Medium = 500._
+
+### ABC Whyte Regular
+
+- **Font family:** ABC Whyte
+- **Foundry:** Dinamo
+- **Role:** Body (the quiet sans)
+- **License/vendor:** Dinamo (licence arranged by the site owner)
+- **Weight:** Regular
+- **CSS weight:** 400
+- **Style:** Normal
+- **CSS style:** normal
+- **Folder:** `assets/fonts/ABC-Whyte/400-Regular/`
+- **Expected file:** `font.woff2`
+- **Used for:** Body copy, case-study prose, service details, legal pages, form input text
+- **Preloaded:** yes (once installed)
+- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+
+### ABC Whyte Regular Italic
+
+- **Font family:** ABC Whyte
+- **Foundry:** Dinamo
+- **Role:** Body (the quiet sans)
+- **License/vendor:** Dinamo (licence arranged by the site owner)
+- **Weight:** Regular
+- **CSS weight:** 400
+- **Style:** Italic
+- **CSS style:** italic
+- **Folder:** `assets/fonts/ABC-Whyte/400-Regular-Italic/`
+- **Expected file:** `font.woff2`
+- **Used for:** <em> in running text (the privacy and terms pages use whole emphasised sentences, kept verbatim)
+- **Preloaded:** no
+- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+
+### ABC Whyte Medium
+
+- **Font family:** ABC Whyte
+- **Foundry:** Dinamo
+- **Role:** Body (the quiet sans)
+- **License/vendor:** Dinamo (licence arranged by the site owner)
+- **Weight:** Medium
+- **CSS weight:** 500
+- **Style:** Normal
+- **CSS style:** normal
+- **Folder:** `assets/fonts/ABC-Whyte/500-Medium/`
+- **Expected file:** `font.woff2`
+- **Used for:** <strong> inside body copy
+- **Preloaded:** no
+- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+
+Fallback: `ABC Whyte Fallback` → local Arial, ArialMT (provisional metrics), then system-ui, sans-serif.
 
 ## GT America Mono
 
@@ -115,11 +153,11 @@ _'Mono' is GT America's monospaced width subfamily. The CSS family name is 'GT A
 - **CSS style:** normal
 - **Folder:** `assets/fonts/GT-America-Mono/400-Regular/`
 - **Expected file:** `font.woff2`
-- **Used for:** Eyebrow labels, badges, metadata rail, section indices, stack lists, step counters, timestamps, footer colophon
+- **Used for:** Eyebrow labels, badges, metadata rail, the Replay clock and engineer-view log, step counters, footer colophon
 - **Preloaded:** no
 - **Status:** Installed (10.4 kB)
 
-Fallback: `GT America Mono Fallback` → local Courier New, CourierNewPSMT (provisional metrics), then ui-monospace, monospace.
+Fallback: `GT America Mono Fallback` → local Courier New, CourierNewPSMT (calibrated), then ui-monospace, monospace.
 
 ## Directory tree
 
@@ -131,7 +169,12 @@ assets/fonts/
 │   │   └── font.woff2
 │   └── 400-Regular-Italic/
 │       └── font.woff2
-├── GT-America-Standard/
+├── ABC-Whyte-Inktrap/
+│   ├── 400-Regular/
+│   │   └── font.woff2
+│   └── 500-Medium/
+│       └── font.woff2
+├── ABC-Whyte/
 │   ├── 400-Regular/
 │   │   └── font.woff2
 │   ├── 400-Regular-Italic/

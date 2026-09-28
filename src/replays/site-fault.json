@@ -1,0 +1,54 @@
+{
+  "title": "Site Fault Tracker",
+  "system": "site-fault-tracker",
+  "base": "14:18:00",
+  "summary": "Replay with simulated data. A field worker on the Crestline Solar team sends the WhatsApp bot a photo and a short note: an inverter housing is cracked at Block C of the Riverside site. The bot acknowledges, then replies with the fields it pulled out: the location from the message, the worker's own description, and a severity flag marked as a rough estimate. One timestamped row is added to the team's Site faults sheet, ready for review.",
+  "lanes": [
+    { "id": "a", "label": "Field worker · WhatsApp", "icon": "whatsapp-logo", "anchor": "bottom", "height": { "narrow": "27rem", "wide": "27rem" } },
+    { "id": "b", "label": "Team sheet · Crestline Solar", "icon": "table", "anchor": "bottom", "height": { "narrow": "18rem", "wide": "27rem" } }
+  ],
+  "steps": [
+    {
+      "t": "00:00", "lane": "a", "type": "whatsapp", "dir": "in", "photo": true,
+      "text": "Inverter housing cracked at Block C, Riverside site. Split along the edge, unit still running.",
+      "meta": "WhatsApp · from ••• 0457 · 14:18",
+      "log": { "sys": "whatsapp", "event": "MESSAGE_IN", "kv": { "from": "+•••0457", "type": "image+text" } }
+    },
+    {
+      "t": "00:02", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Got it. Logging this now.",
+      "meta": "WhatsApp · bot · 14:18",
+      "log": { "sys": "whatsapp", "event": "ACK_SENT", "kv": { "to": "+•••0457" } }
+    },
+    {
+      "t": "00:06", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Logged with these details:",
+      "fields": [
+        { "k": "Location", "v": "Block C, Riverside site" },
+        { "k": "Description", "v": "Inverter housing cracked, split along the edge, unit still running" },
+        { "k": "Severity", "v": "Moderate", "note": "rough estimate" }
+      ],
+      "meta": "WhatsApp · bot · 14:18",
+      "log": { "sys": "vision", "event": "FIELDS_EXTRACTED", "kv": { "location": "Block C, Riverside site", "severity": "moderate", "severity_basis": "rough_estimate" } }
+    },
+    {
+      "t": "00:07", "lane": "b", "type": "sheet", "id": "fault",
+      "sheet": "Site faults",
+      "columns": [
+        { "key": "time", "label": "Logged" },
+        { "key": "location", "label": "Location" },
+        { "key": "desc", "label": "Description" },
+        { "key": "severity", "label": "Severity" },
+        { "key": "photo", "label": "Photo" }
+      ],
+      "row": { "time": "14:18", "location": "Block C, Riverside", "desc": "Inverter housing cracked", "severity": "Moderate (rough)", "photo": "site_photo.jpg" },
+      "tones": { "severity": "wait" },
+      "log": { "sys": "sheets", "event": "SHEET_APPEND", "kv": { "sheet": "Site faults", "location": "Block C, Riverside", "photo": "attached" } }
+    },
+    {
+      "t": "00:08", "lane": "b", "type": "event",
+      "text": "One structured row, ready for someone to review",
+      "log": { "sys": "bot", "event": "LOG_COMPLETE", "kv": { "sheet": "Site faults", "status": "ready_for_review" } }
+    }
+  ]
+}

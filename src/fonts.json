@@ -2,7 +2,7 @@
   "_comment": "Single source of truth for webfonts. build.py reads this to create the assets/fonts/ folders, generate src/css/fonts.css and assets/fonts/MANIFEST.md, and validate everything. Edit here, never in the generated files.",
   "root": "assets/fonts",
   "file": "font.woff2",
-  "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD",
+  "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD",
   "families": [
     {
       "family": "GT Sectra Display",
@@ -13,13 +13,16 @@
       "token": "--font-display",
       "fallback": {
         "family": "GT Sectra Display Fallback",
-        "local": ["Times New Roman", "TimesNewRomanPSMT"],
+        "local": [
+          "Times New Roman",
+          "TimesNewRomanPSMT"
+        ],
         "generic": "Georgia, serif",
-        "size_adjust": "106%",
-        "ascent_override": "88%",
-        "descent_override": "24%",
-        "line_gap_override": "0%",
-        "calibrated": false
+        "size_adjust": "105.32%",
+        "ascent_override": "93.05%",
+        "descent_override": "24.69%",
+        "line_gap_override": "0.00%",
+        "calibrated": true
       },
       "faces": [
         {
@@ -27,7 +30,7 @@
           "weight": 400,
           "style": "normal",
           "folder": "400-Regular",
-          "used_for": "h1 and h2 display headings: hero lines, section titles, case-study titles, the closing statement",
+          "used_for": "h1 and h2 display headings, the footer email line, and the italic half of the wordmark",
           "preload": true
         },
         {
@@ -35,25 +38,28 @@
           "weight": 400,
           "style": "italic",
           "folder": "400-Regular-Italic",
-          "used_for": "Single emphasised words inside display headings (<em> within h1/h2)",
-          "preload": false
+          "used_for": "Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark",
+          "preload": true
         }
       ]
     },
     {
-      "family": "GT America Standard",
-      "folder": "GT-America-Standard",
-      "foundry": "Grilli Type",
-      "role": "Body / UI",
-      "terminology": "'Standard' is GT America's width subfamily (alongside Compressed, Condensed, Extended, Expanded and Mono). It is not a weight. The CSS family name is 'GT America Standard'; Regular = 400, Medium = 500.",
-      "token": "--font-body",
+      "family": "ABC Whyte Inktrap",
+      "folder": "ABC-Whyte-Inktrap",
+      "foundry": "Dinamo",
+      "role": "UI / subheads (the characterful sans)",
+      "terminology": "'Inktrap' is the ink-trapped cut of ABC Whyte, a separate family with notched joins. The CSS family name is 'ABC Whyte Inktrap'; Regular = 400, Medium = 500.",
+      "token": "--font-ui",
       "fallback": {
-        "family": "GT America Standard Fallback",
-        "local": ["Arial", "ArialMT"],
+        "family": "ABC Whyte Inktrap Fallback",
+        "local": [
+          "Arial",
+          "ArialMT"
+        ],
         "generic": "system-ui, sans-serif",
-        "size_adjust": "101%",
-        "ascent_override": "93%",
-        "descent_override": "24%",
+        "size_adjust": "105%",
+        "ascent_override": "90%",
+        "descent_override": "23%",
         "line_gap_override": "0%",
         "calibrated": false
       },
@@ -63,7 +69,46 @@
           "weight": 400,
           "style": "normal",
           "folder": "400-Regular",
-          "used_for": "Body copy, lead paragraphs, form input text, legal pages",
+          "used_for": "Lead paragraphs, footer links, the Replay artifacts (chat bubbles, cards, sheet cells), intake-flow answer options",
+          "preload": false
+        },
+        {
+          "style_name": "Medium",
+          "weight": 500,
+          "style": "normal",
+          "folder": "500-Medium",
+          "used_for": "'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, pillar names, form labels",
+          "preload": true
+        }
+      ]
+    },
+    {
+      "family": "ABC Whyte",
+      "folder": "ABC-Whyte",
+      "foundry": "Dinamo",
+      "role": "Body (the quiet sans)",
+      "terminology": "ABC Whyte is the plain (un-trapped) cut, used for long reading text. The CSS family name is 'ABC Whyte'. Dinamo names the upright 'Regular' and the italic 'Italic'; the italic is the Regular-weight italic, so it maps to 400 italic (folder 400-Regular-Italic). Medium = 500.",
+      "token": "--font-body",
+      "fallback": {
+        "family": "ABC Whyte Fallback",
+        "local": [
+          "Arial",
+          "ArialMT"
+        ],
+        "generic": "system-ui, sans-serif",
+        "size_adjust": "104%",
+        "ascent_override": "91%",
+        "descent_override": "23%",
+        "line_gap_override": "0%",
+        "calibrated": false
+      },
+      "faces": [
+        {
+          "style_name": "Regular",
+          "weight": 400,
+          "style": "normal",
+          "folder": "400-Regular",
+          "used_for": "Body copy, case-study prose, service details, legal pages, form input text",
           "preload": true
         },
         {
@@ -79,7 +124,7 @@
           "weight": 500,
           "style": "normal",
           "folder": "500-Medium",
-          "used_for": "h3/h4 subheads, buttons, navigation, <strong>, form labels",
+          "used_for": "<strong> inside body copy",
           "preload": false
         }
       ]
@@ -93,13 +138,16 @@
       "token": "--font-mono",
       "fallback": {
         "family": "GT America Mono Fallback",
-        "local": ["Courier New", "CourierNewPSMT"],
+        "local": [
+          "Courier New",
+          "CourierNewPSMT"
+        ],
         "generic": "ui-monospace, monospace",
-        "size_adjust": "100%",
-        "ascent_override": "86%",
-        "descent_override": "22%",
-        "line_gap_override": "0%",
-        "calibrated": false
+        "size_adjust": "103.32%",
+        "ascent_override": "96.79%",
+        "descent_override": "24.97%",
+        "line_gap_override": "0.00%",
+        "calibrated": true
       },
       "faces": [
         {
@@ -107,7 +155,7 @@
           "weight": 400,
           "style": "normal",
           "folder": "400-Regular",
-          "used_for": "Eyebrow labels, badges, metadata rail, section indices, stack lists, step counters, timestamps, footer colophon",
+          "used_for": "Eyebrow labels, badges, metadata rail, the Replay clock and engineer-view log, step counters, footer colophon",
           "preload": false
         }
       ]
