@@ -15,14 +15,14 @@
   .home-hero__title {
     font-size: var(--step-7);
     line-height: 0.92;
-    max-inline-size: 11ch;
+    max-inline-size: calc(11 * var(--ch-display));
   }
   @media (min-width: 64rem) {
     .home-hero__copy   { grid-column: 1 / span 5; }
     .home-hero__replay { grid-column: 6 / -1; }
     .home-hero__title  { font-size: clamp(3.5rem, 1rem + 5.4vw, 7.25rem); }
   }
-  .home-hero__lead { max-inline-size: 34ch; }
+  .home-hero__lead { max-inline-size: calc(34 * var(--ch-ui)); }
   .home-hero__ctas { --gap: var(--space-xs); margin-block-start: var(--space-2xs); }
   .home-hero__meta {
     display: flex;
@@ -97,7 +97,7 @@
     font-size: var(--step-0);
     letter-spacing: -0.012em;
   }
-  .pillar .card__body { max-inline-size: 40ch; }
+  .pillar .card__body { max-inline-size: calc(40 * var(--ch-body)); }
   .pillar__price {
     display: inline-flex;
     align-items: baseline;
@@ -192,7 +192,7 @@
   }
   .method__body { display: grid; gap: var(--space-xs); }
   .method__body h3 { font-size: var(--step-2); }
-  .method__body p { max-inline-size: 48ch; }
+  .method__body p { max-inline-size: calc(48 * var(--ch-body)); }
   /* Each step's number lights as the step reaches mid-screen (CSS only) */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
@@ -208,7 +208,7 @@
   /* Close ---------------------------------------------------------------- */
   .close { position: relative; padding-block-end: calc(var(--section-y) + var(--space-l)); }
   .close__inner { display: grid; gap: var(--space-m); justify-items: start; }
-  .close__title { max-inline-size: 12ch; }
+  .close__title { max-inline-size: calc(12 * var(--ch-display)); }
   .close__ctas { --gap: var(--space-xs); }
   .close__alt a { color: var(--c-bone-2); text-decoration: none; transition: color var(--dur-hover) var(--ease-out-soft); }
   .close__alt a:hover { color: var(--c-lilac); }

@@ -3,14 +3,14 @@
    restyles its original structure into the site's long-form reading layout.
    ========================================================================== */
 @layer pages {
-  .legal-head .page-head__title { max-inline-size: 12ch; }
+  .legal-head .page-head__title { max-inline-size: calc(12 * var(--ch-display)); }
   .legal-strip {
     font-family: var(--font-mono);
     font-size: var(--step--2);
     letter-spacing: var(--tracking-label);
     line-height: 1.9;
     color: var(--c-bone-3);
-    max-inline-size: 60ch;
+    max-inline-size: calc(60 * var(--ch-mono));
   }
   .legal-strip em { font-style: normal; color: var(--c-lilac); margin-inline: 0.35em; }
 
@@ -67,7 +67,7 @@
     text-transform: uppercase;
     color: var(--c-lilac);
   }
-  .policy-head h2 { font-size: var(--step-4); line-height: 1.02; letter-spacing: var(--tracking-heading); max-inline-size: 14ch; }
+  .policy-head h2 { font-size: var(--step-4); line-height: 1.02; letter-spacing: var(--tracking-heading); max-inline-size: calc(14 * var(--ch-display)); }
   .appendix-tag {
     justify-self: start;
     padding: 0.3125rem 0.75rem;
@@ -81,8 +81,8 @@
     color: var(--c-lilac);
   }
 
-  .policy-note { font-size: var(--step-1); line-height: 1.5; color: var(--c-bone); max-inline-size: 58ch; font-family: var(--font-body); }
-  .legal p { max-inline-size: 64ch; }
+  .policy-note { font-size: var(--step-1); line-height: 1.5; color: var(--c-bone); max-inline-size: calc(58 * var(--ch-body)); font-family: var(--font-body); }
+  .legal p { max-inline-size: calc(64 * var(--ch-body)); }
   .legal em { color: var(--c-bone); }
   .legal a:not([class]) {
     color: var(--c-bone);

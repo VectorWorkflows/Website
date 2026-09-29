@@ -8,8 +8,8 @@
     padding-block: calc(var(--space-4xl) + 2rem) var(--section-y-tight);
   }
   .page-head__grid { --row-gap: var(--space-m); }
-  .page-head__title { max-inline-size: 14ch; }
-  .page-head__lead { max-inline-size: 46ch; }
+  .page-head__title { max-inline-size: calc(14 * var(--ch-display)); }
+  .page-head__lead { max-inline-size: calc(46 * var(--ch-ui)); }
   .page-head__aside { display: flex; flex-wrap: wrap; gap: 0.625rem; }
 
   /* Words settle into focus rather than rising from behind a mask: they are

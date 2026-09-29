@@ -2,7 +2,10 @@
    CASE STUDY (shared by the three system pages) and the work index close
    ========================================================================== */
 @layer pages {
-  .case-head__title { max-inline-size: 12ch; font-size: var(--step-7); line-height: 0.94; }
+  /* 12.25, not 12: "Site Fault Tracker" fits one line in the webfont with
+     under 1% to spare, and its fallback sets 2% wider; the quarter character
+     keeps both on one line so the swap doesn't drop the page by a line. */
+  .case-head__title { max-inline-size: calc(12.25 * var(--ch-display)); font-size: var(--step-7); line-height: 0.94; }
   .case-back {
     display: inline-flex;
     align-items: center;
@@ -25,7 +28,7 @@
 
   /* Prose */
   .prose { display: grid; gap: var(--space-s); align-content: start; }
-  .prose p { font-size: var(--step-1); line-height: 1.5; color: var(--c-bone-2); max-inline-size: 44ch; font-family: var(--font-body); }
+  .prose p { font-size: var(--step-1); line-height: 1.5; color: var(--c-bone-2); max-inline-size: calc(44 * var(--ch-body)); font-family: var(--font-body); }
   .prose p:first-child { color: var(--c-bone); }
 
   /* Steps: numbered, hung on a hairline */
@@ -47,7 +50,7 @@
   }
   .steps__n { font-family: var(--font-display); font-style: italic; font-size: var(--step-2); color: var(--c-lilac); line-height: 1.1; }
   .steps h3 { font-size: var(--step-1); margin-block-end: 0.375rem; }
-  .steps p { max-inline-size: 56ch; }
+  .steps p { max-inline-size: calc(56 * var(--ch-body)); }
   @media (min-width: 64rem) {
     .steps { grid-template-columns: 1fr 1fr; column-gap: var(--space-2xl); }
   }
@@ -92,10 +95,10 @@
     background: var(--c-lilac-dim);
   }
   .limits h3 { color: var(--c-lilac); }
-  .limits p { color: var(--c-bone); max-inline-size: 60ch; }
+  .limits p { color: var(--c-bone); max-inline-size: calc(60 * var(--ch-body)); }
 
   .status-note { margin-block-start: var(--space-l); display: grid; gap: var(--space-xs); justify-items: start; }
-  .status-note p { max-inline-size: 60ch; }
+  .status-note p { max-inline-size: calc(60 * var(--ch-body)); }
 
   /* Video: a poster that only contacts YouTube when pressed */
   .video {

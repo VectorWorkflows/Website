@@ -18,16 +18,24 @@
           "TimesNewRomanPSMT"
         ],
         "generic": "Georgia, serif",
-        "size_adjust": "105.32%",
-        "ascent_override": "93.05%",
-        "descent_override": "24.69%",
+        "size_adjust": "101.93%",
+        "ascent_override": "96.15%",
+        "descent_override": "25.51%",
         "line_gap_override": "0.00%",
         "calibrated": true,
-        "italic": {
-          "size_adjust": "96.69%",
-          "ascent_override": "101.36%",
-          "descent_override": "26.89%",
-          "line_gap_override": "0.00%"
+        "faces": {
+          "400-normal": {
+            "size_adjust": "101.93%",
+            "ascent_override": "96.15%",
+            "descent_override": "25.51%",
+            "line_gap_override": "0.00%"
+          },
+          "400-italic": {
+            "size_adjust": "94.85%",
+            "ascent_override": "103.32%",
+            "descent_override": "27.41%",
+            "line_gap_override": "0.00%"
+          }
         }
       },
       "faces": [
@@ -47,7 +55,8 @@
           "used_for": "Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark",
           "preload": false
         }
-      ]
+      ],
+      "zero_em": 0.562
     },
     {
       "family": "ABC Whyte Inktrap",
@@ -63,11 +72,25 @@
           "ArialMT"
         ],
         "generic": "system-ui, sans-serif",
-        "size_adjust": "105%",
-        "ascent_override": "90%",
-        "descent_override": "23%",
-        "line_gap_override": "0%",
-        "calibrated": false
+        "size_adjust": "103.01%",
+        "ascent_override": "78.83%",
+        "descent_override": "18.25%",
+        "line_gap_override": "0.00%",
+        "calibrated": true,
+        "faces": {
+          "400-normal": {
+            "size_adjust": "103.01%",
+            "ascent_override": "78.83%",
+            "descent_override": "18.25%",
+            "line_gap_override": "0.00%"
+          },
+          "500-normal": {
+            "size_adjust": "105.80%",
+            "ascent_override": "76.75%",
+            "descent_override": "17.77%",
+            "line_gap_override": "0.00%"
+          }
+        }
       },
       "faces": [
         {
@@ -84,9 +107,16 @@
           "style": "normal",
           "folder": "500-Medium",
           "used_for": "'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, pillar names, form labels",
-          "preload": true
+          "preload": false
         }
-      ]
+      ],
+      "metrics": {
+        "ascent_override": "81.20%",
+        "descent_override": "18.80%",
+        "line_gap_override": "0.00%",
+        "reason": "hhea ascent 393 is below cap height 700; pinned to OS/2 win 812/188"
+      },
+      "zero_em": 0.674
     },
     {
       "family": "ABC Whyte",
@@ -102,11 +132,31 @@
           "ArialMT"
         ],
         "generic": "system-ui, sans-serif",
-        "size_adjust": "104%",
-        "ascent_override": "91%",
-        "descent_override": "23%",
-        "line_gap_override": "0%",
-        "calibrated": false
+        "size_adjust": "102.96%",
+        "ascent_override": "78.87%",
+        "descent_override": "18.26%",
+        "line_gap_override": "0.00%",
+        "calibrated": true,
+        "faces": {
+          "400-normal": {
+            "size_adjust": "102.96%",
+            "ascent_override": "78.87%",
+            "descent_override": "18.26%",
+            "line_gap_override": "0.00%"
+          },
+          "400-italic": {
+            "size_adjust": "102.96%",
+            "ascent_override": "78.86%",
+            "descent_override": "18.26%",
+            "line_gap_override": "0.00%"
+          },
+          "500-normal": {
+            "size_adjust": "105.78%",
+            "ascent_override": "76.76%",
+            "descent_override": "17.77%",
+            "line_gap_override": "0.00%"
+          }
+        }
       },
       "faces": [
         {
@@ -115,7 +165,7 @@
           "style": "normal",
           "folder": "400-Regular",
           "used_for": "Body copy, case-study prose, service details, legal pages, form input text",
-          "preload": true
+          "preload": false
         },
         {
           "style_name": "Regular Italic",
@@ -133,7 +183,14 @@
           "used_for": "<strong> inside body copy",
           "preload": false
         }
-      ]
+      ],
+      "metrics": {
+        "ascent_override": "81.20%",
+        "descent_override": "18.80%",
+        "line_gap_override": "0.00%",
+        "reason": "hhea ascent 393 is below cap height 700; pinned to OS/2 win 812/188"
+      },
+      "zero_em": 0.674
     },
     {
       "family": "GT America Mono",
@@ -149,11 +206,19 @@
           "CourierNewPSMT"
         ],
         "generic": "ui-monospace, monospace",
-        "size_adjust": "103.32%",
-        "ascent_override": "96.79%",
-        "descent_override": "24.97%",
+        "size_adjust": "103.12%",
+        "ascent_override": "96.98%",
+        "descent_override": "25.02%",
         "line_gap_override": "0.00%",
-        "calibrated": true
+        "calibrated": true,
+        "faces": {
+          "400-normal": {
+            "size_adjust": "103.12%",
+            "ascent_override": "96.98%",
+            "descent_override": "25.02%",
+            "line_gap_override": "0.00%"
+          }
+        }
       },
       "faces": [
         {
@@ -164,7 +229,8 @@
           "used_for": "Eyebrow labels, badges, metadata rail, the Replay clock and engineer-view log, step counters, footer colophon",
           "preload": false
         }
-      ]
+      ],
+      "zero_em": 0.62
     }
   ]
 }

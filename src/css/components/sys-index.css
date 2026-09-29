@@ -51,7 +51,7 @@
     transition: transform var(--dur-state) var(--ease-out);
   }
   .sys-row__meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; gap: 0.625rem 1rem; }
-  .sys-row__line { grid-area: line; font-family: var(--font-ui); color: var(--c-bone-2); font-size: var(--step-0); max-inline-size: 52ch; }
+  .sys-row__line { grid-area: line; font-family: var(--font-ui); color: var(--c-bone-2); font-size: var(--step-0); max-inline-size: calc(52 * var(--ch-ui)); }
   .sys-row__go {
     grid-area: go;
     display: grid;

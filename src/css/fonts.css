@@ -19,27 +19,30 @@
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-/* GT Sectra Display Fallback (italic): calibrated from the installed font */
-@font-face {
-  font-family: "GT Sectra Display Fallback";
-  src: local("Times New Roman Italic");
-  font-style: italic;
-  size-adjust: 96.69%;
-  ascent-override: 101.36%;
-  descent-override: 26.89%;
-  line-gap-override: 0.00%;
-}
-/* GT Sectra Display Fallback (normal): calibrated from the installed font */
+/* GT Sectra Display Fallback (Regular): calibrated from the installed font */
 @font-face {
   font-family: "GT Sectra Display Fallback";
   src: local("Times New Roman"), local("TimesNewRomanPSMT");
+  font-weight: 400;
   font-style: normal;
-  size-adjust: 105.32%;
-  ascent-override: 93.05%;
-  descent-override: 24.69%;
+  size-adjust: 101.93%;
+  ascent-override: 96.15%;
+  descent-override: 25.51%;
+  line-gap-override: 0.00%;
+}
+/* GT Sectra Display Fallback (Regular Italic): calibrated from the installed font */
+@font-face {
+  font-family: "GT Sectra Display Fallback";
+  src: local("Times New Roman Italic");
+  font-weight: 400;
+  font-style: italic;
+  size-adjust: 94.85%;
+  ascent-override: 103.32%;
+  descent-override: 27.41%;
   line-gap-override: 0.00%;
 }
 
+/* ABC Whyte Inktrap: vertical metrics pinned so every platform lays it out alike (hhea ascent 393 is below cap height 700; pinned to OS/2 win 812/188) */
 @font-face {
   font-family: "ABC Whyte Inktrap";
   src: url("/assets/fonts/ABC-Whyte-Inktrap/400-Regular/font.woff2") format("woff2");
@@ -47,6 +50,9 @@
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
+  ascent-override: 81.20%;
+  descent-override: 18.80%;
+  line-gap-override: 0.00%;
 }
 @font-face {
   font-family: "ABC Whyte Inktrap";
@@ -55,18 +61,34 @@
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
+  ascent-override: 81.20%;
+  descent-override: 18.80%;
+  line-gap-override: 0.00%;
 }
-/* ABC Whyte Inktrap Fallback (normal): PROVISIONAL: run `python build.py fonts --calibrate` once the font file is installed */
+/* ABC Whyte Inktrap Fallback (Regular): calibrated from the installed font */
 @font-face {
   font-family: "ABC Whyte Inktrap Fallback";
   src: local("Arial"), local("ArialMT");
+  font-weight: 400;
   font-style: normal;
-  size-adjust: 105%;
-  ascent-override: 90%;
-  descent-override: 23%;
-  line-gap-override: 0%;
+  size-adjust: 103.01%;
+  ascent-override: 78.83%;
+  descent-override: 18.25%;
+  line-gap-override: 0.00%;
+}
+/* ABC Whyte Inktrap Fallback (Medium): calibrated from the installed font */
+@font-face {
+  font-family: "ABC Whyte Inktrap Fallback";
+  src: local("Arial"), local("ArialMT");
+  font-weight: 500;
+  font-style: normal;
+  size-adjust: 105.80%;
+  ascent-override: 76.75%;
+  descent-override: 17.77%;
+  line-gap-override: 0.00%;
 }
 
+/* ABC Whyte: vertical metrics pinned so every platform lays it out alike (hhea ascent 393 is below cap height 700; pinned to OS/2 win 812/188) */
 @font-face {
   font-family: "ABC Whyte";
   src: url("/assets/fonts/ABC-Whyte/400-Regular/font.woff2") format("woff2");
@@ -74,6 +96,9 @@
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
+  ascent-override: 81.20%;
+  descent-override: 18.80%;
+  line-gap-override: 0.00%;
 }
 @font-face {
   font-family: "ABC Whyte";
@@ -82,6 +107,9 @@
   font-style: italic;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
+  ascent-override: 81.20%;
+  descent-override: 18.80%;
+  line-gap-override: 0.00%;
 }
 @font-face {
   font-family: "ABC Whyte";
@@ -90,26 +118,42 @@
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
+  ascent-override: 81.20%;
+  descent-override: 18.80%;
+  line-gap-override: 0.00%;
 }
-/* ABC Whyte Fallback (italic): PROVISIONAL: run `python build.py fonts --calibrate` once the font file is installed */
-@font-face {
-  font-family: "ABC Whyte Fallback";
-  src: local("Arial Italic");
-  font-style: italic;
-  size-adjust: 104%;
-  ascent-override: 91%;
-  descent-override: 23%;
-  line-gap-override: 0%;
-}
-/* ABC Whyte Fallback (normal): PROVISIONAL: run `python build.py fonts --calibrate` once the font file is installed */
+/* ABC Whyte Fallback (Regular): calibrated from the installed font */
 @font-face {
   font-family: "ABC Whyte Fallback";
   src: local("Arial"), local("ArialMT");
+  font-weight: 400;
   font-style: normal;
-  size-adjust: 104%;
-  ascent-override: 91%;
-  descent-override: 23%;
-  line-gap-override: 0%;
+  size-adjust: 102.96%;
+  ascent-override: 78.87%;
+  descent-override: 18.26%;
+  line-gap-override: 0.00%;
+}
+/* ABC Whyte Fallback (Regular Italic): calibrated from the installed font */
+@font-face {
+  font-family: "ABC Whyte Fallback";
+  src: local("Arial Italic");
+  font-weight: 400;
+  font-style: italic;
+  size-adjust: 102.96%;
+  ascent-override: 78.86%;
+  descent-override: 18.26%;
+  line-gap-override: 0.00%;
+}
+/* ABC Whyte Fallback (Medium): calibrated from the installed font */
+@font-face {
+  font-family: "ABC Whyte Fallback";
+  src: local("Arial"), local("ArialMT");
+  font-weight: 500;
+  font-style: normal;
+  size-adjust: 105.78%;
+  ascent-override: 76.76%;
+  descent-override: 17.77%;
+  line-gap-override: 0.00%;
 }
 
 @font-face {
@@ -120,13 +164,22 @@
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-2199, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-/* GT America Mono Fallback (normal): calibrated from the installed font */
+/* GT America Mono Fallback (Regular): calibrated from the installed font */
 @font-face {
   font-family: "GT America Mono Fallback";
   src: local("Courier New"), local("CourierNewPSMT");
+  font-weight: 400;
   font-style: normal;
-  size-adjust: 103.32%;
-  ascent-override: 96.79%;
-  descent-override: 24.97%;
+  size-adjust: 103.12%;
+  ascent-override: 96.98%;
+  descent-override: 25.02%;
   line-gap-override: 0.00%;
+}
+
+/* Font-independent character units: the installed face's "0" width */
+:root {
+  --ch-display: 0.562em;
+  --ch-ui: 0.674em;
+  --ch-body: 0.674em;
+  --ch-mono: 0.62em;
 }

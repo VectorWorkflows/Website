@@ -321,6 +321,9 @@ def render_font_css(cfg: dict) -> str:
         "",
     ]
     for fam in cfg["families"]:
+        pin = fam.get("metrics")
+        if pin:
+            lines.append(f"/* {fam['family']}: vertical metrics pinned so every platform lays it out alike ({pin['reason']}) */")
         for face in fam["faces"]:
             lines += [
                 "@font-face {",
@@ -330,21 +333,28 @@ def render_font_css(cfg: dict) -> str:
                 f"  font-style: {face['style']};",
                 "  font-display: swap;",
                 f"  unicode-range: {cfg['unicode_range']};",
-                "}",
             ]
+            if pin:
+                lines += [f"  ascent-override: {pin['ascent_override']};",
+                          f"  descent-override: {pin['descent_override']};",
+                          f"  line-gap-override: {pin['line_gap_override']};"]
+            lines.append("}")
         fb = fam["fallback"]
         note = "calibrated from the installed font" if fb.get("calibrated") else \
             "PROVISIONAL: run `python build.py fonts --calibrate` once the font file is installed"
-        styles = sorted({face["style"] for face in fam["faces"]})
-        for style in styles:
+        # One fallback per real face: each weight and style sets its own
+        # width, so each gets its own size-adjust (family values until measured)
+        for face in fam["faces"]:
+            style = face["style"]
             locals_ = fb["local"] if style == "normal" else [f"{fb['local'][0]} Italic"]
             src = ", ".join(f'local("{n}")' for n in locals_)
-            m = fb.get("italic", fb) if style == "italic" else fb
+            m = fb.get("faces", {}).get(f"{face['weight']}-{style}") or fb
             lines += [
-                f"/* {fb['family']} ({style}): {note} */",
+                f"/* {fb['family']} ({face['style_name']}): {note} */",
                 "@font-face {",
                 f'  font-family: "{fb["family"]}";',
                 f"  src: {src};",
+                f"  font-weight: {face['weight']};",
                 f"  font-style: {style};",
                 f"  size-adjust: {m['size_adjust']};",
                 f"  ascent-override: {m['ascent_override']};",
@@ -353,6 +363,14 @@ def render_font_css(cfg: dict) -> str:
                 "}",
             ]
         lines.append("")
+    # `ch` is the width of "0" in whichever font is showing, so a measure in ch
+    # changes when the fallback swaps for the webfont. These tokens hold the
+    # webfont's "0" in em, which resolves the same before and after the swap.
+    lines += ["/* Font-independent character units: the installed face's \"0\" width */", ":root {"]
+    for fam in cfg["families"]:
+        role = fam["token"].removeprefix("--font-")
+        lines.append(f"  --ch-{role}: {fam.get('zero_em', 0.55)}em;")
+    lines += ["}", ""]
     return "\n".join(lines)
 
 
@@ -412,12 +430,6 @@ def font_tree(cfg: dict) -> str:
     return "\n".join(lines)
 
 
-# Letter-frequency-weighted sample for average advance width (the same idea
-# next/font and Capsize use): representative English text, including spaces.
-_METRIC_SAMPLE = ("the studio builds backend systems messaging bots telephony pipelines and "
-                  "hand built websites for small service businesses that need to answer every "
-                  "call book every job and follow up on every lead without manual work")
-
 _FALLBACK_FILES = {
     "Times New Roman": ["C:/Windows/Fonts/times.ttf", "/System/Library/Fonts/Supplemental/Times New Roman.ttf",
                         "/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf"],
@@ -434,12 +446,55 @@ _FALLBACK_FILES = {
 }
 
 
-def _avg_advance(font) -> float:
-    cmap = font.getBestCmap()
-    hmtx = font["hmtx"]
+def _vertical_metrics(font) -> tuple[float, float, float, str | None]:
+    """(ascent, descent, line gap) in em, plus a reason when the font must be
+    pinned. macOS and Android lay text out from hhea; Windows uses OS/2 win
+    (or typo with USE_TYPO_METRICS). When hhea is unusable (its ascent is
+    shorter than the capitals) the platforms disagree by a large margin, so we
+    take the win values and pin them in @font-face for every platform."""
     upm = font["head"].unitsPerEm
-    widths = [hmtx[cmap[ord(ch)]][0] for ch in _METRIC_SAMPLE if ord(ch) in cmap]
-    return sum(widths) / len(widths) / upm
+    hhea, os2 = font["hhea"], font["OS/2"]
+    cap = getattr(os2, "sCapHeight", 0) or 0
+    if hhea.ascent < cap:
+        return os2.usWinAscent / upm, os2.usWinDescent / upm, 0.0, \
+            f"hhea ascent {hhea.ascent} is below cap height {cap}; pinned to OS/2 win {os2.usWinAscent}/{os2.usWinDescent}"
+    return hhea.ascent / upm, abs(hhea.descent) / upm, hhea.lineGap / upm, None
+
+
+def _site_copy(headings: bool = False) -> str:
+    """The site's own words (page bodies, tags and template syntax stripped):
+    the text fallbacks actually have to match, capitals and punctuation included.
+    headings=True keeps only h1-h3 text plus the system names that become case
+    study titles: the display face sets nothing else, and short title-case
+    lines weigh capitals far more than running copy does."""
+    text = " ".join(re.sub(r"^---.*?---", "", p.read_text("utf-8"), flags=re.S)
+                    for p in sorted((SRC / "pages").rglob("*.html")))
+    if headings:
+        text = " ".join(re.findall(r"<h[1-3]\b[^>]*>(.*?)</h[1-3]>", text, flags=re.S)
+                        + [s["name"] for s in load_site()["systems"]])
+    text = re.sub(r"<(script|style)\b.*?</\1>|{%.*?%}|{{.*?}}|<[^>]+>", " ", text, flags=re.S)
+    return " ".join(html.unescape(text).split())
+
+
+def _text_width(font, text: str) -> float:
+    """Width of `text` in em. Shaped with HarfBuzz (kerning, ligatures) when
+    uharfbuzz is installed, otherwise summed advances."""
+    upm = font["head"].unitsPerEm
+    try:
+        import io
+        import uharfbuzz as hb
+    except ImportError:
+        cmap, hmtx = font.getBestCmap(), font["hmtx"]
+        return sum(hmtx[cmap[ord(c)]][0] for c in text if ord(c) in cmap) / upm
+    raw = io.BytesIO()
+    font.flavor = None  # woff2 -> plain sfnt for HarfBuzz
+    font.save(raw)
+    hb_font = hb.Font(hb.Face(raw.getvalue()))
+    buf = hb.Buffer()
+    buf.add_str(text)
+    buf.guess_segment_properties()
+    hb.shape(hb_font, buf, {"kern": True, "liga": True})
+    return sum(g.x_advance for g in buf.glyph_positions) / upm
 
 
 def calibrate_fonts(cfg: dict) -> None:
@@ -447,20 +502,25 @@ def calibrate_fonts(cfg: dict) -> None:
         from fontTools.ttLib import TTFont
     except ImportError:
         raise BuildError("calibration needs fontTools + brotli:  pip install fonttools brotli")
-    def measure(web_path: Path, local_name: str) -> dict | None:
+    copy, headings = _site_copy(), _site_copy(headings=True)
+    local_widths: dict[tuple[str, bool], float] = {}
+
+    def measure(web_path: Path, local_name: str, display: bool) -> dict | None:
+        corpus = headings if display else copy
         fb_path = next((p for p in _FALLBACK_FILES.get(local_name, []) if Path(p).exists()), None)
         if not fb_path:
             print(f"  skip: fallback font file for '{local_name}' not found on this machine")
             return None
-        web, local = TTFont(web_path), TTFont(fb_path)
-        upm = web["head"].unitsPerEm
-        hhea = web["hhea"]
-        size_adjust = _avg_advance(web) / _avg_advance(local)
+        if (local_name, display) not in local_widths:
+            local_widths[local_name, display] = _text_width(TTFont(fb_path), corpus)
+        web = TTFont(web_path)
+        ascent, descent, gap, _ = _vertical_metrics(web)
+        size_adjust = _text_width(web, corpus) / local_widths[local_name, display]
         return {
             "size_adjust": f"{size_adjust * 100:.2f}%",
-            "ascent_override": f"{hhea.ascent / upm / size_adjust * 100:.2f}%",
-            "descent_override": f"{abs(hhea.descent) / upm / size_adjust * 100:.2f}%",
-            "line_gap_override": f"{hhea.lineGap / upm / size_adjust * 100:.2f}%",
+            "ascent_override": f"{ascent / size_adjust * 100:.2f}%",
+            "descent_override": f"{descent / size_adjust * 100:.2f}%",
+            "line_gap_override": f"{gap / size_adjust * 100:.2f}%",
         }
 
     changed = False
@@ -471,21 +531,36 @@ def calibrate_fonts(cfg: dict) -> None:
         if not face_status(path)[1]:
             print(f"  skip {fam['family']}: {regular['style_name']} not installed yet")
             continue
-        metrics = measure(path, fb["local"][0])
-        if not metrics:
+        ascent, descent, gap, reason = _vertical_metrics(TTFont(path))
+        if reason:
+            fam["metrics"] = {"ascent_override": f"{ascent * 100:.2f}%", "descent_override": f"{descent * 100:.2f}%",
+                              "line_gap_override": f"{gap * 100:.2f}%", "reason": reason}
+            print(f"  {fam['family']}: {reason}")
+        else:
+            fam.pop("metrics", None)
+        # Each weight and style sets its own width against the one local
+        # fallback, so each real face gets its own fallback @font-face.
+        fb.pop("italic", None)
+        faces = {}
+        for face in fam["faces"]:
+            f = face_dir(cfg, fam, face) / cfg["file"]
+            if not face_status(f)[1]:
+                continue
+            local = fb["local"][0] + (" Italic" if face["style"] == "italic" else "")
+            m = measure(f, local, display=fam["token"] == "--font-display")
+            if m:
+                faces[f"{face['weight']}-{face['style']}"] = m
+                print(f"  {fam['family']} {face['style_name']}: size-adjust {m['size_adjust']}, "
+                      f"ascent {m['ascent_override']}, descent {m['descent_override']}")
+        if not faces:
             continue
-        fb.update(metrics, calibrated=True)
+        fb["faces"] = faces
+        # Width of "0" in em: what `ch` means in this font. Measures are set
+        # with --ch-* tokens built from it, so they don't jump at the swap.
+        web = TTFont(path)
+        fam["zero_em"] = round(web["hmtx"][web.getBestCmap()[ord("0")]][0] / web["head"].unitsPerEm, 4)
+        fb.update(faces.get(f"{regular['weight']}-normal") or next(iter(faces.values())), calibrated=True)
         changed = True
-        print(f"  {fam['family']}: size-adjust {fb['size_adjust']}, ascent {fb['ascent_override']}, "
-              f"descent {fb['descent_override']}, line-gap {fb['line_gap_override']}")
-        # Italics set wider or narrower than the upright, so a fallback sized
-        # from the upright reflows when the italic lands. Measure it on its own.
-        italic = next((f for f in fam["faces"] if f["style"] == "italic" and f["weight"] == regular["weight"]), None)
-        if italic and face_status(face_dir(cfg, fam, italic) / cfg["file"])[1]:
-            metrics = measure(face_dir(cfg, fam, italic) / cfg["file"], f"{fb['local'][0]} Italic")
-            if metrics:
-                fb["italic"] = metrics
-                print(f"  {fam['family']} Italic: size-adjust {metrics['size_adjust']}")
     if changed:
         (SRC / "fonts.json").write_text(json.dumps(cfg, indent=2, ensure_ascii=False) + "\n", "utf-8", newline="\n")
 
@@ -1025,8 +1100,9 @@ def build() -> int:
     if font_report["errors"]:
         raise BuildError("font validation failed")
     n_inst = sum(font_report["installed"].values())
-    print(f"  fonts: {n_inst}/{len(font_report['installed'])} faces installed "
-          f"(placeholders render the metric-matched fallback)")
+    missing = len(font_report["installed"]) - n_inst
+    print(f"  fonts: {n_inst}/{len(font_report['installed'])} faces installed"
+          + (f" ({missing} placeholder(s) render the metric-matched fallback)" if missing else ""))
 
     # Images
     img = build_images(out, site)
@@ -1384,8 +1460,11 @@ def og_cards() -> int:
             f = face_dir(cfg, fam, face) / cfg["file"]
             if face_status(f)[1]:
                 data = base64.b64encode(f.read_bytes()).decode()
+                pin = fam.get("metrics")
+                pinned = (f'ascent-override:{pin["ascent_override"]};descent-override:{pin["descent_override"]};'
+                          f'line-gap-override:{pin["line_gap_override"]};') if pin else ""
                 faces.append(f'@font-face{{font-family:"{fam["family"]}";src:url(data:font/woff2;base64,{data}) format("woff2");'
-                             f'font-weight:{face["weight"]};font-style:{face["style"]}}}')
+                             f'font-weight:{face["weight"]};font-style:{face["style"]};{pinned}}}')
     # Plus the metric-matched local() fallbacks, for faces not installed yet
     fallbacks = re.sub(r"@font-face\s*\{[^}]*url\([^}]*\}", "", render_font_css(cfg))
     fonts_css = "\n".join(faces) + "\n" + fallbacks

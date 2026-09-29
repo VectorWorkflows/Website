@@ -3,7 +3,7 @@
    ========================================================================== */
 @layer pages {
   .start-head { padding-block: calc(var(--space-4xl) + 2rem) var(--space-2xl); }
-  .start-head__title { max-inline-size: 19ch; font-size: var(--step-5); }
+  .start-head__title { max-inline-size: calc(19 * var(--ch-display)); font-size: var(--step-5); }
   .start-body { padding-block-end: var(--section-y); }
 
   /* Without JS the flow can't compose anything: show the direct routes */
@@ -65,7 +65,7 @@
   }
   .intake__q:focus { outline: none; }
   .intake__q:focus-visible { outline: 2px solid var(--c-lilac); outline-offset: 6px; border-radius: 6px; }
-  .intake__hint { margin-block: var(--space-s) var(--space-l); color: var(--c-bone-2); max-inline-size: 52ch; }
+  .intake__hint { margin-block: var(--space-s) var(--space-l); color: var(--c-bone-2); max-inline-size: calc(52 * var(--ch-body)); }
   .intake__group { border: 0; margin: 0 0 var(--space-l); padding: 0; min-inline-size: 0; }
   .intake__sub {
     padding: 0;

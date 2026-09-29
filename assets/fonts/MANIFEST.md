@@ -25,7 +25,7 @@ _'Display' is GT Sectra's large-size optical cut (the family also ships GT Sectr
 - **Expected file:** `font.woff2`
 - **Used for:** h1 and h2 display headings, the footer email line, and the italic half of the wordmark
 - **Preloaded:** yes (once installed)
-- **Status:** Installed (44.6 kB)
+- **Status:** Installed (26.8 kB)
 
 ### GT Sectra Display Regular Italic
 
@@ -41,7 +41,7 @@ _'Display' is GT Sectra's large-size optical cut (the family also ships GT Sectr
 - **Expected file:** `font.woff2`
 - **Used for:** Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark
 - **Preloaded:** no
-- **Status:** Installed (48.5 kB)
+- **Status:** Installed (28.5 kB)
 
 Fallback: `GT Sectra Display Fallback` → local Times New Roman, TimesNewRomanPSMT (calibrated), then Georgia, serif.
 
@@ -63,7 +63,7 @@ _'Inktrap' is the ink-trapped cut of ABC Whyte, a separate family with notched j
 - **Expected file:** `font.woff2`
 - **Used for:** Lead paragraphs, footer links, the Replay artifacts (chat bubbles, cards, sheet cells), intake-flow answer options
 - **Preloaded:** no
-- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+- **Status:** Installed (21.9 kB)
 
 ### ABC Whyte Inktrap Medium
 
@@ -78,10 +78,10 @@ _'Inktrap' is the ink-trapped cut of ABC Whyte, a separate family with notched j
 - **Folder:** `assets/fonts/ABC-Whyte-Inktrap/500-Medium/`
 - **Expected file:** `font.woff2`
 - **Used for:** 'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, pillar names, form labels
-- **Preloaded:** yes (once installed)
-- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+- **Preloaded:** no
+- **Status:** Installed (22.2 kB)
 
-Fallback: `ABC Whyte Inktrap Fallback` → local Arial, ArialMT (provisional metrics), then system-ui, sans-serif.
+Fallback: `ABC Whyte Inktrap Fallback` → local Arial, ArialMT (calibrated), then system-ui, sans-serif.
 
 ## ABC Whyte
 
@@ -100,8 +100,8 @@ _ABC Whyte is the plain (un-trapped) cut, used for long reading text. The CSS fa
 - **Folder:** `assets/fonts/ABC-Whyte/400-Regular/`
 - **Expected file:** `font.woff2`
 - **Used for:** Body copy, case-study prose, service details, legal pages, form input text
-- **Preloaded:** yes (once installed)
-- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+- **Preloaded:** no
+- **Status:** Installed (21.0 kB)
 
 ### ABC Whyte Regular Italic
 
@@ -117,7 +117,7 @@ _ABC Whyte is the plain (un-trapped) cut, used for long reading text. The CSS fa
 - **Expected file:** `font.woff2`
 - **Used for:** <em> in running text (the privacy and terms pages use whole emphasised sentences, kept verbatim)
 - **Preloaded:** no
-- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+- **Status:** Installed (22.7 kB)
 
 ### ABC Whyte Medium
 
@@ -133,9 +133,9 @@ _ABC Whyte is the plain (un-trapped) cut, used for long reading text. The CSS fa
 - **Expected file:** `font.woff2`
 - **Used for:** <strong> inside body copy
 - **Preloaded:** no
-- **Status:** Awaiting licensed font file (placeholder, 0 bytes)
+- **Status:** Installed (21.1 kB)
 
-Fallback: `ABC Whyte Fallback` → local Arial, ArialMT (provisional metrics), then system-ui, sans-serif.
+Fallback: `ABC Whyte Fallback` → local Arial, ArialMT (calibrated), then system-ui, sans-serif.
 
 ## GT America Mono
 
@@ -155,7 +155,7 @@ _'Mono' is GT America's monospaced width subfamily. The CSS family name is 'GT A
 - **Expected file:** `font.woff2`
 - **Used for:** Eyebrow labels, badges, metadata rail, the Replay clock and engineer-view log, step counters, footer colophon
 - **Preloaded:** no
-- **Status:** Installed (10.4 kB)
+- **Status:** Installed (6.0 kB)
 
 Fallback: `GT America Mono Fallback` → local Courier New, CourierNewPSMT (calibrated), then ui-monospace, monospace.
 

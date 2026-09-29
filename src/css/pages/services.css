@@ -75,7 +75,7 @@
     margin-block-start: var(--space-xs);
   }
   .svc__tag { font-family: var(--font-ui); color: var(--c-lilac); font-size: var(--step-1); letter-spacing: -0.015em; }
-  .svc__summary { max-inline-size: 42ch; }
+  .svc__summary { max-inline-size: calc(42 * var(--ch-body)); }
 
   .svc__price {
     display: flex;
@@ -111,7 +111,7 @@
     letter-spacing: 0.04em;
     line-height: 1.5;
     color: var(--c-bone-3);
-    max-inline-size: 30ch;
+    max-inline-size: calc(30 * var(--ch-mono));
   }
   .svc__price .btn { margin-block-start: var(--space-xs); }
 
@@ -165,7 +165,7 @@
     background: linear-gradient(90deg, var(--edge-strong), transparent);
   }
   .notes dt { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.018em; color: var(--c-bone); }
-  .notes dd { margin: 0; color: var(--c-bone-2); max-inline-size: 48ch; text-wrap: pretty; }
+  .notes dd { margin: 0; color: var(--c-bone-2); max-inline-size: calc(48 * var(--ch-body)); text-wrap: pretty; }
   .notes dd a { color: var(--c-bone); text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--c-lilac) 45%, transparent); text-underline-offset: 0.22em; }
 
   .close-band { padding-block-end: calc(var(--section-y) + var(--space-l)); }

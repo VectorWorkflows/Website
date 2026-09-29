@@ -108,9 +108,9 @@
     --tracking-label:    0.14em;   /* mono uppercase */
     --tracking-caps:     0.08em;   /* grotesk uppercase (buttons) */
 
-    --measure:        64ch;   /* body text line length */
-    --measure-narrow: 42ch;
-    --measure-display: 16ch;  /* headline wrap target */
+    --measure:        calc(64 * var(--ch-body));   /* body text line length */
+    --measure-narrow: calc(42 * var(--ch-body));
+    --measure-display: calc(16 * var(--ch-display));  /* headline wrap target */
 
     /* ------------------------------------------------------------------
        SPACE: 4px base, fluid 16→20px at step s
