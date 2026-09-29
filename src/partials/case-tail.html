@@ -1,0 +1,56 @@
+<section class="frame section" id="walkthrough" aria-labelledby="walk-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Walkthrough</p></div>
+    <div class="g-body stack flow-m">
+      <h2 id="walk-title" class="t-h2-s" data-split>The real thing, <em>recorded</em>.</h2>
+      <p class="measure">The replay above uses simulated data. This is the system itself, walked through end to end on video.</p>
+      <div class="video" data-video="{{ sys.video }}" data-title="{{ sys.name }}: walkthrough">
+        <a class="video__poster" href="https://www.youtube.com/watch?v={{ sys.video }}" target="_blank" rel="noopener" data-video-play>
+          <span class="video__play" aria-hidden="true">{% icon "play" class="icon--m" %}</span>
+          <span class="video__text">
+            <span class="video__title">Walkthrough: {{ sys.name }}</span>
+            <span class="t-label">Play video · loads from YouTube when you press play</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="source-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Source</p></div>
+    <div class="g-body">
+      <div class="card source">
+        <div class="card__core source__core">
+          <div class="stack flow-s">
+            <h2 id="source-title" class="t-h3">Read the code</h2>
+            <p>The repository is public: the webhooks, the data model, the deploy setup. The Notion write-up covers the design decisions.</p>
+          </div>
+          <div class="cluster source__actions">
+            <a class="btn" href="{{ sys.repo }}" target="_blank" rel="noopener"><span class="btn__label">GitHub repository</span><span class="btn__icon">{% icon "github-logo" %}</span></a>
+            <a class="btn btn--ghost" href="{{ sys.docs }}" target="_blank" rel="noopener"><span class="btn__label">Documentation</span><span class="btn__icon">{% icon "book-open" %}</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section case-close" aria-labelledby="case-close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="case-close-title" class="t-h1" data-split>Want this running for <em>your</em> business?</h2>
+      <p class="t-lead measure">Connecting it to your own number and accounts is a standard onboarding step. Tell me how your business works and I'll tell you what it needs.</p>
+      <div class="cluster" style="--gap: var(--space-xs)">
+        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+  <a class="next-case" href="{{ site.routes.work }}{{ next_sys.slug }}/">
+    <span class="t-label">Next case study · {{ next_sys.num }}</span>
+    <span class="next-case__name">{{ next_sys.name }}</span>
+    <span class="next-case__go" aria-hidden="true">{% icon "arrow-right" %}</span>
+  </a>
+</section>

@@ -1,3 +1,18 @@
+// Video posters: nothing is requested from YouTube until the visitor
+// presses play. Without JS the poster is a plain link to the video.
+document.querySelectorAll('[data-video]').forEach((box) => {
+  box.querySelector('[data-video-play]')?.addEventListener('click', (event) => {
+    event.preventDefault();
+    const frame = document.createElement('iframe');
+    frame.src = `https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&rel=0`;
+    frame.title = box.dataset.title || 'Video';
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    frame.allowFullscreen = true;
+    box.replaceChildren(frame);
+    frame.focus();
+  });
+});
+
 // Shared chrome: the site menu. A native modal <dialog> does the heavy
 // lifting (inert background, Esc to close, focus returned to the opener);
 // the open/close animation is pure CSS (@starting-style). This file only

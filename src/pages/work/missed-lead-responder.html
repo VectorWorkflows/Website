@@ -1,0 +1,78 @@
+---
+title: Missed Lead Responder · a case study by Vector Workflows
+description: How a missed call becomes an SMS reply within seconds, a Telegram alert with call-back buttons, and a logged lead in Google Sheets. A studio-built system on Twilio, FastAPI and MongoDB, with a replay, walkthrough video and public repo.
+path: /work/missed-lead-responder/
+nav: work
+system: missed-lead-responder
+body_class: page-case
+critical_css: components/page-head.css, components/replay.css, pages/case.css
+---
+
+{% include "case-head" %}
+
+<section class="frame section-tight" aria-labelledby="problem-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>The problem</p></div>
+    <div class="g-body stack flow-m">
+      <h2 id="problem-title" class="t-h2-s" data-split>A missed call is a <em>lost</em> customer.</h2>
+    </div>
+    <div class="g-text prose">
+      <p>For most local and service businesses, an unanswered phone is one of the most expensive gaps in the whole operation. A caller who doesn't leave a voicemail has usually just tried the next business on the list.</p>
+      <p>By the time anyone notices the missed call sitting in the log, the window to win that customer back has usually closed. The fix isn't answering every call. It's making sure nobody who calls is left without a reply.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="replay-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Replay</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="replay-title" class="t-h4">One missed call, start to finish</h2>
+      <p class="t-small">Simulated data, real system flow. Switch to the engineer view for the events behind each step.</p>
+    </div>
+  </div>
+  {% replay "missed-lead" id="case-replay" %}
+</section>
+
+<section class="frame section" aria-labelledby="how-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>How it works</p></div>
+    <div class="g-body">
+      <h2 id="how-title" class="t-h2-s sec-head" data-split>Missed call in. <em>Structured lead</em> out.</h2>
+      <ol class="steps" role="list" data-reveal-group>
+        <li><span class="steps__n">01</span><div><h3>The call goes unanswered</h3><p>The business line runs through Twilio. The moment a call ends without being picked up, a webhook fires to the FastAPI service.</p></div></li>
+        <li><span class="steps__n">02</span><div><h3>The caller gets a reply within seconds</h3><p>An SMS goes back automatically: it acknowledges the call, answers the obvious first question, and invites a reply.</p></div></li>
+        <li><span class="steps__n">03</span><div><h3>The owner is alerted on Telegram</h3><p>A bot message arrives with the caller's number and two buttons, Call back and Mark handled, so it can be dealt with from anywhere.</p></div></li>
+        <li><span class="steps__n">04</span><div><h3>A lead row lands in Google Sheets</h3><p>Number, time and status are written to the business's own sheet, so there's always a live list of who called and where each one stands.</p></div></li>
+        <li><span class="steps__n">05</span><div><h3>Replies update the row</h3><p>When the caller texts back, the row changes to Replied with their reason, and the owner is pinged again.</p></div></li>
+        <li><span class="steps__n">06</span><div><h3>Unhandled leads come back round</h3><p>If a lead is still open, a reminder fires, so nothing drifts between "the phone rang" and "someone followed up."</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="stack-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Stack</p></div>
+    <div class="g-body">
+      <h2 id="stack-title" class="t-h3 sec-head--tight">What it runs on</h2>
+      <dl class="stack-list">
+        <div><dt>Twilio</dt><dd>The phone line: missed-call webhooks, outbound and inbound SMS</dd></div>
+        <div><dt>FastAPI</dt><dd>The service that receives every event and decides what happens next</dd></div>
+        <div><dt>MongoDB</dt><dd>Lead state: who called, what's been sent, what's still open</dd></div>
+        <div><dt>Telegram Bot API</dt><dd>Owner alerts with inline Call back and Mark handled actions</dd></div>
+        <div><dt>Google Sheets</dt><dd>The lead list the business actually looks at</dd></div>
+      </dl>
+      <div class="limits">
+        <h3 class="t-label">What it doesn't do</h3>
+        <p>It doesn't answer the call or hold a live conversation. It gets the first reply out fast and makes sure a person follows up.</p>
+      </div>
+      <div class="status-note">
+        <span class="badge"><span class="badge__dot"></span>{{ sys.status }}</span>
+        <p>A self-initiated project, built to prove the pattern before bringing it to a client. The system is complete and tested end to end; connecting it to a specific business's number and accounts is a standard onboarding step.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "case-tail" %}

@@ -77,6 +77,8 @@ CRITICAL_CSS = [
 DEFERRED_CSS = [
     "components/card.css",
     "components/footer.css",
+    "components/sys-index.css",
+    "components/concept.css",
 ]
 SITE_JS = ["chrome.js", "motion.js"]
 # Third-party libraries, self-hosted. motion.js loads them on demand (only
@@ -1061,6 +1063,16 @@ def build() -> int:
             "font_status": font_status_html(fonts_cfg, font_report),
             "build_date": date.today().isoformat(),
         }
+        # Case-study pages name their system; it arrives as {{ sys.* }},
+        # with the following system (wrapping) as {{ next_sys.* }}
+        if meta.get("system"):
+            systems = site["systems"]
+            idx = next((i for i, s in enumerate(systems) if s["slug"] == meta["system"]), None)
+            if idx is None:
+                raise BuildError(f"{where}: unknown system '{meta['system']}'")
+            ctx["sys"] = systems[idx]
+            ctx["next_sys"] = systems[(idx + 1) % len(systems)]
+            ctx["title_html"] = rise_words(html.escape(systems[idx]["name"]))
         content = render(body, ctx, icons, used, where)
         ctx["content"] = content
 

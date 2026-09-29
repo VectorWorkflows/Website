@@ -1,0 +1,45 @@
+---
+title: Work · systems and concepts by Vector Workflows
+description: Three studio-built systems, a missed-call lead responder, a WhatsApp site-fault tracker and a live Telegram scheduling bot, each with a replay, walkthrough video and public repo. Plus unsolicited concept work.
+path: /work/
+nav: work
+body_class: page-work
+critical_css: components/page-head.css, components/sys-index.css
+---
+
+<section class="frame page-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">W</span><span class="index-label__rule"></span>Work</p></div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="rise page-head__title">{% rise %}Systems, built <em>end to end</em>.{% endrise %}</h1>
+      <p class="t-lead page-head__lead fade-in" style="--d:1">Three studio-built systems, each proving a pattern before it goes to a business, each with a replay, a walkthrough and public code. Below them, concept work.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-label="Case studies">
+  {% include "systems-index" %}
+</section>
+
+<section class="frame section" id="concepts" aria-labelledby="concepts-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">C</span><span class="index-label__rule"></span>Concepts</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="concepts-title" data-split>Unsolicited, <em>on purpose</em>.</h2>
+      <p class="t-lead measure">Speculative redesigns of real local businesses' web presence, made to show what a hand-built site can do. They aren't commissioned, and they carry their own notice saying so: each is a concept demonstration, not affiliated with the business it reimagines.</p>
+    </div>
+  </div>
+  {% include "concept-cutabove" %}
+</section>
+
+<section class="frame section work-close" aria-labelledby="work-close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="work-close-title" class="t-h1" data-split>Your process could be <em>next</em>.</h2>
+      <div class="cluster" style="--gap: var(--space-xs)">
+        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.routes.services }}"><span class="btn__label">See services &amp; pricing</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

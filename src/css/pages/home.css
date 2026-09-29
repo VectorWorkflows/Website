@@ -126,105 +126,6 @@
     .pillar:hover .pillar__go { transform: translate(0.125rem, -0.125rem) scale(1.06); background: var(--c-violet); }
   }
 
-  /* Systems index -------------------------------------------------------- */
-  .sys { position: relative; }
-  .sys-index { margin: 0; padding: 0; list-style: none; }
-  .sys-index li { position: relative; }
-  .sys-index li::before,
-  .sys-index li:last-child::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    block-size: 1px;
-    background: linear-gradient(90deg, var(--edge-strong), var(--edge-faint) 60%, transparent);
-  }
-  .sys-index li::before { inset-block-start: 0; }
-  .sys-index li:last-child::after { inset-block-end: 0; }
-
-  .sys-row {
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) 2.75rem;
-    grid-template-areas:
-      "num name go"
-      ".   meta meta"
-      ".   line line";
-    align-items: center;
-    gap: 0.5rem var(--space-s);
-    padding-block: var(--space-l);
-    color: var(--c-bone);
-  }
-  .sys-row::before {
-    content: "";
-    position: absolute;
-    inset: 0 calc(-1 * var(--space-s));
-    z-index: -1;
-    border-radius: var(--radius-l);
-    background: var(--c-raised-1);
-    opacity: 0;
-    transition: opacity var(--dur-state) var(--ease-out-soft);
-  }
-  .sys-row__num { grid-area: num; font-family: var(--font-mono); font-size: var(--step--1); color: var(--c-lilac); align-self: start; padding-block-start: 0.6em; }
-  .sys-row__name {
-    grid-area: name;
-    font-family: var(--font-display);
-    font-size: var(--step-5);
-    line-height: 1;
-    letter-spacing: var(--tracking-heading);
-    transition: transform var(--dur-state) var(--ease-out);
-  }
-  .sys-row__meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: center; gap: 0.625rem 1rem; }
-  .sys-row__line { grid-area: line; font-family: var(--font-ui); color: var(--c-bone-2); font-size: var(--step-0); max-inline-size: 52ch; }
-  .sys-row__go {
-    grid-area: go;
-    display: grid;
-    place-items: center;
-    inline-size: 2.75rem;
-    block-size: 2.75rem;
-    border-radius: 50%;
-    box-shadow: inset 0 0 0 1px var(--edge);
-    transition: transform var(--dur-state) var(--ease-overshoot), background-color var(--dur-hover) var(--ease-out-soft);
-  }
-  @media (min-width: 64rem) {
-    .sys-row {
-      grid-template-columns: 4rem minmax(0, 1.4fr) minmax(0, 1fr) 3rem;
-      grid-template-areas: "num name meta go" "num name line go";
-      row-gap: 0.625rem;
-    }
-    .sys-row__meta { align-self: end; }
-    .sys-row__line { align-self: start; }
-  }
-  @media (hover: hover) {
-    .sys-row:hover::before { opacity: 1; }
-    .sys-row:hover .sys-row__name { transform: translateX(0.5rem); }
-    .sys-row:hover .sys-row__go { transform: rotate(45deg); background: var(--c-violet); }
-  }
-
-  /* Trailing preview (desktop pointer only; positioned by motion.js) */
-  .sys-preview {
-    position: absolute;
-    inset: 0 auto auto 0;
-    z-index: var(--z-raised);
-    pointer-events: none;
-    display: none;
-  }
-  @media (hover: hover) and (pointer: fine) { .sys-preview { display: block; } }
-  .sys-preview__core {
-    inline-size: 17rem;
-    padding: 1rem 1.125rem;
-    border-radius: var(--radius-m);
-    background: color-mix(in oklch, var(--c-raised-2) 92%, transparent);
-    box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit), var(--shadow-lift);
-    display: grid;
-    gap: 0.5rem;
-    transform: translate(1.5rem, -110%) scale(0.92);
-    opacity: 0;
-    transition: opacity var(--dur-hover) var(--ease-out-soft), transform var(--dur-state) var(--ease-out);
-  }
-  .sys-preview.is-on .sys-preview__core { opacity: 1; transform: translate(1.5rem, -110%) scale(1); }
-  .sys-preview__body { font-family: var(--font-mono); font-size: var(--step--2); line-height: 1.6; color: var(--c-bone); max-inline-size: none; }
-
   /* Try it live ---------------------------------------------------------- */
   .live__core { display: grid; gap: var(--space-xl); padding: var(--space-xl) var(--space-l); align-items: center; }
   @media (min-width: 64rem) {
@@ -261,31 +162,6 @@
     animation: rp-caret 1.1s steps(2, jump-none) infinite;
   }
   @media (prefers-reduced-motion: reduce) { .live__caret { animation: none; } }
-
-  /* Concept -------------------------------------------------------------- */
-  .concept { display: block; }
-  .concept__core { display: grid; gap: var(--space-l); padding: var(--space-s); }
-  @media (min-width: 64rem) {
-    .concept__core { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: center; padding: var(--space-s) var(--space-xl) var(--space-s) var(--space-s); gap: var(--space-xl); }
-  }
-  .concept__shot {
-    display: block;
-    border-radius: calc(var(--radius-xl) - var(--bezel) - 0.5rem);
-    overflow: hidden;
-    background: var(--c-raised-2);
-    box-shadow: inset 0 0 0 1px var(--edge-faint);
-    aspect-ratio: 16 / 10;
-  }
-  .concept__shot img { inline-size: 100%; block-size: 100%; object-fit: cover; transition: transform var(--dur-reveal) var(--ease-out); }
-  @media (hover: hover) { .concept:hover .concept__shot img { transform: scale(1.025); } }
-  .concept__copy { display: flex; flex-direction: column; gap: var(--space-s); padding: var(--space-xs) var(--space-xs) var(--space-s); }
-  .concept__disclaimer {
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--c-bone-3);
-  }
 
   /* Method: a rail that draws down as the steps scroll past --------------- */
   .method { position: relative; margin: 0; padding: 0; list-style: none; display: grid; }
