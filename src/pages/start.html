@@ -1,0 +1,169 @@
+---
+title: Start a project · Vector Workflows
+description: Four short questions about what you need, your budget and how the work happens today. Your answers become a ready-to-send message on WhatsApp or email. No forms sent anywhere, no account needed.
+path: /start/
+nav: start
+body_class: page-start
+js: intake
+critical_css: components/page-head.css, pages/start.css
+---
+
+<section class="frame start-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">→</span><span class="index-label__rule"></span>Start a project</p></div>
+    <div class="g-body stack flow-s">
+      <h1 id="page-title" class="rise start-head__title">{% rise %}Four questions, <em>then</em> a conversation.{% endrise %}</h1>
+      <p class="t-lead fade-in measure" style="--d:1">Your answers become a message you send yourself, on WhatsApp or by email. Nothing is submitted to a server, and nothing goes anywhere until you press send.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame start-body" aria-label="Project questions">
+  <form class="intake" id="intake" data-intake novalidate>
+    <aside class="intake__rail" aria-label="Progress">
+      <p class="intake__count"><span class="t-label">Step</span> <span data-count>1</span><span class="intake__of"> / 4</span></p>
+      <ol class="intake__bar" role="list" aria-hidden="true"><li></li><li></li><li></li><li></li></ol>
+      <dl class="intake__summary" data-summary>
+        <div data-sum="need" hidden><dt>Need</dt><dd></dd></div>
+        <div data-sum="budget" hidden><dt>Budget</dt><dd></dd></div>
+        <div data-sum="timeline" hidden><dt>Timeline</dt><dd></dd></div>
+        <div data-sum="business" hidden><dt>Business</dt><dd></dd></div>
+      </dl>
+    </aside>
+
+    <div class="intake__stage">
+      <p class="sr-only" aria-live="polite" data-live></p>
+
+      <!-- 1 · Need -->
+      <fieldset class="intake__step is-current" data-step="1" data-name="What you need">
+        <legend class="intake__q" tabindex="-1">What do you need?</legend>
+        <p class="intake__hint">Pick the closest. The details come later.</p>
+        <div class="opts opts--cards" role="presentation">
+          {% for p in site.services %}
+          <label class="opt">
+            <input type="radio" name="need" value="{{ p.name }}" data-slug="{{ p.slug }}" required aria-describedby="err-need">
+            <span class="opt__body">
+              <span class="opt__name">{{ p.name }}</span>
+              <span class="opt__desc">{{ p.tagline }}</span>
+              <span class="opt__price">from {{ p.price_display }} · {{ p.window }}</span>
+            </span>
+            <span class="opt__check" aria-hidden="true">{% icon "check" %}</span>
+          </label>
+          {% endfor %}
+          <label class="opt opt--wide">
+            <input type="radio" name="need" value="Not sure yet" data-slug="not-sure" required aria-describedby="err-need">
+            <span class="opt__body">
+              <span class="opt__name">Not sure yet</span>
+              <span class="opt__desc">Describe the problem and we'll work out the scope together.</span>
+            </span>
+            <span class="opt__check" aria-hidden="true">{% icon "check" %}</span>
+          </label>
+        </div>
+        <p class="field-error" id="err-need" data-error="need" hidden>{% icon "warning-circle" %}<span>Choose one to continue.</span></p>
+      </fieldset>
+
+      <!-- 2 · Budget and timing -->
+      <fieldset class="intake__step" data-step="2" data-name="Budget and timing">
+        <legend class="intake__q" tabindex="-1">Budget and timing</legend>
+        <p class="intake__hint">Rough is fine. It only shapes what's worth proposing.</p>
+
+        <fieldset class="intake__group">
+          <legend class="intake__sub">Budget</legend>
+          <div class="opts opts--pills">
+            <label class="pill"><input type="radio" name="budget" value="Under ₹5,000" required aria-describedby="err-budget"><span>Under ₹5,000</span></label>
+            <label class="pill"><input type="radio" name="budget" value="₹5,000–15,000" required aria-describedby="err-budget"><span>₹5,000–15,000</span></label>
+            <label class="pill"><input type="radio" name="budget" value="₹15,000–40,000" required aria-describedby="err-budget"><span>₹15,000–40,000</span></label>
+            <label class="pill"><input type="radio" name="budget" value="₹40,000+" required aria-describedby="err-budget"><span>₹40,000+</span></label>
+            <label class="pill"><input type="radio" name="budget" value="Not sure yet" required aria-describedby="err-budget"><span>Not sure yet</span></label>
+          </div>
+          <p class="field-error" id="err-budget" data-error="budget" hidden>{% icon "warning-circle" %}<span>Pick a budget band, or "Not sure yet".</span></p>
+        </fieldset>
+
+        <fieldset class="intake__group">
+          <legend class="intake__sub">When would you like it running?</legend>
+          <div class="opts opts--pills">
+            <label class="pill"><input type="radio" name="timeline" value="As soon as possible" required aria-describedby="err-timeline"><span>As soon as possible</span></label>
+            <label class="pill"><input type="radio" name="timeline" value="Within a month" required aria-describedby="err-timeline"><span>Within a month</span></label>
+            <label class="pill"><input type="radio" name="timeline" value="In the next few months" required aria-describedby="err-timeline"><span>In the next few months</span></label>
+            <label class="pill"><input type="radio" name="timeline" value="Just exploring" required aria-describedby="err-timeline"><span>Just exploring</span></label>
+          </div>
+          <p class="field-error" id="err-timeline" data-error="timeline" hidden>{% icon "warning-circle" %}<span>Pick the closest timing.</span></p>
+        </fieldset>
+      </fieldset>
+
+      <!-- 3 · Current process -->
+      <fieldset class="intake__step" data-step="3" data-name="How it works today">
+        <legend class="intake__q" tabindex="-1">How does it work today?</legend>
+        <p class="intake__hint" id="hint-process">The calls, the chats, the spreadsheets: whatever happens now, and where it goes wrong. A couple of sentences is plenty.</p>
+        <label class="field">
+          <span class="field__label">Your current process <span class="field__opt">optional</span></span>
+          <textarea name="process" rows="5" maxlength="1200" aria-describedby="hint-process" placeholder="e.g. Calls come in while we're on jobs, and we lose track of who to call back."></textarea>
+        </label>
+      </fieldset>
+
+      <!-- 4 · Contact -->
+      <fieldset class="intake__step" data-step="4" data-name="How to reach you">
+        <legend class="intake__q" tabindex="-1">How should I reach you?</legend>
+        <p class="intake__hint">Your message opens ready to send. Nothing leaves this page until you press send there.</p>
+        <div class="fields">
+          <label class="field">
+            <span class="field__label">Your name</span>
+            <input type="text" name="name" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="err-name">
+            <span class="field-error" id="err-name" data-error="name" hidden>{% icon "warning-circle" %}<span>Add your name so I know who I'm talking to.</span></span>
+          </label>
+          <label class="field">
+            <span class="field__label">Business</span>
+            <input type="text" name="business" autocomplete="organization" required minlength="2" maxlength="120" aria-describedby="err-business">
+            <span class="field-error" id="err-business" data-error="business" hidden>{% icon "warning-circle" %}<span>Add your business name, even a rough one.</span></span>
+          </label>
+        </div>
+        <fieldset class="intake__group">
+          <legend class="intake__sub">Send it with</legend>
+          <div class="opts opts--contact">
+            <label class="opt opt--contact">
+              <input type="radio" name="via" value="whatsapp" required checked>
+              <span class="opt__icon" aria-hidden="true">{% icon "whatsapp-logo" class="icon--m" %}</span>
+              <span class="opt__body"><span class="opt__name">WhatsApp</span><span class="opt__desc">Opens a chat with the message filled in</span></span>
+              <span class="opt__check" aria-hidden="true">{% icon "check" %}</span>
+            </label>
+            <label class="opt opt--contact">
+              <input type="radio" name="via" value="email" required>
+              <span class="opt__icon" aria-hidden="true">{% icon "envelope-simple" class="icon--m" %}</span>
+              <span class="opt__body"><span class="opt__name">Email</span><span class="opt__desc">Opens your mail app with a structured message</span></span>
+              <span class="opt__check" aria-hidden="true">{% icon "check" %}</span>
+            </label>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <div class="intake__nav">
+        <button type="button" class="btn btn--ghost" data-back hidden><span class="btn__icon">{% icon "arrow-left" %}</span><span class="btn__label">Back</span></button>
+        <button type="submit" class="btn btn--primary" data-next><span class="btn__label" data-next-label>Continue</span><span class="btn__icon">{% icon "arrow-right" %}</span></button>
+      </div>
+
+      <!-- Confirmation -->
+      <div class="intake__done" data-done hidden tabindex="-1" aria-labelledby="done-title">
+        <span class="badge badge--live"><span class="badge__dot"></span>Message ready</span>
+        <h2 id="done-title" class="t-h2-s" data-done-title>Your message is ready.</h2>
+        <p data-done-text>It should have opened in a new window. If it didn't, use the button below.</p>
+        <pre class="intake__preview" data-preview></pre>
+        <div class="cluster" style="--gap: var(--space-xs)">
+          <a class="btn btn--primary" data-reopen href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label" data-reopen-label>Open again</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+          <button type="button" class="btn" data-copy><span class="btn__label">Copy message</span><span class="btn__icon">{% icon "copy" %}</span></button>
+          <button type="button" class="btn btn--ghost" data-restart><span class="btn__label">Start over</span><span class="btn__icon">{% icon "arrow-counter-clockwise" %}</span></button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <noscript>
+    <div class="intake-nojs">
+      <p>This page needs JavaScript to compose your message. You can reach the studio directly instead:</p>
+      <p><a href="{{ site.whatsapp_url }}">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+    </div>
+  </noscript>
+
+  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+</section>
+
+<script type="application/json" id="intake-config">{"whatsapp": "{{ site.whatsapp_number }}", "email": "{{ site.email }}"}</script>
