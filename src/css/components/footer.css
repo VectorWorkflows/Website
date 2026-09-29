@@ -98,6 +98,14 @@
     background: linear-gradient(90deg, var(--edge), var(--edge-faint) 60%, transparent);
   }
   .colophon p { max-inline-size: none; }
-  .colophon a { color: var(--c-bone-2); text-decoration: none; transition: color var(--dur-hover) var(--ease-out-soft); }
-  .colophon a:hover { color: var(--c-lilac); }
+  /* Links inside a line of text: a hairline underline marks them without
+     relying on colour (WCAG 1.4.1) */
+  .colophon a {
+    color: var(--c-bone-2);
+    text-decoration: underline 1px color-mix(in oklch, currentColor 45%, transparent);
+    text-underline-offset: 0.3em;
+    transition: color var(--dur-hover) var(--ease-out-soft), text-decoration-color var(--dur-hover) var(--ease-out-soft);
+  }
+  .colophon a:hover { color: var(--c-lilac); text-decoration-color: currentColor; }
+  .colophon a:active { color: var(--c-bone); }
 }

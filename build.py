@@ -901,7 +901,7 @@ def _artifact(step: dict, muts: dict, data: dict) -> str:
                 f'<span class="rp-meta">{_esc(meta)}</span></li>')
     if kind == "telegram":
         buttons = "".join(f"<span>{_esc(b)}</span>" for b in step.get("buttons", []))
-        buttons = f'<div class="rp-tg__btns" aria-label="Inline buttons">{buttons}</div>' if buttons else ""
+        buttons = f'<div class="rp-tg__btns" role="group" aria-label="Inline buttons">{buttons}</div>' if buttons else ""
         return (f'<li class="rp-item" {at}><div class="rp-card rp-tg">'
                 f'<div class="rp-tg__head"><span class="rp-avatar">{{% icon "telegram-logo" %}}</span>'
                 f'<span class="rp-tg__name">{_esc(step["from"])}</span><span class="rp-tag">bot</span>'
@@ -1085,7 +1085,6 @@ def build() -> int:
             "critical_css": crit,
             "deferred_css": deferred_tags,
             "brand_mark": brand_mark_html(img),
-            "font_status": font_status_html(fonts_cfg, font_report),
             "build_date": date.today().isoformat(),
         }
         # Case-study pages name their system; it arrives as {{ sys.* }},
@@ -1188,18 +1187,6 @@ def jsonld_for(meta: dict, site: dict) -> str:
     return f'<script type="application/ld+json">\n{payload}\n</script>'
 
 
-def font_status_html(cfg: dict, report: dict) -> str:
-    rows = []
-    for fam in cfg["families"]:
-        for face in fam["faces"]:
-            ok = report["installed"][(fam["family"], face["weight"], face["style"])]
-            rows.append(
-                f'<li><span class="badge {"badge--live" if ok else "badge--quiet"}"><span class="badge__dot"></span>'
-                f'{"Installed" if ok else "Awaiting file"}</span>'
-                f'<span class="t-mono">{fam["folder"]}/{face["folder"]}/font.woff2</span></li>')
-    return "\n".join(rows)
-
-
 def write_seo_files(out: Output, site: dict, built: list) -> None:
     """robots.txt and sitemap.xml. Only written once at least one indexable
     page is built by this script, so the legacy site is never half-described."""
@@ -1213,7 +1200,7 @@ def write_seo_files(out: Output, site: dict, built: list) -> None:
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "\n</urlset>\n",
               allow_legacy=True)
     disallow = "".join(f"Disallow: /{d}/\n" for d in site.get("protected_dirs", []))
-    out.write("robots.txt", f"User-agent: *\n{disallow}Disallow: /_preview.html\n\n"
+    out.write("robots.txt", f"User-agent: *\n{disallow}\n"
               f"Sitemap: {site['url']}/sitemap.xml\n", allow_legacy=True)
 
 
@@ -1322,7 +1309,7 @@ def serve(port: int) -> None:
 
     handler = functools.partial(Handler, directory=str(ROOT))
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), handler) as httpd:
-        print(f"serving {ROOT} at http://127.0.0.1:{port}/  (preview: /_preview.html)")
+        print(f"serving {ROOT} at http://127.0.0.1:{port}/")
         httpd.serve_forever()
 
 

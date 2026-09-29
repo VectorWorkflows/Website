@@ -15,6 +15,9 @@
         animation-timeline: view();
         animation-range: entry 0% entry 70%;
       }
+      /* Tab scrolls a control only just into view, which can leave it at the
+         start of its entry range, half transparent. Focus settles it. */
+      .reveal:focus-within { animation: none; }
     }
   }
   @keyframes reveal-up {

@@ -37,26 +37,27 @@ async function boot() {
   // Motion boots on first interaction, so anything already on screen by then
   // has been seen: leave it alone rather than hide and re-reveal it.
   const unseen = (el) => el.getBoundingClientRect().top > innerHeight * 0.92;
+  const reveals = []; // [root element, tween]: finished early on keyboard focus
 
   // Section reveals: a heavy fade-up, once
   gsap.utils.toArray('[data-reveal]').filter(unseen).forEach((el) => {
-    gsap.from(el, {
+    reveals.push([el, gsap.from(el, {
       y: 48,
       opacity: 0,
       duration: 1.1,
       ease: 'expo.out',
       scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
+    })]);
   });
   gsap.utils.toArray('[data-reveal-group]').filter(unseen).forEach((group) => {
-    gsap.from(group.children, {
+    reveals.push([group, gsap.from(group.children, {
       y: 40,
       opacity: 0,
       duration: 1,
       ease: 'expo.out',
       stagger: 0.08,
       scrollTrigger: { trigger: group, start: 'top 85%', once: true },
-    });
+    })]);
   });
 
   // Display headings: masked line reveal. autoSplit re-splits when fonts
@@ -75,6 +76,18 @@ async function boot() {
           scrollTrigger: { trigger: el, start: 'top 86%', once: true },
         }),
     });
+  });
+
+  // Keyboard focus can land on something still waiting to fade in (Tab
+  // scrolls it into view a beat before its trigger fires). Settle it at
+  // once, so focus never sits on a near-invisible element.
+  document.addEventListener('focusin', (e) => {
+    for (const [root, tween] of reveals) {
+      if (tween.progress() < 1 && root.contains(e.target)) {
+        tween.progress(1);
+        tween.scrollTrigger?.kill(false, true); // keep the finished tween
+      }
+    }
   });
 
   // Systems index: a preview card that trails the pointer (desktop only)
