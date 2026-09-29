@@ -1,0 +1,225 @@
+---
+title: Vector Workflows · Automation and hand-built web for service businesses
+description: A one-person studio building missed-call responders, WhatsApp and Telegram bots, booking automations and hand-built websites for small service businesses. See each system run, then start a conversation.
+path: /
+nav: home
+replaces_legacy: true
+schema: organization
+body_class: page-home
+critical_css: components/replay.css, components/card.css, pages/home.css
+---
+
+<!-- ================================================================ HERO -->
+<section class="frame home-hero" aria-labelledby="hero-title">
+  <div class="grid home-hero__grid">
+    <div class="home-hero__copy">
+      <p class="index-label hero-in" style="--d:0"><span class="index-label__num">VW</span><span class="index-label__rule"></span>Automation &amp; web engineering studio</p>
+
+      <h1 id="hero-title" class="home-hero__title">
+        <span class="w"><span style="--i:0">Systems</span></span>
+        <span class="w"><span style="--i:1">that</span></span>
+        <span class="w"><span style="--i:2"><em>answer</em></span></span>
+        <span class="w"><span style="--i:3">when</span></span>
+        <span class="w"><span style="--i:4">you</span></span>
+        <span class="w"><span style="--i:5">can't.</span></span>
+      </h1>
+
+      <p class="t-lead home-hero__lead hero-in" style="--d:1">A one-person studio building the automations, messaging bots, phone pipelines and hand-built websites that small service businesses run on.</p>
+
+      <div class="cluster home-hero__ctas hero-in" style="--d:2">
+        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+
+      <ul class="home-hero__meta hero-in" style="--d:3" role="list">
+        <li>Backend systems</li><li>Messaging bots</li><li>Telephony</li><li>Hand-built web</li>
+      </ul>
+    </div>
+
+    <div class="home-hero__replay hero-in" style="--d:2">
+      <p class="home-hero__caption"><span aria-hidden="true">↳</span> A call nobody could answer, handled. Watch it run.</p>
+      {% replay "missed-lead" id="hero-replay" %}
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ PILLARS -->
+<section class="frame section" aria-labelledby="pillars-title">
+  <div class="grid home-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>What I build</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="pillars-title" data-split>Four kinds of work, <em>one</em> standard.</h2>
+      <p class="t-lead measure">Each piece is scoped up front, priced before work starts and built by hand. The same person who takes the call writes the code.</p>
+    </div>
+  </div>
+
+  <div class="pillars" data-reveal-group>
+    {% for p in site.services %}
+    <a class="card pillar" href="{{ site.routes.services }}#{{ p.slug }}">
+      <div class="card__core">
+        <div class="card__meta"><span class="t-label c-lilac">{{ p.num }}</span><span class="t-label">{{ p.window }}</span></div>
+        <h3 class="card__title">{{ p.name }}</h3>
+        <p class="pillar__tag">{{ p.tagline }}</p>
+        <p class="card__body">{{ p.summary }}</p>
+        <div class="card__foot">
+          <span class="pillar__price"><span class="t-label">from</span> {{ p.price_display }}</span>
+          <span class="pillar__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ================================================================ SYSTEMS INDEX -->
+<section class="frame section" aria-labelledby="systems-title">
+  <div class="grid home-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Systems</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="systems-title" data-split>Three systems, built <em>end to end</em>.</h2>
+      <p class="t-lead measure">Studio-built rather than client work: each one proves a pattern before it goes to a business. Every one has a public repo, a walkthrough video and a replay.</p>
+    </div>
+  </div>
+
+  <div class="sys">
+    <ol class="sys-index" role="list" data-preview-list>
+      {% for s in site.systems %}
+      <li>
+        <a class="sys-row" href="{{ site.routes.work }}{{ s.slug }}/" data-preview-text="{{ s.stack }}">
+          <span class="sys-row__num">{{ s.num }}</span>
+          <span class="sys-row__name">{{ s.name }}</span>
+          <span class="sys-row__meta">
+            <span class="t-label">{{ s.pillar }}</span>
+            <span class="badge{% if s.live %} badge--live{% endif %}"><span class="badge__dot"></span>{{ s.status }}</span>
+          </span>
+          <span class="sys-row__line">{{ s.line }}</span>
+          <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="sys-preview" data-preview aria-hidden="true">
+      <div class="sys-preview__core">
+        <span class="t-label">Stack</span>
+        <p class="sys-preview__body" data-preview-body></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ TRY IT LIVE -->
+<section class="frame section-tight" aria-labelledby="live-title">
+  <div class="card card--accent live" data-reveal>
+    <div class="card__core live__core">
+      <div class="live__copy stack flow-s">
+        <span class="badge badge--live"><span class="badge__dot"></span>Live — Open for Public Use</span>
+        <h2 id="live-title" class="t-h2-s">Try one yourself: send <code class="live__cmd">/awake</code></h2>
+        <p>The Dynamic Scheduler runs on Telegram and is open to anyone. Save an early, normal and late version of your day, then message /awake when you're up. It checks the time and loads the matching template.</p>
+      </div>
+      <div class="live__action">
+        <div class="live__prompt" aria-hidden="true">
+          <span class="t-label">Telegram · {{ site.telegram_bot_handle }}</span>
+          <span class="live__typed">/awake<span class="live__caret"></span></span>
+        </div>
+        <a class="btn btn--primary" href="{{ site.telegram_bot }}" target="_blank" rel="noopener"><span class="btn__label">Open in Telegram</span><span class="btn__icon">{% icon "telegram-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ CONCEPTS -->
+<section class="frame section" aria-labelledby="concepts-title">
+  <div class="grid home-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Concepts</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="concepts-title" data-split>Unsolicited, <em>on purpose</em>.</h2>
+      <p class="t-lead measure">Speculative redesigns of real local businesses' websites, made to show what a hand-built site can do. Not commissioned, and not affiliated with the businesses they reimagine.</p>
+    </div>
+  </div>
+
+  <a class="card concept" href="{{ site.routes.concept_cutabove }}" data-reveal>
+    <div class="card__core concept__core">
+      <picture class="concept__shot">
+        <source type="image/avif" srcset="/assets/img/concepts/cutabove-720.avif 720w, /assets/img/concepts/cutabove-1200.avif 1200w" sizes="(min-width: 64rem) 60vw, 92vw">
+        <img src="/assets/img/concepts/cutabove-1200.webp" srcset="/assets/img/concepts/cutabove-720.webp 720w, /assets/img/concepts/cutabove-1200.webp 1200w" sizes="(min-width: 64rem) 60vw, 92vw" width="1200" height="750" loading="lazy" decoding="async" alt="Screenshot of the Cut Above concept site: a dark editorial salon homepage with the headline 'Thirty-four years of never doing the same head twice' and a notice bar stating it is an unaffiliated concept redesign.">
+      </picture>
+      <div class="concept__copy">
+        <div class="card__meta"><span class="t-label c-lilac">Concept 01</span><span class="t-label">Salon website</span></div>
+        <h3 class="card__title">Cut Above</h3>
+        <p class="card__body">A hand-built concept site for a long-established hair and beauty salon: price list, team, gallery and a booking flow, all static, with no page builder behind it.</p>
+        <p class="concept__disclaimer">Concept design by Vector Workflows · unaffiliated demonstration</p>
+        <span class="link-arrow">View the concept {% icon "arrow-up-right" %}</span>
+      </div>
+    </div>
+  </a>
+</section>
+
+<!-- ================================================================ METHOD -->
+<section class="frame section" aria-labelledby="method-title">
+  <div class="grid home-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Method</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="method-title" data-split>How a build <em>runs</em>.</h2>
+    </div>
+  </div>
+
+  <ol class="method" role="list">
+    <li class="method__step">
+      <span class="method__num">01</span>
+      <div class="method__body">
+        <h3>Talk it through</h3>
+        <p>You describe how the work happens today: the calls, the chats, the spreadsheets. We find where things slip, and decide whether automating it is worth doing at all.</p>
+      </div>
+    </li>
+    <li class="method__step">
+      <span class="method__num">02</span>
+      <div class="method__body">
+        <h3>A fixed scope and price</h3>
+        <p>Before anything is built you get what's included, what isn't, a starting price and a build window, the same way the services page sets them out.</p>
+      </div>
+    </li>
+    <li class="method__step">
+      <span class="method__num">03</span>
+      <div class="method__body">
+        <h3>Built on what you already use</h3>
+        <p>WhatsApp, Telegram, Google Sheets, your phone line. Nobody on your team has to learn new software for the process to get better.</p>
+      </div>
+    </li>
+    <li class="method__step">
+      <span class="method__num">04</span>
+      <div class="method__body">
+        <h3>It runs without you watching</h3>
+        <p>Rule-based logic that does the same thing every time, running on a cloud server around the clock and handling the edge cases without anyone babysitting it.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================================================================ UNDER THE HOOD -->
+<section class="frame section-tight hood" aria-labelledby="hood-title">
+  <div class="grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Under the hood</p>
+    </div>
+    <div class="g-text stack flow-s">
+      <h2 id="hood-title" class="t-h4">For the developers reading</h2>
+      <p class="t-small">The same three systems as the raw events they emit, cycling. Every case study has a replay with an engineer view like this one.</p>
+      {% logreel "missed-lead, site-fault, scheduler" %}
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ CLOSE -->
+<section class="frame section close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body close__inner">
+      <h2 id="close-title" class="t-display close__title" data-split>Tell me what keeps <em>slipping</em>.</h2>
+      <p class="t-lead measure">Describe the part of the week that goes wrong. You'll get a straight answer on whether it can be automated and what it would cost.</p>
+      <div class="cluster close__ctas">
+        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">Message on WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+      <p class="close__alt t-label">or <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+    </div>
+  </div>
+</section>

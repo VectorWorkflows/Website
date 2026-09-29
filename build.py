@@ -78,7 +78,16 @@ DEFERRED_CSS = [
     "components/card.css",
     "components/footer.css",
 ]
-SITE_JS = ["chrome.js"]
+SITE_JS = ["chrome.js", "motion.js"]
+# Third-party libraries, self-hosted. motion.js loads them on demand (only
+# when motion is allowed), so they never block rendering. Their hashed URLs
+# are injected into any script containing the __VENDOR_MAP__ token.
+VENDOR_JS = {
+    "gsap": "gsap.min.js",
+    "ScrollTrigger": "ScrollTrigger.min.js",
+    "SplitText": "SplitText.min.js",
+    "Lenis": "lenis.min.js",
+}
 
 CSS_WEIGHT_NAMES = {100: "Thin", 200: "ExtraLight", 300: "Light", 400: "Regular", 500: "Medium",
                     600: "Semibold", 700: "Bold", 800: "ExtraBold", 900: "Black"}
@@ -632,6 +641,32 @@ def lookup(ctx: dict, dotted: str, where: str, strict: bool = True):
     return cur
 
 
+RE_FOR_OPEN = re.compile(r"{%\s*for\s+(\w+)\s+in\s+([\w.]+)\s*%}")
+RE_FOR_TAG = re.compile(r"{%\s*(for\s+\w+\s+in\s+[\w.]+|endfor)\s*%}")
+
+
+def expand_loops(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int) -> str:
+    """{% for x in list %}…{% endfor %}, outermost first so nested loops can
+    see the outer variable. Inside: {{ x }}, {{ x.key }}, loop.num (01, 02…),
+    loop.index (1-based), loop.first, loop.last."""
+    while (m := RE_FOR_OPEN.search(text)):
+        level, pos = 1, m.end()
+        while level:
+            tag = RE_FOR_TAG.search(text, pos)
+            if not tag:
+                raise BuildError(f"{where}: unclosed {{% for %}}")
+            level += -1 if tag.group(1) == "endfor" else 1
+            pos = tag.end()
+        body = text[m.end():tag.start()]
+        items = lookup(ctx, m.group(2), where)
+        out = []
+        for i, item in enumerate(items):
+            loop = {"index": i + 1, "num": f"{i + 1:02d}", "first": i == 0, "last": i == len(items) - 1}
+            out.append(render(body, {**ctx, m.group(1): item, "loop": loop}, icons, used, where, depth + 1))
+        text = text[:m.start()] + "".join(out) + text[pos:]
+    return text
+
+
 def render(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int = 0) -> str:
     if depth > 8:
         raise BuildError(f"{where}: include depth exceeded (circular include?)")
@@ -645,6 +680,7 @@ def render(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int 
     text = RE_INCLUDE.sub(include, text)
     text = RE_REPLAY.sub(lambda m: render_replay(m.group(1), where, m.group(2) or ""), text)
     text = RE_LOGREEL.sub(lambda m: render_log_reel([s.strip() for s in m.group(1).split(",")], where), text)
+    text = expand_loops(text, ctx, icons, used, where, depth)
 
     def cond(m):
         negate, key, body = m.group(1), m.group(2), m.group(3)
@@ -914,7 +950,7 @@ def render_log_reel(names: list[str], where: str) -> str:
             'Simulated data · real system flows</span><button type="button" class="replay__play" data-play '
             'aria-label="Pause log">'
             '<span class="replay__icon-pause">{% icon "pause" %}</span><span class="replay__icon-play">{% icon "play" %}</span>'
-            f'</button></div><ol class="logreel__list" role="list" aria-label="Event log, all systems">{"".join(lines)}</ol></div>')
+            f'</button></div><ol class="logreel__list" role="list" tabindex="0" aria-label="Event log, all systems">{"".join(lines)}</ol></div>')
 
 
 # ---------------------------------------------------------------------------
@@ -954,9 +990,14 @@ def build() -> int:
     critical_base = minify_css(read_css(CRITICAL_CSS))
     deferred_site = minify_css(read_css(DEFERRED_CSS))
     deferred_site_url = emit_hashed(out, "css", "site", "css", deferred_site)
+    vendor_map, vendor_bytes = {}, 0
+    for key, fname in VENDOR_JS.items():
+        code = (SRC / "js" / "vendor" / fname).read_text("utf-8")
+        vendor_map[key] = emit_hashed(out, "js/vendor", Path(fname).stem, "js", code)
+        vendor_bytes += gz_size(code)
     js_urls, js_bytes = {}, {}
     for name in SITE_JS + [p.name for p in (SRC / "js").glob("*.js") if p.name not in SITE_JS]:
-        code = (SRC / "js" / name).read_text("utf-8")
+        code = (SRC / "js" / name).read_text("utf-8").replace("__VENDOR_MAP__", json.dumps(vendor_map))
         js_urls[name] = emit_hashed(out, "js", Path(name).stem, "js", code)
         js_bytes[js_urls[name]] = code
 
@@ -1011,6 +1052,7 @@ def build() -> int:
             if n not in js_urls:
                 raise BuildError(f"{where}: unknown script '{n}'")
         ctx["scripts"] = "\n".join(f'<script type="module" src="{js_urls[n]}"></script>' for n in page_js)
+        ctx["jsonld"] = jsonld_for(meta, site)
         doc = render((SRC / "partials" / "layout.html").read_text("utf-8"), ctx, icons, used, "partials/layout.html")
 
         # Current-page marker on every nav link that points here
@@ -1023,9 +1065,10 @@ def build() -> int:
                   + "".join(icons[n] for n in sorted(used)) + "</svg>")
         doc = doc.replace("<!--SPRITE-->", sprite)
 
-        # Honest page weight: HTML (with inlined critical CSS) + deferred CSS + JS, gzipped
+        # Honest page weight: HTML (with inlined critical CSS) + deferred CSS
+        # + all JS including the on-demand motion libraries, gzipped
         weight = gz_size(doc) + sum(gz_size((ROOT / u.lstrip("/")).read_bytes()) for u in deferred_urls) \
-            + sum(gz_size(js_bytes[js_urls[n]]) for n in page_js)
+            + sum(gz_size(js_bytes[js_urls[n]]) for n in page_js) + vendor_bytes
         doc = doc.replace("<!--PAGE_WEIGHT-->", f"{weight / 1024:.1f}&nbsp;kB")
 
         rel = out_path_for(meta["path"])
@@ -1048,6 +1091,44 @@ def build() -> int:
     problems = validate(site, [ROOT / rel for _, rel, _ in built])
     print(f"  done: {len(built)} page(s), {len(out.written)} files tracked")
     return 1 if problems else 0
+
+
+def jsonld_for(meta: dict, site: dict) -> str:
+    """Structured data named in front matter: `schema: organization, services`."""
+    wanted = split_list(meta.get("schema"))
+    if not wanted:
+        return ""
+    org = {
+        "@type": "Organization",
+        "@id": f"{site['url']}/#organization",
+        "name": site["name"],
+        "url": site["url"] + "/",
+        "logo": f"{site['url']}/assets/img/brand/icon-192.png",
+        "email": site["email"],
+        "telephone": site["phone_tel"],
+        "description": site["description"],
+        "sameAs": list(site["social"].values()),
+        "contactPoint": [{"@type": "ContactPoint", "contactType": "sales", "email": site["email"],
+                          "telephone": site["phone_tel"], "availableLanguage": "English"}],
+    }
+    graph = []
+    if "organization" in wanted:
+        graph.append(org)
+    if "services" in wanted:
+        for svc in site["services"]:
+            graph.append({
+                "@type": "Service",
+                "name": svc["name"],
+                "serviceType": svc["name"],
+                "description": svc["summary"],
+                "provider": {"@id": org["@id"]},
+                "url": f"{site['url']}{site['routes']['services']}#{svc['slug']}",
+                "offers": {"@type": "Offer", "priceCurrency": "INR", "price": svc["price"],
+                           "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "INR",
+                                                  "minPrice": svc["price"]}},
+            })
+    payload = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=1)
+    return f'<script type="application/ld+json">\n{payload}\n</script>'
 
 
 def font_status_html(cfg: dict, report: dict) -> str:

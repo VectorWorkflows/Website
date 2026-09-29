@@ -14,8 +14,16 @@
     "assets/img/brand/mark-84.avif",
     "assets/img/brand/mark-84.png",
     "assets/img/brand/mark-84.webp",
-    "assets/js/chrome.b4d57494a6.js",
+    "assets/js/chrome.3de9e0fe55.js",
+    "assets/js/motion.66aace25fa.js",
     "assets/js/replay.bb10e2f32b.js",
-    "favicon.ico"
+    "assets/js/vendor/ScrollTrigger.min.b0b14d67b5.js",
+    "assets/js/vendor/SplitText.min.419f7027a5.js",
+    "assets/js/vendor/gsap.min.92bb9a9647.js",
+    "assets/js/vendor/lenis.min.53195c9797.js",
+    "favicon.ico",
+    "index.html",
+    "robots.txt",
+    "sitemap.xml"
   ]
 }

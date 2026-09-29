@@ -4,12 +4,15 @@
   "locale": "en",
   "year": "2026",
   "theme_color": "#0B0B0F",
+  "description": "A one-person automation and web engineering studio building backend systems, messaging bots, telephony pipelines and hand-built websites for small service businesses.",
 
   "email": "business@vectorworkflows.com",
   "phone_display": "+1 470 470 6323",
   "phone_tel": "+14704706323",
   "whatsapp_number": "919311550616",
   "whatsapp_text": "Hi, saw Vector Workflows — I'd like to ask about automation for my business.",
+  "telegram_bot": "https://t.me/vector_86k_bot",
+  "telegram_bot_handle": "@vector_86k_bot",
 
   "social": {
     "github": "https://github.com/VectorWorkflows",
@@ -25,9 +28,151 @@
     "studio": "/studio/",
     "start": "/start/",
     "privacy": "/privacy/",
-    "terms": "/terms/"
+    "terms": "/terms/",
+    "concept_cutabove": "/cutabove/"
   },
 
+  "services": [
+    {
+      "slug": "web-presence",
+      "num": "01",
+      "name": "Web Presence",
+      "tagline": "Hand-built sites for service businesses",
+      "summary": "A fast, static website written by hand: no page builder, no platform fee, nothing to break when a framework moves on.",
+      "price": "2999",
+      "price_display": "₹2,999",
+      "window": "3–5 days",
+      "note": "",
+      "includes": [
+        "A hand-built static website, written without a page builder",
+        "Mobile-first layout that stays fast on slow connections",
+        "WhatsApp, call and email links wired into every page",
+        "On-page basics: titles, descriptions, sitemap",
+        "The full source handed over to you"
+      ],
+      "excludes": [
+        "Online stores and payment checkout",
+        "Copywriting or photography beyond what you provide",
+        "Domain and hosting fees",
+        "Content changes after hand-over, quoted separately"
+      ]
+    },
+    {
+      "slug": "lead-capture",
+      "num": "02",
+      "name": "Lead Capture",
+      "tagline": "Forms, intake flows, routing, follow-up",
+      "summary": "Every enquiry caught, acknowledged and sent to the place you actually look, with a list you can work through.",
+      "price": "4999",
+      "price_display": "₹4,999",
+      "window": "about 1 week",
+      "note": "",
+      "includes": [
+        "An intake form or step-by-step flow on your site",
+        "Enquiries routed to WhatsApp, Telegram, email or a Google Sheet",
+        "An automatic acknowledgement to the person enquiring",
+        "A lead list you can sort, update and follow up from"
+      ],
+      "excludes": [
+        "Running paid ad campaigns",
+        "A full CRM build",
+        "Bulk or marketing messaging"
+      ]
+    },
+    {
+      "slug": "booking-automation",
+      "num": "03",
+      "name": "Booking & Automation",
+      "tagline": "Scheduling, reminders, back-office workflows",
+      "summary": "The repetitive admin between a booking and a finished job, handled by a system that runs the same way every time.",
+      "price": "7999",
+      "price_display": "₹7,999",
+      "window": "1–2 weeks",
+      "note": "",
+      "includes": [
+        "A booking or scheduling flow tied to your calendar",
+        "Confirmations and reminders by message or email",
+        "One back-office workflow automated end to end, such as logging jobs to a sheet",
+        "Set-up on a cloud server so it runs around the clock"
+      ],
+      "excludes": [
+        "Payment processing",
+        "Migrating historical data",
+        "Connecting to tools that offer no API"
+      ]
+    },
+    {
+      "slug": "voice-messaging",
+      "num": "04",
+      "name": "Voice & Messaging",
+      "tagline": "IVR, missed-call response, WhatsApp and Telegram bots",
+      "summary": "Your phone line and chat apps doing the first response for you: missed calls answered, messages logged, you alerted.",
+      "price": "9999",
+      "price_display": "₹9,999",
+      "window": "about 2 weeks",
+      "note": "+ telephony/messaging provider usage at cost",
+      "includes": [
+        "Missed-call auto-response by SMS or WhatsApp",
+        "A WhatsApp or Telegram bot built around one core task",
+        "A simple IVR menu and call routing",
+        "Alerts to you on Telegram, logged to a Google Sheet"
+      ],
+      "excludes": [
+        "Telephony and messaging provider usage, billed at cost",
+        "Open-ended AI chat assistants",
+        "Call-centre staffing or live answering"
+      ]
+    }
+  ],
+
+  "systems": [
+    {
+      "slug": "missed-lead-responder",
+      "num": "01",
+      "name": "Missed Lead Responder",
+      "replay": "missed-lead",
+      "pillar": "Voice & Messaging",
+      "status": "Built & Tested — Ready for Onboarding",
+      "live": "",
+      "line": "A missed call becomes an instant SMS reply, an owner alert and a logged lead.",
+      "stack": "Twilio · FastAPI · MongoDB · Telegram · Google Sheets",
+      "repo": "https://github.com/VectorWorkflows/Missed-Lead-Responder",
+      "video": "wNvYonYUA-w",
+      "docs": "https://app.notion.com/p/Missed-Lead-Responder-3c9d07dc818580419ae4df23fe5a5ff1?source=copy_link"
+    },
+    {
+      "slug": "site-fault-tracker",
+      "num": "02",
+      "name": "Site Fault Tracker",
+      "replay": "site-fault",
+      "pillar": "Booking & Automation",
+      "status": "Built & Tested — Ready for Onboarding",
+      "live": "",
+      "line": "A WhatsApp photo and a short note become one structured row in the team's sheet.",
+      "stack": "WhatsApp Cloud API · Python · Vision model · Google Sheets",
+      "repo": "https://github.com/VectorWorkflows/WA-ProjectSite-Tracker",
+      "video": "REYPvNCJZfQ",
+      "docs": "https://app.notion.com/p/WA-Project-Site-Fault-Tracker-3bad07dc818580b1baeefdfd7aa555cc?v=3a7d07dc818580d78fa6000c60bc6eac&source=copy_link"
+    },
+    {
+      "slug": "dynamic-scheduler",
+      "num": "03",
+      "name": "Dynamic Scheduler",
+      "replay": "scheduler",
+      "pillar": "Booking & Automation",
+      "status": "Live — Open for Public Use",
+      "live": "true",
+      "line": "Send /awake and today's schedule switches to the template that matches when your day started.",
+      "stack": "Telegram Bot API · Python · Google Calendar",
+      "repo": "https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT",
+      "video": "naB59uo86v4",
+      "docs": "https://app.notion.com/p/Dynamic-Scheduler-Bot-3b9d07dc818580b5ab2dec4c95e80547?source=copy_link"
+    }
+  ],
+
   "protected_dirs": ["cutabove"],
-  "planned_routes": ["/", "/work/", "/services/", "/studio/", "/start/", "/privacy/", "/terms/"]
+  "planned_routes": [
+    "/", "/work/", "/services/", "/studio/", "/start/", "/privacy/", "/terms/",
+    "/work/missed-lead-responder/", "/work/site-fault-tracker/", "/work/dynamic-scheduler/"
+  ]
 }

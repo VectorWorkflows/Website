@@ -44,7 +44,7 @@
   .replay__clock { grid-area: clock; justify-self: end; }
   .replay__views { grid-area: views; justify-self: start; }
   .replay__play { grid-area: play; }
-  @container replay (min-width: 46rem) {
+  @container replay (min-width: 40rem) {
     .replay__bar { display: flex; }
   }
   .replay__bar::after {
@@ -143,7 +143,7 @@
     gap: var(--lane-gap);
     padding: var(--space-s);
   }
-  @container replay (min-width: 46rem) {
+  @container replay (min-width: 40rem) {
     .replay__view--owner { grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); padding: var(--space-m); gap: var(--space-m); }
   }
   .replay__view--engineer { display: none; }
@@ -188,7 +188,7 @@
       -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2.25rem);
       mask-image: linear-gradient(to bottom, transparent, #000 2.25rem);
     }
-    @container replay (min-width: 46rem) {
+    @container replay (min-width: 40rem) {
       html.js .replay__feed { block-size: var(--h-w); }
     }
     /* Before replay.js runs, hide steps so the final state never flashes */
@@ -437,7 +437,7 @@
   .log-kv .v { color: var(--c-bone); }
   .log-line--rule { display: block; padding-block-start: 0.5rem; }
   .log-line--rule .log-sys { color: var(--c-bone-3); }
-  @container replay (min-width: 46rem) {
+  @container replay (min-width: 40rem) {
     .replay__log { padding: var(--space-m); font-size: 0.8125rem; }
     .log-line { grid-template-columns: 5rem 6rem 11rem minmax(0, 1fr); }
     .log-kv { grid-column: 4; }
@@ -471,7 +471,24 @@
     padding: 0.625rem 0.75rem 0.625rem var(--space-s);
     box-shadow: inset 0 -1px 0 var(--edge-faint);
   }
-  .logreel__list { block-size: auto; }
+  /* Static (reduced motion / no JS): a capped, scrollable log, top-down */
+  .logreel__list {
+    block-size: auto;
+    max-block-size: var(--reel-h, 17rem);
+    overflow: auto;
+    justify-content: flex-start;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .logreel__list {
+      max-block-size: none;
+      overflow: hidden;
+      justify-content: flex-end;
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 3rem);
+      mask-image: linear-gradient(to bottom, transparent, #000 3rem);
+    }
+  }
   @media (prefers-reduced-motion: no-preference) {
     html.js .logreel__list { block-size: var(--reel-h, 17rem); }
     html.js .logreel:not(.is-live) .log-line { visibility: hidden; }
