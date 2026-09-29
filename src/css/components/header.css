@@ -192,6 +192,9 @@
     .menu-toggle:hover .menu-lines::before { transform: translateX(0.1875rem); }
     .menu-toggle:hover .menu-lines::after  { transform: translateX(-0.1875rem); }
   }
+  .menu-toggle { transition: transform var(--dur-press) var(--ease-out-soft); }
+  .menu-toggle:active { transform: scale(0.94); }
+  .nav-link:active::before { opacity: 1; transform: scale(0.96); }
 
   /* Close state: the same two lines, crossed. They animate in from the
      hamburger position, so opening reads as one continuous morph. */

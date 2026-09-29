@@ -12,25 +12,22 @@
   .page-head__lead { max-inline-size: 46ch; }
   .page-head__aside { display: flex; flex-wrap: wrap; gap: 0.625rem; }
 
-  .rise .w {
-    display: inline-block;
-    overflow: clip;
-    padding-block-end: 0.12em;
-    margin-block-end: -0.12em;
-    vertical-align: top;
-  }
+  /* Words settle into focus rather than rising from behind a mask: they are
+     painted from the very first frame (so the headline is the LCP at first
+     paint), drifting up a fraction and sharpening. transform + filter only. */
+  .rise .w { display: inline-block; vertical-align: top; }
   .rise .w > span { display: inline-block; }
   @media (prefers-reduced-motion: no-preference) {
     .rise .w > span {
       animation: word-rise var(--dur-hero) var(--ease-out) both;
-      animation-delay: calc(80ms + var(--i, 0) * 70ms);
+      animation-delay: calc(40ms + var(--i, 0) * 55ms);
     }
     .fade-in {
-      animation: hero-in 1s var(--ease-out) both;
-      animation-delay: calc(360ms + var(--d, 0) * 110ms);
+      animation: hero-in 760ms var(--ease-out) both;
+      animation-delay: calc(140ms + var(--d, 0) * 70ms);
     }
   }
-  @keyframes word-rise { from { transform: translateY(108%); } }
+  @keyframes word-rise { from { transform: translateY(0.22em); filter: blur(12px); } }
   @keyframes hero-in { from { opacity: 0; transform: translateY(1.5rem); } }
 
   /* Section heading block shared by inner pages */

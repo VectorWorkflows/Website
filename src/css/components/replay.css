@@ -118,6 +118,7 @@
   .replay__views button[aria-pressed="true"] { color: var(--c-bone); }
   .replay__views button[aria-pressed="true"]::before { opacity: 1; transform: none; }
   @media (hover: hover) { .replay__views button:hover { color: var(--c-bone); } }
+  .replay__views button:active::before { opacity: 1; transform: scale(0.96); }
 
   .replay__play {
     display: none;
@@ -137,7 +138,9 @@
   .replay__play .icon { inline-size: 1.125rem; block-size: 1.125rem; }
 
   /* Stage and views ----------------------------------------------------- */
-  .replay__stage { position: relative; }
+  /* Containment: steps appearing inside a replay never re-lay-out the page */
+  .replay__stage { position: relative; contain: layout paint; }
+  .logreel__list { contain: layout paint; }
   .replay__view--owner {
     display: grid;
     gap: var(--lane-gap);

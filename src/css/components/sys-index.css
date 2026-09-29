@@ -101,4 +101,11 @@
   .sys-preview.is-on .sys-preview__core { opacity: 1; transform: translate(1.5rem, -110%) scale(1); }
   .sys-preview__body { font-family: var(--font-mono); font-size: var(--step--2); line-height: 1.6; color: var(--c-bone); max-inline-size: none; }
 
+  /* Keyboard focus gets the hover treatment; press confirms on touch, where
+     there is no hover to preview the row */
+  .sys-row:focus-visible { outline-offset: -2px; border-radius: var(--radius-l); }
+  .sys-row:focus-visible::before { opacity: 1; }
+  .sys-row:focus-visible .sys-row__go { transform: rotate(45deg); background: var(--c-violet); }
+  .sys-row:active::before { opacity: 1; background: var(--c-raised-2); transition-duration: var(--dur-press); }
+  .sys-row:active .sys-row__go { transform: rotate(45deg) scale(0.92); background: var(--c-violet); }
 }

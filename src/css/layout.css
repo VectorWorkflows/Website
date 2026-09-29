@@ -78,4 +78,12 @@
   .measure-narrow { max-inline-size: var(--measure-narrow); }
 
   main { display: block; }
+
+  /* Below-the-fold sections skip style, layout and paint until they near
+     the viewport. "auto" in the intrinsic size remembers each section's real
+     height once rendered, so scroll length settles after the first pass. */
+  main > section + section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 56rem;
+  }
 }

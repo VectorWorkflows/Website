@@ -22,7 +22,13 @@
         "ascent_override": "93.05%",
         "descent_override": "24.69%",
         "line_gap_override": "0.00%",
-        "calibrated": true
+        "calibrated": true,
+        "italic": {
+          "size_adjust": "96.69%",
+          "ascent_override": "101.36%",
+          "descent_override": "26.89%",
+          "line_gap_override": "0.00%"
+        }
       },
       "faces": [
         {
@@ -39,7 +45,7 @@
           "style": "italic",
           "folder": "400-Regular-Italic",
           "used_for": "Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark",
-          "preload": true
+          "preload": false
         }
       ]
     },

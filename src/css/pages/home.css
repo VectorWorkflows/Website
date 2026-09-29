@@ -59,27 +59,22 @@
   }
   .home-hero__caption span { color: var(--c-lilac); }
 
-  /* The headline rises word by word, in CSS, from first paint. No JS on the
-     LCP path: the words are already in the HTML, masked by their own box. */
-  .home-hero__title .w {
-    display: inline-block;
-    overflow: clip;
-    padding-block-end: 0.12em;
-    margin-block-end: -0.12em;
-    vertical-align: top;
-  }
+  /* The headline settles word by word into focus, in CSS, from first paint.
+     No JS on the LCP path, and the words are painted from frame one (a
+     masked rise would hide them and push LCP back by the whole reveal). */
+  .home-hero__title .w { display: inline-block; vertical-align: top; }
   .home-hero__title .w > span { display: inline-block; }
   @media (prefers-reduced-motion: no-preference) {
     .home-hero__title .w > span {
       animation: word-rise var(--dur-hero) var(--ease-out) both;
-      animation-delay: calc(80ms + var(--i) * 70ms);
+      animation-delay: calc(40ms + var(--i) * 55ms);
     }
     .hero-in {
-      animation: hero-in 1s var(--ease-out) both;
-      animation-delay: calc(380ms + var(--d) * 110ms);
+      animation: hero-in 760ms var(--ease-out) both;
+      animation-delay: calc(140ms + var(--d) * 70ms);
     }
   }
-  @keyframes word-rise { from { transform: translateY(108%); } }
+  @keyframes word-rise { from { transform: translateY(0.22em); filter: blur(12px); } }
   @keyframes hero-in { from { opacity: 0; transform: translateY(1.5rem); } }
 
   /* Pillars: an asymmetric bento, 7/5 then 5/7 --------------------------- */

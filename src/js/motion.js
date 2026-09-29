@@ -34,8 +34,12 @@ async function boot() {
   document.addEventListener('menu:open', () => lenis.stop());
   document.addEventListener('menu:close', () => lenis.start());
 
+  // Motion boots on first interaction, so anything already on screen by then
+  // has been seen: leave it alone rather than hide and re-reveal it.
+  const unseen = (el) => el.getBoundingClientRect().top > innerHeight * 0.92;
+
   // Section reveals: a heavy fade-up, once
-  gsap.utils.toArray('[data-reveal]').forEach((el) => {
+  gsap.utils.toArray('[data-reveal]').filter(unseen).forEach((el) => {
     gsap.from(el, {
       y: 48,
       opacity: 0,
@@ -44,7 +48,7 @@ async function boot() {
       scrollTrigger: { trigger: el, start: 'top 88%', once: true },
     });
   });
-  gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
+  gsap.utils.toArray('[data-reveal-group]').filter(unseen).forEach((group) => {
     gsap.from(group.children, {
       y: 40,
       opacity: 0,
@@ -57,7 +61,7 @@ async function boot() {
 
   // Display headings: masked line reveal. autoSplit re-splits when fonts
   // land or the width changes, so lines stay true to the real typeface.
-  gsap.utils.toArray('[data-split]').forEach((el) => {
+  gsap.utils.toArray('[data-split]').filter(unseen).forEach((el) => {
     SplitText.create(el, {
       type: 'lines',
       mask: 'lines',
@@ -96,10 +100,28 @@ async function boot() {
 
   // Re-measure once web fonts settle so trigger positions are exact
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
+  // Sections use content-visibility: auto and render at their true height as
+  // they approach; refresh trigger positions when any of them resizes.
+  let refreshTimer = 0;
+  const ro = new ResizeObserver(() => {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 120);
+  });
+  document.querySelectorAll('main > section').forEach((s) => ro.observe(s));
 }
 
 if (!reduced.matches) {
-  // After first paint and idle: motion never competes with content
-  const start = () => boot().catch(() => document.documentElement.classList.add('no-motion'));
-  'requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 200);
+  // Every effect here is scroll- or pointer-driven, so the libraries load on
+  // the visitor's first interaction: zero motion JS competes with first
+  // paint, and a visitor who never scrolls never downloads it.
+  const events = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown', 'pointermove'];
+  let started = false;
+  const start = () => {
+    if (started) return;
+    started = true;
+    events.forEach((type) => removeEventListener(type, start, true));
+    boot().catch(() => document.documentElement.classList.add('no-motion'));
+  };
+  events.forEach((type) => addEventListener(type, start, { capture: true, passive: true, once: true }));
 }

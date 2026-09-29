@@ -20,7 +20,6 @@ class Player {
     this.muts = new Map([...root.querySelectorAll('[data-mut]')].map((el) => [el.dataset.mut, el]));
     this.clock = root.querySelector('[data-clock]');
     this.btn = root.querySelector('[data-play]');
-    this.ease = css(root, '--ease-out') || 'ease';
     this.userPaused = false;
     this.inView = false;
     this.raf = 0;
@@ -41,6 +40,11 @@ class Player {
 
   get playing() {
     return !this.userPaused && this.inView && !document.hidden;
+  }
+
+  // Read lazily: a computed-style read during construction forces layout
+  get ease() {
+    return this._ease || (this._ease = css(this.root, '--ease-out') || 'ease');
   }
 
   update() {
@@ -141,6 +145,13 @@ class Player {
   }
 }
 
+// Playback holds until the page has loaded and gone idle, so the replay
+// never competes with first paint (players reset instantly, then wait).
+Player.ready = new Promise((resolve) => {
+  const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(resolve, { timeout: 1500 }) : setTimeout(resolve, 300));
+  document.readyState === 'complete' ? idle() : addEventListener('load', idle, { once: true });
+});
+
 function initViews(root) {
   const buttons = root.querySelectorAll('[data-view-btn]');
   buttons.forEach((btn) =>
@@ -164,10 +175,15 @@ function prepareReel(reel) {
 
 document.querySelectorAll('[data-replay]').forEach(initViews);
 
+// Players are built only after load + idle. Until then CSS keeps the steps
+// hidden inside fixed-height lanes, so waiting costs nothing visually and
+// keeps all replay work off the first-paint path.
 if (!reduced.matches) {
-  document.querySelectorAll('[data-replay]').forEach((root) => new Player(root));
-  document.querySelectorAll('[data-logreel]').forEach((reel) => {
-    prepareReel(reel);
-    new Player(reel, { loopGap: 2400 });
+  Player.ready.then(() => {
+    document.querySelectorAll('[data-replay]').forEach((root) => new Player(root));
+    document.querySelectorAll('[data-logreel]').forEach((reel) => {
+      prepareReel(reel);
+      new Player(reel, { loopGap: 2400 });
+    });
   });
 }

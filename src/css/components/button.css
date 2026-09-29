@@ -131,4 +131,7 @@
     .link-arrow:hover::after { transform: scaleX(1); }
     .link-arrow:hover .icon { transform: translate(0.125rem, -0.125rem); }
   }
+  .link-arrow:focus-visible::after { transform: scaleX(1); }
+  .link-arrow:active { color: var(--c-bone); }
+  .link-arrow:active::after { transform: scaleX(1); transition-duration: var(--dur-press); }
 }

@@ -1,0 +1,62 @@
+---
+title: Page not found · Vector Workflows
+description: There's no page at this address. The services, the three systems, the studio and the project intake are one click away.
+path: /404.html
+robots: noindex
+body_class: page-404
+critical_css: components/page-head.css, components/sys-index.css
+---
+
+<section class="frame page-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">404</span><span class="index-label__rule"></span>Not found</p></div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="rise page-head__title">{% rise %}Nothing lives at this <em>address</em>.{% endrise %}</h1>
+      <p class="t-lead page-head__lead fade-in" style="--d:1">The link may be old, or the address mistyped. Everything on the site is one of these four pages away.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="nf-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Go to</p></div>
+    <div class="g-body stack flow-l">
+      <h2 id="nf-title" class="sr-only">Pages on this site</h2>
+      <ol class="sys-index" role="list">
+        <li>
+          <a class="sys-row" href="{{ site.routes.services }}">
+            <span class="sys-row__num">01</span>
+            <span class="sys-row__name">Services</span>
+            <span class="sys-row__line">Four services, what each includes, and a starting price for every one.</span>
+            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sys-row" href="{{ site.routes.work }}">
+            <span class="sys-row__num">02</span>
+            <span class="sys-row__name">Work</span>
+            <span class="sys-row__line">Three studio-built systems, each shown running, plus concept work.</span>
+            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sys-row" href="{{ site.routes.studio }}">
+            <span class="sys-row__num">03</span>
+            <span class="sys-row__name">Studio</span>
+            <span class="sys-row__line">Who builds these systems, and why every site here is written by hand.</span>
+            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+          </a>
+        </li>
+        <li>
+          <a class="sys-row" href="{{ site.routes.start }}">
+            <span class="sys-row__num">04</span>
+            <span class="sys-row__name">Start a project</span>
+            <span class="sys-row__line">Four short questions, then your answers open as a WhatsApp message or an email.</span>
+            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+          </a>
+        </li>
+      </ol>
+      <p class="t-small"><a href="{{ site.routes.home }}">Back to the home page</a></p>
+    </div>
+  </div>
+</section>

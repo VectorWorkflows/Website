@@ -14,6 +14,9 @@ it will still run in ten years. Pillow (image derivatives) and fontTools
                                         (needs: pip install fonttools brotli)
     python build.py check               validate the built output without writing anything
     python build.py serve [port]        serve the site root locally (default 8000)
+    python build.py og                  render Open Graph / Twitter cards (1200×630 PNG) for every
+                                        indexable page with headless Chrome, then rebuild to link them
+                                        (re-run after installing new fonts)
 
 Source layout (everything authored lives in /src):
 
@@ -336,16 +339,17 @@ def render_font_css(cfg: dict) -> str:
         for style in styles:
             locals_ = fb["local"] if style == "normal" else [f"{fb['local'][0]} Italic"]
             src = ", ".join(f'local("{n}")' for n in locals_)
+            m = fb.get("italic", fb) if style == "italic" else fb
             lines += [
                 f"/* {fb['family']} ({style}): {note} */",
                 "@font-face {",
                 f'  font-family: "{fb["family"]}";',
                 f"  src: {src};",
                 f"  font-style: {style};",
-                f"  size-adjust: {fb['size_adjust']};",
-                f"  ascent-override: {fb['ascent_override']};",
-                f"  descent-override: {fb['descent_override']};",
-                f"  line-gap-override: {fb['line_gap_override']};",
+                f"  size-adjust: {m['size_adjust']};",
+                f"  ascent-override: {m['ascent_override']};",
+                f"  descent-override: {m['descent_override']};",
+                f"  line-gap-override: {m['line_gap_override']};",
                 "}",
             ]
         lines.append("")
@@ -421,6 +425,12 @@ _FALLBACK_FILES = {
               "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"],
     "Courier New": ["C:/Windows/Fonts/cour.ttf", "/System/Library/Fonts/Supplemental/Courier New.ttf",
                     "/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf"],
+    "Times New Roman Italic": ["C:/Windows/Fonts/timesi.ttf", "/System/Library/Fonts/Supplemental/Times New Roman Italic.ttf",
+                               "/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf"],
+    "Arial Italic": ["C:/Windows/Fonts/ariali.ttf", "/System/Library/Fonts/Supplemental/Arial Italic.ttf",
+                     "/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf"],
+    "Courier New Italic": ["C:/Windows/Fonts/couri.ttf", "/System/Library/Fonts/Supplemental/Courier New Italic.ttf",
+                           "/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf"],
 }
 
 
@@ -437,32 +447,45 @@ def calibrate_fonts(cfg: dict) -> None:
         from fontTools.ttLib import TTFont
     except ImportError:
         raise BuildError("calibration needs fontTools + brotli:  pip install fonttools brotli")
+    def measure(web_path: Path, local_name: str) -> dict | None:
+        fb_path = next((p for p in _FALLBACK_FILES.get(local_name, []) if Path(p).exists()), None)
+        if not fb_path:
+            print(f"  skip: fallback font file for '{local_name}' not found on this machine")
+            return None
+        web, local = TTFont(web_path), TTFont(fb_path)
+        upm = web["head"].unitsPerEm
+        hhea = web["hhea"]
+        size_adjust = _avg_advance(web) / _avg_advance(local)
+        return {
+            "size_adjust": f"{size_adjust * 100:.2f}%",
+            "ascent_override": f"{hhea.ascent / upm / size_adjust * 100:.2f}%",
+            "descent_override": f"{abs(hhea.descent) / upm / size_adjust * 100:.2f}%",
+            "line_gap_override": f"{hhea.lineGap / upm / size_adjust * 100:.2f}%",
+        }
+
     changed = False
     for fam in cfg["families"]:
+        fb = fam["fallback"]
         regular = next((f for f in fam["faces"] if f["style"] == "normal"), fam["faces"][0])
         path = face_dir(cfg, fam, regular) / cfg["file"]
         if not face_status(path)[1]:
             print(f"  skip {fam['family']}: {regular['style_name']} not installed yet")
             continue
-        fb = fam["fallback"]
-        fb_path = next((p for p in _FALLBACK_FILES.get(fb["local"][0], []) if Path(p).exists()), None)
-        if not fb_path:
-            print(f"  skip {fam['family']}: fallback font file for '{fb['local'][0]}' not found on this machine")
+        metrics = measure(path, fb["local"][0])
+        if not metrics:
             continue
-        web, local = TTFont(path), TTFont(fb_path)
-        upm = web["head"].unitsPerEm
-        hhea = web["hhea"]
-        size_adjust = _avg_advance(web) / _avg_advance(local)
-        fb.update({
-            "size_adjust": f"{size_adjust * 100:.2f}%",
-            "ascent_override": f"{hhea.ascent / upm / size_adjust * 100:.2f}%",
-            "descent_override": f"{abs(hhea.descent) / upm / size_adjust * 100:.2f}%",
-            "line_gap_override": f"{hhea.lineGap / upm / size_adjust * 100:.2f}%",
-            "calibrated": True,
-        })
+        fb.update(metrics, calibrated=True)
         changed = True
         print(f"  {fam['family']}: size-adjust {fb['size_adjust']}, ascent {fb['ascent_override']}, "
               f"descent {fb['descent_override']}, line-gap {fb['line_gap_override']}")
+        # Italics set wider or narrower than the upright, so a fallback sized
+        # from the upright reflows when the italic lands. Measure it on its own.
+        italic = next((f for f in fam["faces"] if f["style"] == "italic" and f["weight"] == regular["weight"]), None)
+        if italic and face_status(face_dir(cfg, fam, italic) / cfg["file"])[1]:
+            metrics = measure(face_dir(cfg, fam, italic) / cfg["file"], f"{fb['local'][0]} Italic")
+            if metrics:
+                fb["italic"] = metrics
+                print(f"  {fam['family']} Italic: size-adjust {metrics['size_adjust']}")
     if changed:
         (SRC / "fonts.json").write_text(json.dumps(cfg, indent=2, ensure_ascii=False) + "\n", "utf-8", newline="\n")
 
@@ -1047,7 +1070,9 @@ def build() -> int:
             f'<noscript><link rel="stylesheet" href="{u}"></noscript>\n' for u in deferred_urls)
         page_js = SITE_JS + [f"{n}.js" if not n.endswith(".js") else n for n in split_list(meta.get("js"))]
 
-        og_rel = f"assets/img/og/{meta.get('og_image', 'default')}.png"
+        og_rel = f"{OG_DIR}/{meta.get('og_image') or og_slug(meta['path'])}.png"
+        if not (ROOT / og_rel).exists():
+            og_rel = f"{OG_DIR}/default.png"
         ctx = {
             **meta,
             "site": site,
@@ -1258,16 +1283,168 @@ def check() -> int:
 
 
 def serve(port: int) -> None:
+    """Local server that behaves like the production host (GitHub Pages):
+    gzip for text responses and a short max-age, so local Lighthouse runs
+    measure what visitors will actually get."""
     import functools
     import http.server
     import mimetypes
     mimetypes.add_type("font/woff2", ".woff2")
     mimetypes.add_type("image/avif", ".avif")
     mimetypes.add_type("text/javascript", ".js")
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT))
+    text_types = (".html", ".css", ".js", ".json", ".svg", ".xml", ".txt", ".md")
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def send_head(self):
+            path = Path(self.translate_path(self.path))
+            if path.is_dir():
+                path = path / "index.html"
+            if (path.suffix in text_types and path.is_file()
+                    and "gzip" in self.headers.get("Accept-Encoding", "")):
+                body = gzip.compress(path.read_bytes(), compresslevel=6)
+                self.send_response(200)
+                self.send_header("Content-Type", mimetypes.guess_type(path.name)[0] or "text/html")
+                self.send_header("Content-Encoding", "gzip")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "max-age=600")
+                self.end_headers()
+                import io
+                return io.BytesIO(body)
+            return super().send_head()
+
+        def end_headers(self):
+            if "Cache-Control" not in "".join(h.decode("latin-1") for h in getattr(self, "_headers_buffer", [])):
+                self.send_header("Cache-Control", "max-age=600")
+            super().end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    handler = functools.partial(Handler, directory=str(ROOT))
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), handler) as httpd:
         print(f"serving {ROOT} at http://127.0.0.1:{port}/  (preview: /_preview.html)")
         httpd.serve_forever()
+
+
+# ---------------------------------------------------------------------------
+# Open Graph cards
+# ---------------------------------------------------------------------------
+
+OG_DIR = "assets/img/og"
+_CHROME = [os.environ.get("CHROME_PATH", ""),
+           "C:/Program Files/Google/Chrome/Application/chrome.exe",
+           "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+           "/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"]
+
+
+def og_slug(url_path: str) -> str:
+    """/ → default, /work/site-fault-tracker/ → work-site-fault-tracker"""
+    return url_path.strip("/").replace("/", "-").removesuffix(".html") or "default"
+
+
+def og_card_html(headline: str, kicker: str, fonts_css: str, mark_uri: str) -> str:
+    grain = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E"
+             "%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E"
+             "%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E"
+             "%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
+{fonts_css}
+:root {{ --ink:#0B0B0F; --bone:#EDE8E0; --bone2:#AFAAA3; --lilac:#BCB4F4; --violet:#6756B9; }}
+* {{ margin:0; box-sizing:border-box; }}
+html, body {{ width:1200px; height:630px; overflow:hidden; background:var(--ink); color:var(--bone); }}
+body {{ position:relative; font-family:"ABC Whyte Inktrap","ABC Whyte Inktrap Fallback",Arial,sans-serif; }}
+body::after {{ content:""; position:absolute; inset:0; opacity:.05; background:url("{grain}"); background-size:180px; }}
+.rail {{ position:absolute; top:0; bottom:0; left:112px; width:1px; background:linear-gradient(180deg,transparent,rgba(237,232,224,.14) 20%,rgba(237,232,224,.14) 80%,transparent); }}
+.top {{ position:absolute; top:64px; left:152px; right:72px; display:flex; align-items:center; justify-content:space-between; }}
+.brand {{ display:flex; align-items:center; gap:18px; }}
+.brand img {{ height:44px; }}
+.wm {{ display:flex; align-items:baseline; gap:.4em; }}
+.wm a {{ font-weight:500; font-size:17px; letter-spacing:.16em; text-transform:uppercase; }}
+.wm i {{ width:6px; height:6px; border-radius:50%; background:var(--lilac); align-self:center; }}
+.wm b {{ font-family:"GT Sectra Display","GT Sectra Display Fallback",Georgia,serif; font-style:italic; font-weight:400; font-size:30px; letter-spacing:-.015em; }}
+.url {{ font-family:"GT America Mono","GT America Mono Fallback",monospace; font-size:17px; color:var(--bone2); letter-spacing:.02em; }}
+.body {{ position:absolute; left:152px; right:96px; bottom:84px; }}
+.kicker {{ display:flex; align-items:center; gap:16px; margin-bottom:30px; font-family:"GT America Mono","GT America Mono Fallback",monospace;
+          font-size:18px; letter-spacing:.08em; text-transform:uppercase; color:var(--lilac); }}
+.kicker::before {{ content:""; width:40px; height:1px; background:var(--lilac); }}
+h1 {{ font-family:"GT Sectra Display","GT Sectra Display Fallback",Georgia,serif; font-weight:400; font-size:92px; line-height:1;
+     letter-spacing:-.018em; text-wrap:balance; max-width:960px; }}
+h1 em {{ font-style:italic; color:var(--lilac); letter-spacing:-.01em; }}
+.tick {{ position:absolute; left:108px; bottom:120px; width:9px; height:9px; border-radius:50%; background:var(--violet); }}
+</style></head><body>
+<div class="rail"></div><div class="tick"></div>
+<div class="top"><div class="brand"><img src="{mark_uri}" alt=""><span class="wm"><a>Vector</a><i></i><b>Workflows</b></span></div>
+<span class="url">vectorworkflows.com</span></div>
+<div class="body"><p class="kicker">{kicker}</p><h1>{headline}</h1></div>
+</body></html>"""
+
+
+def og_cards() -> int:
+    """Render one card per indexable page from its built h1 and rail label.
+    Fonts and the logo are embedded as data URIs so Chrome needs no server."""
+    import base64
+    import subprocess
+    import tempfile
+    chrome = next((c for c in _CHROME if c and Path(c).exists()), None)
+    if not chrome:
+        raise BuildError("og needs Chrome or Edge (set CHROME_PATH)")
+    cfg = load_fonts()
+    site = load_site()
+    faces = []
+    for fam in cfg["families"]:
+        for face in fam["faces"]:
+            f = face_dir(cfg, fam, face) / cfg["file"]
+            if face_status(f)[1]:
+                data = base64.b64encode(f.read_bytes()).decode()
+                faces.append(f'@font-face{{font-family:"{fam["family"]}";src:url(data:font/woff2;base64,{data}) format("woff2");'
+                             f'font-weight:{face["weight"]};font-style:{face["style"]}}}')
+    # Plus the metric-matched local() fallbacks, for faces not installed yet
+    fallbacks = re.sub(r"@font-face\s*\{[^}]*url\([^}]*\}", "", render_font_css(cfg))
+    fonts_css = "\n".join(faces) + "\n" + fallbacks
+    mark = ROOT / "assets/img/brand/mark-84.png"
+    if not mark.exists():
+        raise BuildError("run `python build.py` first: the brand mark derivatives are missing")
+    mark_uri = "data:image/png;base64," + base64.b64encode(mark.read_bytes()).decode()
+
+    (ROOT / OG_DIR).mkdir(parents=True, exist_ok=True)
+    made = 0
+    with tempfile.TemporaryDirectory() as tmp:
+        for page in sorted((SRC / "pages").rglob("*.html")):
+            meta, _ = parse_page(page)
+            if meta.get("robots", "index").startswith("noindex"):
+                continue
+            built = ROOT / out_path_for(meta["path"])
+            if not built.exists():
+                raise BuildError(f"{built.relative_to(ROOT)} not built yet: run `python build.py` first")
+            doc = built.read_text("utf-8")
+            h1 = re.search(r"<h1[^>]*>(.*?)</h1>", doc, re.S).group(1)
+            headline = " ".join(re.sub(r"<(?!/?em\b)[^>]+>", "", h1).split())
+            headline = headline.replace("</em> <em>", " ")
+            if meta.get("system"):
+                sys_ = next(s for s in site["systems"] if s["slug"] == meta["system"])
+                kicker = f"Case study · {html.escape(sys_['status'])}"
+            else:
+                head = doc.split('class="frame page-head', 1)[-1] if "page-head" in doc else doc
+                m = re.search(r'index-label__rule"></span>(.*?)</p>', head, re.S)
+                kicker = m.group(1).strip() if m else html.escape(meta["title"].split(" · ")[0])
+            src = Path(tmp) / f"{og_slug(meta['path'])}.html"
+            src.write_text(og_card_html(headline, kicker, fonts_css, mark_uri), "utf-8")
+            png = ROOT / OG_DIR / f"{og_slug(meta['path'])}.png"
+            subprocess.run([chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=1",
+                            "--window-size=1200,630", "--virtual-time-budget=3000", f"--user-data-dir={Path(tmp) / 'profile'}",
+                            f"--screenshot={png}", src.as_uri()],
+                           check=True, capture_output=True, timeout=60)
+            try:
+                from PIL import Image
+                with Image.open(png) as im:
+                    im.convert("RGB").save(png, "PNG", optimize=True)
+            except ImportError:
+                pass
+            made += 1
+            print(f"  og: /{OG_DIR}/{png.name}  ({png.stat().st_size / 1024:.0f} kB)  {kicker} · {re.sub('<[^>]+>', '', headline)}")
+    print(f"  {made} card(s) rendered; rebuilding to link them")
+    return build()
 
 
 def main(argv: list[str]) -> int:
@@ -1296,6 +1473,8 @@ def main(argv: list[str]) -> int:
             return 1 if report["errors"] else 0
         if cmd == "check":
             return check()
+        if cmd == "og":
+            return og_cards()
         if cmd == "serve":
             serve(int(argv[2]) if len(argv) > 2 else 8000)
             return 0
