@@ -641,6 +641,25 @@ def lookup(ctx: dict, dotted: str, where: str, strict: bool = True):
     return cur
 
 
+RE_RISE = re.compile(r"{%\s*rise\s*%}(.*?){%\s*endrise\s*%}", re.S)
+
+
+def rise_words(src: str) -> str:
+    """Wrap each word in a masking box for the CSS word-rise reveal:
+    <span class="w"><span style="--i:n">word</span></span>. Words inside
+    <em>…</em> keep their emphasis. Spaces between boxes stay real spaces."""
+    out, italic = [], False
+    for i, token in enumerate(src.split()):
+        opens, closes = "<em>" in token, "</em>" in token
+        word = token.replace("<em>", "").replace("</em>", "")
+        italic = italic or opens
+        inner = f"<em>{word}</em>" if italic else word
+        out.append(f'<span class="w"><span style="--i:{i}">{inner}</span></span>')
+        if closes:
+            italic = False
+    return " ".join(out)
+
+
 RE_FOR_OPEN = re.compile(r"{%\s*for\s+(\w+)\s+in\s+([\w.]+)\s*%}")
 RE_FOR_TAG = re.compile(r"{%\s*(for\s+\w+\s+in\s+[\w.]+|endfor)\s*%}")
 
@@ -681,6 +700,7 @@ def render(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int 
     text = RE_REPLAY.sub(lambda m: render_replay(m.group(1), where, m.group(2) or ""), text)
     text = RE_LOGREEL.sub(lambda m: render_log_reel([s.strip() for s in m.group(1).split(",")], where), text)
     text = expand_loops(text, ctx, icons, used, where, depth)
+    text = RE_RISE.sub(lambda m: rise_words(m.group(1)), text)
 
     def cond(m):
         negate, key, body = m.group(1), m.group(2), m.group(3)

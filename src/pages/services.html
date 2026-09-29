@@ -1,0 +1,112 @@
+---
+title: Services and pricing · Vector Workflows
+description: Four services with prices in the open: hand-built websites from ₹2,999, lead capture from ₹4,999, booking and automation from ₹7,999, voice and messaging bots from ₹9,999. What's included, what isn't, and how long each build takes.
+path: /services/
+nav: services
+schema: organization, services
+body_class: page-services
+critical_css: components/page-head.css, components/card.css, pages/services.css
+---
+
+<section class="frame page-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">S</span><span class="index-label__rule"></span>Services &amp; pricing</p></div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="rise page-head__title">{% rise %}Four services, <em>priced</em> in the open.{% endrise %}</h1>
+      <p class="t-lead page-head__lead fade-in" style="--d:1">Each one is a fixed scope with a starting price and a build window. You'll know what's included and what isn't before anything is built.</p>
+    </div>
+  </div>
+
+  <nav class="price-index fade-in" style="--d:2" aria-label="Services on this page">
+    <ol role="list">
+      {% for p in site.services %}
+      <li>
+        <a href="#{{ p.slug }}">
+          <span class="price-index__num">{{ p.num }}</span>
+          <span class="price-index__name">{{ p.name }}</span>
+          <span class="price-index__price"><span class="t-label">from</span> {{ p.price_display }}</span>
+          <span class="price-index__window">{{ p.window }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+  </nav>
+</section>
+
+<section class="frame section-tight" aria-label="Service details">
+  <div class="svc-list">
+    {% for p in site.services %}
+    <article class="card svc" id="{{ p.slug }}" aria-labelledby="{{ p.slug }}-name" data-reveal>
+      <div class="card__core svc__core">
+        <header class="svc__head">
+          <div class="card__meta"><span class="t-label c-lilac">{{ p.num }}</span><span class="t-label">Service</span></div>
+          <h2 id="{{ p.slug }}-name" class="svc__name">{{ p.name }}</h2>
+          <p class="svc__tag">{{ p.tagline }}</p>
+          <p class="svc__summary">{{ p.summary }}</p>
+        </header>
+
+        <div class="svc__price">
+          <p class="svc__from"><span class="t-label">from</span> <span class="svc__amount">{{ p.price_display }}</span></p>
+          <p class="svc__window">{% icon "clock" %}<span>{{ p.window }}</span></p>
+          {% if p.note %}<p class="svc__note">{{ p.note }}</p>{% endif %}
+          <a class="btn btn--primary btn--sm" href="{{ site.routes.start }}?need={{ p.slug }}"><span class="btn__label">Start with this</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        </div>
+
+        <div class="svc__lists">
+          <div class="svc__col">
+            <h3 class="svc__list-title">{% icon "check" %}Included</h3>
+            <ul role="list" class="svc__ul svc__ul--in">
+              {% for item in p.includes %}<li>{{ item }}</li>{% endfor %}
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h3 class="svc__list-title svc__list-title--out">{% icon "minus" %}Not included</h3>
+            <ul role="list" class="svc__ul svc__ul--out">
+              {% for item in p.excludes %}<li>{{ item }}</li>{% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="terms-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">i</span><span class="index-label__rule"></span>How pricing works</p></div>
+    <div class="g-body">
+      <h2 id="terms-title" class="t-h2-s sec-head" data-split>Starting prices, <em>not</em> surprises.</h2>
+      <dl class="notes" data-reveal-group>
+        <div class="notes__item">
+          <dt>What "from" means</dt>
+          <dd>The price covers the scope listed under Included. If your job needs more than that, you get a quote for the extra before any work starts, never after.</dd>
+        </div>
+        <div class="notes__item">
+          <dt>Provider costs</dt>
+          <dd>Voice and messaging systems run on third-party telephony and messaging providers. Their usage is billed at cost, with no markup.</dd>
+        </div>
+        <div class="notes__item">
+          <dt>Build windows</dt>
+          <dd>Each window starts once the scope is agreed and the accounts it needs (phone number, WhatsApp Business, Google access) are in place.</dd>
+        </div>
+        <div class="notes__item">
+          <dt>Not sure which one fits?</dt>
+          <dd>Most processes touch more than one of these. Describe the problem instead and the scope gets worked out together. <a href="{{ site.routes.start }}">Start here</a>.</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="frame section close-band" aria-labelledby="svc-close">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="svc-close" class="t-h1" data-split>Pick one, or describe the <em>problem</em>.</h2>
+      <div class="cluster" style="--gap: var(--space-xs)">
+        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">Ask on WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
