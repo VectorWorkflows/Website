@@ -12,8 +12,34 @@
     margin-block-start: var(--space-xl);
   }
   .launch__label { max-inline-size: none; }
-  .launch__rule { font-family: var(--font-ui); color: var(--c-bone); max-inline-size: calc(64 * var(--ch-body)); text-wrap: pretty; }
-  .launch__rule span:not([data-copy]) { color: var(--c-bone-2); }
+  .launch__rule { font-family: var(--font-ui); color: var(--c-bone-2); max-inline-size: calc(64 * var(--ch-body)); text-wrap: pretty; }
+  .launch__rule .link-arrow { color: var(--c-bone); }
+
+  /* How prices combine: four short rules, read left to right */
+  .rules {
+    flex-basis: 100%;
+    display: grid;
+    margin: 0;
+    border-radius: var(--radius-l);
+    background: var(--c-raised-1);
+    box-shadow: inset 0 0 0 1px var(--edge-faint);
+  }
+  @media (min-width: 48rem) { .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 80rem) { .rules { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .rules__item { display: grid; gap: 0.25rem; align-content: start; padding: var(--space-s) var(--space-m); }
+  .rules__item + .rules__item { box-shadow: inset 0 1px 0 var(--edge-faint); }
+  @media (min-width: 48rem) {
+    .rules__item + .rules__item { box-shadow: none; }
+    .rules__item:nth-child(n + 3) { box-shadow: inset 0 1px 0 var(--edge-faint); }
+    .rules__item:nth-child(even) { box-shadow: inset 1px 0 0 var(--edge-faint); }
+    .rules__item:nth-child(4) { box-shadow: inset 1px 0 0 var(--edge-faint), inset 0 1px 0 var(--edge-faint); }
+  }
+  @media (min-width: 80rem) {
+    .rules__item:nth-child(n) { box-shadow: none; }
+    .rules__item + .rules__item { box-shadow: inset 1px 0 0 var(--edge-faint); }
+  }
+  .rules dt { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--c-lilac); }
+  .rules dd { margin: 0; font-family: var(--font-ui); font-weight: var(--weight-medium); color: var(--c-bone); text-wrap: pretty; }
 
   /* Group index: the three groups with their lowest price ------------------ */
   .group-index { margin-block-start: var(--space-xl); }
@@ -57,7 +83,7 @@
     .svc-grid:has(> :nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (min-width: 48rem) { .svc--featured { grid-column: span 2; } }
-  /* Three columns: the bundle takes two rows, its two free setups stack beside it */
+  /* Three columns: the website takes two rows, its two Starter pack setups stack beside it */
   @media (min-width: 80rem) { .svc--featured { grid-row: span 2; } }
 
   /* Service card ------------------------------------------------------------ */
@@ -69,7 +95,7 @@
     block-size: 100%;
     padding: var(--space-l) var(--space-m) var(--space-m);
   }
-  .svc__head { display: grid; gap: var(--space-xs); justify-items: start; }
+  .svc__head { display: grid; gap: var(--space-xs); justify-items: start; align-content: start; }
   .svc__flag { margin-block-end: var(--space-2xs); }
   .svc__name {
     font-family: var(--font-ui);
@@ -150,17 +176,88 @@
     text-decoration-thickness: 1px;
     text-decoration-color: color-mix(in oklch, var(--c-bone-3) 80%, transparent);
   }
-  .svc__free {
+  /* The add-on price: what this costs alongside a related system */
+  .svc__pair {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--c-bone-2);
+    max-inline-size: none;
+    text-wrap: pretty;
+  }
+  .svc__pair strong { font-weight: var(--weight-medium); color: var(--c-lilac); }
+  .svc__pair .icon { flex: none; inline-size: 1rem; block-size: 1rem; margin-block-start: 0.15em; color: var(--c-lilac); }
+
+  /* The Starter pack on the website card */
+  .svc__pack {
+    display: grid;
+    gap: var(--space-2xs);
+    justify-items: start;
+    inline-size: 100%;
+    margin-block: var(--space-2xs);
+    padding: var(--space-s);
+    border-radius: var(--radius-m);
+    background: var(--c-violet-wash);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--c-violet) 40%, transparent);
+  }
+  .svc__pack-name { display: grid; gap: 0.125rem; font-size: var(--step--1); color: var(--c-bone); max-inline-size: none; }
+  .svc__pack-name .t-label { color: var(--c-lilac); }
+  .svc__pack-now { font-family: var(--font-display); font-size: var(--step-3); line-height: 1; letter-spacing: -0.02em; color: var(--c-bone); }
+  .svc__pack .btn { margin-block-start: var(--space-2xs); }
+
+  /* Packs -------------------------------------------------------------------- */
+  .packs__intro { color: var(--c-bone-2); max-inline-size: calc(52 * var(--ch-body)); text-wrap: pretty; }
+  .packs { display: grid; margin: 0; padding: 0; list-style: none; }
+  .pack {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "name add" "what add" "price add";
+    align-items: center;
+    gap: 0.25rem var(--space-m);
+    padding-block: var(--space-m);
+  }
+  .pack::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--edge-strong), var(--edge-faint) 60%, transparent);
+  }
+  @media (min-width: 64rem) {
+    .pack { grid-template-columns: minmax(0, 12rem) minmax(0, 1fr) auto auto; grid-template-areas: "name what price add"; }
+  }
+  .pack__name { grid-area: name; font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.02em; color: var(--c-bone); }
+  .pack--featured .pack__name { color: var(--c-lilac); }
+  .pack__what { grid-area: what; color: var(--c-bone-2); font-size: var(--step--1); text-wrap: pretty; }
+  .pack__price { grid-area: price; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.125rem 0.625rem; max-inline-size: none; }
+  .pack__now { font-family: var(--font-display); font-size: var(--step-2); line-height: 1; letter-spacing: -0.02em; color: var(--c-bone); }
+  .pack__was { font-family: var(--font-display); color: var(--c-bone-3); text-decoration-thickness: 1px; }
+  .pack__own { flex-basis: 100%; font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-bone-3); }
+  @media (min-width: 64rem) { .pack__price { justify-content: flex-end; text-align: end; } }
+  .pack__add {
+    grid-area: add;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--c-lilac);
+    min-block-size: 2.75rem;
+    padding-inline: 0.75rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-raised-2);
+    box-shadow: inset 0 0 0 1px var(--edge);
+    font-family: var(--font-ui);
+    font-weight: var(--weight-medium);
+    font-size: var(--step--1);
+    color: var(--c-bone);
+    transition: background-color var(--dur-hover) var(--ease-out-soft), box-shadow var(--dur-hover) var(--ease-out-soft), transform var(--dur-press) var(--ease-out-soft);
   }
-  .svc__free .icon { inline-size: 0.875rem; block-size: 0.875rem; }
+  .pack__add .icon { inline-size: 1rem; block-size: 1rem; color: var(--c-lilac); }
+  @media (hover: hover) { .pack__add:hover { box-shadow: inset 0 0 0 1px var(--c-violet); } }
+  .pack__add:active { transform: scale(0.96); }
+  html:not(.bundle-ready) .pack__add, html:not(.bundle-ready) .svc__pack .btn { visibility: hidden; }
   .svc__ready {
     display: flex;
     align-items: flex-start;
@@ -174,7 +271,7 @@
   .svc__cond { color: var(--c-bone-3); }
   .svc__foot .btn { margin-block-start: var(--space-2xs); }
 
-  /* Featured (Starter bundle): wider, lists side by side on large screens */
+  /* Featured (Starter pack): wider, lists side by side on large screens */
   .svc--featured .svc__name { font-family: var(--font-display); font-weight: 400; font-size: var(--step-5); line-height: 1; letter-spacing: var(--tracking-heading); }
   @container (min-width: 44rem) {
     .svc--featured .svc__core {
@@ -289,7 +386,7 @@
     pointer-events: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "what sum" "save actions";
+    grid-template-areas: "offer offer" "what sum" "save actions";
     align-items: center;
     gap: 0.25rem var(--space-m);
     inline-size: min(100%, 52rem);
@@ -301,8 +398,9 @@
     box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit), var(--shadow-float);
   }
   @media (min-width: 48rem) {
-    .bundle__inner { grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "what sum save actions"; }
+    .bundle__inner { grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "offer offer offer offer" "what sum save actions"; }
   }
+  .bundle__offer { grid-area: offer; margin-block-end: 0.375rem; margin-inline-start: -0.5rem; }
   .bundle__what { grid-area: what; display: grid; gap: 0.125rem; font-family: var(--font-ui); font-weight: var(--weight-medium); color: var(--c-bone); max-inline-size: none; }
   .bundle__what .t-label { color: var(--c-bone-3); font-weight: 400; }
   .bundle__sum { grid-area: sum; display: flex; align-items: baseline; gap: 0.5rem; max-inline-size: none; }

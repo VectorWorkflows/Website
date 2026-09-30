@@ -19,6 +19,7 @@ critical_css: components/page-head.css, pages/studio.css
         <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
+      <p class="studio-hero__note fade-in" style="--d:4">For a call, please pick a slot at least an hour from now.</p>
     </div>
     <figure class="portrait fade-in" style="--d:1" data-portrait>
       <div class="portrait__frame">{{{ portrait }}}</div>
@@ -43,10 +44,15 @@ critical_css: components/page-head.css, pages/studio.css
         </div>
 
         <ol class="timeline__list" role="list">
+          <li class="tl tl--origin">
+            <p class="tl__when">2022</p>
+            <h3 class="tl__title">Finished school</h3>
+            <p>I completed my schooling at School of Excellence. The year after, the teaching and the degree began, side by side.</p>
+          </li>
           <li class="tl">
             <p class="tl__when">2023</p>
-            <h3 class="tl__title">Teaching at a neighbourhood institute</h3>
-            <p>I taught classes 6 to 9 at Reliance Coaching Centre, a neighbourhood institute in Delhi.</p>
+            <h3 class="tl__title">Teaching middle and secondary school students</h3>
+            <p>I taught classes 6 to 9 at Reliance Coaching Centre in Delhi (no relation to Reliance Industries).</p>
             <p class="tl__taught"><span class="t-label">What it taught me</span>How to explain something so it lands with people who don't care about jargon. It's still how I explain a system to an owner.</p>
           </li>
           <li class="tl">

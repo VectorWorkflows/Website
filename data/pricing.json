@@ -1,35 +1,39 @@
 {
-  "_comment": "Single source of truth for every price, the launch end date and every build time on the site. build.py reads this file; pages never contain a price. Amounts are whole rupees. After launch_end, the build renders standard prices only and drops the launch label and strike-through.",
+  "_comment": "Single source of truth for every price, the launch end date and every build time on the site. build.py reads this file; pages never contain a price. Amounts are whole rupees. After launch_end, the build renders standard prices only and drops the launch label and strike-through. Totals are never written here: pack prices and quotes are worked out from these rules, the same way in build.py and in pricing.js.",
 
   "currency": "INR",
   "symbol": "₹",
   "launch_end": "2026-11-30",
 
+  "_rules": "The first system you pick is at its full price. Each further system is at its bundle rate, or at the related add-on rate when it builds on one you're already paying for. Setups are at their own price, or the setup add-on rate alongside a related system. An add-on always rides on a system you're paying for that costs at least as much on its own, never on another add-on or on a setup. A service marked never_addon (the website) is always a main build.",
+
   "tiers": {
     "standard": {
+      "kind": "system",
       "launch": 2999,
       "standard": 4999,
-      "bundle": 1999,
-      "counts_toward_bundle": true
+      "bundle": 1999
     },
     "phone": {
+      "kind": "system",
       "launch": 3999,
       "standard": 5999,
-      "bundle": 2999,
-      "counts_toward_bundle": true
+      "bundle": 2999
     },
     "setup": {
+      "kind": "setup",
       "launch": 1499,
-      "standard": 2499,
-      "free_with": "website",
-      "counts_toward_bundle": false
+      "standard": 2499
     }
   },
 
-  "bundle_min": 2,
+  "addon": {
+    "system": 1000,
+    "setup": 500
+  },
 
   "services": {
-    "website":                 { "tier": "standard", "days": 3 },
+    "website":                 { "tier": "standard", "days": 3, "never_addon": true },
     "google-business-profile": { "tier": "setup",    "days": 2 },
     "whatsapp-business":       { "tier": "setup",    "days": 2 },
     "whatsapp-bot":            { "tier": "standard", "days": 5 },
@@ -42,6 +46,39 @@
     "review-requester":        { "tier": "standard", "days": 5 },
     "telegram-team-bot":       { "tier": "standard", "days": 5 }
   },
+
+  "_related": "Pairs that share groundwork, so the second one costs the add-on rate. Pairs of two systems work either way round. A setup pairs with the systems listed beside it.",
+  "related": [
+    ["missed-call-responder", "ivr"],
+    ["missed-call-responder", "enquiry-tracker"],
+    ["whatsapp-bot", "enquiry-tracker"],
+    ["website", "enquiry-tracker"],
+    ["whatsapp-bot", "appointment-reminders"],
+    ["appointment-reminders", "review-requester"],
+    ["appointment-reminders", "repeat-customer-tracker"],
+    ["review-requester", "repeat-customer-tracker"],
+    ["job-site-log", "telegram-team-bot"],
+    ["google-business-profile", "website"],
+    ["google-business-profile", "review-requester"],
+    ["whatsapp-business", "website"],
+    ["whatsapp-business", "whatsapp-bot"],
+    ["whatsapp-business", "appointment-reminders"],
+    ["whatsapp-business", "review-requester"],
+    ["whatsapp-business", "repeat-customer-tracker"]
+  ],
+
+  "_packs": "Named combinations the bundle builder suggests. Their prices are worked out from the rules above, never written down.",
+  "packs": [
+    { "id": "starter",  "name": "Starter pack",     "services": ["website", "google-business-profile", "whatsapp-business"], "featured": true },
+    { "id": "whatsapp", "name": "WhatsApp pack",    "services": ["whatsapp-bot", "whatsapp-business"] },
+    { "id": "phone",    "name": "Phone pack",       "services": ["missed-call-responder", "ivr"] },
+    { "id": "leads",    "name": "Lead desk",        "services": ["missed-call-responder", "enquiry-tracker"] },
+    { "id": "bookings", "name": "Bookings pack",    "services": ["appointment-reminders", "review-requester"] },
+    { "id": "return",   "name": "Return-visit pack", "services": ["repeat-customer-tracker", "review-requester"] },
+    { "id": "team",     "name": "Team pack",        "services": ["job-site-log", "telegram-team-bot"] }
+  ],
+
+  "talk_from": 3,
 
   "included_year_one": [
     "Free hosting",

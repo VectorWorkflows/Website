@@ -5,7 +5,7 @@ path: /start/
 nav: start
 body_class: page-start
 js: pricing, intake
-critical_css: components/page-head.css, pages/start.css
+critical_css: components/page-head.css, components/offer.css, pages/start.css
 ---
 
 <section class="frame start-head" aria-labelledby="page-title">
@@ -37,7 +37,7 @@ critical_css: components/page-head.css, pages/start.css
       <!-- 1 · Services -->
       <fieldset class="intake__step is-current" data-step="1" data-name="Services">
         <legend class="intake__q" tabindex="-1">What would you like set up?</legend>
-        <p class="intake__hint" id="hint-svc">Pick as many as you like. <span data-copy>{{ pricing.bundle_rule }}</span> {{ pricing.free_rule }}</p>
+        <p class="intake__hint" id="hint-svc">Pick as many as you like. <span data-copy>{{ pricing.bundle_rule }}</span></p>
 
         {% for g in site.service_groups %}
         <fieldset class="intake__group chips">
@@ -73,6 +73,13 @@ critical_css: components/page-head.css, pages/start.css
           </p>
           <p class="quote__save" data-quote-save hidden></p>
           <p class="sr-only" aria-live="polite" data-quote-live></p>
+          <div class="offer quote__offer" data-offer hidden>
+            <p class="offer__body"><span class="offer__tag">Suggested</span><span class="offer__title" data-offer-title></span> <span class="offer__text" data-offer-text></span></p>
+            <button type="button" class="offer__add" data-offer-add>{% icon "plus" %}<span data-offer-label>Add it</span></button>
+          </div>
+          <div class="offer offer--talk quote__offer" data-talk hidden>
+            <p class="offer__body"><span class="offer__tag">{{ pricing.talk_tag }}</span><span class="offer__text">{{ pricing.talk_rule }} Choose "Book a 15-min call" at the last step.</span></p>
+          </div>
         </div>
         <p class="field-error" id="err-svc" data-error="svc" hidden>{% icon "warning-circle" %}<span>Pick at least one service, or "Not sure — help me choose".</span></p>
       </fieldset>
@@ -104,18 +111,6 @@ critical_css: components/page-head.css, pages/start.css
       <fieldset class="intake__step" data-step="3" data-name="How to continue">
         <legend class="intake__q" tabindex="-1">How would you like to continue?</legend>
         <p class="intake__hint">WhatsApp and email open with your answers filled in. Nothing leaves this page until you press send there.</p>
-        <div class="fields">
-          <label class="field">
-            <span class="field__label">Your name</span>
-            <input type="text" name="name" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="err-name">
-            <span class="field-error" id="err-name" data-error="name" hidden>{% icon "warning-circle" %}<span>Add your name so I know who I'm talking to.</span></span>
-          </label>
-          <label class="field">
-            <span class="field__label">Business</span>
-            <input type="text" name="business" autocomplete="organization" required minlength="2" maxlength="120" aria-describedby="err-business">
-            <span class="field-error" id="err-business" data-error="business" hidden>{% icon "warning-circle" %}<span>Add your business name, even a rough one.</span></span>
-          </label>
-        </div>
         <fieldset class="intake__group">
           <legend class="intake__sub">Continue with</legend>
           <div class="opts opts--contact">
@@ -134,11 +129,29 @@ critical_css: components/page-head.css, pages/start.css
             <label class="opt opt--contact">
               <input type="radio" name="via" value="call" required>
               <span class="opt__icon" aria-hidden="true">{% icon "calendar-blank" class="icon--m" %}</span>
-              <span class="opt__body"><span class="opt__name">Book a 15-min call</span><span class="opt__desc">Opens the booking page in a new tab</span></span>
+              <span class="opt__body"><span class="opt__name">Book a 15-min call</span><span class="opt__desc">Pick a time on the booking page</span></span>
               <span class="opt__check" aria-hidden="true">{% icon "check" %}</span>
             </label>
           </div>
         </fieldset>
+        <!-- Name and business are asked once: here for WhatsApp and email,
+             on the booking page for a call -->
+        <div class="fields" data-who>
+          <label class="field">
+            <span class="field__label">Your name</span>
+            <input type="text" name="name" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="err-name">
+            <span class="field-error" id="err-name" data-error="name" hidden>{% icon "warning-circle" %}<span>Add your name so I know who I'm talking to.</span></span>
+          </label>
+          <label class="field">
+            <span class="field__label">Business</span>
+            <input type="text" name="business" autocomplete="organization" required minlength="2" maxlength="120" aria-describedby="err-business">
+            <span class="field-error" id="err-business" data-error="business" hidden>{% icon "warning-circle" %}<span>Add your business name, even a rough one.</span></span>
+          </label>
+        </div>
+        <div class="callnote" data-callnote hidden>
+          <p>{% icon "calendar-blank" %}<span>The booking page asks for your name and business, so there's nothing else to fill in here. Your answers so far go into the booking notes.</span></p>
+          <p>{% icon "clock" %}<span><strong>Please pick a slot at least an hour from now</strong>, so there's time to read your answers before we talk.</span></p>
+        </div>
       </fieldset>
 
       <div class="intake__nav">
@@ -168,7 +181,7 @@ critical_css: components/page-head.css, pages/start.css
     </div>
   </noscript>
 
-  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> · <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> (an hour or more ahead) · <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
 </section>
 
 <script type="application/json" id="pricing-data">{{{ pricing.json }}}</script>

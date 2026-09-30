@@ -2,7 +2,7 @@
   "title": "Site Fault Tracker",
   "system": "site-fault-tracker",
   "base": "14:18:00",
-  "summary": "Replay with simulated data. A field worker on the Crestline Solar team sends the WhatsApp bot a photo and a short note: an inverter housing is cracked at Block C of the Riverside site. The bot acknowledges, then replies with the fields it pulled out: the location from the message, the worker's own description, and a severity flag marked as a rough estimate. One timestamped row is added to the team's Site faults sheet, ready for review.",
+  "summary": "Replay with simulated data. A field worker on the Crestline Solar team sends the WhatsApp bot a photo and a short note: an inverter housing is cracked at Block C of the Riverside site. The bot acknowledges, then replies that it has logged the report as SF-0141, with the fields it pulled out: the location from the message, the worker's own description, and a severity flag marked as a rough estimate. In the team's Site faults sheet, SF-0141 is added below the day's earlier reports (a loose cable tray, now resolved; chipped panel glass, assigned; water pooling by a cabinet, in progress), with its time, location, issue, estimated severity, status New and the photo attached.",
   "lanes": [
     {
       "id": "a",
@@ -21,7 +21,7 @@
       "icon": "table",
       "anchor": "bottom",
       "height": {
-        "narrow": "18rem",
+        "narrow": "19rem",
         "wide": "27rem"
       },
       "view": "owner"
@@ -65,7 +65,7 @@
       "lane": "a",
       "type": "whatsapp",
       "dir": "out",
-      "text": "Logged with these details:",
+      "text": "Logged as SF-0141 with these details:",
       "fields": [
         {
           "k": "Location",
@@ -97,62 +97,125 @@
       "lane": "b",
       "type": "sheet",
       "id": "fault",
-      "sheet": "Site faults",
+      "sheet": "Site faults · Riverside",
       "columns": [
         {
+          "key": "ref",
+          "label": "Ref",
+          "show": "mid"
+        },
+        {
           "key": "time",
-          "label": "Logged"
+          "label": "Logged",
+          "show": "wide"
         },
         {
           "key": "location",
-          "label": "Location"
+          "label": "Location",
+          "show": "mid"
         },
         {
           "key": "desc",
-          "label": "Description"
+          "label": "Issue"
         },
         {
           "key": "severity",
-          "label": "Severity"
+          "label": "Severity (est.)",
+          "show": "mid"
+        },
+        {
+          "key": "status",
+          "label": "Status"
         },
         {
           "key": "photo",
-          "label": "Photo"
+          "label": "Photo",
+          "show": "wide"
         }
       ],
       "row": {
+        "ref": "SF-0141",
         "time": "14:18",
-        "location": "Block C, Riverside",
+        "location": "Block C",
         "desc": "Inverter housing cracked",
-        "severity": "Moderate (rough)",
-        "photo": "site_photo.jpg"
+        "severity": "Moderate",
+        "status": "New",
+        "photo": "IMG ↗"
       },
       "tones": {
-        "severity": "wait"
+        "status": "warn"
       },
       "log": {
         "sys": "sheets",
         "event": "SHEET_APPEND",
         "kv": {
           "sheet": "Site faults",
+          "ref": "SF-0141",
           "location": "Block C, Riverside",
           "photo": "attached"
         }
-      }
+      },
+      "before": [
+        {
+          "ref": "SF-0138",
+          "time": "09:12",
+          "location": "Block A",
+          "desc": "Loose cable tray",
+          "severity": "Low",
+          "status": "Resolved",
+          "photo": "IMG ↗",
+          "_tones": {
+            "status": "ok"
+          }
+        },
+        {
+          "ref": "SF-0139",
+          "time": "11:40",
+          "location": "Block B",
+          "desc": "Panel glass chipped",
+          "severity": "Moderate",
+          "status": "Assigned",
+          "photo": "IMG ↗",
+          "_tones": {
+            "status": "wait"
+          }
+        },
+        {
+          "ref": "SF-0140",
+          "time": "12:55",
+          "location": "Gate 2",
+          "desc": "Water pooling by cabinet",
+          "severity": "High",
+          "status": "In progress",
+          "photo": "IMG ↗",
+          "_tones": {
+            "status": "wait"
+          }
+        }
+      ]
     },
     {
       "t": "00:08",
       "lane": "b",
       "type": "event",
-      "text": "One structured row, ready for someone to review",
+      "text": "SF-0141 sits with the week's other reports, dated, photographed and open for review",
       "log": {
         "sys": "bot",
         "event": "LOG_COMPLETE",
         "kv": {
           "sheet": "Site faults",
-          "status": "ready_for_review"
+          "ref": "SF-0141",
+          "status": "new"
         }
       }
     }
-  ]
+  ],
+  "story": {
+    "label": "Field worker's WhatsApp → team sheet",
+    "icon": "whatsapp-logo",
+    "height": {
+      "narrow": "33rem",
+      "wide": "31rem"
+    }
+  }
 }

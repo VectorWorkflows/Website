@@ -6,6 +6,8 @@ nav: work
 system: dynamic-scheduler
 body_class: page-case
 critical_css: components/page-head.css, components/replay.css, pages/case.css
+css: components/wake.css
+js: wake
 ---
 
 {% include "case-head" %}
@@ -39,6 +41,35 @@ critical_css: components/page-head.css, components/replay.css, pages/case.css
     <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>How it works</p></div>
     <div class="g-body">
       <h2 id="how-title" class="t-h2-s sec-head" data-split>Set templates once, <em>adapt</em> every day.</h2>
+
+      <div class="card wake" data-wake>
+        <div class="card__core wake__core">
+          <div class="wake__head">
+            <div class="stack flow-2xs">
+              <h3 class="wake__title">Move your wake-up time</h3>
+              <p class="wake__intro">Inside a zone, the day slides with you. Cross into the next zone and a different template takes over. These three are an example: in the bot you build your own, and choose where each one starts.</p>
+            </div>
+            <p class="wake__readout">
+              <span class="t-label">Woke up at</span>
+              <output class="wake__time" for="wake-range" aria-live="off" data-wake-time>06:30</output>
+              <span class="rp-pill rp-pill--ok wake__tpl" data-wake-tpl>Early template</span>
+            </p>
+          </div>
+
+          <div class="wake__control">
+            <label class="sr-only" for="wake-range">Wake-up time</label>
+            <input class="wake__range" type="range" id="wake-range" min="180" max="1080" step="5" value="390" data-wake-range aria-valuetext="06:30, early template">
+            <ol class="wake__zones" role="list" aria-hidden="true" data-wake-zones></ol>
+          </div>
+
+          <div class="wake__day">
+            <div class="wake__axis" aria-hidden="true" data-wake-axis></div>
+            <ol class="wake__list" role="list" aria-label="Today's plan" data-wake-list></ol>
+          </div>
+          <noscript><p class="wake__intro">This demo needs JavaScript. The replay above shows the same idea: a late /awake swaps in the late template.</p></noscript>
+        </div>
+      </div>
+
       <ol class="steps" role="list" data-reveal-group>
         <li><span class="steps__n">01</span><div><h3>Sign in with Google</h3><p>Connect your calendar once: a standard Google consent screen asks you to allow access to your calendar events.</p></div></li>
         <li><span class="steps__n">02</span><div><h3>Define three versions of your day</h3><p>Build a schedule for a date by hand and save it as your early, normal or late template, or start from the defaults.</p></div></li>

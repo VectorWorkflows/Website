@@ -5,6 +5,7 @@
   /* Hero: Sam, with the portrait ------------------------------------------ */
   .studio-hero__grid { row-gap: var(--space-xl); align-items: start; }
   .studio-hero__origin { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.04em; color: var(--c-bone-3); }
+  .studio-hero__note { font-size: var(--step--1); color: var(--c-bone-3); margin-block-start: calc(-1 * var(--space-s)); }
   .portrait { margin: 0; display: grid; gap: var(--space-xs); max-inline-size: 24rem; }
   .portrait__frame {
     position: relative;
@@ -30,8 +31,9 @@
   .timeline {
     display: grid;
     grid-template-columns: 1.75rem minmax(0, 1fr);
-    grid-template-rows: repeat(5, auto);
+    grid-template-rows: repeat(6, auto);
     column-gap: var(--space-s);
+    padding-block-start: var(--space-xl);
   }
   @media (min-width: 64rem) { .timeline { grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: var(--space-m); } }
   .timeline__list {
@@ -39,12 +41,24 @@
     grid-row: 1 / -1;
     display: grid;
     grid-template-rows: subgrid;
+    position: relative;
     margin: 0;
     padding: 0;
     list-style: none;
   }
+  /* The line doesn't start at the first dot: it fades in from above, the
+     years before school ended running into the story */
+  .timeline__list::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block: calc(-1 * var(--space-xl)) auto;
+    inline-size: 1px;
+    block-size: calc(var(--space-xl) + 0.55rem);
+    background: linear-gradient(180deg, transparent, var(--edge-violet));
+  }
   /* The thread spans the four rows from 2023 to April 2026 */
-  .thread { grid-column: 1; grid-row: 1 / 5; position: relative; display: grid; justify-items: center; align-content: start; }
+  .thread { grid-column: 1; grid-row: 2 / 6; position: relative; display: grid; justify-items: center; align-content: start; }
   .thread__line {
     position: absolute;
     inset-block: 0.55rem 1.3rem;
@@ -103,6 +117,9 @@
   }
   .tl--milestone::after { background: var(--c-ground); box-shadow: inset 0 0 0 2px var(--c-lilac-dim), 0 0 0 4px var(--c-ground); }
   .tl--now::after { background: var(--c-lilac); }
+  .tl--origin::after { background: var(--c-ground); box-shadow: inset 0 0 0 2px var(--c-violet), 0 0 0 4px var(--c-ground); }
+  .tl--origin { padding-block-end: var(--space-l); }
+  .tl--origin .tl__title { font-size: var(--step-1); }
   .tl__when { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--c-lilac); }
   .tl__title { font-size: var(--step-2); letter-spacing: -0.02em; }
   .tl--milestone .tl__title { font-size: var(--step-0); color: var(--c-bone-2); }

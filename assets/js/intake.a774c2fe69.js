@@ -69,26 +69,36 @@ if (form && pricing) {
   const quoteBox = $('[data-quote]');
   const totalEl = $('[data-quote-total]');
   let liveTimer = 0;
+  const addPicks = (slugs) => {
+    boxes.forEach((b) => { if (slugs.includes(b.value)) b.checked = true; });
+    unsure.checked = false;
+    updateQuote();
+    save();
+    summarise();
+  };
   const updateQuote = () => {
     const q = pricing.quote(picked());
-    // Chips show what each pick costs in this selection (setups turn free)
-    const free = new Set(q.lines.filter((l) => l.price === 0).map((l) => l.slug));
+    // Chips show what each pick costs in this selection: a related add-on
+    // shows its add-on price, an extra system its bundle rate
     boxes.forEach((b) => {
       const tag = b.parentElement.querySelector('.chip__price');
-      const tier = pricing.data.tiers[pricing.data.services[b.value].tier];
-      const isFree = free.has(b.value) || (tier.freeWith && picked().includes(tier.freeWith));
-      tag.textContent = isFree ? 'Free' : tag.dataset.price;
-      tag.classList.toggle('is-free', !!isFree);
+      const line = q.lines.find((l) => l.slug === b.value);
+      const cheaper = line && line.basis !== 'own';
+      tag.textContent = cheaper ? `${line.basis === 'addon' ? '+' : ''}${pricing.money(line.price)}` : tag.dataset.price;
+      tag.classList.toggle('is-free', !!cheaper);
     });
     quoteBox.hidden = !q.count;
+    $('[data-talk]').hidden = !q.talk;
+    if (q.talk) $('[data-offer]').hidden = true;
+    else pricing.renderOffer($('[data-offer]'), picked(), addPicks);
     if (!q.count) {
       totalEl.dataset.value = '0';
       return q;
     }
-    $('[data-quote-count]').textContent = `${q.count} service${q.count === 1 ? '' : 's'} ·`;
+    $('[data-quote-count]').textContent = `${q.pack ? q.pack.name : `${q.count} service${q.count === 1 ? '' : 's'}`} ·`;
     pricing.countTo(totalEl, q.total);
     const save$ = $('[data-quote-save]');
-    const notes = q.lines.filter((l) => l.note).map((l) => `${l.name}: ${l.note}`);
+    const notes = q.lines.filter((l) => l.note).map((l) => `${l.name} ${pricing.money(l.price)}, ${l.note}`);
     save$.hidden = q.saving <= 0;
     save$.textContent = q.saving > 0
       ? `You save ${pricing.money(q.saving)} against standard prices${notes.length ? `. ${notes.join(' · ')}.` : '.'}`
@@ -124,8 +134,12 @@ if (form && pricing) {
     if (msg) msg.hidden = !on;
     controls(name).forEach((el) => el && el.setAttribute('aria-invalid', String(on)));
   };
+  // Booking a call: the booking page asks for name and business, so this
+  // form doesn't (asked once, not twice)
+  const byCall = () => form.elements.via.value === 'call';
   const valid = (name) => {
     if (name === 'svc') return picked().length > 0 || unsure.checked;
+    if ((name === 'name' || name === 'business') && byCall()) return true;
     const els = form.elements[name];
     if (els instanceof RadioNodeList) return !!els.value;
     return els.value.trim().length >= (Number(els.getAttribute('minlength')) || 1);
@@ -177,6 +191,10 @@ if (form && pricing) {
         );
       }
     }
+    const call = byCall();
+    $('[data-who]').hidden = call;
+    $('[data-callnote]').hidden = !call;
+    if (call) ['name', 'business'].forEach((f) => showError(f, false));
     form.querySelector('[data-count]').textContent = n;
     form.querySelectorAll('.intake__bar li').forEach((li, i) => li.classList.toggle('is-done', i < n));
     backBtn.hidden = n === 1;
@@ -215,15 +233,18 @@ if (form && pricing) {
   });
 
   // --- compose and hand off ----------------------------------------------
-  const compose = (d) => {
+  // For a call the booking page already has the name and business, so the
+  // notes skip the greeting
+  const compose = (d, { greet = true } = {}) => {
     const q = pricing.quote(d.svc);
-    const lines = [`Hi Vector Workflows, I'm ${d.name} from ${d.business}.`, ''];
+    const lines = greet ? [`Hi Vector Workflows, I'm ${d.name} from ${d.business}.`, ''] : [];
     if (d.unsure || !q.count) {
       lines.push("What I need: not sure yet, I'd like help choosing.");
     } else {
       lines.push('Services:');
-      q.lines.forEach((l) => lines.push(`· ${l.name}${l.note ? ` (${l.note})` : ''}`));
+      q.lines.forEach((l) => lines.push(`· ${l.name} ${pricing.money(l.price)}${l.note ? ` (${l.note})` : ''}`));
       lines.push(`Quoted total: ${pricing.describe(q)}`);
+      if (q.talk) lines.push("I'd like to talk the price through for these.");
     }
     lines.push(`Timeline: ${d.timeline}`);
     if (d.process) lines.push('', 'How we handle this today:', d.process);
@@ -240,14 +261,15 @@ if (form && pricing) {
 
   const send = () => {
     const d = read();
-    const message = compose(d);
+    const message = compose(d, { greet: d.via !== 'call' });
     const reopen = $('[data-reopen]');
     let url;
     if (d.via === 'call') {
-      url = config.cal;
+      // Cal.com prefills its "Additional notes" field from ?notes=
+      url = `${config.cal}?notes=${encodeURIComponent(message)}`;
       $('[data-done-badge]').textContent = 'Booking page open';
-      $('[data-done-title]').textContent = 'Pick a time that suits you.';
-      $('[data-done-text]').textContent = 'The booking page should have opened in a new tab. If it didn\'t, use the button below. Your answers are here if you want to paste them into the booking notes.';
+      $('[data-done-title]').textContent = 'Pick a time at least an hour from now.';
+      $('[data-done-text]').textContent = 'The booking page should have opened in a new tab, with your answers in the notes. Please choose a slot an hour or more ahead, so there\'s time to read them first. If the page didn\'t open, use the button below.';
       $('[data-reopen-label]').textContent = 'Open the booking page';
     } else if (d.via === 'email') {
       const subject = d.unsure || !d.svc.length ? `Project enquiry · ${d.business}` : `Project enquiry: ${d.svc.length} service${d.svc.length === 1 ? '' : 's'} · ${d.business}`;

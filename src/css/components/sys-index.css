@@ -72,10 +72,13 @@
     .sys-row__meta { align-self: end; }
     .sys-row__line { align-self: start; }
   }
+  /* Once motion.js tracks the pointer (.is-tracked), it marks the row under
+     it with .is-hover, which stays right while the page scrolls under a
+     still mouse; :hover is the fallback until then */
   @media (hover: hover) {
-    .sys-row:hover::before { opacity: 1; }
-    .sys-row:hover .sys-row__name { transform: translateX(0.5rem); }
-    .sys-row:hover .sys-row__go { transform: rotate(45deg); background: var(--c-violet); }
+    .sys:not(.is-tracked) .sys-row:hover::before, .sys-row.is-hover::before { opacity: 1; }
+    .sys:not(.is-tracked) .sys-row:hover .sys-row__name, .sys-row.is-hover .sys-row__name { transform: translateX(0.5rem); }
+    .sys:not(.is-tracked) .sys-row:hover .sys-row__go, .sys-row.is-hover .sys-row__go { transform: rotate(45deg); background: var(--c-violet); }
   }
 
   /* Trailing preview (desktop pointer only; positioned by motion.js) */

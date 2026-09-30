@@ -1,12 +1,12 @@
 ---
 title: Services and prices · Vector Workflows
-description: Websites, Google and WhatsApp Business setup, WhatsApp bots, missed-call responders and small automations for local businesses. Every service has a price and a build time on the page, with bundle pricing when you pick two or more.
+description: Websites, Google and WhatsApp Business setup, WhatsApp bots, missed-call responders and small automations for local businesses. Every service has a price and a build time on the page, and related services cost less together.
 path: /services/
 nav: services
 schema: organization, services
 body_class: page-services
 js: pricing, bundle
-critical_css: components/page-head.css, components/card.css, pages/services.css
+critical_css: components/page-head.css, components/card.css, components/offer.css, pages/services.css
 ---
 
 <section class="frame page-head" aria-labelledby="page-title">
@@ -20,7 +20,10 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
 
   <div class="launch fade-in" style="--d:2">
     {% if pricing.launch %}<p class="launch__label"><span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span></p>{% endif %}
-    <p class="launch__rule"><span data-copy>{{ pricing.bundle_rule }}</span> <span>{{ pricing.free_rule }}</span></p>
+    <dl class="rules" aria-label="How prices combine">
+      {% for r in pricing.rules %}<div class="rules__item"><dt>{{ r.k }}</dt><dd data-copy>{{ r.v }}</dd></div>{% endfor %}
+    </dl>
+    <p class="launch__rule">{{ pricing.talk_rule }} <a class="link-arrow" href="#packs">See the packs {% icon "arrow-down" %}</a></p>
   </div>
 
   <nav class="group-index fade-in" style="--d:3" aria-label="Service groups">
@@ -74,7 +77,14 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
 
         <div class="svc__foot">
           <p class="svc__price" data-copy><span class="svc__now">{{ s.price.now }}</span>{% if s.price.was %}<s class="svc__was"><span class="sr-only">standard price </span>{{ s.price.was }}</s>{% endif %}</p>
-          {% if s.price.free_with %}<p class="svc__free">{% icon "check" %}Free with a website</p>{% endif %}
+          {% if s.price.addon %}<p class="svc__pair">{% icon "plus" %}<span><strong data-copy>{{ s.price.addon }}</strong> {{ s.price.addon_with }}</span></p>{% endif %}
+          {% if s.pack %}
+          <div class="svc__pack">
+            <p class="svc__pack-name"><span class="t-label">{{ s.pack.name }}</span><span>{{ s.pack.label }}</span></p>
+            <p class="svc__price" data-copy><span class="svc__pack-now">{{ s.pack.price }}</span>{% if s.pack.was %}<s class="svc__was"><span class="sr-only">standard price </span>{{ s.pack.was }}</s>{% endif %}</p>
+            <button type="button" class="btn btn--sm" data-pack-add="{{ s.pack.slugs }}"><span class="btn__label">Add the {{ s.pack.name }}</span><span class="btn__icon">{% icon "plus" %}</span></button>
+          </div>
+          {% endif %}
           <p class="svc__ready">{% icon "clock" %}<span>{{ s.price.ready }}{% if s.condition_text %} <span class="svc__cond">({{ s.condition_text }})</span>{% endif %}</span></p>
           <div class="svc__actions">
             <label class="pick">
@@ -91,6 +101,28 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
   </div>
 </section>
 {% endfor %}
+
+<section class="frame section" id="packs" aria-labelledby="packs-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">+</span><span class="index-label__rule"></span>Packs</p></div>
+    <div class="g-body stack flow-m">
+      <div class="stack flow-xs">
+        <h2 id="packs-title" class="t-h2-s" data-split>Better <em>together</em>.</h2>
+        <p class="packs__intro">These share their groundwork, so the second one costs a fraction of its own price. The bundle bar suggests the right one as you pick.</p>
+      </div>
+      <ol class="packs" role="list">
+        {% for pk in pricing.packs %}
+        <li class="pack{% if pk.featured %} pack--featured{% endif %}">
+          <p class="pack__name">{{ pk.name }}</p>
+          <p class="pack__what">{{ pk.label }}</p>
+          <p class="pack__price" data-copy><span class="pack__now">{{ pk.price }}</span>{% if pk.was %}<s class="pack__was"><span class="sr-only">standard price </span>{{ pk.was }}</s>{% endif %}<span class="pack__own">{{ pk.own }} separately</span></p>
+          <button type="button" class="pack__add" data-pack-add="{{ pk.slugs }}" aria-label="Add the {{ pk.name }} to your bundle">{% icon "plus" %}<span>Add</span></button>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
 
 <section class="frame section" id="included" aria-labelledby="included-title">
   <div class="grid">
@@ -136,7 +168,7 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
         </div>
         <div class="faq__item">
           <dt>What if I'm not sure which ones I need?</dt>
-          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <a href="{{ site.cal_url }}" target="_blank" rel="noopener">book a 15-minute call</a>. Describe how your week runs and you'll get a straight answer on what's worth setting up.</dd>
+          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <a href="{{ site.cal_url }}" target="_blank" rel="noopener">book a 15-minute call</a> (please pick a slot at least an hour ahead). Describe how your week runs and you'll get a straight answer on what's worth setting up.</dd>
         </div>
       </dl>
     </div>
@@ -157,6 +189,14 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
 
 <div class="bundle" data-bundle inert>
   <div class="bundle__inner">
+    <div class="offer bundle__offer" data-offer hidden>
+      <p class="offer__body"><span class="offer__tag">Suggested</span><span class="offer__title" data-offer-title></span> <span class="offer__text" data-offer-text></span></p>
+      <button type="button" class="offer__add" data-offer-add>{% icon "plus" %}<span data-offer-label>Add it</span></button>
+    </div>
+    <div class="offer offer--talk bundle__offer" data-talk hidden>
+      <p class="offer__body"><span class="offer__tag">{{ pricing.talk_tag }}</span><span class="offer__text">{{ pricing.talk_rule }}</span></p>
+      <a class="offer__add" data-talk-link href="{{ site.cal_url }}" target="_blank" rel="noopener">{% icon "calendar-blank" %}<span>Talk price</span></a>
+    </div>
     <p class="bundle__what"><span class="t-label">Your bundle</span><span data-bundle-count></span></p>
     <p class="bundle__sum"><span class="bundle__total" data-bundle-total data-copy></span>{% if pricing.launch %}<span class="bundle__when">at launch pricing</span>{% endif %}</p>
     <p class="bundle__save" data-bundle-save></p>

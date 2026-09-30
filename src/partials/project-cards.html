@@ -21,7 +21,7 @@
         <p class="project__svc"><span class="t-label">Offered as</span>{% for r in site.sys.site_fault_tracker.related %}<a href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}</a>{% endfor %}</p>
         <a class="link-arrow project__go" href="{{ site.routes.work }}site-fault-tracker/">Read the case study {% icon "arrow-right" %}</a>
       </div>
-      <div class="project__replay">{% replay "site-fault" id="work-sft" view="customer" %}</div>
+      <div class="project__replay">{% replay "site-fault" id="work-sft" view="story" %}</div>
     </div>
   </article>
 

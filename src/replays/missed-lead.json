@@ -2,7 +2,7 @@
   "title": "Missed Lead Responder",
   "system": "missed-lead-responder",
   "base": "10:42:00",
-  "summary": "Replay with simulated data. A call to Northgate Plumbing from a number ending 0182 goes unanswered. Four seconds later the caller gets an SMS apologising and asking what they need. The owner gets a Telegram alert with Call back and Mark handled buttons, and a row is added to the Leads sheet marked Awaiting reply. About a minute later the caller replies that their kitchen sink is leaking; the sheet row updates to Replied, the owner is pinged again, and a reminder is set in case the lead stays unhandled.",
+  "summary": "Replay with simulated data. A call to Northgate Plumbing from a number ending 0182 goes unanswered. Four seconds later the caller gets an SMS apologising and asking what they need. The owner gets a Telegram alert with Call back and Mark handled buttons, and a row is added to the Leads sheet marked Awaiting reply. About a minute later the caller replies that their kitchen sink is leaking; the row updates to Replied and the owner is pinged again. The caller is asked for their address and a good time, replies with both, and the row fills in and is marked Ready to book. The caller gets a message confirming the request is logged and that the business will call to confirm the visit, and a reminder is set in case the lead stays unhandled.",
   "lanes": [
     {
       "id": "a",
@@ -21,8 +21,8 @@
       "icon": "bell-simple",
       "anchor": "bottom",
       "height": {
-        "narrow": "25.5rem",
-        "wide": "20rem"
+        "narrow": "27rem",
+        "wide": "21.5rem"
       },
       "view": "owner"
     }
@@ -96,6 +96,14 @@
           "label": "Caller"
         },
         {
+          "key": "need",
+          "label": "Need"
+        },
+        {
+          "key": "visit",
+          "label": "Visit"
+        },
+        {
           "key": "status",
           "label": "Status"
         }
@@ -103,6 +111,8 @@
       "row": {
         "time": "10:42",
         "caller": "••• 0182",
+        "need": "—",
+        "visit": "—",
         "status": "Awaiting reply"
       },
       "tones": {
@@ -140,7 +150,8 @@
       "op": "update",
       "target": "lead",
       "set": {
-        "status": "Replied · leaking sink"
+        "need": "Leaking kitchen sink",
+        "status": "Replied"
       },
       "tones": {
         "status": "ok"
@@ -151,7 +162,7 @@
         "kv": {
           "lead": "•••0182",
           "status": "replied",
-          "reason": "leaking sink"
+          "need": "leaking sink"
         }
       }
     },
@@ -171,7 +182,92 @@
       }
     },
     {
-      "t": "01:13",
+      "t": "01:14",
+      "lane": "a",
+      "type": "sms",
+      "dir": "out",
+      "text": "Thanks, that's logged. So we can send someone today, reply with your address and a time that suits you.",
+      "meta": "SMS · auto-reply · 10:43",
+      "log": {
+        "sys": "twilio",
+        "event": "SMS_SENT",
+        "kv": {
+          "to": "+•••0182",
+          "template": "visit_details_request"
+        }
+      }
+    },
+    {
+      "t": "01:58",
+      "lane": "a",
+      "type": "sms",
+      "dir": "in",
+      "text": "22 Elm Row, flat 3. Any time after 2pm.",
+      "meta": "SMS · from ••• 0182 · 10:44",
+      "log": {
+        "sys": "twilio",
+        "event": "SMS_REPLY",
+        "kv": {
+          "from": "+•••0182",
+          "lead": "•••0182"
+        }
+      }
+    },
+    {
+      "t": "01:59",
+      "type": "sheet",
+      "op": "update",
+      "target": "lead",
+      "set": {
+        "visit": "22 Elm Row, after 2pm",
+        "status": "Ready to book"
+      },
+      "tones": {
+        "status": "ok"
+      },
+      "log": {
+        "sys": "sheets",
+        "event": "SHEET_UPDATE",
+        "kv": {
+          "lead": "•••0182",
+          "status": "ready_to_book",
+          "visit": "22 Elm Row, after 2pm"
+        }
+      }
+    },
+    {
+      "t": "01:59",
+      "lane": "b",
+      "type": "event",
+      "text": "Owner pinged: address and visit time are in",
+      "log": {
+        "sys": "telegram",
+        "event": "TELEGRAM_ALERT",
+        "kv": {
+          "chat": "owner",
+          "lead": "•••0182",
+          "type": "details_received"
+        }
+      }
+    },
+    {
+      "t": "02:00",
+      "lane": "a",
+      "type": "sms",
+      "dir": "out",
+      "text": "Got it, thank you. Your request is logged, and Northgate Plumbing will call to confirm the visit.",
+      "meta": "SMS · auto-reply · 10:44",
+      "log": {
+        "sys": "twilio",
+        "event": "SMS_SENT",
+        "kv": {
+          "to": "+•••0182",
+          "template": "request_logged"
+        }
+      }
+    },
+    {
+      "t": "02:00",
       "lane": "b",
       "type": "event",
       "text": "Reminder set if the lead stays unhandled",

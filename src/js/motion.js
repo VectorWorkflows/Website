@@ -90,25 +90,45 @@ async function boot() {
     }
   });
 
-  // Systems index: a preview card that trails the pointer (desktop only)
+  // Systems index: a preview card that trails the pointer (desktop only).
+  // The row under the pointer is found from the pointer's position, on
+  // pointer moves AND on scroll: scrolling with a still mouse moves rows
+  // under it without any pointer event, and browsers are slow to update
+  // :hover then. The hovered row is marked by class (.is-hover), not :hover.
   document.querySelectorAll('[data-preview-list]').forEach((list) => {
     const card = list.parentElement.querySelector('[data-preview]');
     if (!card || !finePointer.matches) return;
     const x = gsap.quickTo(card, 'x', { duration: 0.6, ease: 'power3.out' });
     const y = gsap.quickTo(card, 'y', { duration: 0.6, ease: 'power3.out' });
     const body = card.querySelector('[data-preview-body]');
-    list.addEventListener('pointermove', (e) => {
+    let px = -1;
+    let py = -1;
+    let current = null;
+    const sync = () => {
       const r = list.getBoundingClientRect();
-      x(e.clientX - r.left);
-      y(e.clientY - r.top);
-    });
-    list.querySelectorAll('[data-preview-text]').forEach((row) => {
-      row.addEventListener('pointerenter', () => {
-        body.textContent = row.dataset.previewText;
-        card.classList.add('is-on');
-      });
-    });
-    list.addEventListener('pointerleave', () => card.classList.remove('is-on'));
+      const over = px >= 0 && px >= r.left && px <= r.right && py >= r.top && py <= r.bottom;
+      const row = over ? document.elementFromPoint(px, py)?.closest('[data-preview-text]') : null;
+      if (row !== current) {
+        current?.classList.remove('is-hover');
+        row?.classList.add('is-hover');
+        if (row) body.textContent = row.dataset.previewText;
+        current = row;
+      }
+      card.classList.toggle('is-on', !!row);
+      if (row) {
+        x(px - r.left);
+        y(py - r.top);
+      }
+    };
+    addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      px = e.clientX;
+      py = e.clientY;
+      sync();
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { px = py = -1; sync(); });
+    lenis.on('scroll', () => { if (px >= 0) sync(); });
+    list.parentElement.classList.add('is-tracked');
   });
 
   // Re-measure once web fonts settle so trigger positions are exact

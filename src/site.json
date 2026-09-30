@@ -43,19 +43,21 @@
         {
           "slug": "website",
           "name": "Business website",
-          "featured": "Starter bundle",
+          "short": "website",
+          "featured": "Starter pack",
           "line": "A fast, hand-built website that tells people what you do and gets them calling or messaging you.",
           "points": [
             "Hand-built and quick to open on any phone",
             "Free hosting, with your domain included for year one",
             "Call, WhatsApp and directions buttons on every page",
-            "Google Business Profile setup and WhatsApp Business setup included free"
+            "Pairs with Google Business Profile and WhatsApp Business setup as the Starter pack"
           ],
           "condition": ""
         },
         {
           "slug": "google-business-profile",
           "name": "Google Business Profile setup",
+          "short": "Google Business Profile setup",
           "line": "Your business shows up properly on Google Search and Maps, with the right details.",
           "points": [
             "Correct categories, services and opening hours",
@@ -67,6 +69,7 @@
         {
           "slug": "whatsapp-business",
           "name": "WhatsApp Business setup",
+          "short": "WhatsApp Business setup",
           "line": "Your WhatsApp looks and works like a business number, not a personal one.",
           "points": [
             "A catalogue of what you sell or offer",
@@ -86,6 +89,7 @@
         {
           "slug": "whatsapp-bot",
           "name": "WhatsApp auto-reply bot",
+          "short": "WhatsApp bot",
           "line": "Answers the questions you get every day on WhatsApp, at any hour.",
           "points": [
             "Replies to common questions about prices, hours and location",
@@ -97,6 +101,7 @@
         {
           "slug": "missed-call-responder",
           "name": "Missed-call responder",
+          "short": "missed-call responder",
           "line": "When you can't pick up, the caller gets a message back straight away.",
           "points": [
             "An instant message back to every missed caller",
@@ -109,6 +114,7 @@
         {
           "slug": "ivr",
           "name": "IVR phone line",
+          "short": "IVR line",
           "line": "A \"Press 1 for…\" menu that sends each caller to the right place.",
           "points": [
             "A short menu in your business's own words",
@@ -120,6 +126,7 @@
         {
           "slug": "enquiry-tracker",
           "name": "Enquiry tracker",
+          "short": "enquiry tracker",
           "line": "Every enquiry from your website, WhatsApp and calls in one sheet you can work through.",
           "points": [
             "Website, WhatsApp and call enquiries in one Google Sheet",
@@ -140,6 +147,7 @@
         {
           "slug": "appointment-reminders",
           "name": "Appointment reminders",
+          "short": "appointment reminders",
           "line": "Customers book a slot and get reminded on WhatsApp, so fewer of them miss it.",
           "points": [
             "A booking link for your website, WhatsApp and social profiles",
@@ -151,6 +159,7 @@
         {
           "slug": "job-site-log",
           "name": "Job & site log",
+          "short": "job & site log",
           "line": "Staff send a photo and a note on WhatsApp, and it becomes a timestamped record.",
           "points": [
             "For site issues, deliveries, stock received and proof of finished work",
@@ -163,6 +172,7 @@
         {
           "slug": "repeat-customer-tracker",
           "name": "Repeat-customer tracker",
+          "short": "repeat-customer tracker",
           "line": "Shows who hasn't come back in a while and sends them a gentle WhatsApp nudge.",
           "points": [
             "Customers listed by when they last came in",
@@ -174,6 +184,7 @@
         {
           "slug": "review-requester",
           "name": "Review requester",
+          "short": "review requester",
           "line": "After a visit, the customer receives your Google review link.",
           "points": [
             "Sent on WhatsApp after each visit",
@@ -185,6 +196,7 @@
         {
           "slug": "telegram-team-bot",
           "name": "Telegram team bot",
+          "short": "Telegram team bot",
           "line": "One Telegram bot for your staff: tasks, alerts and notes in the chat they already use.",
           "points": [
             "Tasks handed out and marked done from Telegram",

@@ -207,6 +207,84 @@ def rupees(n: int) -> str:
     return f"₹{s}"
 
 
+class Quoter:
+    """Prices a selection of services. src/js/pricing.js runs the same rules
+    in the browser; both read only data/pricing.json.
+
+    The first system is at its full price, each further system at its bundle
+    rate, or at the add-on rate when it builds on a system that's being paid
+    for. Setups are at their own price, or the setup add-on rate alongside a
+    related system. The cheapest valid arrangement wins."""
+
+    def __init__(self, p: dict, launch: bool):
+        self.p = p
+        self.launch = launch
+        self.order = list(p["services"])
+        self.tier = {slug: p["tiers"][e["tier"]] for slug, e in p["services"].items()}
+        self.related: dict[str, list[str]] = {s: [] for s in self.order}
+        for a, b in p["related"]:
+            if a not in self.tier or b not in self.tier:
+                raise BuildError(f"data/pricing.json: related pair {a} / {b} names an unknown service")
+            self.related[a].append(b)
+            self.related[b].append(a)
+
+    def kind(self, slug: str) -> str:
+        return self.tier[slug]["kind"]
+
+    def own(self, slug: str) -> int:
+        t = self.tier[slug]
+        return t["launch"] if self.launch else t["standard"]
+
+    def standard(self, slug: str) -> int:
+        return self.tier[slug]["standard"]
+
+    def hosts(self, slug: str) -> list[str]:
+        """Systems this service can be added on to, in menu order. A host is
+        never cheaper on its own than what rides on it (so a phone service
+        can't be added on to a standard system for less than it costs alone).
+        A service marked never_addon (the website) is always a main build."""
+        if self.p["services"][slug].get("never_addon"):
+            return []
+        return [s for s in self.order if s in self.related[slug] and self.kind(s) == "system"
+                and self.standard(s) >= self.standard(slug)]
+
+    def quote(self, slugs: list[str]) -> dict:
+        picked = [s for s in self.order if s in slugs]
+        best = None
+        for mask in range(1, 1 << len(picked)):
+            paid = [s for i, s in enumerate(picked) if mask >> i & 1]
+            systems = [s for s in paid if self.kind(s) == "system"]
+            # The system with the smallest step down to its bundle rate pays in full
+            anchor = min(systems, key=lambda s: self.own(s) - self.tier[s]["bundle"]) if systems else None
+            lines, ok = [], True
+            for s in picked:
+                if s in paid:
+                    if self.kind(s) == "setup" or s == anchor:
+                        lines.append({"slug": s, "price": self.own(s), "basis": "own", "via": ""})
+                    else:
+                        lines.append({"slug": s, "price": self.tier[s]["bundle"], "basis": "bundle", "via": ""})
+                    continue
+                via = next((h for h in self.hosts(s) if h in paid), None)
+                if not via:
+                    ok = False
+                    break
+                lines.append({"slug": s, "price": self.p["addon"][self.kind(s)], "basis": "addon", "via": via})
+            if not ok:
+                continue
+            total = sum(line["price"] for line in lines)
+            if best is None or total < best["total"]:
+                best = {"total": total, "lines": lines}
+        if best is None:
+            return {"total": 0, "lines": [], "own": 0, "standard": 0}
+        best["own"] = sum(self.own(s) for s in picked)
+        best["standard"] = sum(self.standard(s) for s in picked)
+        return best
+
+
+def _join_or(names: list[str]) -> str:
+    return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} or {names[-1]}"
+
+
 def load_pricing(site: dict, today: date | None = None) -> dict:
     """Attach prices to every service in site['service_groups'] and return the
     page-level pricing context. After launch_end only standard prices render."""
@@ -214,14 +292,15 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
     end = date.fromisoformat(p["launch_end"])
     launch = (today or date.today()) <= end
     tiers = p["tiers"]
+    q = Quoter(p, launch)
+    q_std = Quoter(p, False)
 
     menu_slugs = [s["slug"] for g in site["service_groups"] for s in g["services"]]
     if sorted(menu_slugs) != sorted(p["services"]):
         missing = set(menu_slugs) ^ set(p["services"])
         raise BuildError(f"data/pricing.json and src/site.json list different services: {sorted(missing)}")
-
-    def now(tier: dict) -> int:
-        return tier["launch"] if launch else tier["standard"]
+    names = {s["slug"]: s["name"] for g in site["service_groups"] for s in g["services"]}
+    short = {s["slug"]: s.get("short", s["name"]) for g in site["service_groups"] for s in g["services"]}
 
     js_services = {}
     for g in site["service_groups"]:
@@ -229,17 +308,23 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
             entry = p["services"][s["slug"]]
             tier = tiers[entry["tier"]]
             days = entry["days"]
+            hosts = q.hosts(s["slug"])
             s["tier"] = entry["tier"]
             s["price"] = {
-                "now": rupees(now(tier)),
+                "now": rupees(q.own(s["slug"])),
                 "was": rupees(tier["standard"]) if launch else "",
-                "value": now(tier),
-                "free_with": tier.get("free_with", ""),
+                "value": q.own(s["slug"]),
+                "addon": rupees(p["addon"][tier["kind"]]) if hosts else "",
+                "addon_with": f"alongside the {_join_or([short[h] for h in hosts])}" if hosts else "",
                 "ready": f"Ready in under {days} days, once we have your details.",
                 "days": days,
             }
             s["condition_text"] = site["conditions"].get(s.get("condition", ""), "")
-            js_services[s["slug"]] = {"name": s["name"], "tier": entry["tier"]}
+            js_services[s["slug"]] = {
+                "name": s["name"], "short": short[s["slug"]], "kind": tier["kind"],
+                "neverAddon": bool(entry.get("never_addon")),
+                "now": q.own(s["slug"]), "standard": tier["standard"], "bundle": tier.get("bundle"),
+            }
         g["from"] = rupees(min(s["price"]["value"] for s in g["services"]))
         g["count_label"] = f"{len(g['services'])} services"
 
@@ -252,29 +337,66 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
     if unknown:
         raise BuildError(f"src/site.json: services point at unknown case studies {unknown}")
 
-    std, phone = tiers["standard"], tiers["phone"]
-    free_names = [s["name"] for g in site["service_groups"] for s in g["services"] if s["price"]["free_with"]]
+    # Packs: named combinations, priced by the same rules as any selection
+    packs = []
+    for pack in p["packs"]:
+        if any(s not in names for s in pack["services"]):
+            raise BuildError(f"data/pricing.json: pack '{pack['id']}' names an unknown service")
+        quote_now = q.quote(pack["services"])
+        packs.append({
+            "id": pack["id"],
+            "name": pack["name"],
+            "featured": pack.get("featured", False),
+            "services": [names[s] for s in pack["services"]],
+            "label": " + ".join(names[s] for s in pack["services"]),
+            "slugs": ",".join(pack["services"]),
+            "price": rupees(quote_now["total"]),
+            "was": rupees(q_std.quote(pack["services"])["total"]) if launch else "",
+            "own": rupees(quote_now["own"]),
+            "value": quote_now["total"],
+        })
+    starter = next(pk for pk in packs if pk["featured"])
+    for g in site["service_groups"]:
+        for s in g["services"]:
+            if s.get("featured"):
+                s["pack"] = starter
+
+    std, phone, add = tiers["standard"], tiers["phone"], p["addon"]
     pricing = {
         "launch": launch,
         "launch_label": f"Launch pricing until {end.day} {end:%B %Y}",
         "launch_end": p["launch_end"],
-        "bundle_rule": (f"Pick {_NUM_WORDS.get(p['bundle_min'], p['bundle_min'])} or more and each is "
+        # The rules in owner language, from the data. rules[] is the full set
+        # (services page); bundle_rule is the one-line version.
+        "rules": [
+            {"k": "First system", "v": "At its own price"},
+            {"k": "Each extra system", "v": f"{rupees(std['bundle'])} (phone services {rupees(phone['bundle'])})"},
+            {"k": "A related extra", "v": f"{rupees(add['system'])} when it builds on one you've picked"},
+            {"k": "Google or WhatsApp setup", "v": f"{rupees(add['setup'])} alongside a related system"},
+        ],
+        "bundle_rule": (f"Pick more than one and the extras cost less: {rupees(add['system'])} for a system that "
+                        f"builds on one you've picked, {rupees(add['setup'])} for a related setup, otherwise "
                         f"{rupees(std['bundle'])} (phone services {rupees(phone['bundle'])})."),
-        "free_rule": f"{' and '.join(free_names)} are free with a website, and don't count toward the bundle.",
+        "talk_rule": (f"Taking {_NUM_WORDS.get(p['talk_from'], p['talk_from'])} or more? Once we've gone through "
+                      "exactly what you need, the price can come down from here."),
+        "talk_tag": f"{p['talk_from']}+ services",
+        "packs": packs,
+        "starter": starter,
         "included": p["included_year_one"],
         "care_monthly": rupees(p["care_plan"]["monthly"]),
         "care_yearly": rupees(p["care_plan"]["yearly"]),
         "usage_note": p["usage_note"],
-        "from": rupees(min(now(t) for t in tiers.values() if t.get("counts_toward_bundle"))),
+        "from": rupees(min(q.own(s) for s in p["services"] if q.kind(s) == "system")),
     }
     # What the browser needs to quote a selection (shared by /start and /services)
     pricing["json"] = json.dumps({
         "launch": launch,
-        "bundleMin": p["bundle_min"],
-        "tiers": {k: {"now": now(t), "standard": t["standard"], "bundle": t.get("bundle"),
-                      "counts": t["counts_toward_bundle"], "freeWith": t.get("free_with", "")}
-                  for k, t in tiers.items()},
+        "order": q.order,
         "services": js_services,
+        "addon": p["addon"],
+        "related": p["related"],
+        "packs": [{"id": pk["id"], "name": pk["name"], "services": pk["services"]} for pk in p["packs"]],
+        "talkFrom": p["talk_from"],
     }, ensure_ascii=False, separators=(",", ":"))
     return pricing
 
@@ -868,7 +990,7 @@ RE_INCLUDE = re.compile(r'{%\s*include\s+"([\w\-/]+)"\s*%}')
 RE_IF = re.compile(r'{%\s*if\s+(not\s+)?([\w.]+)\s*%}((?:(?!{%\s*if\b).)*?){%\s*endif\s*%}', re.S)
 RE_ICON = re.compile(r'{%\s*icon\s+"([\w\-]+)"(?:\s+class="([^"]*)")?\s*%}')
 RE_VALUE = re.compile(r"{{{\s*([\w.]+)\s*}}}|{{\s*([\w.]+)\s*}}")
-RE_REPLAY = re.compile(r'{%\s*replay\s+"([\w\-]+)"(?:\s+id="([\w\-]+)")?(?:\s+view="(customer|owner)")?\s*%}')
+RE_REPLAY = re.compile(r'{%\s*replay\s+"([\w\-]+)"(?:\s+id="([\w\-]+)")?(?:\s+view="(customer|owner|story)")?\s*%}')
 RE_LOGREEL = re.compile(r'{%\s*logreel\s+"([\w\-, ]+)"\s*%}')
 
 
@@ -1126,13 +1248,31 @@ def _artifact(step: dict, muts: dict, data: dict) -> str:
                 f'<span class="rp-meta">{wall}</span></div>'
                 f'<p class="rp-tg__text">{_esc(step["text"])}</p>{buttons}</div></li>')
     if kind == "sheet" and op == "add":
-        head = "".join(f'<th scope="col">{_esc(c["label"])}</th>' for c in step["columns"])
-        cells = "".join(f'<td data-label="{_esc(c["label"])}">{_mut(muts, step["id"] + "." + c["key"])}</td>'
-                        for c in step["columns"])
-        return (f'<li class="rp-item" {at}><div class="rp-card rp-sheet">'
+        # A sheet with "before" rows is a running log (a ledger): the earlier
+        # rows are there from the start and the new row lands below them a
+        # beat after the sheet appears. Columns can ask to show only when the
+        # sheet is mid-width or wide ("show"), so it stays a table on a phone.
+        cols = step["columns"]
+        show = lambda c: f' class="rp-col--{c["show"]}"' if c.get("show") else ""  # noqa: E731
+        head = "".join(f'<th scope="col"{show(c)}>{_esc(c["label"])}</th>' for c in cols)
+
+        def seed(row: dict) -> str:
+            tones = row.get("_tones", {})
+            return "<tr>" + "".join(
+                f'<td data-label="{_esc(c["label"])}"{show(c)}>'
+                + (f'<span class="rp-pill rp-pill--{tones[c["key"]]}">{_esc(row[c["key"]])}</span>'
+                   if c["key"] in tones else _esc(row[c["key"]])) + "</td>"
+                for c in cols) + "</tr>"
+
+        before = step.get("before", [])
+        cells = "".join(f'<td data-label="{_esc(c["label"])}"{show(c)}>{_mut(muts, step["id"] + "." + c["key"])}</td>'
+                        for c in cols)
+        new_row = (f'<tr class="rp-row--new" data-at="{step["_at"] + 650}">{cells}</tr>' if before
+                   else f"<tr>{cells}</tr>")
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-sheet{" rp-sheet--ledger" if before else ""}">'
                 f'<div class="rp-sheet__tab">{{% icon "table" %}}<span>{_esc(step["sheet"])}</span>'
                 f'<span class="rp-meta">Google Sheets</span></div>'
-                f'<table><thead><tr>{head}</tr></thead><tbody><tr>{cells}</tr></tbody></table></div></li>')
+                f'<table><thead><tr>{head}</tr></thead><tbody>{"".join(seed(r) for r in before)}{new_row}</tbody></table></div></li>')
     if kind == "calendar" and op == "add":
         blocks = "".join(
             f'<li class="rp-block" style="--i:{i}">{_mut(muts, f"{step["id"]}.b{i}.time", "rp-block__time")}'
@@ -1169,7 +1309,7 @@ def _log_line(step: dict, data: dict, extra_cls: str = "") -> str:
             f'<span class="log-kv">{kv}</span></li>')
 
 
-VIEW_NAMES = {"customer": "Customer", "owner": "Owner"}
+VIEW_NAMES = {"customer": "Customer", "owner": "Owner", "story": "Full"}
 
 
 def render_replay(name: str, where: str, dom_id: str = "", compact: str = "") -> str:
@@ -1180,16 +1320,25 @@ def render_replay(name: str, where: str, dom_id: str = "", compact: str = "") ->
     event log only appears in the home page's log reel.)
 
     compact="customer"|"owner": one view only, no toggle (the work index
-    cards). It still has its clock and its pause control."""
+    cards). It still has its clock and its pause control.
+    compact="story": both lanes merged into one feed in step order, so a
+    card can follow the event from the customer's phone to the owner's
+    sheet (needs a "story" block in the replay: label, icon, height)."""
     data = load_replay(name, where)
     muts = _collect_muts(data)
     rid = dom_id or f"replay-{name}"
-    lanes = [lane for lane in data["lanes"] if not compact or lane["view"] == compact]
+    if compact == "story":
+        if "story" not in data:
+            raise BuildError(f"{where}: replay '{name}' has no story block")
+        lanes = [{**data["story"], "id": "*", "view": "story", "anchor": "bottom"}]
+    else:
+        lanes = [lane for lane in data["lanes"] if not compact or lane["view"] == compact]
     if not lanes:
         raise BuildError(f"{where}: replay '{name}' has no {compact} view")
     views = []
     for lane in lanes:
-        items = "".join(_artifact(s, muts, data) for s in data["steps"] if s.get("lane") == lane["id"])
+        items = "".join(_artifact(s, muts, data) for s in data["steps"]
+                        if s.get("lane") and lane["id"] in ("*", s["lane"]))
         h = lane["height"]
         views.append(
             f'<section class="replay__view" data-panel="{lane["view"]}" id="{rid}-{lane["view"]}" '

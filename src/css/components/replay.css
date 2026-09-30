@@ -352,17 +352,36 @@
   .rp-sheet .rp-pill { white-space: normal; }
   /* Narrow sheets become a record: one labelled line per cell */
   @container (max-width: 25rem) {
-    .rp-sheet thead { display: none; }
-    .rp-sheet tr, .rp-sheet td { display: block; }
-    .rp-sheet tr { padding-block: 0.375rem 0.5rem; }
-    .rp-sheet td { display: grid; grid-template-columns: 6.25rem 1fr; align-items: baseline; gap: 0.5rem; padding: 0.3125rem 0.875rem; }
-    .rp-sheet td::before {
+    .rp-sheet:not(.rp-sheet--ledger) thead { display: none; }
+    .rp-sheet:not(.rp-sheet--ledger) :is(tr, td) { display: block; }
+    .rp-sheet:not(.rp-sheet--ledger) tr { padding-block: 0.375rem 0.5rem; }
+    .rp-sheet:not(.rp-sheet--ledger) td { display: grid; grid-template-columns: 6.25rem 1fr; align-items: baseline; gap: 0.5rem; padding: 0.3125rem 0.875rem; }
+    .rp-sheet:not(.rp-sheet--ledger) td::before {
       content: attr(data-label);
       font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em; text-transform: uppercase;
       color: var(--c-bone-3);
     }
-    .rp-sheet td .rp-pill { justify-self: start; }
+    .rp-sheet:not(.rp-sheet--ledger) td .rp-pill { justify-self: start; }
   }
+
+  /* Ledger: a running log that stays a table at any width. Lower-priority
+     columns join as the sheet widens; earlier rows sit back, the new row
+     lands below them with a brief highlight. */
+  .rp-sheet--ledger table { font-size: 0.75rem; table-layout: auto; }
+  .rp-sheet--ledger th { white-space: nowrap; padding-inline: 0.625rem; }
+  .rp-sheet--ledger td { padding: 0.5rem 0.625rem; color: var(--c-bone-2); box-shadow: inset 0 1px 0 var(--edge-faint); }
+  .rp-sheet--ledger :is(th, td):first-child { padding-inline-start: 0.875rem; }
+  .rp-sheet--ledger :is(th, td):last-child { padding-inline-end: 0.875rem; }
+  .rp-sheet--ledger .rp-pill { white-space: nowrap; padding: 0.1875rem 0.4375rem; font-size: 0.625rem; }
+  .rp-sheet--ledger .rp-col--mid, .rp-sheet--ledger .rp-col--wide { display: none; }
+  @container (min-width: 30rem) { .rp-sheet--ledger .rp-col--mid { display: table-cell; } }
+  @container (min-width: 44rem) { .rp-sheet--ledger .rp-col--wide { display: table-cell; } }
+  .rp-sheet--ledger td[data-label="Ref"], .rp-sheet--ledger td[data-label="Logged"] { font-family: var(--font-mono); font-size: 0.6875rem; white-space: nowrap; }
+  .rp-sheet--ledger td[data-label="Photo"] { color: var(--c-lilac); white-space: nowrap; }
+  .rp-row--new td { color: var(--c-bone); }
+  /* The pending new row keeps its space, so the sheet never jumps */
+  .is-live tr[data-at].is-pending { display: table-row; visibility: hidden; }
+  .rp-row--new td { background: color-mix(in oklch, var(--c-violet) 12%, transparent); }
 
   /* Calendar */
   .rp-cal { display: grid; gap: 0.625rem; }

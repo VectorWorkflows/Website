@@ -1,0 +1,61 @@
+/* ==========================================================================
+   OFFER: the suggested pack / pairing for the current picks, and the
+   "talk price" nudge from three services up. Shared by the services page
+   bundle bar and the /start live total. Filled in by pricing.js.
+   ========================================================================== */
+@layer components {
+  .offer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs) var(--space-s);
+    padding: 0.5rem 0.5rem 0.5rem 0.875rem;
+    border-radius: var(--radius-m);
+    background: color-mix(in oklch, var(--c-violet) 14%, var(--c-raised-2));
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--c-violet) 40%, transparent);
+  }
+  .offer__body {
+    flex: 1;
+    min-inline-size: 0;
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--c-bone-2);
+    max-inline-size: none;
+    text-wrap: pretty;
+  }
+  .offer__tag {
+    display: inline-block;
+    margin-inline-end: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--c-lilac);
+  }
+  .offer__title { font-family: var(--font-ui); font-weight: var(--weight-medium); color: var(--c-bone); }
+  .offer__add {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-block-size: 2.75rem;
+    padding-inline: 0.75rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-violet);
+    color: var(--c-bone);
+    font-family: var(--font-ui);
+    font-weight: var(--weight-medium);
+    font-size: var(--step--1);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-hover) var(--ease-out-soft), transform var(--dur-press) var(--ease-out-soft);
+  }
+  .offer__add .icon { inline-size: 1rem; block-size: 1rem; }
+  @media (hover: hover) { .offer__add:hover { background: color-mix(in oklch, var(--c-violet) 82%, var(--c-bone)); } }
+  .offer__add:active { transform: scale(0.96); }
+  .offer__add:focus-visible { outline: 2px solid var(--c-lilac); outline-offset: 3px; }
+  .offer--talk { background: var(--c-raised-3); box-shadow: inset 0 0 0 1px var(--edge); }
+  @media (prefers-reduced-motion: no-preference) {
+    .offer:not([hidden]) { animation: offer-in var(--dur-state) var(--ease-out) both; }
+  }
+  @keyframes offer-in { from { opacity: 0; transform: translateY(0.375rem); } }
+}

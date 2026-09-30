@@ -1,0 +1,177 @@
+/* ==========================================================================
+   WAKE: the Dynamic Scheduler's wake-time slider (case study). A range input
+   over three template zones, and today's plan as a list with each block on
+   a 03:00 → 03:00 day axis. Filled in by wake.js.
+   ========================================================================== */
+@layer components {
+  .wake { margin-block-end: var(--space-2xl); }
+  .wake__core { display: grid; gap: var(--space-l); padding: var(--space-l) var(--space-m); }
+  @container (min-width: 48rem) { .wake__core { padding: var(--space-xl); } }
+
+  .wake__head { display: grid; gap: var(--space-m); }
+  @container (min-width: 48rem) { .wake__head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: var(--space-xl); } }
+  .wake__title { font-size: var(--step-2); letter-spacing: -0.02em; }
+  .wake__intro { color: var(--c-bone-2); font-size: var(--step--1); max-inline-size: calc(54 * var(--ch-body)); text-wrap: pretty; }
+  .wake__readout { display: grid; justify-items: start; gap: 0.375rem; max-inline-size: none; }
+  @container (min-width: 48rem) { .wake__readout { justify-items: end; } }
+  .wake__time {
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--c-bone);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Slider ------------------------------------------------------------------ */
+  .wake__control { display: grid; gap: 0.5rem; }
+  .wake__range {
+    --track: 0.375rem;
+    --thumb: 1.75rem;
+    inline-size: 100%;
+    block-size: 2.75rem;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .wake__range::-webkit-slider-runnable-track {
+    block-size: var(--track);
+    border-radius: var(--radius-pill);
+    background: var(--c-raised-3);
+    box-shadow: inset 0 0 0 1px var(--edge);
+  }
+  .wake__range::-moz-range-track {
+    block-size: var(--track);
+    border-radius: var(--radius-pill);
+    background: var(--c-raised-3);
+    box-shadow: inset 0 0 0 1px var(--edge);
+  }
+  .wake__range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    inline-size: var(--thumb);
+    block-size: var(--thumb);
+    margin-block-start: calc((var(--track) - var(--thumb)) / 2);
+    border-radius: 50%;
+    background: var(--c-bone);
+    box-shadow: 0 0 0 0.3125rem color-mix(in oklch, var(--c-violet) 55%, transparent), var(--shadow-lift);
+    transition: transform var(--dur-press) var(--ease-out-soft);
+  }
+  .wake__range::-moz-range-thumb {
+    inline-size: var(--thumb);
+    block-size: var(--thumb);
+    border: 0;
+    border-radius: 50%;
+    background: var(--c-bone);
+    box-shadow: 0 0 0 0.3125rem color-mix(in oklch, var(--c-violet) 55%, transparent), var(--shadow-lift);
+  }
+  .wake__range:active::-webkit-slider-thumb { transform: scale(1.1); }
+  .wake__range:focus-visible { outline: 2px solid var(--c-lilac); outline-offset: 4px; border-radius: var(--radius-s); }
+
+  /* The three zones, drawn to scale under the track (thumb-width inset so
+     the zone edges line up with the thumb's centre) */
+  .wake__zones { position: relative; block-size: 2.75rem; margin: 0 calc(1.75rem / 2); padding: 0; list-style: none; }
+  .wake__zones li {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(var(--a) * 100%);
+    inline-size: calc((var(--b) - var(--a)) * 100%);
+    display: grid;
+    align-content: start;
+    gap: 0.125rem;
+    padding: 0.5rem 0.5rem 0;
+    box-shadow: inset 1px 0 0 var(--edge);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--c-bone-3);
+    transition: color var(--dur-state) var(--ease-out-soft), box-shadow var(--dur-state) var(--ease-out-soft);
+  }
+  .wake__zones li:last-child { box-shadow: inset 1px 0 0 var(--edge), inset -1px 0 0 var(--edge); }
+  .wake__span { letter-spacing: 0.04em; opacity: 0.8; }
+  @container (max-width: 30rem) { .wake__span { display: none; } }
+  .wake[data-zone="early"] [data-zone="early"],
+  .wake[data-zone="normal"] [data-zone="normal"],
+  .wake[data-zone="late"] [data-zone="late"] { color: var(--c-lilac); box-shadow: inset 1px 0 0 var(--c-violet), inset 0 2px 0 var(--c-violet); }
+
+  /* Today's plan on a day axis ---------------------------------------------- */
+  .wake__day {
+    --cols: 3.25rem minmax(0, 8.5rem) minmax(0, 1fr);
+    display: grid;
+    gap: 0.375rem;
+    padding: var(--space-s);
+    border-radius: var(--radius-m);
+    background: var(--c-sunken);
+    box-shadow: inset 0 0 0 1px var(--edge-faint);
+  }
+  @container (min-width: 40rem) { .wake__day { --cols: 3.5rem minmax(0, 11rem) minmax(0, 1fr); padding: var(--space-m); } }
+  /* Hour labels sit over the track column, lined up with the bars */
+  .wake__axis {
+    display: grid;
+    grid-template-columns: var(--cols);
+    column-gap: 0.75rem;
+    padding-inline-start: 0.5rem;
+    block-size: 1.25rem;
+  }
+  .wake__ticks { grid-column: 3; position: relative; }
+  .wake__ticks span {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--p) * 100%);
+    translate: -50% 0;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    color: var(--c-bone-3);
+  }
+  .wake__ticks span:first-child { translate: 0 0; }
+  .wake__ticks span:last-child { translate: -100% 0; }
+  .wake__ticks span:nth-child(even) { display: none; }
+  @container (min-width: 40rem) { .wake__ticks span:nth-child(even) { display: block; } }
+
+  .wake__list {
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(7, 2.5rem);
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .wake__block {
+    display: grid;
+    grid-template-columns: var(--cols);
+    column-gap: 0.75rem;
+    align-items: center;
+    padding-inline: 0.5rem 0;
+    border-radius: var(--radius-s);
+    background: var(--c-raised-1);
+  }
+  .wake__block.is-leaving { position: absolute; inset-inline: 0; block-size: 2.5rem; pointer-events: none; }
+  .wake__at { font-family: var(--font-mono); font-size: var(--step--1); color: var(--c-lilac); font-variant-numeric: tabular-nums; }
+  .wake__label { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step--1); color: var(--c-bone); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wake__track {
+    position: relative;
+    container-type: inline-size;
+    align-self: stretch;
+    margin-block: 0.625rem;
+    border-radius: var(--radius-pill);
+    background: repeating-linear-gradient(90deg, var(--edge-faint) 0 1px, transparent 1px calc(100% / 8));
+    overflow: hidden;
+  }
+  .wake__bar {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: max(0.375rem, calc(var(--w) * 100%));
+    border-radius: var(--radius-pill);
+    background: var(--c-violet);
+    transform: translateX(calc(var(--s) * 100cqi));
+  }
+  .wake__block:first-child .wake__bar { background: var(--c-lilac); }
+  @media (prefers-reduced-motion: no-preference) {
+    .wake__bar { transition: transform 260ms var(--ease-out); }
+  }
+}
