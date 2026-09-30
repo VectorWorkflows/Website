@@ -6,7 +6,7 @@
         <span class="sys-row__num">{{ s.num }}</span>
         <span class="sys-row__name">{{ s.name }}</span>
         <span class="sys-row__meta">
-          <span class="t-label">{{ s.pillar }}</span>
+          <span class="t-label">{% for r in s.related %}<span class="sys-row__svc">{{ r.name }}</span>{% endfor %}</span>
           <span class="badge{% if s.live %} badge--live{% endif %}"><span class="badge__dot"></span>{{ s.status }}</span>
         </span>
         <span class="sys-row__line">{{ s.line }}</span>

@@ -1,6 +1,6 @@
 ---
-title: Services and pricing · Vector Workflows
-description: Four services with prices in the open: hand-built websites from ₹2,999, lead capture from ₹4,999, booking and automation from ₹7,999, voice and messaging bots from ₹9,999. What's included, what isn't, and how long each build takes.
+title: Services and prices · Vector Workflows
+description: Websites, Google and WhatsApp Business setup, WhatsApp bots, missed-call responders and small automations for local businesses. Every service has a price and a build time on the page, with bundle pricing when you pick two or more.
 path: /services/
 nav: services
 schema: organization, services
@@ -10,22 +10,26 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
 
 <section class="frame page-head" aria-labelledby="page-title">
   <div class="grid page-head__grid">
-    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">S</span><span class="index-label__rule"></span>Services &amp; pricing</p></div>
+    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">S</span><span class="index-label__rule"></span>Services &amp; prices</p></div>
     <div class="g-body stack flow-l">
-      <h1 id="page-title" class="rise page-head__title">{% rise %}Four services, <em>priced</em> in the open.{% endrise %}</h1>
-      <p class="t-lead page-head__lead fade-in" style="--d:1">Each one is a fixed scope with a starting price and a build window. You'll know what's included and what isn't before anything is built.</p>
+      <h1 id="page-title" class="rise page-head__title">{% rise %}Things you can name, <em>priced</em> in the open.{% endrise %}</h1>
+      <p class="t-lead page-head__lead fade-in" style="--d:1">Twelve services in three groups. Each one shows what you get, what it costs and how soon it's running. Pick one, or put a few together.</p>
     </div>
   </div>
 
-  <nav class="price-index fade-in" style="--d:2" aria-label="Services on this page">
+  <div class="launch fade-in" style="--d:2">
+    {% if pricing.launch %}<p class="launch__label"><span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span></p>{% endif %}
+    <p class="launch__rule">{{ pricing.bundle_rule }} <span>{{ pricing.free_rule }}</span></p>
+  </div>
+
+  <nav class="group-index fade-in" style="--d:3" aria-label="Service groups">
     <ol role="list">
-      {% for p in site.services %}
+      {% for g in site.service_groups %}
       <li>
-        <a href="#{{ p.slug }}">
-          <span class="price-index__num">{{ p.num }}</span>
-          <span class="price-index__name">{{ p.name }}</span>
-          <span class="price-index__price"><span class="t-label">from</span> {{ p.price_display }}</span>
-          <span class="price-index__window">{{ p.window }}</span>
+        <a href="#{{ g.id }}">
+          <span class="group-index__num">{{ g.num }}</span>
+          <span class="group-index__name">{{ g.name }}</span>
+          <span class="group-index__from" data-copy><span class="t-label">from</span> {{ g.from }}</span>
         </a>
       </li>
       {% endfor %}
@@ -33,66 +37,98 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
   </nav>
 </section>
 
-<section class="frame section-tight" aria-label="Service details">
-  <div class="svc-list">
-    {% for p in site.services %}
-    <article class="card svc" id="{{ p.slug }}" aria-labelledby="{{ p.slug }}-name" data-reveal>
+{% for g in site.service_groups %}
+<section class="frame section-tight svc-group" id="{{ g.id }}" aria-labelledby="{{ g.id }}-title">
+  <div class="grid svc-group__head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">{{ g.num }}</span><span class="index-label__rule"></span>{{ g.count_label }}</p></div>
+    <div class="g-body stack flow-xs">
+      <h2 id="{{ g.id }}-title" class="t-h2-s">{{ g.name }}</h2>
+      <p class="svc-group__line">{{ g.line }}</p>
+    </div>
+  </div>
+
+  <div class="svc-grid">
+    {% for s in g.services %}
+    <article class="card svc{% if s.featured %} svc--featured{% endif %}" id="{{ s.slug }}" aria-labelledby="{{ s.slug }}-name">
       <div class="card__core svc__core">
         <header class="svc__head">
-          <div class="card__meta"><span class="t-label c-lilac">{{ p.num }}</span><span class="t-label">Service</span></div>
-          <h2 id="{{ p.slug }}-name" class="svc__name">{{ p.name }}</h2>
-          <p class="svc__tag">{{ p.tagline }}</p>
-          <p class="svc__summary">{{ p.summary }}</p>
+          {% if s.featured %}<span class="badge badge--accent svc__flag">{{ s.featured }}</span>{% endif %}
+          <h3 id="{{ s.slug }}-name" class="svc__name">{{ s.name }}</h3>
+          <p class="svc__line">{{ s.line }}</p>
         </header>
 
-        <div class="svc__price">
-          <p class="svc__from"><span class="t-label">from</span> <span class="svc__amount">{{ p.price_display }}</span></p>
-          <p class="svc__window">{% icon "clock" %}<span>{{ p.window }}</span></p>
-          {% if p.note %}<p class="svc__note">{{ p.note }}</p>{% endif %}
-          <a class="btn btn--primary btn--sm" href="{{ site.routes.start }}?need={{ p.slug }}"><span class="btn__label">Start with this</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <div class="svc__body">
+          <h4 class="svc__list-title">{% icon "check" %}What you get</h4>
+          <ul role="list" class="svc__ul">
+            {% for pt in s.points %}<li>{{ pt }}</li>{% endfor %}
+          </ul>
+          {% if s.featured %}
+          <div class="svc__year">
+            <h4 class="svc__list-title">Included for year one</h4>
+            <ul role="list" class="svc__tags">{% for item in pricing.included %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          {% endif %}
+          {% if s.case %}<p class="svc__case"><a class="link-arrow" href="{{ site.routes.work }}{{ s.case }}/">{% icon "play" %}Built on the {{ s.case_name }}</a></p>{% endif %}
         </div>
 
-        <div class="svc__lists">
-          <div class="svc__col">
-            <h3 class="svc__list-title">{% icon "check" %}Included</h3>
-            <ul role="list" class="svc__ul svc__ul--in">
-              {% for item in p.includes %}<li>{{ item }}</li>{% endfor %}
-            </ul>
-          </div>
-          <div class="svc__col">
-            <h3 class="svc__list-title svc__list-title--out">{% icon "minus" %}Not included</h3>
-            <ul role="list" class="svc__ul svc__ul--out">
-              {% for item in p.excludes %}<li>{{ item }}</li>{% endfor %}
-            </ul>
-          </div>
+        <div class="svc__foot">
+          <p class="svc__price" data-copy><span class="svc__now">{{ s.price.now }}</span>{% if s.price.was %}<s class="svc__was"><span class="sr-only">standard price </span>{{ s.price.was }}</s>{% endif %}</p>
+          {% if s.price.free_with %}<p class="svc__free">{% icon "check" %}Free with a website</p>{% endif %}
+          <p class="svc__ready">{% icon "clock" %}<span>{{ s.price.ready }}{% if s.condition_text %} <span class="svc__cond">({{ s.condition_text }})</span>{% endif %}</span></p>
+          <a class="btn btn--sm{% if s.featured %} btn--primary{% endif %}" href="{{ site.routes.start }}?service={{ s.slug }}"><span class="btn__label">Start with this</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         </div>
       </div>
     </article>
     {% endfor %}
   </div>
 </section>
+{% endfor %}
 
-<section class="frame section" aria-labelledby="terms-title">
+<section class="frame section" id="included" aria-labelledby="included-title">
   <div class="grid">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">i</span><span class="index-label__rule"></span>How pricing works</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">i</span><span class="index-label__rule"></span>What's included</p></div>
     <div class="g-body">
-      <h2 id="terms-title" class="t-h2-s sec-head" data-split>Starting prices, <em>not</em> surprises.</h2>
-      <dl class="notes" data-reveal-group>
-        <div class="notes__item">
-          <dt>What "from" means</dt>
-          <dd>The price covers the scope listed under Included. If your job needs more than that, you get a quote for the extra before any work starts, never after.</dd>
+      <div class="card year">
+        <div class="card__core year__core">
+          <div class="stack flow-s">
+            <h2 id="included-title" class="t-h2-s">Included for <em>year one</em></h2>
+            <p class="year__after">After the first year, a care plan keeps it all running: <strong data-copy>{{ pricing.care_monthly }}/month</strong> or <strong data-copy>{{ pricing.care_yearly }}/year</strong>.</p>
+          </div>
+          <ul role="list" class="year__list">
+            {% for item in pricing.included %}<li>{% icon "check" %}<span>{{ item }}</span></li>{% endfor %}
+          </ul>
+          <p class="year__note">{{ pricing.usage_note }}</p>
         </div>
-        <div class="notes__item">
-          <dt>Provider costs</dt>
-          <dd>Voice and messaging systems run on third-party telephony and messaging providers. Their usage is billed at cost, with no markup.</dd>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head" data-split>Before you <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Do my customers need to create an account?</dt>
+          <dd>No. Orders and booking requests arrive from the customer's own WhatsApp number, so you always know who is asking. Requests stay "pending" until you confirm them, and anyone wasting your time can be blocked in one tap. For high-value slots you can ask for a small UPI token amount.</dd>
         </div>
-        <div class="notes__item">
-          <dt>Build windows</dt>
-          <dd>Each window starts once the scope is agreed and the accounts it needs (phone number, WhatsApp Business, Google access) are in place.</dd>
+        <div class="faq__item">
+          <dt>What happens after the first year?</dt>
+          <dd>The care plan keeps hosting, bot hosting and small changes going, at <span data-copy>{{ pricing.care_monthly }}</span> a month or <span data-copy>{{ pricing.care_yearly }}</span> a year. If you'd rather not continue, everything that was built stays yours to run wherever you like.</dd>
         </div>
-        <div class="notes__item">
-          <dt>Not sure which one fits?</dt>
-          <dd>Most processes touch more than one of these. Describe the problem instead and the scope gets worked out together. <a href="{{ site.routes.start }}">Start here</a>.</dd>
+        <div class="faq__item">
+          <dt>Can I change my prices or hours myself?</dt>
+          <dd>Yes. Your Google Business Profile and WhatsApp Business details are yours to edit whenever you like. For the website and the bots, send the change on WhatsApp: text, prices, hours and photos count as small changes, included in year one and on the care plan after that.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What do you need from me to start?</dt>
+          <dd>Your business name, what you offer and what you charge, your opening hours, a few photos, and access to whatever the service runs on: your Google account, your WhatsApp number or your phone line. The build time starts once those are in.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What if I'm not sure which ones I need?</dt>
+          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <a href="{{ site.cal_url }}" target="_blank" rel="noopener">book a 15-minute call</a>. Describe how your week runs and you'll get a straight answer on what's worth setting up.</dd>
         </div>
       </dl>
     </div>
@@ -102,7 +138,7 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
 <section class="frame section close-band" aria-labelledby="svc-close">
   <div class="grid">
     <div class="g-body stack flow-l">
-      <h2 id="svc-close" class="t-h1" data-split>Pick one, or describe the <em>problem</em>.</h2>
+      <h2 id="svc-close" class="t-h1" data-split>Pick a few, see the <em>total</em>.</h2>
       <div class="cluster" style="--gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">Ask on WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>

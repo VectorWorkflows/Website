@@ -4,8 +4,7 @@
   "locale": "en",
   "year": "2026",
   "theme_color": "#0B0B0F",
-  "description": "A one-person automation and web engineering studio building backend systems, messaging bots, telephony pipelines and hand-built websites for small service businesses.",
-
+  "description": "A one-person studio that sets up websites, WhatsApp bots, missed-call responders and small automations for local service businesses, with prices in the open.",
   "email": "business@vectorworkflows.com",
   "phone_display": "+1 470 470 6323",
   "phone_tel": "+14704706323",
@@ -13,14 +12,13 @@
   "whatsapp_text": "Hi, saw Vector Workflows — I'd like to ask about automation for my business.",
   "telegram_bot": "https://t.me/vector_86k_bot",
   "telegram_bot_handle": "@vector_86k_bot",
-
+  "cal_url": "https://cal.com/vectorworkflows/intro-call",
   "social": {
     "github": "https://github.com/VectorWorkflows",
     "youtube": "https://www.youtube.com/@vectorworkflows",
     "instagram": "https://www.instagram.com/vectorworkflows/",
     "x": "https://x.com/VectorWorkflows"
   },
-
   "routes": {
     "home": "/",
     "work": "/work/",
@@ -31,107 +29,180 @@
     "terms": "/terms/",
     "concept_cutabove": "/cutabove/"
   },
-
-  "services": [
+  "conditions": {
+    "meta": "plus Meta's approval time",
+    "phone": "plus phone-line activation time"
+  },
+  "service_groups": [
     {
-      "slug": "web-presence",
+      "id": "get-found",
       "num": "01",
-      "name": "Web Presence",
-      "tagline": "Hand-built sites for service businesses",
-      "summary": "A fast, static website written by hand: no page builder, no platform fee, nothing to break when a framework moves on.",
-      "price": "2999",
-      "price_display": "₹2,999",
-      "window": "3–5 days",
-      "note": "",
-      "includes": [
-        "A hand-built static website, written without a page builder",
-        "Mobile-first layout that stays fast on slow connections",
-        "WhatsApp, call and email links wired into every page",
-        "On-page basics: titles, descriptions, sitemap",
-        "The full source handed over to you"
-      ],
-      "excludes": [
-        "Online stores and payment checkout",
-        "Copywriting or photography beyond what you provide",
-        "Domain and hosting fees",
-        "Content changes after hand-over, quoted separately"
+      "name": "Get found",
+      "line": "So people searching for what you do find you, and can reach you in one tap.",
+      "services": [
+        {
+          "slug": "website",
+          "name": "Business website",
+          "featured": "Starter bundle",
+          "line": "A fast, hand-built website that tells people what you do and gets them calling or messaging you.",
+          "points": [
+            "Hand-built and quick to open on any phone",
+            "Free hosting, with your domain included for year one",
+            "Call, WhatsApp and directions buttons on every page",
+            "Google Business Profile setup and WhatsApp Business setup included free"
+          ],
+          "condition": ""
+        },
+        {
+          "slug": "google-business-profile",
+          "name": "Google Business Profile setup",
+          "line": "Your business shows up properly on Google Search and Maps, with the right details.",
+          "points": [
+            "Correct categories, services and opening hours",
+            "Your photos added and in order",
+            "Your review link, plus a printable review QR code"
+          ],
+          "condition": ""
+        },
+        {
+          "slug": "whatsapp-business",
+          "name": "WhatsApp Business setup",
+          "line": "Your WhatsApp looks and works like a business number, not a personal one.",
+          "points": [
+            "A catalogue of what you sell or offer",
+            "Greeting and away messages, quick replies and labels",
+            "A click-to-chat link and a QR code for your counter or card"
+          ],
+          "condition": ""
+        }
       ]
     },
     {
-      "slug": "lead-capture",
+      "id": "never-miss",
       "num": "02",
-      "name": "Lead Capture",
-      "tagline": "Forms, intake flows, routing, follow-up",
-      "summary": "Every enquiry caught, acknowledged and sent to the place you actually look, with a list you can work through.",
-      "price": "4999",
-      "price_display": "₹4,999",
-      "window": "about 1 week",
-      "note": "",
-      "includes": [
-        "An intake form or step-by-step flow on your site",
-        "Enquiries routed to WhatsApp, Telegram, email or a Google Sheet",
-        "An automatic acknowledgement to the person enquiring",
-        "A lead list you can sort, update and follow up from"
-      ],
-      "excludes": [
-        "Running paid ad campaigns",
-        "A full CRM build",
-        "Bulk or marketing messaging"
+      "name": "Never miss a customer",
+      "line": "Every call and message gets an answer, even when you're busy with the one in front of you.",
+      "services": [
+        {
+          "slug": "whatsapp-bot",
+          "name": "WhatsApp auto-reply bot",
+          "line": "Answers the questions you get every day on WhatsApp, at any hour.",
+          "points": [
+            "Replies to common questions about prices, hours and location",
+            "Takes booking requests and passes them to you to confirm",
+            "Hands the chat over to you when a person is needed"
+          ],
+          "condition": "meta"
+        },
+        {
+          "slug": "missed-call-responder",
+          "name": "Missed-call responder",
+          "line": "When you can't pick up, the caller gets a message back straight away.",
+          "points": [
+            "An instant message back to every missed caller",
+            "An alert to you with their number",
+            "Every call logged in one sheet"
+          ],
+          "condition": "phone",
+          "case": "missed-lead-responder"
+        },
+        {
+          "slug": "ivr",
+          "name": "IVR phone line",
+          "line": "A \"Press 1 for…\" menu that sends each caller to the right place.",
+          "points": [
+            "A short menu in your business's own words",
+            "Each option routed to the right person or number",
+            "A clear message for callers outside your hours"
+          ],
+          "condition": "phone"
+        },
+        {
+          "slug": "enquiry-tracker",
+          "name": "Enquiry tracker",
+          "line": "Every enquiry from your website, WhatsApp and calls in one sheet you can work through.",
+          "points": [
+            "Website, WhatsApp and call enquiries in one Google Sheet",
+            "A status on each enquiry, so nothing is forgotten",
+            "Follow-up reminders for anything still open"
+          ],
+          "condition": "meta",
+          "case": "missed-lead-responder"
+        }
       ]
     },
     {
-      "slug": "booking-automation",
+      "id": "run-smoother",
       "num": "03",
-      "name": "Booking & Automation",
-      "tagline": "Scheduling, reminders, back-office workflows",
-      "summary": "The repetitive admin between a booking and a finished job, handled by a system that runs the same way every time.",
-      "price": "7999",
-      "price_display": "₹7,999",
-      "window": "1–2 weeks",
-      "note": "",
-      "includes": [
-        "A booking or scheduling flow tied to your calendar",
-        "Confirmations and reminders by message or email",
-        "One back-office workflow automated end to end, such as logging jobs to a sheet",
-        "Set-up on a cloud server so it runs around the clock"
-      ],
-      "excludes": [
-        "Payment processing",
-        "Migrating historical data",
-        "Connecting to tools that offer no API"
-      ]
-    },
-    {
-      "slug": "voice-messaging",
-      "num": "04",
-      "name": "Voice & Messaging",
-      "tagline": "IVR, missed-call response, WhatsApp and Telegram bots",
-      "summary": "Your phone line and chat apps doing the first response for you: missed calls answered, messages logged, you alerted.",
-      "price": "9999",
-      "price_display": "₹9,999",
-      "window": "about 2 weeks",
-      "note": "+ telephony/messaging provider usage at cost",
-      "includes": [
-        "Missed-call auto-response by SMS or WhatsApp",
-        "A WhatsApp or Telegram bot built around one core task",
-        "A simple IVR menu and call routing",
-        "Alerts to you on Telegram, logged to a Google Sheet"
-      ],
-      "excludes": [
-        "Telephony and messaging provider usage, billed at cost",
-        "Open-ended AI chat assistants",
-        "Call-centre staffing or live answering"
+      "name": "Run smoother",
+      "line": "The small repeat jobs of the week, done the same way every time without you chasing them.",
+      "services": [
+        {
+          "slug": "appointment-reminders",
+          "name": "Appointment reminders",
+          "line": "Customers book a slot and get reminded on WhatsApp, so fewer of them miss it.",
+          "points": [
+            "A booking link for your website, WhatsApp and social profiles",
+            "A WhatsApp reminder before each appointment",
+            "Bookings land in your own calendar"
+          ],
+          "condition": "meta"
+        },
+        {
+          "slug": "job-site-log",
+          "name": "Job & site log",
+          "line": "Staff send a photo and a note on WhatsApp, and it becomes a timestamped record.",
+          "points": [
+            "For site issues, deliveries, stock received and proof of finished work",
+            "Each message becomes a dated row with the photo attached",
+            "One sheet to check instead of scrolling back through chats"
+          ],
+          "condition": "meta",
+          "case": "site-fault-tracker"
+        },
+        {
+          "slug": "repeat-customer-tracker",
+          "name": "Repeat-customer tracker",
+          "line": "Shows who hasn't come back in a while and sends them a gentle WhatsApp nudge.",
+          "points": [
+            "Customers listed by when they last came in",
+            "A friendly WhatsApp message to the ones who are overdue",
+            "Written in your words, sent from your business number"
+          ],
+          "condition": "meta"
+        },
+        {
+          "slug": "review-requester",
+          "name": "Review requester",
+          "line": "After a visit, the customer receives your Google review link.",
+          "points": [
+            "Sent on WhatsApp after each visit",
+            "One tap from the message to your Google review page",
+            "Sent at a time you choose, not in the middle of the visit"
+          ],
+          "condition": "meta"
+        },
+        {
+          "slug": "telegram-team-bot",
+          "name": "Telegram team bot",
+          "line": "One Telegram bot for your staff: tasks, alerts and notes in the chat they already use.",
+          "points": [
+            "Tasks handed out and marked done from Telegram",
+            "Alerts when something needs someone's attention",
+            "Notes saved where the whole team can find them"
+          ],
+          "condition": "",
+          "case": "dynamic-scheduler"
+        }
       ]
     }
   ],
-
   "systems": [
     {
       "slug": "missed-lead-responder",
       "num": "01",
       "name": "Missed Lead Responder",
       "replay": "missed-lead",
-      "pillar": "Voice & Messaging",
       "status": "Built & Tested — Ready for Onboarding",
       "live": "",
       "line": "A missed call becomes an instant SMS reply, an owner alert and a logged lead.",
@@ -145,7 +216,6 @@
       "num": "02",
       "name": "Site Fault Tracker",
       "replay": "site-fault",
-      "pillar": "Booking & Automation",
       "status": "Built & Tested — Ready for Onboarding",
       "live": "",
       "line": "A WhatsApp photo and a short note become one structured row in the team's sheet.",
@@ -159,7 +229,6 @@
       "num": "03",
       "name": "Dynamic Scheduler",
       "replay": "scheduler",
-      "pillar": "Booking & Automation",
       "status": "Live — Open for Public Use",
       "live": "true",
       "line": "Send /awake and today's schedule switches to the template that matches when your day started.",
@@ -169,10 +238,19 @@
       "docs": "https://app.notion.com/p/Dynamic-Scheduler-Bot-3b9d07dc818580b5ab2dec4c95e80547?source=copy_link"
     }
   ],
-
-  "protected_dirs": ["cutabove"],
+  "protected_dirs": [
+    "cutabove"
+  ],
   "planned_routes": [
-    "/", "/work/", "/services/", "/studio/", "/start/", "/privacy/", "/terms/",
-    "/work/missed-lead-responder/", "/work/site-fault-tracker/", "/work/dynamic-scheduler/"
+    "/",
+    "/work/",
+    "/services/",
+    "/studio/",
+    "/start/",
+    "/privacy/",
+    "/terms/",
+    "/work/missed-lead-responder/",
+    "/work/site-fault-tracker/",
+    "/work/dynamic-scheduler/"
   ]
 }

@@ -1,6 +1,6 @@
 ---
-title: Studio · who builds Vector Workflows systems, and how
-description: Vector Workflows is a one-person automation and web engineering studio. The person who scopes the project builds it, deploys it and answers when it needs changing. Why every site here is hand-built instead of made with a page builder.
+title: Studio · Sameer Bhardwaj, the person behind Vector Workflows
+description: Vector Workflows is Sameer Bhardwaj, known as Sam. Teaching, sales and retention work, and a BCA taught him how to explain things plainly, why customers leave, and how software is built properly. Now all three happen in one place.
 path: /studio/
 nav: studio
 schema: organization
@@ -8,54 +8,113 @@ body_class: page-studio
 critical_css: components/page-head.css, pages/studio.css
 ---
 
-<section class="frame page-head" aria-labelledby="page-title">
-  <div class="grid page-head__grid">
+<section class="frame page-head studio-hero" aria-labelledby="page-title">
+  <div class="grid studio-hero__grid">
     <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">ST</span><span class="index-label__rule"></span>Studio</p></div>
+    <div class="studio-hero__copy stack flow-l">
+      <h1 id="page-title" class="rise page-head__title">{% rise %}Hi, I'm <em>Sam</em>.{% endrise %}</h1>
+      <p class="t-lead page-head__lead fade-in" style="--d:1">I'm Sameer Bhardwaj, and Vector Workflows is me. I work out what you need, build it, and answer when it needs changing. There's no account manager in between.</p>
+      <p class="studio-hero__origin fade-in" style="--d:2">Born in Uttar Pradesh, raised in New Delhi.</p>
+      <div class="cluster fade-in" style="--d:3; --gap: var(--space-xs)">
+        <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+    <figure class="portrait fade-in" style="--d:1" data-portrait>
+      <div class="portrait__frame">{{{ portrait }}}</div>
+      <figcaption class="t-label">Sameer Bhardwaj — “Sam”</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="story-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>How I got here</p></div>
     <div class="g-body stack flow-l">
-      <h1 id="page-title" class="rise page-head__title">{% rise %}One person, <em>every</em> line.{% endrise %}</h1>
-      <p class="t-lead page-head__lead fade-in" style="--d:1">Vector Workflows is a one-person studio. The person who scopes your project is the person who builds it, deploys it, and answers when something needs to change. There's no account manager in between.</p>
+      <div class="stack flow-s">
+        <h2 id="story-title" class="t-h2-s" data-split>Teaching, selling, <em>building</em>.</h2>
+        <p class="story__intro">Underneath all of it, from 2023 to April 2026, ran a BCA at Amity University, alongside the teaching, Digitora and a full-time job. It gave me the engineering grounding: how software is built properly, not just how to make it work once. It's the line running beside the chapters below.</p>
+      </div>
+
+      <div class="timeline" data-timeline>
+        <div class="thread" aria-hidden="true">
+          <span class="thread__line"></span>
+          <span class="thread__label">BCA · Amity University · 2023 – April 2026</span>
+        </div>
+
+        <ol class="timeline__list" role="list">
+          <li class="tl">
+            <p class="tl__when">2023</p>
+            <h3 class="tl__title">Teaching at a neighbourhood institute</h3>
+            <p>I taught classes 6 to 9 at Reliance Coaching Centre, a neighbourhood institute in Delhi.</p>
+            <p class="tl__taught"><span class="t-label">What it taught me</span>How to explain something so it lands with people who don't care about jargon. It's still how I explain a system to an owner.</p>
+          </li>
+          <li class="tl">
+            <p class="tl__when">2024</p>
+            <h3 class="tl__title">Digitora</h3>
+            <p>I moved to Gurugram and built Digitora, a site meant to sell websites. I spent months perfecting the site, and stopped when it was time to sell.</p>
+            <p class="tl__taught"><span class="t-label">What it taught me</span>A beautiful site nobody sees earns nothing. That's why Vector Workflows builds things that bring customers in, and why I go out and talk to people.</p>
+          </li>
+          <li class="tl">
+            <p class="tl__when">Nov 2024 – Oct 2025</p>
+            <h3 class="tl__title">Sales and retention at Concentrix</h3>
+            <p>On Comcast's Xfinity account, I spent every day talking with customers who had already decided to leave, and won many of them back. I was recognised on the floor's wall of fame and awarded a certificate of recognition.</p>
+            <p class="tl__taught"><span class="t-label">What it taught me</span>Most customers are lost through silence, not price: an unanswered call, a slow reply. That's where the <a href="{{ site.routes.services }}#missed-call-responder">Missed-call responder</a> and the <a href="{{ site.routes.services }}#repeat-customer-tracker">Repeat-customer tracker</a> come from.</p>
+          </li>
+          <li class="tl tl--milestone">
+            <p class="tl__when">April 2026</p>
+            <h3 class="tl__title">BCA completed</h3>
+          </li>
+          <li class="tl tl--now">
+            <p class="tl__when">2026</p>
+            <h3 class="tl__title">Vector Workflows</h3>
+            <p>I started Vector Workflows to put the three in one place: teaching, selling and building. You get the plain explanation, the reason it matters to your customers, and the working system, from the same person.</p>
+          </li>
+        </ol>
+      </div>
+
+      <p class="signoff">— Sam</p>
     </div>
   </div>
 </section>
 
 <section class="frame section-tight" aria-labelledby="how-title">
   <div class="grid">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>How it works</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>How it works</p></div>
     <div class="g-body">
       <h2 id="how-title" class="t-h2-s sec-head" data-split>Small by design.</h2>
       <div class="principles" data-reveal-group>
         <article class="principle">
-          <h3>Scoped before it's built</h3>
-          <p>Every project starts with what's included, what isn't, a starting price and a build window. If something needs to grow, you hear about it before the work, not after.</p>
+          <h3>Priced before it's built</h3>
+          <p>Every service has its price and build time on the <a href="{{ site.routes.services }}">services page</a>. If something needs to grow, you hear about it before the work, not after.</p>
         </article>
         <article class="principle">
           <h3>Built on what you already use</h3>
-          <p>WhatsApp, Telegram, Google Sheets, your existing phone line. Systems fit around how your team already works instead of asking them to learn new software.</p>
+          <p>WhatsApp, Telegram, Google Sheets, your existing phone line. Systems fit around how your team already works.</p>
         </article>
         <article class="principle">
           <h3>Handed over, not locked in</h3>
-          <p>You get the source code and run it on your own accounts. If you ever want someone else to take it over, nothing stands in the way.</p>
+          <p>What's built for you is yours. If you ever want someone else to take it over, nothing stands in the way.</p>
         </article>
       </div>
     </div>
   </div>
 </section>
 
-<section class="frame section" aria-labelledby="why-title">
+<section class="frame section-tight" aria-labelledby="why-title">
   <div class="grid">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Why hand-built</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Why hand-built</p></div>
     <div class="g-body">
-      <h2 id="why-title" class="t-h1 sec-head" data-split>Page builders rent you a website. <em>This</em> kind is yours.</h2>
+      <h2 id="why-title" class="t-h2-s sec-head" data-split>Written by hand, <em>fast</em> on any phone.</h2>
       <div class="why">
         <div class="why__lead prose">
-          <p>Every site here is written by hand: plain HTML, CSS and a little JavaScript, with no page builder or framework underneath. It's the same way this site is made.</p>
+          <p>Every site here is plain HTML, CSS and a little JavaScript, with no page builder underneath. It's the same way this site is made.</p>
           <p>This page, including its styles and scripts, is <strong><!--PAGE_WEIGHT--></strong> gzipped. That's measured when the site is built, not estimated.</p>
         </div>
         <dl class="why__points" data-reveal-group>
-          <div><dt>Fast on slow connections</dt><dd>No builder runtime to download before anything appears. Pages open quickly on a mid-range phone on mobile data.</dd></div>
-          <div><dt>Nothing to patch</dt><dd>No plugins, no admin panel, no weekly security updates. There's very little that can break.</dd></div>
-          <div><dt>Outlives the framework</dt><dd>Plain HTML still opens in any browser years from now, long after today's tools have moved on.</dd></div>
-          <div><dt>No platform fee</dt><dd>A static site can be hosted cheaply or for free, and you're never paying monthly just to keep it online.</dd></div>
+          <div><dt>Fast on slow connections</dt><dd>Nothing heavy to download before the page appears, so it opens quickly on a mid-range phone on mobile data.</dd></div>
+          <div><dt>Nothing to patch</dt><dd>No plugins, no admin panel, no weekly security updates. Very little can break.</dd></div>
+          <div><dt>Outlives the tools</dt><dd>Plain HTML still opens in any browser years from now.</dd></div>
         </dl>
       </div>
     </div>
@@ -64,13 +123,13 @@ critical_css: components/page-head.css, pages/studio.css
 
 <section class="frame section-tight" aria-labelledby="kit-title">
   <div class="grid">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Toolkit</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Toolkit</p></div>
     <div class="g-body stack flow-m">
       <h2 id="kit-title" class="t-h3">What the systems are built with</h2>
       <ul class="kit" role="list">
         <li>Python</li><li>FastAPI</li><li>MongoDB</li><li>Twilio</li><li>WhatsApp Cloud API</li><li>Telegram Bot API</li><li>Google Workspace APIs</li><li>Google Cloud Platform</li><li>Docker</li><li>HTML · CSS · JavaScript</li>
       </ul>
-      <p class="t-small">The code for every system on this site is public: <a href="{{ site.social.github }}" target="_blank" rel="noopener">github.com/VectorWorkflows</a>. Build logs and walkthroughs are on <a href="{{ site.social.youtube }}" target="_blank" rel="noopener">YouTube</a>.</p>
+      <p class="t-small">The code for every system on this site is public: <a href="{{ site.social.github }}" target="_blank" rel="noopener">github.com/VectorWorkflows</a>. Walkthroughs are on <a href="{{ site.social.youtube }}" target="_blank" rel="noopener">YouTube</a>.</p>
     </div>
   </div>
 </section>
@@ -80,7 +139,8 @@ critical_css: components/page-head.css, pages/studio.css
     <div class="g-body stack flow-l">
       <h2 id="studio-close-title" class="t-h1" data-split>Talk to the person who'll <em>build it</em>.</h2>
       <div class="cluster" style="--gap: var(--space-xs)">
-        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
+        <a class="btn" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
     </div>

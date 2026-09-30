@@ -4,61 +4,185 @@
   "base": "10:42:00",
   "summary": "Replay with simulated data. A call to Northgate Plumbing from a number ending 0182 goes unanswered. Four seconds later the caller gets an SMS apologising and asking what they need. The owner gets a Telegram alert with Call back and Mark handled buttons, and a row is added to the Leads sheet marked Awaiting reply. About a minute later the caller replies that their kitchen sink is leaking; the sheet row updates to Replied, the owner is pinged again, and a reminder is set in case the lead stays unhandled.",
   "lanes": [
-    { "id": "a", "label": "Caller's phone", "icon": "phone", "anchor": "bottom", "height": { "narrow": "21rem", "wide": "20rem" } },
-    { "id": "b", "label": "Owner · Northgate Plumbing", "icon": "bell-simple", "anchor": "bottom", "height": { "narrow": "25.5rem", "wide": "20rem" } }
+    {
+      "id": "a",
+      "label": "Caller's phone",
+      "icon": "phone",
+      "anchor": "bottom",
+      "height": {
+        "narrow": "21rem",
+        "wide": "20rem"
+      },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Owner · Northgate Plumbing",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": {
+        "narrow": "25.5rem",
+        "wide": "20rem"
+      },
+      "view": "owner"
+    }
   ],
   "steps": [
     {
-      "t": "00:00", "lane": "a", "type": "call",
-      "from": "••• 0182", "status": "Unanswered",
-      "log": { "sys": "twilio", "event": "CALL_UNANSWERED", "kv": { "from": "+•••0182", "to": "business_line", "answered": "false" } }
+      "t": "00:00",
+      "lane": "a",
+      "type": "call",
+      "from": "••• 0182",
+      "status": "Unanswered",
+      "log": {
+        "sys": "twilio",
+        "event": "CALL_UNANSWERED",
+        "kv": {
+          "from": "+•••0182",
+          "to": "business_line",
+          "answered": "false"
+        }
+      }
     },
     {
-      "t": "00:04", "lane": "a", "type": "sms", "dir": "out",
+      "t": "00:04",
+      "lane": "a",
+      "type": "sms",
+      "dir": "out",
       "text": "Hi, it's Northgate Plumbing. Sorry we missed your call! What can we help with? Reply here and we'll get straight back to you.",
       "meta": "SMS · auto-reply · 10:42",
-      "log": { "sys": "twilio", "event": "SMS_SENT", "kv": { "to": "+•••0182", "template": "missed_call_ack" } }
+      "log": {
+        "sys": "twilio",
+        "event": "SMS_SENT",
+        "kv": {
+          "to": "+•••0182",
+          "template": "missed_call_ack"
+        }
+      }
     },
     {
-      "t": "00:05", "lane": "b", "type": "telegram",
+      "t": "00:05",
+      "lane": "b",
+      "type": "telegram",
       "from": "Lead Desk",
       "text": "Missed call from ••• 0182. Auto-reply sent. No response yet.",
-      "buttons": ["Call back", "Mark handled"],
-      "log": { "sys": "telegram", "event": "TELEGRAM_ALERT", "kv": { "chat": "owner", "lead": "•••0182", "actions": "call_back,mark_handled" } }
+      "buttons": [
+        "Call back",
+        "Mark handled"
+      ],
+      "log": {
+        "sys": "telegram",
+        "event": "TELEGRAM_ALERT",
+        "kv": {
+          "chat": "owner",
+          "lead": "•••0182",
+          "actions": "call_back,mark_handled"
+        }
+      }
     },
     {
-      "t": "00:05", "lane": "b", "type": "sheet", "id": "lead",
+      "t": "00:05",
+      "lane": "b",
+      "type": "sheet",
+      "id": "lead",
       "sheet": "Leads",
       "columns": [
-        { "key": "time", "label": "Time" },
-        { "key": "caller", "label": "Caller" },
-        { "key": "status", "label": "Status" }
+        {
+          "key": "time",
+          "label": "Time"
+        },
+        {
+          "key": "caller",
+          "label": "Caller"
+        },
+        {
+          "key": "status",
+          "label": "Status"
+        }
       ],
-      "row": { "time": "10:42", "caller": "••• 0182", "status": "Awaiting reply" },
-      "tones": { "status": "wait" },
-      "log": { "sys": "sheets", "event": "SHEET_APPEND", "kv": { "sheet": "Leads", "caller": "+•••0182", "status": "awaiting_reply" } }
+      "row": {
+        "time": "10:42",
+        "caller": "••• 0182",
+        "status": "Awaiting reply"
+      },
+      "tones": {
+        "status": "wait"
+      },
+      "log": {
+        "sys": "sheets",
+        "event": "SHEET_APPEND",
+        "kv": {
+          "sheet": "Leads",
+          "caller": "+•••0182",
+          "status": "awaiting_reply"
+        }
+      }
     },
     {
-      "t": "01:12", "lane": "a", "type": "sms", "dir": "in",
+      "t": "01:12",
+      "lane": "a",
+      "type": "sms",
+      "dir": "in",
       "text": "Hi, the kitchen sink is leaking under the cabinet. Can someone come today?",
       "meta": "SMS · from ••• 0182 · 10:43",
-      "log": { "sys": "twilio", "event": "SMS_REPLY", "kv": { "from": "+•••0182", "lead": "•••0182" } }
+      "log": {
+        "sys": "twilio",
+        "event": "SMS_REPLY",
+        "kv": {
+          "from": "+•••0182",
+          "lead": "•••0182"
+        }
+      }
     },
     {
-      "t": "01:13", "type": "sheet", "op": "update", "target": "lead",
-      "set": { "status": "Replied · leaking sink" },
-      "tones": { "status": "ok" },
-      "log": { "sys": "sheets", "event": "SHEET_UPDATE", "kv": { "lead": "•••0182", "status": "replied", "reason": "leaking sink" } }
+      "t": "01:13",
+      "type": "sheet",
+      "op": "update",
+      "target": "lead",
+      "set": {
+        "status": "Replied · leaking sink"
+      },
+      "tones": {
+        "status": "ok"
+      },
+      "log": {
+        "sys": "sheets",
+        "event": "SHEET_UPDATE",
+        "kv": {
+          "lead": "•••0182",
+          "status": "replied",
+          "reason": "leaking sink"
+        }
+      }
     },
     {
-      "t": "01:13", "lane": "b", "type": "event",
+      "t": "01:13",
+      "lane": "b",
+      "type": "event",
       "text": "Owner pinged again with the reply",
-      "log": { "sys": "telegram", "event": "TELEGRAM_ALERT", "kv": { "chat": "owner", "lead": "•••0182", "type": "reply_received" } }
+      "log": {
+        "sys": "telegram",
+        "event": "TELEGRAM_ALERT",
+        "kv": {
+          "chat": "owner",
+          "lead": "•••0182",
+          "type": "reply_received"
+        }
+      }
     },
     {
-      "t": "01:13", "lane": "b", "type": "event",
+      "t": "01:13",
+      "lane": "b",
+      "type": "event",
       "text": "Reminder set if the lead stays unhandled",
-      "log": { "sys": "scheduler", "event": "REMINDER_SET", "kv": { "lead": "•••0182", "when": "unhandled" } }
+      "log": {
+        "sys": "scheduler",
+        "event": "REMINDER_SET",
+        "kv": {
+          "lead": "•••0182",
+          "when": "unhandled"
+        }
+      }
     }
   ]
 }

@@ -1,0 +1,57 @@
+{
+  "_comment": "Single source of truth for every price, the launch end date and every build time on the site. build.py reads this file; pages never contain a price. Amounts are whole rupees. After launch_end, the build renders standard prices only and drops the launch label and strike-through.",
+
+  "currency": "INR",
+  "symbol": "₹",
+  "launch_end": "2026-11-30",
+
+  "tiers": {
+    "standard": {
+      "launch": 2999,
+      "standard": 4999,
+      "bundle": 1999,
+      "counts_toward_bundle": true
+    },
+    "phone": {
+      "launch": 3999,
+      "standard": 5999,
+      "bundle": 2999,
+      "counts_toward_bundle": true
+    },
+    "setup": {
+      "launch": 1499,
+      "standard": 2499,
+      "free_with": "website",
+      "counts_toward_bundle": false
+    }
+  },
+
+  "bundle_min": 2,
+
+  "services": {
+    "website":                 { "tier": "standard", "days": 3 },
+    "google-business-profile": { "tier": "setup",    "days": 2 },
+    "whatsapp-business":       { "tier": "setup",    "days": 2 },
+    "whatsapp-bot":            { "tier": "standard", "days": 5 },
+    "missed-call-responder":   { "tier": "phone",    "days": 5 },
+    "ivr":                     { "tier": "phone",    "days": 5 },
+    "enquiry-tracker":         { "tier": "standard", "days": 5 },
+    "appointment-reminders":   { "tier": "standard", "days": 5 },
+    "job-site-log":            { "tier": "standard", "days": 5 },
+    "repeat-customer-tracker": { "tier": "standard", "days": 5 },
+    "review-requester":        { "tier": "standard", "days": 5 },
+    "telegram-team-bot":       { "tier": "standard", "days": 5 }
+  },
+
+  "included_year_one": [
+    "Free hosting",
+    "Domain for year one (websites)",
+    "SSL",
+    "Bot hosting",
+    "Small changes and fixes (text, prices, hours, photos)"
+  ],
+
+  "care_plan": { "monthly": 999, "yearly": 9999 },
+
+  "usage_note": "Messages your business starts on WhatsApp (reminders, follow-ups) carry small Meta fees, and phone services need a phone line — both billed at cost. Chats your customers start cost nothing extra."
+}

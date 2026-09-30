@@ -57,10 +57,11 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
+DATA = ROOT / "data"
 MANIFEST_FILE = ROOT / ".build-manifest.json"
 
 # Directories the builder must never touch. site.json can add more.
-ALWAYS_PROTECTED = {".git", ".github", ".claude", ".agents", "src", "node_modules", "cutabove"}
+ALWAYS_PROTECTED = {".git", ".github", ".claude", ".agents", "src", "data", "node_modules", "cutabove"}
 
 # CSS bundles. Cascade layers are declared first (layers.css), so the order
 # files arrive in never changes which rule wins. Critical CSS is inlined in
@@ -183,6 +184,96 @@ def load_site() -> dict:
 
 def protected_dirs(site: dict) -> set[str]:
     return ALWAYS_PROTECTED | set(site.get("protected_dirs", []))
+
+
+# ---------------------------------------------------------------------------
+# Pricing: data/pricing.json is the only place a price, the launch end date or
+# a build time is written. Pages read the values this attaches to the site.
+# ---------------------------------------------------------------------------
+
+_NUM_WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
+
+
+def rupees(n: int) -> str:
+    """Indian digit grouping: 2999 → ₹2,999; 125000 → ₹1,25,000."""
+    s = str(int(n))
+    if len(s) > 3:
+        head, tail = s[:-3], s[-3:]
+        head = ",".join([head[max(0, i - 2):i] for i in range(len(head), 0, -2)][::-1])
+        s = f"{head},{tail}"
+    return f"₹{s}"
+
+
+def load_pricing(site: dict, today: date | None = None) -> dict:
+    """Attach prices to every service in site['service_groups'] and return the
+    page-level pricing context. After launch_end only standard prices render."""
+    p = json.loads((DATA / "pricing.json").read_text("utf-8"))
+    end = date.fromisoformat(p["launch_end"])
+    launch = (today or date.today()) <= end
+    tiers = p["tiers"]
+
+    menu_slugs = [s["slug"] for g in site["service_groups"] for s in g["services"]]
+    if sorted(menu_slugs) != sorted(p["services"]):
+        missing = set(menu_slugs) ^ set(p["services"])
+        raise BuildError(f"data/pricing.json and src/site.json list different services: {sorted(missing)}")
+
+    def now(tier: dict) -> int:
+        return tier["launch"] if launch else tier["standard"]
+
+    js_services = {}
+    for g in site["service_groups"]:
+        for s in g["services"]:
+            entry = p["services"][s["slug"]]
+            tier = tiers[entry["tier"]]
+            days = entry["days"]
+            s["tier"] = entry["tier"]
+            s["price"] = {
+                "now": rupees(now(tier)),
+                "was": rupees(tier["standard"]) if launch else "",
+                "value": now(tier),
+                "free_with": tier.get("free_with", ""),
+                "ready": f"Ready in under {days} days, once we have your details.",
+                "days": days,
+            }
+            s["condition_text"] = site["conditions"].get(s.get("condition", ""), "")
+            js_services[s["slug"]] = {"name": s["name"], "tier": entry["tier"]}
+        g["from"] = rupees(min(s["price"]["value"] for s in g["services"]))
+        g["count_label"] = f"{len(g['services'])} services"
+
+    for sysm in site["systems"]:
+        sysm["related"] = [s for g in site["service_groups"] for s in g["services"] if s.get("case") == sysm["slug"]]
+        for s in sysm["related"]:
+            s["case_name"] = sysm["name"]
+    unknown = [s["case"] for g in site["service_groups"] for s in g["services"]
+               if s.get("case") and not s.get("case_name")]
+    if unknown:
+        raise BuildError(f"src/site.json: services point at unknown case studies {unknown}")
+
+    std, phone = tiers["standard"], tiers["phone"]
+    free_names = [s["name"] for g in site["service_groups"] for s in g["services"] if s["price"]["free_with"]]
+    pricing = {
+        "launch": launch,
+        "launch_label": f"Launch pricing until {end.day} {end:%B %Y}",
+        "launch_end": p["launch_end"],
+        "bundle_rule": (f"Pick {_NUM_WORDS.get(p['bundle_min'], p['bundle_min'])} or more and each is "
+                        f"{rupees(std['bundle'])} (phone services {rupees(phone['bundle'])})."),
+        "free_rule": f"{' and '.join(free_names)} are free with a website, and don't count toward the bundle.",
+        "included": p["included_year_one"],
+        "care_monthly": rupees(p["care_plan"]["monthly"]),
+        "care_yearly": rupees(p["care_plan"]["yearly"]),
+        "usage_note": p["usage_note"],
+        "from": rupees(min(now(t) for t in tiers.values() if t.get("counts_toward_bundle"))),
+    }
+    # What the browser needs to quote a selection (shared by /start and /services)
+    pricing["json"] = json.dumps({
+        "launch": launch,
+        "bundleMin": p["bundle_min"],
+        "tiers": {k: {"now": now(t), "standard": t["standard"], "bundle": t.get("bundle"),
+                      "counts": t["counts_toward_bundle"], "freeWith": t.get("free_with", "")}
+                  for k, t in tiers.items()},
+        "services": js_services,
+    }, ensure_ascii=False, separators=(",", ":"))
+    return pricing
 
 
 # ---------------------------------------------------------------------------
@@ -704,7 +795,54 @@ def build_images(out: Output, site: dict) -> dict:
         if not fresh("favicon.ico", icon_src):
             square.save(target("favicon.ico"), "ICO", sizes=[(16, 16), (32, 32), (48, 48)])
         out.keep("favicon.ico")
+
+    # Studio portrait: 4:5 crop, a little desaturated, with a faint violet-to-
+    # ink wash so it sits in the palette. Two sizes, AVIF + WebP + JPEG.
+    portrait_src = ROOT / "assets/img/sam-portrait.jpg"
+    if portrait_src.exists():
+        from PIL import ImageEnhance
+        sizes = (480, 960)
+        rels = [f"assets/img/studio/sam-{w}.{ext}" for w in sizes for ext in ("avif", "webp", "jpg")]
+        if not all(fresh(r, portrait_src) for r in rels):
+            with Image.open(portrait_src) as im:
+                im = im.convert("RGB")
+                w, h = im.size
+                cw = min(w, round(h * 4 / 5))
+                ch = round(cw * 5 / 4)
+                left, top = (w - cw) // 2, max(0, (h - ch) // 2)
+                im = im.crop((left, top, left + cw, top + ch))
+                im = ImageEnhance.Color(im).enhance(0.72)
+                im = ImageEnhance.Brightness(im).enhance(0.93)
+                # Vertical wash: violet at the top, ink towards the bottom
+                wash = Image.new("RGBA", im.size)
+                violet, ink = (103, 86, 185), (11, 11, 15)
+                px = wash.load()
+                for y in range(im.height):
+                    k = y / (im.height - 1)
+                    col = tuple(round(violet[i] + (ink[i] - violet[i]) * k) for i in range(3))
+                    alpha = round(255 * (0.13 + 0.17 * k))
+                    for x in range(im.width):
+                        px[x, y] = (*col, alpha)
+                im = Image.alpha_composite(im.convert("RGBA"), wash).convert("RGB")
+                for size in sizes:
+                    frame = im.resize((size, round(size * 5 / 4)), Image.LANCZOS)
+                    frame.save(target(f"assets/img/studio/sam-{size}.avif"), "AVIF", quality=62)
+                    frame.save(target(f"assets/img/studio/sam-{size}.webp"), "WEBP", quality=80, method=6)
+                    frame.save(target(f"assets/img/studio/sam-{size}.jpg"), "JPEG", quality=82, optimize=True, progressive=True)
+        for r in rels:
+            out.keep(r)
+        info["portrait"] = True
     return info
+
+
+def portrait_html() -> str:
+    b = "/assets/img/studio/sam"
+    return ('<picture>'
+            f'<source type="image/avif" srcset="{b}-480.avif 480w, {b}-960.avif 960w" sizes="(min-width: 64rem) 26rem, 90vw">'
+            f'<source type="image/webp" srcset="{b}-480.webp 480w, {b}-960.webp 960w" sizes="(min-width: 64rem) 26rem, 90vw">'
+            f'<img class="portrait__img" src="{b}-480.jpg" width="480" height="600" '
+            'alt="Sameer Bhardwaj, founder of Vector Workflows" decoding="async" fetchpriority="high">'
+            '</picture>')
 
 
 def brand_mark_html(info: dict) -> str:
@@ -1000,6 +1138,16 @@ def _artifact(step: dict, muts: dict, data: dict) -> str:
                 f'{_mut(muts, step["id"] + ".template")}</div><ol class="rp-cal__list" role="list">{blocks}</ol></div></li>')
     if kind == "event":
         return f'<li class="rp-item rp-event" {at}><span aria-hidden="true">↳</span> {_esc(step["text"])}</li>'
+    if kind == "consent":
+        scopes = "".join(f'<li>{{% icon "check" %}}<span>{_esc(s)}</span></li>' for s in step["scopes"])
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-consent">'
+                f'<p class="rp-kicker">Sign in with Google · {wall}</p>'
+                f'<p class="rp-consent__title">{_esc(step["app"])} wants to access your Google Account</p>'
+                f'<p class="rp-consent__acct"><span class="rp-avatar" aria-hidden="true">{_esc(step["initial"])}</span>'
+                f'{_esc(step["account"])}</p>'
+                f'<ul class="rp-consent__scopes" role="list">{scopes}</ul>'
+                f'<div class="rp-consent__btns"><span>Cancel</span><span class="is-primary">Allow</span></div>'
+                f'</div></li>')
     return ""
 
 
@@ -1016,22 +1164,40 @@ def _log_line(step: dict, data: dict, extra_cls: str = "") -> str:
             f'<span class="log-kv">{kv}</span></li>')
 
 
+VIEW_NAMES = {"customer": "Customer", "owner": "Owner"}
+
+
 def render_replay(name: str, where: str, dom_id: str = "") -> str:
+    """Two synchronised views on one clock: the customer's own phone, and what
+    the owner sees. Both sit in one grid cell, so the stage is as tall as the
+    taller view and switching never moves the page. A hidden tick list carries
+    the clock and the value changes for every step, visible or not. (The raw
+    event log only appears in the home page's log reel.)"""
     data = load_replay(name, where)
     muts = _collect_muts(data)
     rid = dom_id or f"replay-{name}"
-    lanes = []
+    views = []
     for lane in data["lanes"]:
         items = "".join(_artifact(s, muts, data) for s in data["steps"] if s.get("lane") == lane["id"])
         h = lane["height"]
-        lanes.append(
-            f'<section class="replay__lane" aria-label="{_esc(lane["label"])}">'
+        views.append(
+            f'<section class="replay__view" data-panel="{lane["view"]}" id="{rid}-{lane["view"]}" '
+            f'aria-label="{VIEW_NAMES[lane["view"]]} view: {_esc(lane["label"])}">'
             f'<p class="replay__lane-label">{{% icon "{lane.get("icon", "eye")}" %}}{_esc(lane["label"])}</p>'
             f'<ol class="replay__feed" role="list" data-anchor="{lane.get("anchor", "bottom")}" '
             f'style="--h-n:{h["narrow"]};--h-w:{h["wide"]}">{items}</ol></section>')
-    log = "".join(_log_line(s, data) for s in data["steps"])
+    ticks = "".join(
+        f'<li data-at="{s["_at"]}" data-t="{s["t"]}"'
+        + (f" data-apply='{_esc(json.dumps(s['_apply']))}'" if s.get("_apply") else "") + "></li>"
+        for s in data["steps"])
+    first = data["lanes"][0]["view"]
+    buttons = "".join(
+        f'<button type="button" data-view-btn="{lane["view"]}" aria-controls="{rid}-{lane["view"]}" '
+        f'aria-pressed="{str(lane["view"] == first).lower()}">{VIEW_NAMES[lane["view"]]}'
+        f'<span class="replay__vw"> view</span></button>'
+        for lane in data["lanes"])
     final_t = data["steps"][-1]["t"]
-    return f'''<figure class="replay" id="{rid}" data-replay data-duration="{data["_duration"]}" data-view="owner" aria-labelledby="{rid}-name">
+    return f'''<figure class="replay" id="{rid}" data-replay data-duration="{data["_duration"]}" data-view="{first}" aria-labelledby="{rid}-name">
   <div class="replay__core">
     <div class="replay__bar">
       <div class="replay__id">
@@ -1039,20 +1205,13 @@ def render_replay(name: str, where: str, dom_id: str = "") -> str:
         <span class="replay__sim">Simulated data · real system flow</span>
       </div>
       <span class="replay__clock" data-clock aria-hidden="true">{final_t}</span>
-      <div class="replay__views" role="group" aria-label="Replay view">
-        <button type="button" data-view-btn="owner" aria-pressed="true">Owner<span class="replay__vw"> view</span></button>
-        <button type="button" data-view-btn="engineer" aria-pressed="false">Engineer<span class="replay__vw"> view</span></button>
-      </div>
+      <div class="replay__views" role="group" aria-label="Replay view">{buttons}</div>
       <button type="button" class="replay__play" data-play aria-label="Pause replay">
         <span class="replay__icon-pause">{{% icon "pause" %}}</span><span class="replay__icon-play">{{% icon "play" %}}</span>
       </button>
     </div>
-    <div class="replay__stage">
-      <div class="replay__view replay__view--owner" data-panel="owner">{"".join(lanes)}</div>
-      <div class="replay__view replay__view--engineer" data-panel="engineer">
-        <ol class="replay__log" role="list" aria-label="Event log">{log}<li class="log-caret" aria-hidden="true"></li></ol>
-      </div>
-    </div>
+    <div class="replay__stage">{"".join(views)}</div>
+    <ol class="replay__ticks" hidden>{ticks}</ol>
   </div>
   <figcaption class="sr-only">{_esc(data["summary"])}</figcaption>
 </figure>'''
@@ -1085,6 +1244,7 @@ def gz_size(data: str | bytes) -> int:
 
 def build() -> int:
     site = load_site()
+    pricing = load_pricing(site)
     protected = protected_dirs(site)
     guarded = {d: tree_hash(ROOT / d) for d in site.get("protected_dirs", [])}
     out = Output(protected)
@@ -1152,6 +1312,7 @@ def build() -> int:
         ctx = {
             **meta,
             "site": site,
+            "pricing": pricing,
             "canonical": site["url"] + meta["path"],
             "noindex": meta.get("robots", "index").startswith("noindex"),
             "og_type": meta.get("og_type", "website"),
@@ -1161,6 +1322,7 @@ def build() -> int:
             "critical_css": crit,
             "deferred_css": deferred_tags,
             "brand_mark": brand_mark_html(img),
+            "portrait": portrait_html() if img.get("portrait") else "",
             "build_date": date.today().isoformat(),
         }
         # Case-study pages name their system; it arrives as {{ sys.* }},
@@ -1184,7 +1346,7 @@ def build() -> int:
             if n not in js_urls:
                 raise BuildError(f"{where}: unknown script '{n}'")
         ctx["scripts"] = "\n".join(f'<script type="module" src="{js_urls[n]}"></script>' for n in page_js)
-        ctx["jsonld"] = jsonld_for(meta, site)
+        ctx["jsonld"] = jsonld_for(meta, site, pricing)
         doc = render((SRC / "partials" / "layout.html").read_text("utf-8"), ctx, icons, used, "partials/layout.html")
 
         # Current-page marker on every nav link that points here
@@ -1225,7 +1387,7 @@ def build() -> int:
     return 1 if problems else 0
 
 
-def jsonld_for(meta: dict, site: dict) -> str:
+def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
     """Structured data named in front matter: `schema: organization, services`."""
     wanted = split_list(meta.get("schema"))
     if not wanted:
@@ -1247,18 +1409,21 @@ def jsonld_for(meta: dict, site: dict) -> str:
     if "organization" in wanted:
         graph.append(org)
     if "services" in wanted:
-        for svc in site["services"]:
-            graph.append({
-                "@type": "Service",
-                "name": svc["name"],
-                "serviceType": svc["name"],
-                "description": svc["summary"],
-                "provider": {"@id": org["@id"]},
-                "url": f"{site['url']}{site['routes']['services']}#{svc['slug']}",
-                "offers": {"@type": "Offer", "priceCurrency": "INR", "price": svc["price"],
-                           "priceSpecification": {"@type": "PriceSpecification", "priceCurrency": "INR",
-                                                  "minPrice": svc["price"]}},
-            })
+        for group in site["service_groups"]:
+            for svc in group["services"]:
+                offer = {"@type": "Offer", "priceCurrency": "INR", "price": svc["price"]["value"]}
+                if pricing["launch"]:
+                    offer["priceValidUntil"] = pricing["launch_end"]
+                graph.append({
+                    "@type": "Service",
+                    "name": svc["name"],
+                    "serviceType": svc["name"],
+                    "category": group["name"],
+                    "description": svc["line"],
+                    "provider": {"@id": org["@id"]},
+                    "url": f"{site['url']}{site['routes']['services']}#{svc['slug']}",
+                    "offers": offer,
+                })
     payload = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=1)
     return f'<script type="application/ld+json">\n{payload}\n</script>'
 

@@ -9,10 +9,10 @@
       <p class="t-lead page-head__lead fade-in" style="--d:1">{{ sys.line }}</p>
       <div class="cluster case-head__meta fade-in" style="--d:2">
         <span class="badge{% if sys.live %} badge--live{% endif %}"><span class="badge__dot"></span>{{ sys.status }}</span>
-        <span class="badge badge--accent">{{ sys.pillar }}</span>
         <span class="badge badge--quiet">Studio-built · self-initiated</span>
       </div>
-      <nav class="case-head__links fade-in" style="--d:3" aria-label="Case study resources">
+      <p class="case-head__offer fade-in" style="--d:3"><span class="t-label">Offered as</span>{% for r in sys.related %}<a class="link-arrow" href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}{% icon "arrow-up-right" %}</a>{% endfor %}</p>
+      <nav class="case-head__links fade-in" style="--d:4" aria-label="Case study resources">
         <a class="link-arrow" href="{{ sys.repo }}" target="_blank" rel="noopener">{% icon "github-logo" %}Repository</a>
         <a class="link-arrow" href="#walkthrough">{% icon "play" %}Walkthrough</a>
         <a class="link-arrow" href="{{ sys.docs }}" target="_blank" rel="noopener">{% icon "book-open" %}Documentation</a>

@@ -106,7 +106,7 @@
           "weight": 500,
           "style": "normal",
           "folder": "500-Medium",
-          "used_for": "'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, pillar names, form labels",
+          "used_for": "'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, service names, form labels",
           "preload": false
         }
       ],
@@ -226,7 +226,7 @@
           "weight": 400,
           "style": "normal",
           "folder": "400-Regular",
-          "used_for": "Eyebrow labels, badges, metadata rail, the Replay clock and engineer-view log, step counters, footer colophon",
+          "used_for": "Eyebrow labels, badges, metadata rail, the Replay clock and the raw event log, step counters, footer colophon",
           "preload": false
         }
       ],

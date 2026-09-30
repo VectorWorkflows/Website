@@ -1,41 +1,171 @@
 {
   "title": "Dynamic Scheduler",
   "system": "dynamic-scheduler",
-  "base": "07:52:00",
-  "summary": "Replay with simulated data. The day starts with the user's Normal template: workout at 07:00, deep work at 08:00, and so on. At 07:52 the user sends /awake to the Telegram bot. The bot detects the time, picks the user's Late template, and today's calendar shifts to the late version, with deep work at 08:30 and the workout moved to the evening. The bot confirms the change.",
+  "base": "07:51:40",
+  "summary": "Replay with simulated data. The user signs in with Google and allows the Dynamic Scheduler to see and edit their calendar events. Today's calendar loads with the user's Normal template: workout at 07:00, deep work at 08:00, and so on. At 07:52 the user sends /awake to the Telegram bot. The bot detects the time, picks the user's Late template, and today's calendar shifts to the late version, with deep work at 08:30 and the workout moved to the evening. The bot confirms the change.",
   "lanes": [
-    { "id": "a", "label": "Telegram chat", "icon": "telegram-logo", "anchor": "bottom", "height": { "narrow": "15.5rem", "wide": "17.5rem" } },
-    { "id": "b", "label": "Calendar", "icon": "calendar-blank", "anchor": "top", "height": { "narrow": "17.5rem", "wide": "17.5rem" } }
+    {
+      "id": "a",
+      "label": "Your phone · Telegram",
+      "icon": "telegram-logo",
+      "anchor": "bottom",
+      "height": {
+        "narrow": "21rem",
+        "wide": "21rem"
+      },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Your calendar",
+      "icon": "calendar-blank",
+      "anchor": "top",
+      "height": {
+        "narrow": "17.5rem",
+        "wide": "17.5rem"
+      },
+      "view": "owner"
+    }
   ],
   "steps": [
     {
-      "t": "00:00", "lane": "b", "type": "calendar", "id": "today",
-      "title": "Today", "template": "Normal template",
-      "blocks": [["07:00", "Workout"], ["08:00", "Deep work"], ["10:30", "Email & calls"], ["13:00", "Lunch"], ["14:00", "Project time"]],
-      "log": { "sys": "calendar", "event": "DAY_LOADED", "kv": { "template": "normal" } }
+      "t": "00:00",
+      "lane": "a",
+      "type": "consent",
+      "app": "Dynamic Scheduler",
+      "account": "a•••••@gmail.com",
+      "initial": "A",
+      "scopes": [
+        "See and edit events on your calendar"
+      ],
+      "log": {
+        "sys": "google",
+        "event": "OAUTH_CONSENT",
+        "kv": {
+          "scope": "calendar.events",
+          "result": "allowed"
+        }
+      }
     },
     {
-      "t": "00:01", "lane": "a", "type": "telegram", "dir": "in",
+      "t": "00:02",
+      "lane": "b",
+      "type": "calendar",
+      "id": "today",
+      "title": "Today",
+      "template": "Normal template",
+      "blocks": [
+        [
+          "07:00",
+          "Workout"
+        ],
+        [
+          "08:00",
+          "Deep work"
+        ],
+        [
+          "10:30",
+          "Email & calls"
+        ],
+        [
+          "13:00",
+          "Lunch"
+        ],
+        [
+          "14:00",
+          "Project time"
+        ]
+      ],
+      "log": {
+        "sys": "calendar",
+        "event": "CALENDAR_LINKED",
+        "kv": {
+          "template": "normal",
+          "date": "today"
+        }
+      }
+    },
+    {
+      "t": "00:20",
+      "lane": "a",
+      "type": "telegram",
+      "dir": "in",
       "text": "/awake",
       "meta": "Telegram · you · 07:52",
-      "log": { "sys": "telegram", "event": "COMMAND", "kv": { "cmd": "/awake", "received_at": "07:52" } }
+      "log": {
+        "sys": "telegram",
+        "event": "COMMAND",
+        "kv": {
+          "cmd": "/awake",
+          "received_at": "07:52"
+        }
+      }
     },
     {
-      "t": "00:02", "lane": "a", "type": "event",
+      "t": "00:21",
+      "lane": "a",
+      "type": "event",
       "text": "07:52 is past your normal start, so using the Late template",
-      "log": { "sys": "scheduler", "event": "TEMPLATE_SELECT", "kv": { "wake": "07:52", "template": "late" } }
+      "log": {
+        "sys": "scheduler",
+        "event": "TEMPLATE_SELECT",
+        "kv": {
+          "wake": "07:52",
+          "template": "late"
+        }
+      }
     },
     {
-      "t": "00:03", "type": "calendar", "op": "shift", "target": "today",
+      "t": "00:22",
+      "type": "calendar",
+      "op": "shift",
+      "target": "today",
       "template": "Late template",
-      "blocks": [["08:30", "Deep work"], ["10:00", "Email & calls"], ["12:30", "Lunch"], ["13:30", "Project time"], ["17:00", "Workout"]],
-      "log": { "sys": "calendar", "event": "DAY_APPLIED", "kv": { "template": "late", "date": "today" } }
+      "blocks": [
+        [
+          "08:30",
+          "Deep work"
+        ],
+        [
+          "10:00",
+          "Email & calls"
+        ],
+        [
+          "12:30",
+          "Lunch"
+        ],
+        [
+          "13:30",
+          "Project time"
+        ],
+        [
+          "17:00",
+          "Workout"
+        ]
+      ],
+      "log": {
+        "sys": "calendar",
+        "event": "DAY_APPLIED",
+        "kv": {
+          "template": "late",
+          "date": "today"
+        }
+      }
     },
     {
-      "t": "00:04", "lane": "a", "type": "telegram",
+      "t": "00:23",
+      "lane": "a",
+      "type": "telegram",
       "from": "Scheduler",
       "text": "Late start noted. Today now follows your Late template. First up: Deep work at 08:30.",
-      "log": { "sys": "telegram", "event": "REPLY_SENT", "kv": { "type": "confirmation", "template": "late" } }
+      "log": {
+        "sys": "telegram",
+        "event": "REPLY_SENT",
+        "kv": {
+          "type": "confirmation",
+          "template": "late"
+        }
+      }
     }
   ]
 }

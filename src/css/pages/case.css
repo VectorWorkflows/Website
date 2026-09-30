@@ -22,6 +22,10 @@
   .case-head__meta { --gap: 0.5rem; }
   .case-head__links { display: flex; flex-wrap: wrap; gap: 0.25rem var(--space-l); }
   .case-head__links .link-arrow .icon { inline-size: 1rem; block-size: 1rem; }
+  .case-head__offer { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem var(--space-m); max-inline-size: none; }
+  .case-head__offer > .t-label { color: var(--c-bone-3); }
+  .case-head__offer .link-arrow { color: var(--c-bone); }
+  .case-head__offer .link-arrow .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
   .sec-head--tight { margin-block-end: var(--space-l); }
   .case-replay-head { margin-block-end: var(--space-l); }

@@ -77,7 +77,7 @@ _'Inktrap' is the ink-trapped cut of ABC Whyte, a separate family with notched j
 - **CSS style:** normal
 - **Folder:** `assets/fonts/ABC-Whyte-Inktrap/500-Medium/`
 - **Expected file:** `font.woff2`
-- **Used for:** 'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, pillar names, form labels
+- **Used for:** 'Vector' in the wordmark, navigation, buttons, h3/h4 subheads, card titles, service names, form labels
 - **Preloaded:** no
 - **Status:** Installed (22.2 kB)
 
@@ -153,7 +153,7 @@ _'Mono' is GT America's monospaced width subfamily. The CSS family name is 'GT A
 - **CSS style:** normal
 - **Folder:** `assets/fonts/GT-America-Mono/400-Regular/`
 - **Expected file:** `font.woff2`
-- **Used for:** Eyebrow labels, badges, metadata rail, the Replay clock and engineer-view log, step counters, footer colophon
+- **Used for:** Eyebrow labels, badges, metadata rail, the Replay clock and the raw event log, step counters, footer colophon
 - **Preloaded:** no
 - **Status:** Installed (6.0 kB)
 

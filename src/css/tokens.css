@@ -68,7 +68,7 @@
        ui:      ink-trapped sans with character: wordmark, nav, buttons,
                 subheads, card titles, leads, footer, Replay artifacts
        body:    the same skeleton without traps, quiet for long reading
-       mono:    metadata, labels, the engineer-view log */
+       mono:    metadata, labels, the raw event log */
     --font-display: "GT Sectra Display", "GT Sectra Display Fallback", Georgia, serif;
     --font-ui:      "ABC Whyte Inktrap", "ABC Whyte Inktrap Fallback", system-ui, sans-serif;
     --font-body:    "ABC Whyte", "ABC Whyte Fallback", system-ui, sans-serif;
