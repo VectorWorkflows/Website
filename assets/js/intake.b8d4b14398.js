@@ -46,9 +46,14 @@ if (form && pricing) {
   const restore = () => {
     let data = {};
     try { data = JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch {}
+    // ?service=a,b (from a service card or the bundle builder) is a fresh,
+    // explicit choice, so it wins over what was saved
     const params = new URLSearchParams(location.search);
-    const preset = params.get('service') || params.get('need');
-    if (preset && !(data.svc && data.svc.length) && !data.unsure) data.svc = [preset];
+    const preset = (params.get('service') || params.get('need') || '').split(',').filter(Boolean);
+    if (preset.length) {
+      data.svc = preset;
+      data.unsure = false;
+    }
     boxes.forEach((b) => { b.checked = (data.svc || []).includes(b.value); });
     unsure.checked = !!data.unsure && !picked().length;
     for (const name of text) {
@@ -313,7 +318,10 @@ if (form && pricing) {
   for (let n = 1; n < Math.min(fromHash, total); n++) {
     if (rules[n].every(valid)) start = n + 1; else break;
   }
-  history.replaceState({ intakeStep: start }, '', start > 1 ? `#step-${start}` : location.pathname + location.search);
+  // The ?service preset has been applied (and saved): drop it from the URL so
+  // a reload keeps later edits instead of re-applying it
+  save();
+  history.replaceState({ intakeStep: start }, '', location.pathname + (start > 1 ? `#step-${start}` : ''));
   steps.forEach((s) => s.classList.toggle('is-current', Number(s.dataset.step) === start));
   current = start;
   render(start, { focus: false });

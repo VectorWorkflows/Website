@@ -48,6 +48,8 @@
   @container replay (min-width: 40rem) {
     .replay__bar { display: flex; }
   }
+  /* Compact (work index cards): one view, no toggle, one row */
+  .replay--compact .replay__bar { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "id clock play"; }
   .replay__bar::after {
     content: "";
     position: absolute;
@@ -165,7 +167,7 @@
   html.js .replay:not([data-view="owner"]) .replay__view[data-panel="owner"] {
     opacity: 0;
     visibility: hidden;
-    transition: opacity var(--dur-hover) var(--ease-out-soft), visibility 0s linear var(--dur-hover);
+    transition: opacity var(--dur-hover) var(--ease-out-soft), visibility 0s var(--ease-out-soft) var(--dur-hover);
   }
 
   .replay__lane-label {

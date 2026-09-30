@@ -83,8 +83,9 @@ DEFERRED_CSS = [
     "components/footer.css",
     "components/sys-index.css",
     "components/concept.css",
+    "components/cursor.css",
 ]
-SITE_JS = ["chrome.js", "motion.js"]
+SITE_JS = ["chrome.js", "motion.js", "cursor.js"]
 # Third-party libraries, self-hosted. motion.js loads them on demand (only
 # when motion is allowed), so they never block rendering. Their hashed URLs
 # are injected into any script containing the __VENDOR_MAP__ token.
@@ -179,6 +180,8 @@ def load_site() -> dict:
     site = json.loads((SRC / "site.json").read_text("utf-8"))
     site["whatsapp_url"] = (f"https://wa.me/{site['whatsapp_number']}?text="
                             + quote(site["whatsapp_text"], safe=""))
+    # Templates can't index lists: site.sys.missed_lead_responder.name etc.
+    site["sys"] = {s["slug"].replace("-", "_"): s for s in site["systems"]}
     return site
 
 
@@ -801,7 +804,7 @@ def build_images(out: Output, site: dict) -> dict:
     portrait_src = ROOT / "assets/img/sam-portrait.jpg"
     if portrait_src.exists():
         from PIL import ImageEnhance
-        sizes = (480, 960)
+        sizes = (400, 720)
         rels = [f"assets/img/studio/sam-{w}.{ext}" for w in sizes for ext in ("avif", "webp", "jpg")]
         if not all(fresh(r, portrait_src) for r in rels):
             with Image.open(portrait_src) as im:
@@ -836,11 +839,13 @@ def build_images(out: Output, site: dict) -> dict:
 
 
 def portrait_html() -> str:
+    # The frame is at most 24rem wide, and the page gutters bound it on phones
     b = "/assets/img/studio/sam"
+    sizes = "(min-width: 64rem) 24rem, min(24rem, calc(100vw - 2.5rem))"
     return ('<picture>'
-            f'<source type="image/avif" srcset="{b}-480.avif 480w, {b}-960.avif 960w" sizes="(min-width: 64rem) 26rem, 90vw">'
-            f'<source type="image/webp" srcset="{b}-480.webp 480w, {b}-960.webp 960w" sizes="(min-width: 64rem) 26rem, 90vw">'
-            f'<img class="portrait__img" src="{b}-480.jpg" width="480" height="600" '
+            f'<source type="image/avif" srcset="{b}-400.avif 400w, {b}-720.avif 720w" sizes="{sizes}">'
+            f'<source type="image/webp" srcset="{b}-400.webp 400w, {b}-720.webp 720w" sizes="{sizes}">'
+            f'<img class="portrait__img" src="{b}-400.jpg" width="400" height="500" '
             'alt="Sameer Bhardwaj, founder of Vector Workflows" decoding="async" fetchpriority="high">'
             '</picture>')
 
@@ -863,7 +868,7 @@ RE_INCLUDE = re.compile(r'{%\s*include\s+"([\w\-/]+)"\s*%}')
 RE_IF = re.compile(r'{%\s*if\s+(not\s+)?([\w.]+)\s*%}((?:(?!{%\s*if\b).)*?){%\s*endif\s*%}', re.S)
 RE_ICON = re.compile(r'{%\s*icon\s+"([\w\-]+)"(?:\s+class="([^"]*)")?\s*%}')
 RE_VALUE = re.compile(r"{{{\s*([\w.]+)\s*}}}|{{\s*([\w.]+)\s*}}")
-RE_REPLAY = re.compile(r'{%\s*replay\s+"([\w\-]+)"(?:\s+id="([\w\-]+)")?\s*%}')
+RE_REPLAY = re.compile(r'{%\s*replay\s+"([\w\-]+)"(?:\s+id="([\w\-]+)")?(?:\s+view="(customer|owner)")?\s*%}')
 RE_LOGREEL = re.compile(r'{%\s*logreel\s+"([\w\-, ]+)"\s*%}')
 
 
@@ -935,7 +940,7 @@ def render(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int 
         return render(p.read_text("utf-8"), ctx, icons, used, f"partials/{m.group(1)}.html", depth + 1)
 
     text = RE_INCLUDE.sub(include, text)
-    text = RE_REPLAY.sub(lambda m: render_replay(m.group(1), where, m.group(2) or ""), text)
+    text = RE_REPLAY.sub(lambda m: render_replay(m.group(1), where, m.group(2) or "", m.group(3) or ""), text)
     text = RE_LOGREEL.sub(lambda m: render_log_reel([s.strip() for s in m.group(1).split(",")], where), text)
     text = expand_loops(text, ctx, icons, used, where, depth)
     text = RE_RISE.sub(lambda m: rise_words(m.group(1)), text)
@@ -1167,17 +1172,23 @@ def _log_line(step: dict, data: dict, extra_cls: str = "") -> str:
 VIEW_NAMES = {"customer": "Customer", "owner": "Owner"}
 
 
-def render_replay(name: str, where: str, dom_id: str = "") -> str:
+def render_replay(name: str, where: str, dom_id: str = "", compact: str = "") -> str:
     """Two synchronised views on one clock: the customer's own phone, and what
     the owner sees. Both sit in one grid cell, so the stage is as tall as the
     taller view and switching never moves the page. A hidden tick list carries
     the clock and the value changes for every step, visible or not. (The raw
-    event log only appears in the home page's log reel.)"""
+    event log only appears in the home page's log reel.)
+
+    compact="customer"|"owner": one view only, no toggle (the work index
+    cards). It still has its clock and its pause control."""
     data = load_replay(name, where)
     muts = _collect_muts(data)
     rid = dom_id or f"replay-{name}"
+    lanes = [lane for lane in data["lanes"] if not compact or lane["view"] == compact]
+    if not lanes:
+        raise BuildError(f"{where}: replay '{name}' has no {compact} view")
     views = []
-    for lane in data["lanes"]:
+    for lane in lanes:
         items = "".join(_artifact(s, muts, data) for s in data["steps"] if s.get("lane") == lane["id"])
         h = lane["height"]
         views.append(
@@ -1190,22 +1201,23 @@ def render_replay(name: str, where: str, dom_id: str = "") -> str:
         f'<li data-at="{s["_at"]}" data-t="{s["t"]}"'
         + (f" data-apply='{_esc(json.dumps(s['_apply']))}'" if s.get("_apply") else "") + "></li>"
         for s in data["steps"])
-    first = data["lanes"][0]["view"]
+    first = lanes[0]["view"]
     buttons = "".join(
         f'<button type="button" data-view-btn="{lane["view"]}" aria-controls="{rid}-{lane["view"]}" '
         f'aria-pressed="{str(lane["view"] == first).lower()}">{VIEW_NAMES[lane["view"]]}'
         f'<span class="replay__vw"> view</span></button>'
-        for lane in data["lanes"])
+        for lane in lanes)
+    toggle = "" if compact else f'<div class="replay__views" role="group" aria-label="Replay view">{buttons}</div>'
     final_t = data["steps"][-1]["t"]
-    return f'''<figure class="replay" id="{rid}" data-replay data-duration="{data["_duration"]}" data-view="{first}" aria-labelledby="{rid}-name">
+    return f'''<figure class="replay{" replay--compact" if compact else ""}" id="{rid}" data-replay data-duration="{data["_duration"]}" data-view="{first}" aria-labelledby="{rid}-name">
   <div class="replay__core">
     <div class="replay__bar">
       <div class="replay__id">
-        <span class="replay__name" id="{rid}-name">{_esc(data["title"])}</span>
+        <span class="replay__name" id="{rid}-name">{_esc(data["title"])}{f'<span class="sr-only"> · {VIEW_NAMES[compact].lower()} view</span>' if compact else ""}</span>
         <span class="replay__sim">Simulated data · real system flow</span>
       </div>
       <span class="replay__clock" data-clock aria-hidden="true">{final_t}</span>
-      <div class="replay__views" role="group" aria-label="Replay view">{buttons}</div>
+      {toggle}
       <button type="button" class="replay__play" data-play aria-label="Pause replay">
         <span class="replay__icon-pause">{{% icon "pause" %}}</span><span class="replay__icon-play">{{% icon "play" %}}</span>
       </button>
@@ -1218,7 +1230,7 @@ def render_replay(name: str, where: str, dom_id: str = "") -> str:
 
 
 def render_log_reel(names: list[str], where: str) -> str:
-    """'Under the hood': every replay's engineer log, back to back, cycling."""
+    """'Under the hood': every replay's raw event log, back to back, cycling."""
     lines = []
     for name in names:
         data = load_replay(name, where)

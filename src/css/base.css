@@ -26,6 +26,22 @@
   }
 
   /* ---------------------------------------------------------------------
+     Copy protection, light-handed: page text doesn't select, but anything a
+     visitor might need to copy does: email addresses, phone and WhatsApp
+     links, prices and [data-copy] content, and every form field. Right-click
+     and keyboard shortcuts are left alone. Fields restate `text` explicitly:
+     iOS Safari won't let you type into a field under a user-select: none
+     ancestor unless the field opts back in.
+     --------------------------------------------------------------------- */
+  body { -webkit-user-select: none; user-select: none; }
+  :is(input, textarea, select, [contenteditable="true"], [data-copy],
+      a[href^="mailto:"], a[href^="tel:"], a[href*="wa.me/"]) {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  :is(input, textarea, [contenteditable="true"]) { -webkit-touch-callout: default; }
+
+  /* ---------------------------------------------------------------------
      Headings: semantic level sets a default; .t-* classes set visual size,
      so heading order stays correct while visual rhythm stays free.
      --------------------------------------------------------------------- */

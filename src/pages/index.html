@@ -72,7 +72,7 @@ critical_css: components/replay.css, components/card.css, pages/home.css
 
   <div class="menu-note">
     {% if pricing.launch %}<span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span>{% endif %}
-    <p>{{ pricing.bundle_rule }} <a class="link-arrow" href="{{ site.routes.services }}">Every service and price {% icon "arrow-right" %}</a></p>
+    <p><span data-copy>{{ pricing.bundle_rule }}</span> <a class="link-arrow" href="{{ site.routes.services }}">Every service and price {% icon "arrow-right" %}</a></p>
   </div>
 </section>
 

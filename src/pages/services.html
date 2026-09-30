@@ -5,6 +5,7 @@ path: /services/
 nav: services
 schema: organization, services
 body_class: page-services
+js: pricing, bundle
 critical_css: components/page-head.css, components/card.css, pages/services.css
 ---
 
@@ -19,7 +20,7 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
 
   <div class="launch fade-in" style="--d:2">
     {% if pricing.launch %}<p class="launch__label"><span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span></p>{% endif %}
-    <p class="launch__rule">{{ pricing.bundle_rule }} <span>{{ pricing.free_rule }}</span></p>
+    <p class="launch__rule"><span data-copy>{{ pricing.bundle_rule }}</span> <span>{{ pricing.free_rule }}</span></p>
   </div>
 
   <nav class="group-index fade-in" style="--d:3" aria-label="Service groups">
@@ -75,7 +76,14 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
           <p class="svc__price" data-copy><span class="svc__now">{{ s.price.now }}</span>{% if s.price.was %}<s class="svc__was"><span class="sr-only">standard price </span>{{ s.price.was }}</s>{% endif %}</p>
           {% if s.price.free_with %}<p class="svc__free">{% icon "check" %}Free with a website</p>{% endif %}
           <p class="svc__ready">{% icon "clock" %}<span>{{ s.price.ready }}{% if s.condition_text %} <span class="svc__cond">({{ s.condition_text }})</span>{% endif %}</span></p>
-          <a class="btn btn--sm{% if s.featured %} btn--primary{% endif %}" href="{{ site.routes.start }}?service={{ s.slug }}"><span class="btn__label">Start with this</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+          <div class="svc__actions">
+            <label class="pick">
+              <input type="checkbox" data-pick value="{{ s.slug }}">
+              <span class="pick__box"><span class="pick__tick" aria-hidden="true">{% icon "check" %}</span><span class="pick__label">Add to bundle<span class="sr-only">: {{ s.name }}</span></span></span>
+              <span class="pick__note" data-pick-note></span>
+            </label>
+            <a class="link-arrow" href="{{ site.routes.start }}?service={{ s.slug }}">Start with this<span class="sr-only">: {{ s.name }}</span> {% icon "arrow-up-right" %}</a>
+          </div>
         </div>
       </div>
     </article>
@@ -146,3 +154,17 @@ critical_css: components/page-head.css, components/card.css, pages/services.css
     </div>
   </div>
 </section>
+
+<div class="bundle" data-bundle inert>
+  <div class="bundle__inner">
+    <p class="bundle__what"><span class="t-label">Your bundle</span><span data-bundle-count></span></p>
+    <p class="bundle__sum"><span class="bundle__total" data-bundle-total data-copy></span>{% if pricing.launch %}<span class="bundle__when">at launch pricing</span>{% endif %}</p>
+    <p class="bundle__save" data-bundle-save></p>
+    <div class="bundle__actions">
+      <button type="button" class="bundle__clear" data-bundle-clear>Clear</button>
+      <a class="btn btn--primary btn--sm" data-bundle-go href="{{ site.routes.start }}"><span class="btn__label">Continue with these</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+    </div>
+  </div>
+</div>
+<p class="sr-only" aria-live="polite" data-bundle-live></p>
+<script type="application/json" id="pricing-data">{{{ pricing.json }}}</script>

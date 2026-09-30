@@ -37,7 +37,7 @@ critical_css: components/page-head.css, pages/start.css
       <!-- 1 · Services -->
       <fieldset class="intake__step is-current" data-step="1" data-name="Services">
         <legend class="intake__q" tabindex="-1">What would you like set up?</legend>
-        <p class="intake__hint" id="hint-svc">Pick as many as you like. {{ pricing.bundle_rule }} {{ pricing.free_rule }}</p>
+        <p class="intake__hint" id="hint-svc">Pick as many as you like. <span data-copy>{{ pricing.bundle_rule }}</span> {{ pricing.free_rule }}</p>
 
         {% for g in site.service_groups %}
         <fieldset class="intake__group chips">
@@ -68,7 +68,7 @@ critical_css: components/page-head.css, pages/start.css
         <div class="quote" data-quote hidden>
           <p class="quote__line">
             <span class="quote__count" data-quote-count></span>
-            <span class="quote__total" data-quote-total data-copy aria-hidden="true">₹0</span>
+            <span class="quote__total" data-quote-total data-copy aria-hidden="true"></span>
             <span class="quote__when" data-quote-when>{% if pricing.launch %}at launch pricing{% endif %}</span>
           </p>
           <p class="quote__save" data-quote-save hidden></p>

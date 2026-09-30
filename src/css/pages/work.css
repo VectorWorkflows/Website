@@ -1,0 +1,45 @@
+/* ==========================================================================
+   WORK INDEX: one card per system, each running a compact replay of itself
+   while it's on screen.
+   ========================================================================== */
+@layer pages {
+  .projects { display: grid; gap: var(--space-l); }
+
+  .project__core { display: grid; gap: var(--space-l); padding: var(--space-m) var(--space-s) var(--space-s); }
+  /* On phones the replay sits nearly edge to edge inside the card */
+  @container (max-width: 30rem) { .project__replay .replay__view { padding: var(--space-xs); } }
+  @container (min-width: 56rem) {
+    .project__core {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: var(--space-xl);
+      align-items: center;
+      padding: var(--space-xl);
+    }
+    /* Alternate sides so the list doesn't read as one column */
+    .project:nth-child(even) .project__text { order: 2; }
+  }
+
+  .project__text { display: grid; gap: var(--space-s); justify-items: start; align-content: center; }
+  .project__text .card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); justify-content: flex-start; }
+  .project__name {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--step-5);
+    line-height: 1;
+    letter-spacing: var(--tracking-heading);
+    text-wrap: balance;
+  }
+  .project__name a { color: var(--c-bone); text-decoration: none; transition: color var(--dur-hover) var(--ease-out-soft); }
+  @media (hover: hover) { .project__name a:hover { color: var(--c-lilac); } }
+  .project__name a:active { color: var(--c-lilac); }
+  .project__line { color: var(--c-bone-2); max-inline-size: calc(40 * var(--ch-body)); text-wrap: pretty; }
+  .project__svc { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; max-inline-size: none; font-size: var(--step--1); }
+  .project__svc .t-label { color: var(--c-bone-3); }
+  .project__svc a { color: var(--c-bone); text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--c-lilac) 45%, transparent); text-underline-offset: 0.22em; }
+  .project__svc a:hover { text-decoration-color: var(--c-lilac); }
+  .project__svc a:active { color: var(--c-lilac); }
+  .project__go { margin-block-start: var(--space-2xs); }
+  .project__go .icon { inline-size: 0.875rem; block-size: 0.875rem; }
+
+  .project__replay { min-inline-size: 0; }
+}

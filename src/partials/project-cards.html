@@ -1,0 +1,40 @@
+<div class="projects">
+  <article class="card project" aria-labelledby="p-mlr">
+    <div class="card__core project__core">
+      <div class="project__text">
+        <div class="card__meta"><span class="t-label c-lilac">{{ site.sys.missed_lead_responder.num }}</span><span class="badge"><span class="badge__dot"></span>{{ site.sys.missed_lead_responder.status }}</span></div>
+        <h2 id="p-mlr" class="project__name"><a href="{{ site.routes.work }}missed-lead-responder/">{{ site.sys.missed_lead_responder.name }}</a></h2>
+        <p class="project__line">{{ site.sys.missed_lead_responder.line }}</p>
+        <p class="project__svc"><span class="t-label">Offered as</span>{% for r in site.sys.missed_lead_responder.related %}<a href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}</a>{% endfor %}</p>
+        <a class="link-arrow project__go" href="{{ site.routes.work }}missed-lead-responder/">Read the case study {% icon "arrow-right" %}</a>
+      </div>
+      <div class="project__replay">{% replay "missed-lead" id="work-mlr" view="customer" %}</div>
+    </div>
+  </article>
+
+  <article class="card project" aria-labelledby="p-sft">
+    <div class="card__core project__core">
+      <div class="project__text">
+        <div class="card__meta"><span class="t-label c-lilac">{{ site.sys.site_fault_tracker.num }}</span><span class="badge"><span class="badge__dot"></span>{{ site.sys.site_fault_tracker.status }}</span></div>
+        <h2 id="p-sft" class="project__name"><a href="{{ site.routes.work }}site-fault-tracker/">{{ site.sys.site_fault_tracker.name }}</a></h2>
+        <p class="project__line">{{ site.sys.site_fault_tracker.line }}</p>
+        <p class="project__svc"><span class="t-label">Offered as</span>{% for r in site.sys.site_fault_tracker.related %}<a href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}</a>{% endfor %}</p>
+        <a class="link-arrow project__go" href="{{ site.routes.work }}site-fault-tracker/">Read the case study {% icon "arrow-right" %}</a>
+      </div>
+      <div class="project__replay">{% replay "site-fault" id="work-sft" view="customer" %}</div>
+    </div>
+  </article>
+
+  <article class="card project" aria-labelledby="p-ds">
+    <div class="card__core project__core">
+      <div class="project__text">
+        <div class="card__meta"><span class="t-label c-lilac">{{ site.sys.dynamic_scheduler.num }}</span><span class="badge badge--live"><span class="badge__dot"></span>{{ site.sys.dynamic_scheduler.status }}</span></div>
+        <h2 id="p-ds" class="project__name"><a href="{{ site.routes.work }}dynamic-scheduler/">{{ site.sys.dynamic_scheduler.name }}</a></h2>
+        <p class="project__line">{{ site.sys.dynamic_scheduler.line }}</p>
+        <p class="project__svc"><span class="t-label">Offered as</span>{% for r in site.sys.dynamic_scheduler.related %}<a href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}</a>{% endfor %}</p>
+        <a class="link-arrow project__go" href="{{ site.routes.work }}dynamic-scheduler/">Read the case study {% icon "arrow-right" %}</a>
+      </div>
+      <div class="project__replay">{% replay "scheduler" id="work-ds" view="owner" %}</div>
+    </div>
+  </article>
+</div>
