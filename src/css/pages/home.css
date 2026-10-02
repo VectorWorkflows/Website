@@ -1,33 +1,27 @@
 /* ==========================================================================
-   HOME
+   HOME: what the studio does for a business owner, said broadly. A
+   typographic hero, one replay as proof, the three service groups, a quiet
+   list of selected work, the method, who's behind it, and a close.
    ========================================================================== */
 @layer pages {
   .home-head { margin-block-end: var(--space-2xl); }
 
-  /* Hero ---------------------------------------------------------------- */
-  .home-hero {
-    min-block-size: 100dvh;
-    padding-block: calc(var(--space-4xl) + 1rem) var(--section-y-tight);
-    align-content: center;
-  }
-  .home-hero__grid { --row-gap: var(--space-2xl); align-items: center; }
-  .home-hero__copy { display: flex; flex-direction: column; gap: var(--space-m); }
+  /* Hero: headline, sub-line, the two buttons. No component beside it ----- */
+  .home-hero { padding-block: calc(var(--space-4xl) + 2rem) var(--section-y-tight); }
+  .home-hero__grid { --row-gap: var(--space-m); }
+  .home-hero__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-m); }
   .home-hero__title {
-    font-size: var(--step-7);
-    line-height: 0.92;
-    max-inline-size: calc(11 * var(--ch-display));
+    font-size: var(--step-6);
+    line-height: 0.96;
+    max-inline-size: calc(19 * var(--ch-display));
   }
-  @media (min-width: 64rem) {
-    .home-hero__copy   { grid-column: 1 / span 5; }
-    .home-hero__replay { grid-column: 6 / -1; }
-    .home-hero__title  { font-size: clamp(3.5rem, 1rem + 5.4vw, 7.25rem); }
-  }
-  .home-hero__lead { max-inline-size: calc(34 * var(--ch-ui)); }
+  .home-hero__lead { max-inline-size: calc(44 * var(--ch-ui)); }
   .home-hero__ctas { --gap: var(--space-xs); margin-block-start: var(--space-2xs); }
   .home-hero__meta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.375rem 1.25rem;
+    align-self: stretch;
     padding: var(--space-s) 0 0;
     margin: var(--space-2xs) 0 0;
     list-style: none;
@@ -48,16 +42,19 @@
   }
   .home-hero__meta li { display: inline-flex; align-items: center; gap: 0.5rem; }
   .home-hero__meta li::before { content: ""; inline-size: 0.25rem; block-size: 0.25rem; border-radius: 50%; background: var(--c-lilac-dim); }
-  .home-hero__caption {
+
+  /* One thing we've built: a label and a link, then the replay ------------- */
+  .home-proof { padding-block-end: var(--section-y-tight); }
+  .home-proof__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-l);
     margin-block-end: var(--space-s);
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    color: var(--c-bone-3);
-    max-inline-size: none;
   }
-  .home-hero__caption span { color: var(--c-lilac); }
+  .home-proof__head .index-label { max-inline-size: none; color: var(--c-bone-2); }
+  .home-proof__head .link-arrow .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
   /* Service groups: an asymmetric bento, 5/7 then one full-width row ------ */
   .menu-groups {
@@ -115,41 +112,62 @@
     .menu-group:hover .menu-group__go { transform: translate(0.125rem, -0.125rem) scale(1.06); background: var(--c-violet); }
   }
 
-  /* Try it live ---------------------------------------------------------- */
-  .live__core { display: grid; gap: var(--space-xl); padding: var(--space-xl) var(--space-l); align-items: center; }
-  @media (min-width: 64rem) {
-    .live__core { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); padding: var(--space-2xl); }
+  /* Selected work: three quiet rows. Name, one line, status, a way in.
+     The demos live on the Work page; nothing plays here. ------------------- */
+  .picks__title { max-inline-size: calc(34 * var(--ch-ui)); font-weight: var(--weight-regular); color: var(--c-bone-2); margin-block-end: var(--space-l); }
+  .picks { margin: 0; padding: 0; list-style: none; }
+  .picks li { position: relative; }
+  .picks li::before,
+  .picks li:last-child::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--edge-strong), var(--edge-faint) 60%, transparent);
   }
-  .live__cmd {
-    font-family: var(--font-mono);
-    font-size: 0.72em;
-    color: var(--c-lilac);
-    padding: 0.05em 0.35em;
-    border-radius: 0.3em;
-    background: var(--c-sunken);
-    box-shadow: inset 0 0 0 1px var(--edge);
-    white-space: nowrap;
-  }
-  .live__action { min-inline-size: 0; }
-  .live__copy .btn { margin-block-start: var(--space-xs); }
-  .live__handle { color: var(--c-bone-3); }
-  /* The two other live demos (data/contact.json), under the Telegram one */
-  .live__more {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-wrap: wrap;
+  .picks li::before { inset-block-start: 0; }
+  .picks li:last-child::after { inset-block-end: 0; }
+  .pick-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "name go" "line line" "status status";
     align-items: center;
-    gap: var(--space-2xs) var(--space-l);
-    padding-block-start: var(--space-m);
-    box-shadow: inset 0 1px 0 var(--edge-faint);
+    gap: 0.375rem var(--space-s);
+    padding-block: var(--space-m);
+    color: var(--c-bone);
+    text-decoration: none;
   }
-  .live__more .t-label { flex-basis: 100%; color: var(--c-bone-3); }
-  .live__more .link-arrow { min-block-size: 2.75rem; }
-  .live__more .link-arrow .icon { color: var(--c-lilac); }
-  .live__note { flex-basis: 100%; font-size: var(--step--1); color: var(--c-bone-2); max-inline-size: none; }
-  .live__note a { color: var(--c-bone); text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--c-lilac) 50%, transparent); text-underline-offset: 0.22em; }
+  .pick-row__name { grid-area: name; font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.02em; transition: color var(--dur-hover) var(--ease-out-soft); }
+  .pick-row__line { grid-area: line; color: var(--c-bone-2); font-size: var(--step--1); line-height: 1.45; max-inline-size: calc(52 * var(--ch-body)); text-wrap: pretty; }
+  .pick-row__status {
+    grid-area: status;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--c-bone-3);
+  }
+  .pick-row__status.is-live { color: var(--c-lilac); }
+  .pick-row__go { grid-area: go; color: var(--c-bone-3); transition: transform var(--dur-state) var(--ease-out), color var(--dur-hover) var(--ease-out-soft); }
+  .pick-row__go .icon { display: block; inline-size: 1.125rem; block-size: 1.125rem; }
+  @media (min-width: 64rem) {
+    .pick-row {
+      grid-template-columns: minmax(0, 17rem) minmax(0, 1fr) auto 1.5rem;
+      grid-template-areas: "name line status go";
+      column-gap: var(--space-l);
+    }
+    .pick-row__status { text-align: end; max-inline-size: 16rem; }
+  }
+  @media (hover: hover) {
+    .pick-row:hover .pick-row__name { color: var(--c-lilac); }
+    .pick-row:hover .pick-row__go { color: var(--c-lilac); transform: translateX(0.25rem); }
+  }
+  .pick-row:active .pick-row__name { color: var(--c-lilac); }
+  .pick-row:focus-visible { outline-offset: -2px; border-radius: var(--radius-s); }
+  .picks__more { margin-block-start: var(--space-m); max-inline-size: none; }
+  .picks__more .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
-  /* Method: a rail that draws down as the steps scroll past --------------- */
+  /* Method: a rail that the steps hang from -------------------------------- */
   .method { position: relative; margin: 0; padding: 0; list-style: none; display: grid; }
   .method__step {
     position: relative;
@@ -185,9 +203,23 @@
   .method__body h3 { font-size: var(--step-2); }
   .method__body p { max-inline-size: calc(48 * var(--ch-body)); }
 
-  /* Under the hood: deliberately quiet ------------------------------------ */
-  .hood { --reel-h: 15rem; }
-  .hood .logreel { margin-block-start: var(--space-xs); }
+  /* Who's behind this: a small portrait and a way to the Studio page ------- */
+  .who { display: grid; gap: var(--space-l); align-items: center; }
+  @media (min-width: 40rem) { .who { grid-template-columns: 11rem minmax(0, 1fr); column-gap: var(--space-xl); } }
+  @media (min-width: 64rem) { .who { grid-template-columns: 13rem minmax(0, 1fr); column-gap: var(--space-2xl); } }
+  .who__photo {
+    margin: 0;
+    inline-size: 9rem;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    background: var(--c-raised-1);
+    box-shadow: inset 0 0 0 1px var(--edge-faint), var(--shadow-float);
+  }
+  @media (min-width: 40rem) { .who__photo { inline-size: 100%; } }
+  .who__photo img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .who__text { color: var(--c-bone-2); font-size: var(--step-1); line-height: 1.45; font-family: var(--font-ui); letter-spacing: -0.015em; max-inline-size: calc(42 * var(--ch-ui)); text-wrap: pretty; }
+  .who .link-arrow .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
   /* Close ---------------------------------------------------------------- */
   .close { position: relative; padding-block-end: calc(var(--section-y) + var(--space-l)); }

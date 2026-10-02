@@ -1,12 +1,13 @@
-// Dynamic Scheduler: "slide your wake-up time". An illustration of the idea
-// (the live bot applies the user's own early, normal or late template).
+// Dynamic Scheduler: "slide your wake-up time". What the bot does when you
+// send /awake: the day is planned from that moment, the first task starting
+// D.lead minutes later, in order of priority.
 //
 // Data: data/scheduler-demo.json, embedded by the build as #wake-data. Each
 // block has a show range (it fades in and out inside it), a duration and a
 // priority per zone (they blend across the zone edges, so blocks shrink,
 // grow and change places), and optionally an anchor: not before N minutes
 // after waking, or not before a clock time. The day is laid out in priority
-// order from the wake time; time nothing claims becomes "Open time"; sleep
+// order from wake + lead; time nothing claims becomes "Open time"; sleep
 // starts 16 hours after waking.
 //
 // Motion is transform and opacity only: every row is absolutely placed and
@@ -53,7 +54,7 @@ if (dataEl && roots.length) {
     }).filter((x) => x.o > 0.02).sort((x, y) => x.pri - y.pri);
 
     const rows = [];
-    let cursor = wake;
+    let cursor = wake + D.lead; // the first block always starts this long after waking
     const open = (until, key) => {
       const gap = until - cursor;
       if (gap >= D.gap.from) rows.push({ id: `open-${key}`, label: D.gap.label, start: cursor, dur: gap, o: clamp((gap - D.gap.from) / 30 + 0.25), kind: 'open' });
@@ -102,7 +103,6 @@ if (dataEl && roots.length) {
     timeEl.innerHTML = `<span class="sr-only">${timeEl.textContent}</span><span class="wk__odo" aria-hidden="true">${reel(hours)}<span class="wk__colon">:</span>${reel(minutes)}</span>`;
     const timeText = timeEl.querySelector('.sr-only').firstChild;
     const [hourReel, minuteReel] = [...timeEl.querySelectorAll('.wk__reel > span')];
-    const limit = Number(list.dataset.limit) || Infinity; // the compact version shows the start of the day
     const rowEls = new Map();
     // Write only what changed: `was` remembers the last value per element
     const put = (el, key, value, write) => {
@@ -170,7 +170,7 @@ if (dataEl && roots.length) {
       rows.forEach((row, i) => {
         const el = rowFor(row);
         seen.add(row.id);
-        place(el, Math.min(i, limit), i < limit ? row.o.toFixed(2) : '0');
+        place(el, i, row.o.toFixed(2));
         put(el, 'd', clamp(row.dur / D.bar).toFixed(3), (v) => { el.parts.bar.style.transform = `scaleX(${v})`; });
         if (!el.wk.at) label(row); // a new row never shows an empty time
       });
@@ -199,7 +199,7 @@ if (dataEl && roots.length) {
       // The readable list for assistive tech, once the slider settles
       clearTimeout(spokenTimer);
       spokenTimer = setTimeout(() => {
-        spokenList.replaceChildren(...rows.slice(0, limit).filter((r) => r.o > 0.5).map((r) => {
+        spokenList.replaceChildren(...rows.filter((r) => r.o > 0.5).map((r) => {
           const li = document.createElement('li');
           li.textContent = `${spoken(r.start)}${Math.round(r.start) >= 1440 ? ' the next day' : ''}: ${r.label}, ${length(r.dur)}`;
           return li;
@@ -228,7 +228,7 @@ if (dataEl && roots.length) {
       const legs = path.slice(1).map((v, i) => Math.abs(v - path[i]));
       const total = legs.reduce((s, v) => s + v, 0);
       const t0 = performance.now();
-      const dur = 4200;
+      const dur = D.sweepMs;
       root.classList.add('is-sweeping');
       const tick = (now) => {
         const k = clamp((now - t0) / dur);

@@ -201,6 +201,7 @@
     --z-raised: 10;
     --z-header: 100;
     --z-dock:    90;   /* floating bars (bundle) sit under the header */
+    --z-tip:    200;   /* tooltips, where the top layer isn't available */
     --z-grain:  300;
     --z-skip:   400;
     --z-cursor: 500;

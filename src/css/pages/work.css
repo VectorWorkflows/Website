@@ -42,4 +42,44 @@
   .project__go .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
   .project__replay { min-inline-size: 0; }
+
+  /* Try them yourself: the three live ways in, as an editorial list. How to
+     reach it on the left, what it is in the middle, the way in on the right. */
+  .try { margin: 0; padding: 0; list-style: none; display: grid; }
+  .try__row {
+    position: relative;
+    display: grid;
+    gap: var(--space-s);
+    padding-block: var(--space-l);
+  }
+  .try__row::before,
+  .try__row:last-child::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--edge-strong), var(--edge-faint) 60%, transparent);
+  }
+  .try__row::before { inset-block-start: 0; }
+  .try__row:last-child::after { inset-block-end: 0; }
+  .try__via { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; max-inline-size: none; }
+  .try__via .t-label { color: var(--c-lilac); }
+  .try__what { display: grid; gap: 0.375rem; align-content: start; }
+  .try__what h3 { font-size: var(--step-2); }
+  .try__what p { max-inline-size: calc(46 * var(--ch-body)); text-wrap: pretty; }
+  .try__action { display: flex; min-inline-size: 0; }
+  @media (min-width: 64rem) {
+    .try__row {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--grid-gap);
+      align-items: center;
+    }
+    .try__via { grid-column: 1 / span 3; align-self: start; padding-block-start: 0.5em; }
+    .try__what { grid-column: 4 / span 5; }
+    .try__action { grid-column: 9 / -1; justify-content: flex-end; }
+  }
+
+  /* Under the hood: deliberately quiet */
+  .hood { --reel-h: 15rem; }
+  .hood .logreel { margin-block-start: var(--space-xs); }
 }

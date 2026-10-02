@@ -1,24 +1,21 @@
 ---
-title: Vector Workflows · Automation and hand-built web for service businesses
-description: Websites, WhatsApp bots, missed-call responders and small automations for local service businesses, built by one person with every price on the page. See each system run, then start a conversation.
+title: Vector Workflows · Websites and automations for service businesses
+description: Websites and automations that make sure customers find you, get an answer and get looked after, for businesses in India and abroad. Every service has its price on the page.
 path: /
 nav: home
 schema: organization
 body_class: page-home
 critical_css: components/replay.css, components/card.css, pages/home.css
-css: components/wake.css
-js: wake
 ---
 
 <!-- ================================================================ HERO -->
 <section class="frame home-hero" aria-labelledby="hero-title">
   <div class="grid home-hero__grid">
-    <div class="home-hero__copy">
-      <p class="index-label"><span class="index-label__num">VW</span><span class="index-label__rule"></span>Automation &amp; web engineering studio</p>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">VW</span><span class="index-label__rule"></span>Websites &amp; automations</p></div>
+    <div class="g-body home-hero__copy">
+      <h1 id="hero-title" class="home-hero__title">Customers find you, get an answer, and get <em>looked after</em>.</h1>
 
-      <h1 id="hero-title" class="home-hero__title">Systems that <em>answer</em> when you can't.</h1>
-
-      <p class="t-lead home-hero__lead">A one-person studio building the automations, messaging bots, phone pipelines and hand-built websites that small service businesses run on.</p>
+      <p class="t-lead home-hero__lead">We build websites and automations for businesses in India and abroad. Your website brings people in, every call and message gets a reply, and the follow-ups happen without you chasing them.</p>
 
       <div class="cluster home-hero__ctas">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
@@ -29,18 +26,22 @@ js: wake
         <li>Websites</li><li>WhatsApp bots</li><li>Missed-call replies</li><li>Reminders</li>
       </ul>
     </div>
-
-    <div class="home-hero__replay">
-      <p class="home-hero__caption"><span aria-hidden="true">↳</span> A call nobody could answer, handled. Watch it run.</p>
-      {% replay "missed-lead" id="hero-replay" %}
-    </div>
   </div>
 </section>
 
-<!-- ================================================================ SERVICES -->
+<!-- ================================================================ ONE THING WE'VE BUILT -->
+<section class="frame home-proof" aria-labelledby="proof-label">
+  <div class="home-proof__head">
+    <p class="index-label" id="proof-label"><span class="index-label__num">↳</span><span class="index-label__rule"></span>One of the things we've built</p>
+    <a class="link-arrow" href="{{ site.routes.work }}{{ site.sys.missed_lead_responder.slug }}/">See the full case study {% icon "arrow-right" %}</a>
+  </div>
+  {% replay "missed-lead" id="hero-replay" %}
+</section>
+
+<!-- ================================================================ WHAT WE DO -->
 <section class="frame section" aria-labelledby="menu-title">
   <div class="grid home-head">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>What I set up</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>What we do</p></div>
     <div class="g-body stack flow-s">
       <h2 id="menu-title">Things you can <em>name</em>, priced before you ask.</h2>
       <p class="t-lead measure">A website, your Google and WhatsApp listings, a bot that answers, a phone line that never leaves a caller hanging. Each has a price and a build time you can plan around.</p>
@@ -70,61 +71,33 @@ js: wake
   </div>
 </section>
 
-<!-- ================================================================ SYSTEMS INDEX -->
-<section class="frame section" aria-labelledby="systems-title">
-  <div class="grid home-head">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Systems</p></div>
-    <div class="g-body stack flow-s">
-      <h2 id="systems-title">Three systems, built <em>end to end</em>.</h2>
-      <p class="t-lead measure">Studio-built rather than client work: each one proves a pattern before it goes to a business. Each has a public repo, a walkthrough video and a replay.</p>
+<!-- ================================================================ SELECTED WORK -->
+<section class="frame section-tight" aria-labelledby="work-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Selected work</p></div>
+    <div class="g-body">
+      <h2 id="work-title" class="t-h4 picks__title">Three systems we built end to end, each with its own case study.</h2>
+      <ol class="picks" role="list">
+        {% for s in site.systems %}
+        <li>
+          <a class="pick-row" href="{{ site.routes.work }}{{ s.slug }}/">
+            <span class="pick-row__name">{{ s.name }}</span>
+            <span class="pick-row__line">{{ s.line }}</span>
+            <span class="pick-row__status{% if s.live %} is-live{% endif %}">{{ s.status }}</span>
+            <span class="pick-row__go" aria-hidden="true">{% icon "arrow-right" %}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+      <p class="picks__more"><a class="link-arrow" href="{{ site.routes.work }}">All work, with live demos {% icon "arrow-right" %}</a></p>
     </div>
   </div>
-
-  {% include "systems-index" %}
-</section>
-
-<!-- ================================================================ TRY IT LIVE -->
-<section class="frame section-tight" aria-labelledby="live-title">
-  <div class="card card--accent live">
-    <div class="card__core live__core">
-      <div class="live__copy stack flow-s">
-        <span class="badge badge--live"><span class="badge__dot"></span>Live — Open for Public Use</span>
-        <h2 id="live-title" class="t-h2-s">Try one yourself: send <code class="live__cmd">/awake</code></h2>
-        <p>The Dynamic Scheduler runs on Telegram and is open to anyone. Save an early, normal and late version of your day, then message /awake when you're up. It checks the time and loads the matching template.</p>
-        <a class="btn btn--primary" href="{{ site.telegram_bot }}" target="_blank" rel="noopener"><span class="btn__label">Send /awake on Telegram</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
-        <p class="live__handle t-label">Telegram · {{ site.telegram_bot_handle }}</p>
-      </div>
-      <div class="live__action">
-        {% include "wake-compact" %}
-      </div>
-      <div class="live__more">
-        <span class="t-label">Two more to try</span>
-        <a class="link-arrow" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{% icon "whatsapp-logo" %}{{ site.contact.whatsapp.label }}</a>
-        <a class="link-arrow" href="tel:{{ site.contact.ivr.tel }}">{% icon "phone" %}{{ site.contact.ivr.label }} · <span data-copy>{{ site.contact.ivr.display }}</span></a>
-        <p class="live__note">{{ site.contact.ivr.note }} <a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.ivr.note_link }}</a></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================ CONCEPTS -->
-<section class="frame section" aria-labelledby="concepts-title">
-  <div class="grid home-head">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Concepts</p></div>
-    <div class="g-body stack flow-s">
-      <h2 id="concepts-title">Unsolicited, <em>on purpose</em>.</h2>
-      <p class="t-lead measure">Speculative redesigns of real local businesses' websites, made to show what a hand-built site can do. Not commissioned, and not affiliated with the businesses they reimagine.</p>
-    </div>
-  </div>
-
-  {% include "concept-cutabove" %}
-  <p class="concepts-more"><a class="link-arrow" href="{{ site.routes.work }}#concepts">All concept work {% icon "arrow-right" %}</a></p>
 </section>
 
 <!-- ================================================================ METHOD -->
 <section class="frame section" aria-labelledby="method-title">
   <div class="grid home-head">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Method</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Method</p></div>
     <div class="g-body stack flow-s">
       <h2 id="method-title">How a build <em>runs</em>.</h2>
     </div>
@@ -162,16 +135,17 @@ js: wake
   </ol>
 </section>
 
-<!-- ================================================================ UNDER THE HOOD -->
-<section class="frame section-tight hood" aria-labelledby="hood-title">
+<!-- ================================================================ WHO'S BEHIND THIS -->
+<section class="frame section-tight" aria-labelledby="who-title">
   <div class="grid">
-    <div class="g-rail stack flow-xs">
-      <p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Under the hood</p>
-    </div>
-    <div class="g-text stack flow-s">
-      <h2 id="hood-title" class="t-h4">For the developers reading</h2>
-      <p class="t-small">The same three systems as the raw events they emit, cycling. The replays elsewhere show what the customer and the owner see; this is what the code sees.</p>
-      {% logreel "missed-lead, site-fault, scheduler" %}
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Who's behind this</p></div>
+    <div class="g-body who">
+      <figure class="who__photo">{{{ portrait_small }}}</figure>
+      <div class="who__copy stack flow-s">
+        <h2 id="who-title" class="t-h2-s">One person, <em>start to finish</em>.</h2>
+        <p class="who__text">Vector Workflows is Sameer Bhardwaj, known as Sam. The person you talk to is the person who builds it, and the person who answers when it needs changing. There's no account manager in between.</p>
+        <a class="link-arrow" href="{{ site.routes.studio }}">Meet Sam {% icon "arrow-right" %}</a>
+      </div>
     </div>
   </div>
 </section>
@@ -180,7 +154,7 @@ js: wake
 <section class="frame section close" aria-labelledby="close-title">
   <div class="grid">
     <div class="g-body close__inner">
-      <h2 id="close-title" class="t-display close__title">Tell me what keeps <em>slipping</em>.</h2>
+      <h2 id="close-title" class="t-display close__title">Tell us what keeps <em>slipping</em>.</h2>
       <p class="t-lead measure">Describe the part of the week that goes wrong. You'll get a straight answer on whether it can be automated and what it would cost.</p>
       <div class="cluster close__ctas">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>

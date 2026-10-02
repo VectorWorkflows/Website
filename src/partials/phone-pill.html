@@ -1,0 +1,10 @@
+<span class="phone-pill">
+  <span class="tipwrap">
+    <a class="phone-pill__call" href="tel:{{ site.contact.ivr.tel }}" aria-describedby="tip-call-{{ uid }}" data-tip>{% icon "phone" %}<span class="phone-pill__num" data-copy>{{ site.contact.ivr.display }}</span></a>
+    <span class="tip" role="tooltip" id="tip-call-{{ uid }}">{{ site.contact.ivr.tip }}</span>
+  </span>
+  <span class="tipwrap">
+    <button type="button" class="phone-pill__chip" aria-describedby="tip-india-{{ uid }}" data-tip data-tip-toggle>{{ site.contact.ivr.india_label }}</button>
+    <span class="tip" role="tooltip" id="tip-india-{{ uid }}">{{ site.contact.ivr.india_tip }}</span>
+  </span>
+</span>

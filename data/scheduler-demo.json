@@ -1,11 +1,16 @@
 {
-  "_comment": "The wake-time slider on the Dynamic Scheduler case study and the home page. An illustration of the idea, not the bot's logic: the live bot applies the user's own early, normal or late template. Times are minutes after midnight unless written HH:MM. Per-zone values are [early, normal, late] and blend over the last `blend` minutes before each zone edge (so a zone is fully itself from its first minute), so blocks shrink, grow, fade and change places as the slider moves.",
+  "_comment": "The wake-time slider on the Dynamic Scheduler case study: what the bot does when you send /awake. The day is planned from the wake time: the first task starts `lead` minutes later, then the blocks follow in order of priority, sized and ordered by how early or late the wake time is. Times are minutes after midnight unless written HH:MM. Per-zone values are [early, normal, late] and blend over the last `blend` minutes before each zone edge (so a zone is fully itself from its first minute), so blocks shrink, grow, fade and change places as the slider moves.",
 
   "min": "03:00",
   "max": "15:00",
   "step": 15,
   "start": "07:00",
   "ticks": ["03:00", "07:00", "11:00", "15:00"],
+
+  "lead": 15,
+  "_lead": "The first block always starts this many minutes after the wake time. The copy beside the slider prints this number.",
+  "sweepMs": 5040,
+  "_sweepMs": "How long the opening sweep takes (07:00, 03:00, 15:00, back to 07:00).",
 
   "day": 960,
   "_day": "The waking day: 16 hours from the wake time, then the sleep block.",
@@ -19,12 +24,11 @@
   "bar": 240,
   "_bar": "A duration bar is full at this many minutes.",
   "rows": 13,
-  "compactRows": 6,
 
   "zones": [
-    { "id": "early",  "name": "Early day",  "from": "03:00", "line": "A long workout first, time for a hobby and good habits, then focused work and a light early evening." },
-    { "id": "normal", "name": "Normal day", "from": "07:00", "line": "Crucial tasks come first. Everything else shrinks or slides later, and the workout gets short." },
-    { "id": "late",   "name": "Late day",   "from": "11:00", "line": "A slow start, one focus block, then leisure, people and errands. Sleep lands the next morning." }
+    { "id": "early",  "name": "Early start",  "from": "03:00", "line": "A long workout first, time for a hobby and good habits, then focused work and a light early evening." },
+    { "id": "normal", "name": "Normal start", "from": "07:00", "line": "Crucial tasks come first. Everything else shrinks or slides later, and the workout gets short." },
+    { "id": "late",   "name": "Late start",   "from": "11:00", "line": "A slow start, one focus block, then leisure, people and errands. Sleep lands the next morning." }
   ],
 
   "_blocks": "show: the wake-time range the block exists in. duration, priority: [early, normal, late]; the lowest priority goes first. anchor (optional; without one a block simply follows the block before it): wake = not before this many minutes after waking; clock = not before this time of day.",

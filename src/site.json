@@ -239,7 +239,7 @@
       "replay": "scheduler",
       "status": "Live — Open for Public Use",
       "live": "true",
-      "line": "Send /awake and today's schedule switches to the template that matches when your day started.",
+      "line": "Send /awake and your day is planned from that moment, shaped by how early or late you woke up.",
       "stack": "Telegram Bot API · Python · Google Calendar",
       "repo": "https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT",
       "video": "naB59uo86v4",

@@ -1,0 +1,106 @@
+/* ==========================================================================
+   TOOLTIP and the split PHONE PILL.
+
+   Tooltip: a trigger marked [data-tip] names its bubble with
+   aria-describedby; both sit in a .tipwrap.
+
+     <span class="tipwrap">
+       <a href="…" aria-describedby="tip-x" data-tip>…</a>
+       <span class="tip" role="tooltip" id="tip-x">…</span>
+     </span>
+
+   chrome.js shows the bubble on hover (mouse) and on keyboard focus, closes
+   it on Esc, and for a [data-tip-toggle] button also toggles it on tap. It
+   opens the bubble in the top layer (popover) and places it inside the
+   viewport, so no card, section or screen edge can clip it. Without JS the
+   bubble shows under its trigger on hover and focus.
+
+   Phone pill: one pill, two segments. The number (a tel: link) and a small
+   "From India?" chip (a button), each with its own tooltip.
+   ========================================================================== */
+@layer components {
+  .tipwrap { position: relative; display: inline-flex; }
+
+  .tip {
+    position: absolute;
+    z-index: var(--z-tip);
+    inset-block-start: calc(100% + 0.5rem);
+    inset-inline-start: 0;
+    inline-size: max-content;
+    max-inline-size: min(17rem, calc(100vw - 1.5rem));
+    margin: 0;
+    padding: 0.5625rem 0.8125rem;
+    border: 0;
+    border-radius: var(--radius-s);
+    background: var(--c-raised-3);
+    box-shadow: inset 0 0 0 1px var(--edge-strong), var(--edge-lit), var(--shadow-float);
+    color: var(--c-bone);
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    font-weight: var(--weight-regular);
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    text-align: start;
+    text-transform: none;
+    white-space: normal;
+    text-wrap: pretty;
+    overflow: visible;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  /* Shown: by chrome.js (class, or as an open popover placed with left/top) */
+  .tip.is-open { visibility: visible; }
+  .tip:popover-open { position: fixed; inset: auto; visibility: visible; }
+  /* No JS: straight under the trigger */
+  .no-js .tipwrap:has([data-tip]:hover) .tip,
+  .no-js .tipwrap:has([data-tip]:focus) .tip { visibility: visible; }
+
+  /* Phone pill ---------------------------------------------------------- */
+  .phone-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    max-inline-size: 100%;
+    padding: 0.25rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-raised-1);
+    box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit);
+  }
+  .phone-pill__call {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 2.75rem;
+    padding-inline: 0.75rem 0.625rem;
+    border-radius: var(--radius-pill);
+    color: var(--c-bone);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color var(--dur-hover) var(--ease-out-soft);
+  }
+  .phone-pill__call .icon { inline-size: 1.125rem; block-size: 1.125rem; color: var(--c-lilac); }
+  .phone-pill__num { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.01em; font-variant-numeric: tabular-nums; }
+  .phone-pill__chip {
+    min-block-size: 2.75rem;
+    padding-inline: 0.875rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-raised-3);
+    box-shadow: inset 0 0 0 1px var(--edge-faint);
+    color: var(--c-bone-2);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: help;
+    transition: color var(--dur-hover) var(--ease-out-soft), background-color var(--dur-hover) var(--ease-out-soft), transform var(--dur-press) var(--ease-out-soft);
+  }
+  @media (hover: hover) {
+    .phone-pill__call:hover { background: var(--c-raised-2); }
+    .phone-pill__chip:hover { color: var(--c-bone); }
+  }
+  .phone-pill__call:active { background: var(--c-raised-2); }
+  .phone-pill__chip:active { transform: scale(0.97); }
+  .phone-pill__chip[aria-pressed="true"] { color: var(--c-bone); background: color-mix(in oklch, var(--c-violet) 28%, var(--c-raised-3)); }
+  .phone-pill :focus-visible { outline-offset: 2px; }
+}

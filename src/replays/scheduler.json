@@ -2,7 +2,7 @@
   "title": "Dynamic Scheduler",
   "system": "dynamic-scheduler",
   "base": "07:51:40",
-  "summary": "Replay with simulated data. The user signs in with Google and allows the Dynamic Scheduler to see and edit their calendar events. Today's calendar loads with the user's Normal template: workout at 07:00, deep work at 08:00, and so on. At 07:52 the user sends /awake to the Telegram bot. The bot detects the time, picks the user's Late template, and today's calendar shifts to the late version, with deep work at 08:30 and the workout moved to the evening. The bot confirms the change.",
+  "summary": "Replay with simulated data. The user signs in with Google and allows the Dynamic Scheduler to see and edit their calendar events. Today's calendar loads with the user's Normal template: workout at 07:00, deep work at 08:00, and so on. At 07:52 the user sends /awake to the Telegram bot. The bot detects the time, picks the user's Late template, and today's calendar shifts to the late version, with deep work starting at 08:07, fifteen minutes after waking, and the workout moved to the evening. The bot confirms the change.",
   "lanes": [
     {
       "id": "a",
@@ -123,7 +123,7 @@
       "template": "Late template",
       "blocks": [
         [
-          "08:30",
+          "08:07",
           "Deep work"
         ],
         [
@@ -157,7 +157,7 @@
       "lane": "a",
       "type": "telegram",
       "from": "Scheduler",
-      "text": "Late start noted. Today now follows your Late template. First up: Deep work at 08:30.",
+      "text": "Late start noted. Today now follows your Late template. First up: Deep work at 08:07, in 15 minutes.",
       "log": {
         "sys": "telegram",
         "event": "REPLY_SENT",

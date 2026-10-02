@@ -46,6 +46,7 @@ Template syntax (deliberately tiny):
     {{ key }}  {{ site.email }}      HTML-escaped value (dotted lookup)
     {{{ key }}}                      raw value
     {% include "header" %}           src/partials/header.html
+    {% include "x" uid="footer" %}   the same, with {{ uid }} set inside it
     {% icon "arrow-up-right" %}      inline sprite reference (validated)
     {% if key %}…{% else %}…{% endif %}
 
@@ -103,6 +104,7 @@ CRITICAL_CSS = [
     "components/button.css",
     "components/badge.css",
     "components/header.css",
+    "components/tip.css",
     "utilities.css",
 ]
 DEFERRED_CSS = [
@@ -221,6 +223,7 @@ def load_site() -> dict:
     site["contact"] = {
         "whatsapp": {"label": wa["label"], "url": wa["url"], "base": wa["url"].split("?")[0]},
         "ivr": {"label": ivr["label"], "tel": ivr["tel"], "display": ivr["display"],
+                "tip": ivr["tip"], "india_label": ivr["indiaLabel"], "india_tip": ivr["indiaTip"],
                 "note": ivr["note"], "note_link": ivr["noteLink"]},
     }
     # Templates can't index lists: site.sys.missed_lead_responder.name etc.
@@ -253,7 +256,7 @@ def load_scheduler_demo() -> dict:
         "json": json.dumps({k: v for k, v in sd.items() if not k.startswith("_")},
                            ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
         "min": lo, "max": hi, "step": sd["step"], "start": start, "start_label": sd["start"],
-        "rows": sd["rows"], "compact_rows": sd["compactRows"],
+        "rows": sd["rows"], "lead": sd["lead"],
         "ticks": [{"label": t, "p": f"{(mm(t) - lo) / (hi - lo):.4f}"} for t in sd["ticks"]],
         "zone": zone["name"], "zone_id": zone["id"], "line": zone["line"],
         "valuetext": f"Wake at {spoken}, {zone['name'].lower()}",
@@ -1145,6 +1148,18 @@ def portrait_html() -> str:
             '</picture>')
 
 
+def portrait_small_html() -> str:
+    """The home page's "who's behind this" teaser: the same portrait, small
+    (9 to 13rem wide) and lazy."""
+    b = "/assets/img/studio/sam"
+    return ('<picture>'
+            f'<source type="image/avif" srcset="{b}-400.avif">'
+            f'<source type="image/webp" srcset="{b}-400.webp">'
+            f'<img src="{b}-400.jpg" width="400" height="500" '
+            'alt="Sameer Bhardwaj, founder of Vector Workflows" loading="lazy" decoding="async">'
+            '</picture>')
+
+
 def brand_mark_html(info: dict) -> str:
     h, w = info["mark_h"], info["mark_w"]
     b = "/assets/img/brand/mark"
@@ -1159,7 +1174,7 @@ def brand_mark_html(info: dict) -> str:
 # Templates
 # ---------------------------------------------------------------------------
 
-RE_INCLUDE = re.compile(r'{%\s*include\s+"([\w\-/]+)"\s*%}')
+RE_INCLUDE = re.compile(r'{%\s*include\s+"([\w\-/]+)"((?:\s+\w+="[^"]*")*)\s*%}')
 RE_IF = re.compile(r'{%\s*if\s+(not\s+)?([\w.]+)\s*%}((?:(?!{%\s*if\b).)*?){%\s*endif\s*%}', re.S)
 RE_ICON = re.compile(r'{%\s*icon\s+"([\w\-]+)"(?:\s+class="([^"]*)")?\s*%}')
 RE_VALUE = re.compile(r"{{{\s*([\w.]+)\s*}}}|{{\s*([\w.]+)\s*}}")
@@ -1213,7 +1228,9 @@ def render(text: str, ctx: dict, icons: dict, used: set, where: str, depth: int 
         p = SRC / "partials" / f"{m.group(1)}.html"
         if not p.exists():
             raise BuildError(f"{where}: missing partial '{m.group(1)}'")
-        return render(p.read_text("utf-8"), ctx, icons, used, f"partials/{m.group(1)}.html", depth + 1)
+        # {% include "phone-pill" uid="footer" %}: the pairs arrive as {{ uid }}
+        args = dict(re.findall(r'(\w+)="([^"]*)"', m.group(2)))
+        return render(p.read_text("utf-8"), {**ctx, **args}, icons, used, f"partials/{m.group(1)}.html", depth + 1)
 
     text = RE_INCLUDE.sub(include, text)
     text = RE_REPLAY.sub(lambda m: render_replay(m.group(1), where, m.group(2) or "", m.group(3) or ""), text)
@@ -1639,6 +1656,7 @@ def build() -> int:
             "deferred_css": deferred_tags,
             "brand_mark": brand_mark_html(img),
             "portrait": portrait_html() if img.get("portrait") else "",
+            "portrait_small": portrait_small_html() if img.get("portrait") else "",
             "digitora": digitora_html(img["digitora"]) if img.get("digitora") else "",
             "build_date": date.today().isoformat(),
         }

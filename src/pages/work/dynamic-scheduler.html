@@ -36,10 +36,10 @@ js: wake
   {% replay "scheduler" id="case-replay" %}
 
   <div class="grid case-replay-head wk-head">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">↔</span><span class="index-label__rule"></span>Try the idea</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">↔</span><span class="index-label__rule"></span>Try it</p></div>
     <div class="g-body stack flow-s">
       <h2 class="t-h4">Slide your wake-up time</h2>
-      <p class="t-small">The same day can't fit every start. Move the slider and watch three example templates take over from one another.</p>
+      <p class="wk-intro">Send /awake and your day is planned from that moment: the first task starts {{ site.scheduler.lead }} minutes later, in order of priority, shaped by how early or late you woke up.</p>
     </div>
   </div>
   {% include "wake" %}
