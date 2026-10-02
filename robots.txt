@@ -1,4 +1,7 @@
 User-agent: *
 Disallow: /cutabove/
+Disallow: /src/
+Disallow: /data/
+Disallow: /docs/
 
 Sitemap: https://vectorworkflows.com/sitemap.xml

@@ -1685,7 +1685,9 @@ def write_seo_files(out: Output, site: dict, built: list) -> None:
     out.write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "\n</urlset>\n",
               allow_legacy=True)
-    disallow = "".join(f"Disallow: /{d}/\n" for d in site.get("protected_dirs", []))
+    # The site is served from the repository root, so the working folders are
+    # reachable by URL too: keep crawlers out of them as well as the demos.
+    disallow = "".join(f"Disallow: /{d}/\n" for d in [*site.get("protected_dirs", []), "src", "data", "docs"])
     out.write("robots.txt", f"User-agent: *\n{disallow}\n"
               f"Sitemap: {site['url']}/sitemap.xml\n", allow_legacy=True)
 
