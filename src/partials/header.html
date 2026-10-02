@@ -57,8 +57,7 @@
   <div class="site-menu__foot">
     <div class="site-menu__contact">
       <a class="link-arrow" href="mailto:{{ site.email }}">{{ site.email }}</a>
-      <a class="link-arrow" href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a>
-      <a class="link-arrow" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp {% icon "arrow-up-right" %}</a>
+      <a class="link-arrow" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.whatsapp.label }} {% icon "arrow-up-right" %}</a>
     </div>
     <p class="t-label">Automation &amp; web engineering studio</p>
   </div>

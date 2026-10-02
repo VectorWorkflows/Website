@@ -178,8 +178,20 @@ def tree_hash(path: Path) -> tuple[int, str]:
 
 def load_site() -> dict:
     site = json.loads((SRC / "site.json").read_text("utf-8"))
-    site["whatsapp_url"] = (f"https://wa.me/{site['whatsapp_number']}?text="
-                            + quote(site["whatsapp_text"], safe=""))
+    # Contact: data/contact.json is the only place the WhatsApp link and the
+    # phone number are written. whatsapp.base (the link without its pre-filled
+    # text) is what /start composes its own message onto.
+    contact = json.loads((DATA / "contact.json").read_text("utf-8"))
+    wa, ivr = contact["whatsappBot"], contact["ivrLine"]
+    if not re.fullmatch(r"https://wa\.me/\d+(\?text=\S*)?", wa["url"]):
+        raise BuildError("data/contact.json: whatsappBot.url must be a https://wa.me/<number> link")
+    if "".join(ch for ch in ivr["display"] if ch.isdigit()) != ivr["tel"].lstrip("+"):
+        raise BuildError("data/contact.json: ivrLine.display and ivrLine.tel are different numbers")
+    site["contact"] = {
+        "whatsapp": {"label": wa["label"], "url": wa["url"], "base": wa["url"].split("?")[0]},
+        "ivr": {"label": ivr["label"], "tel": ivr["tel"], "display": ivr["display"],
+                "note": ivr["note"], "note_link": ivr["noteLink"]},
+    }
     # Templates can't index lists: site.sys.missed_lead_responder.name etc.
     site["sys"] = {s["slug"].replace("-", "_"): s for s in site["systems"]}
     # Booking notice: chrome.js turns the fallback into an exact local time
@@ -1604,11 +1616,11 @@ def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
         "url": site["url"] + "/",
         "logo": f"{site['url']}/assets/img/brand/icon-192.png",
         "email": site["email"],
-        "telephone": site["phone_tel"],
         "description": site["description"],
         "sameAs": list(site["social"].values()),
+        # No telephone: the site's one phone number is a voice demo line
         "contactPoint": [{"@type": "ContactPoint", "contactType": "sales", "email": site["email"],
-                          "telephone": site["phone_tel"], "availableLanguage": "English"}],
+                          "availableLanguage": "English"}],
     }
     graph = []
     if "organization" in wanted:

@@ -71,6 +71,12 @@
     .footer-col a:hover { color: var(--c-bone); }
     .footer-col a:hover .icon { color: var(--c-lilac); transform: translate(0.125rem, -0.125rem); }
   }
+  /* The phone demo: label over number, both inside the one tel: link */
+  .footer-col .ivr a { align-items: flex-start; padding-block: 0.375rem; }
+  .footer-col .ivr a .icon { margin-block-start: 0.2em; }
+  .ivr__text { display: grid; }
+  .ivr__num { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.02em; color: var(--c-bone); }
+
   /* A small line under a contact link (the earliest bookable time, the note
      under the phone demo), indented to the link's text */
   .footer-hint {

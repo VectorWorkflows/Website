@@ -166,7 +166,7 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
         <p data-done-text>It should have opened in a new window. If it didn't, use the button below.</p>
         <pre class="intake__preview" data-preview data-copy></pre>
         <div class="cluster" style="--gap: var(--space-xs)">
-          <a class="btn btn--primary" data-reopen href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label" data-reopen-label>Open again</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+          <a class="btn btn--primary" data-reopen href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label" data-reopen-label>Open again</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
           <button type="button" class="btn" data-copy-btn><span class="btn__label">Copy message</span><span class="btn__icon">{% icon "copy" %}</span></button>
           <button type="button" class="btn btn--ghost" data-restart><span class="btn__label">Start over</span><span class="btn__icon">{% icon "arrow-counter-clockwise" %}</span></button>
         </div>
@@ -177,12 +177,12 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
   <noscript>
     <div class="intake-nojs">
       <p>This page needs JavaScript to compose your message. You can reach the studio directly instead:</p>
-      <p><a href="{{ site.whatsapp_url }}">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a> · <a href="{{ site.cal_url }}">Book a 15-min call</a></p>
+      <p><a href="{{ site.contact.whatsapp.url }}">{{ site.contact.whatsapp.label }}</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="{{ site.cal_url }}">Book a 15-min call</a></p>
     </div>
   </noscript>
 
-  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> · <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> · <a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.whatsapp.label }}</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
 </section>
 
 <script type="application/json" id="pricing-data">{{{ pricing.json }}}</script>
-<script type="application/json" id="intake-config">{"whatsapp": "{{ site.whatsapp_number }}", "email": "{{ site.email }}", "cal": "{{ site.cal_url }}"}</script>
+<script type="application/json" id="intake-config">{"whatsapp": "{{ site.contact.whatsapp.base }}", "email": "{{ site.email }}", "cal": "{{ site.cal_url }}"}</script>

@@ -1,5 +1,5 @@
 // Intake flow: three screens. No backend: the answers are composed into a
-// message the visitor sends themselves (wa.me or mailto:), or they book a
+// message the visitor sends themselves (WhatsApp or mailto:), or they book a
 // 15-minute call on the booking page instead.
 //
 // · Screen 1 is a multi-select of services with a live total, worked out by
@@ -285,7 +285,8 @@ if (form && pricing) {
       $('[data-done-text]').textContent = 'Your mail app should have opened with the message filled in. Press send there. If nothing opened, use the button below, or copy the message.';
       $('[data-reopen-label]').textContent = 'Open email again';
     } else {
-      url = `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(message)}`;
+      // config.whatsapp is the studio's WhatsApp link without its pre-filled text
+      url = `${config.whatsapp}?text=${encodeURIComponent(message)}`;
       $('[data-done-badge]').textContent = 'Message ready';
       $('[data-done-title]').textContent = 'Your message is ready.';
       $('[data-done-text]').textContent = 'WhatsApp should have opened in a new tab with the message filled in. Press send there. If it didn\'t open, use the button below, or copy the message.';

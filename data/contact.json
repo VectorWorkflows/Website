@@ -1,0 +1,14 @@
+{
+  "_comment": "The only two ways to reach the demos, and the only place either is written. build.py reads this file; no page, partial or script contains a phone number or a wa.me link. whatsappBot.url is the link the site has always used, pre-filled text included. ivrLine is voice only: never offer WhatsApp or SMS on it.",
+  "whatsappBot": {
+    "label": "Message the bot on WhatsApp",
+    "url": "https://wa.me/919311550616?text=Hi%2C%20saw%20Vector%20Workflows%20%E2%80%94%20I%27d%20like%20to%20ask%20about%20automation%20for%20my%20business."
+  },
+  "ivrLine": {
+    "label": "Hear the phone demo (US number)",
+    "tel": "+14704706323",
+    "display": "+1 470 470 6323",
+    "note": "Calling from India needs international calling. Prefer not to?",
+    "noteLink": "Message the bot instead."
+  }
+}

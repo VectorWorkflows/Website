@@ -16,7 +16,7 @@ critical_css: components/page-head.css, pages/studio.css
       <p class="t-lead page-head__lead fade-in" style="--d:1">I'm Sameer Bhardwaj, and Vector Workflows is me. I work out what you need, build it, and answer when it needs changing. There's no account manager in between.</p>
       <div class="cluster fade-in" style="--d:2; --gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
-        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
       <p class="studio-hero__note fade-in" style="--d:3"><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></p>
     </div>
@@ -165,7 +165,7 @@ critical_css: components/page-head.css, pages/studio.css
       <div class="cluster" style="--gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
         <a class="btn" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
-        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
     </div>
   </div>

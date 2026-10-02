@@ -28,7 +28,7 @@ critical_css: components/replay.css, components/card.css, pages/home.css
 
       <div class="cluster home-hero__ctas hero-in" style="--d:2">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
-        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
 
       <ul class="home-hero__meta hero-in" style="--d:3" role="list">
@@ -104,6 +104,12 @@ critical_css: components/replay.css, components/card.css, pages/home.css
           <span class="live__typed">/awake<span class="live__caret"></span></span>
         </div>
         <a class="btn btn--primary" href="{{ site.telegram_bot }}" target="_blank" rel="noopener"><span class="btn__label">Open in Telegram</span><span class="btn__icon">{% icon "telegram-logo" %}</span></a>
+      </div>
+      <div class="live__more">
+        <span class="t-label">Two more to try</span>
+        <a class="link-arrow" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{% icon "whatsapp-logo" %}{{ site.contact.whatsapp.label }}</a>
+        <a class="link-arrow" href="tel:{{ site.contact.ivr.tel }}">{% icon "phone" %}{{ site.contact.ivr.label }} · <span data-copy>{{ site.contact.ivr.display }}</span></a>
+        <p class="live__note">{{ site.contact.ivr.note }} <a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.ivr.note_link }}</a></p>
       </div>
     </div>
   </div>
@@ -186,9 +192,9 @@ critical_css: components/replay.css, components/card.css, pages/home.css
       <p class="t-lead measure">Describe the part of the week that goes wrong. You'll get a straight answer on whether it can be automated and what it would cost.</p>
       <div class="cluster close__ctas">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
-        <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">Message on WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
-      <p class="close__alt t-label">or <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+      <p class="close__alt t-label">or <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
     </div>
   </div>
 </section>
