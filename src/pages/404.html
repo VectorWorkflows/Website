@@ -1,62 +1,94 @@
 ---
-title: Page not found · Vector Workflows
-description: There's no page at this address. The services, the three systems, the studio and the project intake are one click away.
+title: Wrong number · Vector Workflows
+description: There's no page at this address. Home, Services, Work and Studio are one tap away.
 path: /404.html
 robots: noindex
 body_class: page-404
-critical_css: components/page-head.css, components/sys-index.css
+critical_css: components/replay.css, pages/notfound.css
 ---
 
-<section class="frame page-head" aria-labelledby="page-title">
-  <div class="grid page-head__grid">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">404</span><span class="index-label__rule"></span>Not found</p></div>
-    <div class="g-body stack flow-l">
-      <h1 id="page-title" class="page-head__title">Nothing lives at this <em>address</em>.</h1>
-      <p class="t-lead page-head__lead">The link may be old, or the address mistyped. Everything on the site is one of these four pages away.</p>
+<section class="frame nf" aria-labelledby="page-title">
+  <div class="grid nf__grid">
+    <div class="nf__say">
+      <p class="nf__num" aria-hidden="true"><span>4</span><span class="nf__zero">0</span><span>4</span></p>
+      <h1 id="page-title" class="nf__title">Wrong <em>number</em>.</h1>
+      <p class="t-lead nf__lead">Nothing lives at this address. We build systems that never leave a caller hanging, so this page won't leave you hanging either.</p>
     </div>
+
+    <figure class="replay replay--compact nf__panel" data-nf aria-labelledby="nf-name">
+      <div class="replay__core">
+        <div class="replay__bar">
+          <div class="replay__id">
+            <span class="replay__name" id="nf-name">Wrong Number Responder</span>
+            <span class="replay__sim">Not simulated · you really dialled this</span>
+          </div>
+          <span class="replay__clock" data-nf-clock aria-hidden="true">00:03</span>
+        </div>
+        <div class="nf__stage">
+          <p class="replay__lane-label">{% icon "phone" %}Your browser</p>
+          <ol class="nf__feed" role="list">
+            <li class="rp-item" data-nf-step>
+              <div class="rp-card rp-call">
+                <span class="rp-call__icon">{% icon "phone-x" %}</span>
+                <span class="rp-call__body"><span class="rp-kicker">Outgoing call · you dialled</span><span class="rp-call__num nf__path" data-nf-path data-copy>an address that isn't here</span></span>
+                <span class="rp-pill rp-pill--warn" data-nf-status>No such page</span>
+              </div>
+            </li>
+            <li class="rp-item nf__voice" data-nf-step>
+              <span class="rp-kicker">Recorded message</span>
+              <p>“The page you have dialled does not exist. Please check the address and try again.”</p>
+            </li>
+            <li class="rp-item rp-msg rp-msg--out" data-nf-step>
+              <div class="rp-bubble"><p>Looks like a wrong number. Here's where you probably meant to go:</p></div>
+              <span class="rp-meta">Auto-reply · Vector Workflows</span>
+            </li>
+            <li class="rp-item nf__chips" data-nf-step>
+              <nav aria-label="Where you probably meant to go">
+                <a href="{{ site.routes.home }}">Home</a>
+                <a href="{{ site.routes.services }}">Services</a>
+                <a href="{{ site.routes.work }}">Work</a>
+                <a href="{{ site.routes.studio }}">Studio</a>
+              </nav>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <figcaption class="sr-only">A playful re-enactment: the address you asked for is dialled like a phone number, nobody answers, a recorded message says the page does not exist, and an automatic reply offers links to Home, Services, Work and Studio.</figcaption>
+    </figure>
   </div>
 </section>
 
-<section class="frame section-tight" aria-labelledby="nf-title">
-  <div class="grid">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Go to</p></div>
-    <div class="g-body stack flow-l">
-      <h2 id="nf-title" class="sr-only">Pages on this site</h2>
-      <ol class="sys-index" role="list">
-        <li>
-          <a class="sys-row" href="{{ site.routes.services }}">
-            <span class="sys-row__num">01</span>
-            <span class="sys-row__name">Services</span>
-            <span class="sys-row__line">Twelve services in three groups, each with its price and build time.</span>
-            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
-          </a>
-        </li>
-        <li>
-          <a class="sys-row" href="{{ site.routes.work }}">
-            <span class="sys-row__num">02</span>
-            <span class="sys-row__name">Work</span>
-            <span class="sys-row__line">Three studio-built systems, each shown running, plus concept work.</span>
-            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
-          </a>
-        </li>
-        <li>
-          <a class="sys-row" href="{{ site.routes.studio }}">
-            <span class="sys-row__num">03</span>
-            <span class="sys-row__name">Studio</span>
-            <span class="sys-row__line">Who builds these systems, and why every site here is written by hand.</span>
-            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
-          </a>
-        </li>
-        <li>
-          <a class="sys-row" href="{{ site.routes.start }}">
-            <span class="sys-row__num">04</span>
-            <span class="sys-row__name">Start a project</span>
-            <span class="sys-row__line">Four short questions, then your answers open as a WhatsApp message or an email.</span>
-            <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
-          </a>
-        </li>
-      </ol>
-      <p class="t-small"><a href="{{ site.routes.home }}">Back to the home page</a></p>
-    </div>
-  </div>
-</section>
+<script>
+// The wrong-number gag. Without this script (or with reduced motion) the
+// panel above is already complete: every line and every link is there.
+(() => {
+  const root = document.querySelector('[data-nf]');
+  if (!root) return;
+  // The address as typed. Written with textContent, so it is only ever text.
+  let path = location.pathname;
+  try { path = decodeURIComponent(path); } catch (e) { /* keep it as it came */ }
+  root.querySelector('[data-nf-path]').textContent = path.length > 48 ? path.slice(0, 45) + '…' : path;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !root.animate) return;
+
+  const steps = [...root.querySelectorAll('[data-nf-step]')].slice(1);
+  const status = root.querySelector('[data-nf-status]');
+  const clock = root.querySelector('[data-nf-clock]');
+  const verdict = status.textContent;
+  // Hidden but still taking up their room, so the panel never changes size
+  steps.forEach((el) => { el.style.visibility = 'hidden'; });
+  status.textContent = 'Ringing…';
+  status.className = 'rp-pill rp-pill--wait nf__ringing';
+  clock.textContent = '00:00';
+  setTimeout(() => {
+    status.textContent = verdict;
+    status.className = 'rp-pill rp-pill--warn';
+    clock.textContent = '00:02';
+  }, 1500);
+  [[1700, '00:02'], [2600, '00:03'], [3250, '00:03']].forEach(([at, t], i) => setTimeout(() => {
+    steps[i].style.visibility = '';
+    steps[i].animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
+      { duration: 460, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+    clock.textContent = t;
+  }, at));
+})();
+</script>

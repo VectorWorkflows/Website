@@ -1,0 +1,81 @@
+/* ==========================================================================
+   404: "wrong number". An oversized 404 with the zero knocked off its hook,
+   and a replay-style panel that dials the address you typed, gets no answer,
+   plays the recorded message, then auto-replies with where you probably
+   meant to go. The panel is complete as it stands in the HTML; the page's
+   small inline script only plays it in (and only when motion is welcome).
+   ========================================================================== */
+@layer pages {
+  .nf { padding-block: calc(var(--space-4xl) + 1rem) var(--section-y); }
+  .nf__grid { --row-gap: var(--space-xl); align-items: center; }
+  .nf__say { display: grid; gap: var(--space-m); justify-items: start; }
+  @media (min-width: 64rem) {
+    .grid > .nf__say { grid-column: 1 / span 5; }
+    .grid > .nf__panel { grid-column: 7 / -1; }
+  }
+
+  /* The number: big enough to be slightly absurd, the zero in italic lilac
+     and tilted, like a receiver left off the hook */
+  .nf__num {
+    display: flex;
+    align-items: baseline;
+    margin-block-end: calc(-1 * var(--space-2xs));
+    font-family: var(--font-display);
+    font-size: clamp(9rem, 5rem + 19vw, 21rem);
+    line-height: 0.78;
+    letter-spacing: -0.055em;
+    color: var(--c-bone);
+    font-variant-numeric: lining-nums;
+    max-inline-size: none;
+    user-select: none;
+  }
+  .nf__zero {
+    display: inline-block;
+    font-style: italic;
+    color: var(--c-lilac);
+    transform: rotate(-11deg) translate(-0.02em, 0.03em);
+    transform-origin: 50% 60%;
+  }
+  .nf__title { font-size: var(--step-5); line-height: 1; letter-spacing: var(--tracking-heading); }
+  .nf__lead { max-inline-size: calc(36 * var(--ch-ui)); }
+
+  /* The panel: the shared replay shell, with its own simple feed */
+  .nf__panel { min-inline-size: 0; }
+  .nf__stage { padding: var(--space-s); }
+  @container replay (min-width: 40rem) { .nf__stage { padding: var(--space-m); } }
+  .nf__feed { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  /* A long address wraps inside the card, and the status pill drops under it
+     rather than squeezing it into a sliver */
+  .nf__panel .rp-call { flex-wrap: wrap; }
+  .nf__panel .rp-call__body { flex: 1 1 9rem; }
+  .nf__path { overflow-wrap: anywhere; font-size: var(--step--1); letter-spacing: 0.01em; line-height: 1.35; }
+  .nf__voice { display: grid; gap: 0.25rem; padding-inline: 0.25rem; }
+  .nf__voice p { font-family: var(--font-display); font-style: italic; font-size: var(--step-1); line-height: 1.25; letter-spacing: -0.01em; color: var(--c-bone); max-inline-size: none; }
+
+  /* Reply chips: the four places, as quick replies under the auto-reply */
+  .nf__chips nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; }
+  .nf__chips a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    padding-inline: 1.125rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-sunken);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--c-violet) 55%, transparent);
+    color: var(--c-lilac);
+    font-family: var(--font-ui);
+    font-weight: var(--weight-medium);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    transition: background-color var(--dur-hover) var(--ease-out-soft), color var(--dur-hover) var(--ease-out-soft), transform var(--dur-press) var(--ease-out-soft);
+  }
+  @media (hover: hover) { .nf__chips a:hover { background: var(--c-violet); color: var(--c-bone); } }
+  .nf__chips a:active { transform: scale(0.96); background: var(--c-violet); color: var(--c-bone); }
+
+  /* While it rings */
+  @media (prefers-reduced-motion: no-preference) {
+    .nf__ringing { animation: nf-ring 700ms var(--ease-out-soft) infinite alternate; }
+  }
+  @keyframes nf-ring { from { opacity: 0.45; } to { opacity: 1; } }
+}
