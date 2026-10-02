@@ -75,7 +75,7 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
           <p class="sr-only" aria-live="polite" data-quote-live></p>
           <div class="offer quote__offer" data-offer hidden>
             <p class="offer__body"><span class="offer__tag">Suggested</span><span class="offer__title" data-offer-title></span> <span class="offer__text" data-offer-text></span></p>
-            <button type="button" class="offer__add" data-offer-add>{% icon "plus" %}<span data-offer-label>Add it</span></button>
+            <button type="button" class="offer__add" data-offer-add>{% icon "check" %}<span data-offer-label>Add it</span></button>
           </div>
           <div class="offer offer--talk quote__offer" data-talk hidden>
             <p class="offer__body"><span class="offer__tag">{{ pricing.talk_tag }}</span><span class="offer__text">{{ pricing.talk_rule }} Choose "Book a 15-min call" at the last step.</span></p>
@@ -150,7 +150,7 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
         </div>
         <div class="callnote" data-callnote hidden>
           <p>{% icon "calendar-blank" %}<span>The booking page asks for your name and business, so there's nothing else to fill in here. Your answers so far go into the booking notes.</span></p>
-          <p>{% icon "clock" %}<span><strong>Please pick a slot at least an hour from now</strong>, so there's time to read your answers before we talk.</span></p>
+          <p>{% icon "clock" %}<span><strong><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></strong>, so there's time to read your answers before we talk.</span></p>
         </div>
       </fieldset>
 
@@ -181,7 +181,7 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
     </div>
   </noscript>
 
-  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> (an hour or more ahead) · <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> · <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a> · <a href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
 </section>
 
 <script type="application/json" id="pricing-data">{{{ pricing.json }}}</script>

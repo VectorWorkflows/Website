@@ -1,0 +1,4 @@
+{
+  "_comment": "minNoticeHours must equal the 'Minimum notice' setting of the Cal.com event type (cal.com/vectorworkflows/intro-call > Limits). The site tells visitors the earliest time they can book, worked out in their browser as now + minNoticeHours, rounded up to 5 minutes.",
+  "minNoticeHours": 1
+}

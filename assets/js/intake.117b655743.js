@@ -78,13 +78,13 @@ if (form && pricing) {
   };
   const updateQuote = () => {
     const q = pricing.quote(picked());
-    // Chips show what each pick costs in this selection: a related add-on
-    // shows its add-on price, an extra system its bundle rate
+    // Chips show what each pick costs in this selection: a related service
+    // shows its reduced price, a further system its bundle rate
     boxes.forEach((b) => {
       const tag = b.parentElement.querySelector('.chip__price');
       const line = q.lines.find((l) => l.slug === b.value);
       const cheaper = line && line.basis !== 'own';
-      tag.textContent = cheaper ? `${line.basis === 'addon' ? '+' : ''}${pricing.money(line.price)}` : tag.dataset.price;
+      tag.textContent = cheaper ? pricing.money(line.price) : tag.dataset.price;
       tag.classList.toggle('is-free', !!cheaper);
     });
     quoteBox.hidden = !q.count;
@@ -98,7 +98,7 @@ if (form && pricing) {
     $('[data-quote-count]').textContent = `${q.pack ? q.pack.name : `${q.count} service${q.count === 1 ? '' : 's'}`} ·`;
     pricing.countTo(totalEl, q.total);
     const save$ = $('[data-quote-save]');
-    const notes = q.lines.filter((l) => l.note).map((l) => `${l.name} ${pricing.money(l.price)}, ${l.note}`);
+    const notes = q.lines.filter((l) => l.note).map((l) => `${l.name}: ${l.basis === 'addon' ? 'only ' : ''}${pricing.money(l.price)} ${l.basis === 'addon' ? l.note : `(${l.note})`}`);
     save$.hidden = q.saving <= 0;
     save$.textContent = q.saving > 0
       ? `You save ${pricing.money(q.saving)} against standard prices${notes.length ? `. ${notes.join(' · ')}.` : '.'}`
@@ -268,8 +268,14 @@ if (form && pricing) {
       // Cal.com prefills its "Additional notes" field from ?notes=
       url = `${config.cal}?notes=${encodeURIComponent(message)}`;
       $('[data-done-badge]').textContent = 'Booking page open';
-      $('[data-done-title]').textContent = 'Pick a time at least an hour from now.';
-      $('[data-done-text]').textContent = 'The booking page should have opened in a new tab, with your answers in the notes. Please choose a slot an hour or more ahead, so there\'s time to read them first. If the page didn\'t open, use the button below.';
+      $('[data-done-title]').textContent = 'Pick a time that suits you.';
+      // The earliest bookable time, kept current by chrome.js
+      const hint = $('[data-callnote] [data-book-after]').cloneNode(true);
+      $('[data-done-text]').replaceChildren(
+        'The booking page should have opened in a new tab, with your answers in the notes. ',
+        hint,
+        '. If the page didn\'t open, use the button below.'
+      );
       $('[data-reopen-label]').textContent = 'Open the booking page';
     } else if (d.via === 'email') {
       const subject = d.unsure || !d.svc.length ? `Project enquiry · ${d.business}` : `Project enquiry: ${d.svc.length} service${d.svc.length === 1 ? '' : 's'} · ${d.business}`;

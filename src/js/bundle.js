@@ -43,7 +43,7 @@ if (pricing && bar) {
     boxes.forEach((b) => {
       const line = q.lines.find((l) => l.slug === b.value);
       const note = b.closest('.pick')?.querySelector('[data-pick-note]');
-      if (note) note.textContent = line && line.basis !== 'own' ? `${pricing.money(line.price)} ${line.note}` : '';
+      if (note) note.textContent = !line || line.basis === 'own' ? '' : line.basis === 'addon' ? `only ${pricing.money(line.price)} ${line.note}` : `${pricing.money(line.price)} · ${line.note}`;
     });
     // From the talk threshold the price is settled on a call; below it,
     // suggest the pack or pairing that takes the most off
@@ -67,7 +67,7 @@ if (pricing && bar) {
     go.href = `${start}?service=${slugs.join(',')}`;
     if (announce) {
       clearTimeout(liveTimer);
-      const extra = q.talk ? ' The price can come down on a call.' : s ? ` Suggested: add ${pricing.list(s.add.map((x) => pricing.data.services[x].name))} for ${pricing.money(s.extra)} more.` : '';
+      const extra = q.talk ? ' The price can come down on a call.' : s ? ` Suggested: get ${pricing.list(s.add.map((x) => pricing.data.services[x].name))} for only ${pricing.money(s.extra)}, instead of ${pricing.money(s.own)}.` : '';
       liveTimer = setTimeout(() => { live.textContent = `Bundle: ${pricing.describe(q)}.${extra}`; }, 700);
     }
   };

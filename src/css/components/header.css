@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HEADER: detached glass islands, never an edge-to-edge bar.
+   HEADER: detached solid islands, never an edge-to-edge bar.
    Brand island (left) · nav island (centre, ≥64rem) · action island (right).
    The wrapper ignores the pointer, so the gaps between islands stay
    clickable; only the islands take input.
@@ -41,22 +41,13 @@
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: color-mix(in oklch, var(--c-ground) 84%, transparent);
-    -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-    backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+    /* A solid ground. Tested translucent with backdrop blur: page text still
+       read through the pill in Chrome (the header's view-transition name
+       keeps the blur from seeing the page), so the ground is opaque in
+       every browser, with or without backdrop-filter. */
+    background: var(--c-raised-1);
     box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit);
   }
-
-  /* The glass firms up over the first 8rem of scroll: zero JS, tied to the
-     scroll position. Without support the glass is simply always solid. */
-  @supports (animation-timeline: scroll()) {
-    .site-header .island::before {
-      animation: island-solidify var(--ease-out) both;
-      animation-timeline: scroll(root);
-      animation-range: 0 8rem;
-    }
-  }
-  @keyframes island-solidify { from { opacity: 0.4; } to { opacity: 1; } }
 
   /* Brand ------------------------------------------------------------- */
   .brand {
@@ -243,7 +234,6 @@
   @starting-style { .site-menu[open] { opacity: 0; } }
   .site-menu::backdrop { background: transparent; }
 
-  .site-menu .island::before { animation: none; }
 
   .site-menu__nav {
     flex: 1;

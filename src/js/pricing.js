@@ -52,7 +52,7 @@ function quote(slugs) {
     ...l,
     name: svc(l.slug).name,
     standard: svc(l.slug).standard,
-    note: l.basis === 'addon' ? `with the ${svc(l.via).short}` : l.basis === 'bundle' ? 'extra system rate' : '',
+    note: l.basis === 'addon' ? `with the ${svc(l.via).short}` : l.basis === 'bundle' ? 'bundle rate' : '',
   }));
   const total = best?.total || 0;
   const standard = lines.reduce((sum, l) => sum + l.standard, 0);
@@ -147,7 +147,7 @@ function renderOffer(box, slugs, onAdd) {
   const text = box.querySelector('[data-offer-text]');
   const btn = box.querySelector('[data-offer-add]');
   title.textContent = s.pack ? `${s.pack.name} · ${money(s.total)}` : `Pairs well · ${money(s.total)} together`;
-  text.textContent = `Add ${list(names)} for ${money(s.extra)} more (${money(s.own)} on ${s.add.length === 1 ? 'its' : 'their'} own).`;
+  text.textContent = `Get ${list(names)} for only ${money(s.extra)} (instead of ${money(s.own)}).`;
   btn.querySelector('[data-offer-label]').textContent = s.add.length === 1 ? 'Add it' : 'Add both';
   btn.onclick = () => onAdd(s.add);
   return s;

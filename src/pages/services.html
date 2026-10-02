@@ -77,7 +77,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
 
         <div class="svc__foot">
           <p class="svc__price" data-copy><span class="svc__now">{{ s.price.now }}</span>{% if s.price.was %}<s class="svc__was"><span class="sr-only">standard price </span>{{ s.price.was }}</s>{% endif %}</p>
-          {% if s.price.addon %}<p class="svc__pair">{% icon "plus" %}<span><strong data-copy>{{ s.price.addon }}</strong> {{ s.price.addon_with }}</span></p>{% endif %}
+          {% if s.price.addon %}<p class="svc__pair">{% icon "check" %}<span>Get it for <strong data-copy>only {{ s.price.addon }}</strong> {{ s.price.addon_with }} <span data-copy>(instead of {{ s.price.now }})</span></span></p>{% endif %}
           {% if s.pack %}
           <div class="svc__pack">
             <p class="svc__pack-name"><span class="t-label">{{ s.pack.name }}</span><span>{{ s.pack.label }}</span></p>
@@ -108,7 +108,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
     <div class="g-body stack flow-m">
       <div class="stack flow-xs">
         <h2 id="packs-title" class="t-h2-s" data-split>Better <em>together</em>.</h2>
-        <p class="packs__intro">These share their groundwork, so the second one costs a fraction of its own price. The bundle bar suggests the right one as you pick.</p>
+        <p class="packs__intro">These share their groundwork, so together they cost far less than they do apart. The bundle bar suggests the right one as you pick.</p>
       </div>
       <ol class="packs" role="list">
         {% for pk in pricing.packs %}
@@ -130,14 +130,16 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
     <div class="g-body">
       <div class="card year">
         <div class="card__core year__core">
-          <div class="stack flow-s">
+          <div class="stack flow-m">
             <h2 id="included-title" class="t-h2-s">Included for <em>year one</em></h2>
-            <p class="year__after">After the first year, a care plan keeps it all running: <strong data-copy>{{ pricing.care_monthly }}/month</strong> or <strong data-copy>{{ pricing.care_yearly }}/year</strong>.</p>
+            <ul role="list" class="year__list">
+              {% for item in pricing.included %}<li>{% icon "check" %}<span>{{ item }}</span></li>{% endfor %}
+            </ul>
           </div>
-          <ul role="list" class="year__list">
-            {% for item in pricing.included %}<li>{% icon "check" %}<span>{{ item }}</span></li>{% endfor %}
-          </ul>
-          <p class="year__note">{{ pricing.usage_note }}</p>
+          <div class="year__after stack flow-xs">
+            <h3 class="year__after-title">After the first year — your call</h3>
+            <p>Everything keeps running as it is. Renew the domain yourself at the market price, or choose our optional care plan and we'll look after renewals, fixes and changes for <strong data-copy>{{ pricing.care_monthly }} a month</strong> (<span data-copy>{{ pricing.care_yearly }} a year</span>).</p>
+          </div>
         </div>
       </div>
     </div>
@@ -156,11 +158,15 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
         </div>
         <div class="faq__item">
           <dt>What happens after the first year?</dt>
-          <dd>The care plan keeps hosting, bot hosting and small changes going, at <span data-copy>{{ pricing.care_monthly }}</span> a month or <span data-copy>{{ pricing.care_yearly }}</span> a year. If you'd rather not continue, everything that was built stays yours to run wherever you like.</dd>
+          <dd>That's your call. Everything keeps running as it is, and what was built stays yours. Renew the domain yourself at the market price, or choose the optional care plan and we'll look after renewals, fixes and changes for <span data-copy>{{ pricing.care_monthly }}</span> a month (<span data-copy>{{ pricing.care_yearly }}</span> a year).</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there any running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
         </div>
         <div class="faq__item">
           <dt>Can I change my prices or hours myself?</dt>
-          <dd>Yes. Your Google Business Profile and WhatsApp Business details are yours to edit whenever you like. For the website and the bots, send the change on WhatsApp: text, prices, hours and photos count as small changes, included in year one and on the care plan after that.</dd>
+          <dd>Yes. Your Google Business Profile and WhatsApp Business details are yours to edit whenever you like. For the website and the bots, send the change on WhatsApp: text, prices, hours and photos count as small changes, included in year one and in the optional care plan after that.</dd>
         </div>
         <div class="faq__item">
           <dt>What do you need from me to start?</dt>
@@ -168,7 +174,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
         </div>
         <div class="faq__item">
           <dt>What if I'm not sure which ones I need?</dt>
-          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <a href="{{ site.cal_url }}" target="_blank" rel="noopener">book a 15-minute call</a> (please pick a slot at least an hour ahead). Describe how your week runs and you'll get a straight answer on what's worth setting up.</dd>
+          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <a href="{{ site.cal_url }}" target="_blank" rel="noopener">book a 15-minute call</a>. Describe how your week runs and you'll get a straight answer on what's worth setting up. <span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span>.</dd>
         </div>
       </dl>
     </div>
@@ -191,7 +197,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
   <div class="bundle__inner">
     <div class="offer bundle__offer" data-offer hidden>
       <p class="offer__body"><span class="offer__tag">Suggested</span><span class="offer__title" data-offer-title></span> <span class="offer__text" data-offer-text></span></p>
-      <button type="button" class="offer__add" data-offer-add>{% icon "plus" %}<span data-offer-label>Add it</span></button>
+      <button type="button" class="offer__add" data-offer-add>{% icon "check" %}<span data-offer-label>Add it</span></button>
     </div>
     <div class="offer offer--talk bundle__offer" data-talk hidden>
       <p class="offer__body"><span class="offer__tag">{{ pricing.talk_tag }}</span><span class="offer__text">{{ pricing.talk_rule }}</span></p>

@@ -14,12 +14,11 @@ critical_css: components/page-head.css, pages/studio.css
     <div class="studio-hero__copy stack flow-l">
       <h1 id="page-title" class="rise page-head__title">{% rise %}Hi, I'm <em>Sam</em>.{% endrise %}</h1>
       <p class="t-lead page-head__lead fade-in" style="--d:1">I'm Sameer Bhardwaj, and Vector Workflows is me. I work out what you need, build it, and answer when it needs changing. There's no account manager in between.</p>
-      <p class="studio-hero__origin fade-in" style="--d:2">Born in Uttar Pradesh, raised in New Delhi.</p>
-      <div class="cluster fade-in" style="--d:3; --gap: var(--space-xs)">
+      <div class="cluster fade-in" style="--d:2; --gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><span class="btn__label">WhatsApp</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
-      <p class="studio-hero__note fade-in" style="--d:4">For a call, please pick a slot at least an hour from now.</p>
+      <p class="studio-hero__note fade-in" style="--d:3"><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></p>
     </div>
     <figure class="portrait fade-in" style="--d:1" data-portrait>
       <div class="portrait__frame">{{{ portrait }}}</div>
@@ -44,28 +43,47 @@ critical_css: components/page-head.css, pages/studio.css
         </div>
 
         <ol class="timeline__list" role="list">
+          <li class="tl tl--lead">
+            <p class="tl__lead">Born in Uttar Pradesh, raised in New Delhi.</p>
+          </li>
           <li class="tl tl--origin">
             <p class="tl__when">2022</p>
-            <h3 class="tl__title">Finished school</h3>
-            <p>I completed my schooling at School of Excellence. The year after, the teaching and the degree began, side by side.</p>
+            <h3 class="tl__title">Studied at School of Excellence, Dwarka Sector 22</h3>
           </li>
           <li class="tl">
             <p class="tl__when">2023</p>
             <h3 class="tl__title">Teaching middle and secondary school students</h3>
-            <p>I taught classes 6 to 9 at Reliance Coaching Centre in Delhi (no relation to Reliance Industries).</p>
-            <p class="tl__taught"><span class="t-label">What it taught me</span>How to explain something so it lands with people who don't care about jargon. It's still how I explain a system to an owner.</p>
+            <p>I taught classes 6 to 9 at Reliance Coaching Centre in Delhi.</p>
+            <p class="tl__taught"><span class="t-label">What it taught me</span>To break any topic down until the person in front of you actually understands it, because that is all they care about. And to start from first principles: not “what can I sell you?” but “what do you actually need, and what does it solve?”</p>
+            <p class="tl__after">That's still how I work. I only recommend what I'd pay for myself, and if something won't earn its place in your business, I'll tell you before we build it.</p>
           </li>
-          <li class="tl">
+          <li class="tl tl--media">
             <p class="tl__when">2024</p>
             <h3 class="tl__title">Digitora</h3>
-            <p>I moved to Gurugram and built Digitora, a site meant to sell websites. I spent months perfecting the site, and stopped when it was time to sell.</p>
-            <p class="tl__taught"><span class="t-label">What it taught me</span>A beautiful site nobody sees earns nothing. That's why Vector Workflows builds things that bring customers in, and why I go out and talk to people.</p>
+            <div class="tl__split">
+              <div class="tl__text">
+                <p>I moved to Gurugram and built Digitora to sell websites: the brand, the site, a video, and hosting set up for up to a hundred client sites. I spent months perfecting it, and stopped when it was time to start selling.</p>
+                <p class="tl__taught"><span class="t-label">What it taught me</span>Building is half the work. The other half is getting in front of people, and that is the half I now start with. It is why Vector Workflows talks to owners first and builds around what they need.</p>
+              </div>
+              <figure class="phone">
+                <div class="phone__body"><span class="phone__ear" aria-hidden="true"></span>{{{ digitora }}}</div>
+                <figcaption class="t-label">digitora.baggudi.com · 2024</figcaption>
+              </figure>
+            </div>
           </li>
           <li class="tl">
             <p class="tl__when">Nov 2024 – Oct 2025</p>
             <h3 class="tl__title">Sales and retention at Concentrix</h3>
             <p>On Comcast's Xfinity account, I spent every day talking with customers who had already decided to leave, and won many of them back. I was recognised on the floor's wall of fame and awarded a certificate of recognition.</p>
-            <p class="tl__taught"><span class="t-label">What it taught me</span>Most customers are lost through silence, not price: an unanswered call, a slow reply. That's where the <a href="{{ site.routes.services }}#missed-call-responder">Missed-call responder</a> and the <a href="{{ site.routes.services }}#repeat-customer-tracker">Repeat-customer tracker</a> come from.</p>
+            <div class="tl__taught">
+              <span class="t-label">What it taught me</span>
+              <ul role="list" class="tl__points">
+                <li>What actually makes a customer say yes, and what makes them say no to even a very good offer.</li>
+                <li>How customer service shapes the way people see a business.</li>
+                <li>How a company of Comcast's scale runs its operations across so many different areas.</li>
+              </ul>
+              <p>It's also where the <a href="{{ site.routes.services }}#missed-call-responder">Missed-call responder</a> and the <a href="{{ site.routes.services }}#repeat-customer-tracker">Repeat-customer tracker</a> come from.</p>
+            </div>
           </li>
           <li class="tl tl--milestone">
             <p class="tl__when">April 2026</p>

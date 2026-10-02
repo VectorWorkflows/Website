@@ -182,6 +182,10 @@ def load_site() -> dict:
                             + quote(site["whatsapp_text"], safe=""))
     # Templates can't index lists: site.sys.missed_lead_responder.name etc.
     site["sys"] = {s["slug"].replace("-", "_"): s for s in site["systems"]}
+    # Booking notice: chrome.js turns the fallback into an exact local time
+    hours = json.loads((DATA / "booking.json").read_text("utf-8"))["minNoticeHours"]
+    site["booking"] = {"hours": hours,
+                       "fallback": f"Pick a slot at least {hours} hour{'' if hours == 1 else 's'} from now"}
     return site
 
 
@@ -238,6 +242,10 @@ class Quoter:
     def standard(self, slug: str) -> int:
         return self.tier[slug]["standard"]
 
+    def bundle(self, slug: str) -> int:
+        """A further system's rate, written out for both periods in the data."""
+        return self.tier[slug]["bundle"]["launch" if self.launch else "standard"]
+
     def hosts(self, slug: str) -> list[str]:
         """Systems this service can be added on to, in menu order. A host is
         never cheaper on its own than what rides on it (so a phone service
@@ -255,14 +263,14 @@ class Quoter:
             paid = [s for i, s in enumerate(picked) if mask >> i & 1]
             systems = [s for s in paid if self.kind(s) == "system"]
             # The system with the smallest step down to its bundle rate pays in full
-            anchor = min(systems, key=lambda s: self.own(s) - self.tier[s]["bundle"]) if systems else None
+            anchor = min(systems, key=lambda s: self.own(s) - self.bundle(s)) if systems else None
             lines, ok = [], True
             for s in picked:
                 if s in paid:
                     if self.kind(s) == "setup" or s == anchor:
                         lines.append({"slug": s, "price": self.own(s), "basis": "own", "via": ""})
                     else:
-                        lines.append({"slug": s, "price": self.tier[s]["bundle"], "basis": "bundle", "via": ""})
+                        lines.append({"slug": s, "price": self.bundle(s), "basis": "bundle", "via": ""})
                     continue
                 via = next((h for h in self.hosts(s) if h in paid), None)
                 if not via:
@@ -307,15 +315,16 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         for s in g["services"]:
             entry = p["services"][s["slug"]]
             tier = tiers[entry["tier"]]
-            days = entry["days"]
+            days = entry.get("days", tier["days"])
             hosts = q.hosts(s["slug"])
             s["tier"] = entry["tier"]
             s["price"] = {
                 "now": rupees(q.own(s["slug"])),
                 "was": rupees(tier["standard"]) if launch else "",
                 "value": q.own(s["slug"]),
+                # "Get it for only ₹N with the X or Y (instead of ₹own)"
                 "addon": rupees(p["addon"][tier["kind"]]) if hosts else "",
-                "addon_with": f"alongside the {_join_or([short[h] for h in hosts])}" if hosts else "",
+                "addon_with": f"with the {_join_or([short[h] for h in hosts])}" if hosts else "",
                 "ready": f"Ready in under {days} days, once we have your details.",
                 "days": days,
             }
@@ -323,7 +332,8 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
             js_services[s["slug"]] = {
                 "name": s["name"], "short": short[s["slug"]], "kind": tier["kind"],
                 "neverAddon": bool(entry.get("never_addon")),
-                "now": q.own(s["slug"]), "standard": tier["standard"], "bundle": tier.get("bundle"),
+                "now": q.own(s["slug"]), "standard": tier["standard"],
+                "bundle": q.bundle(s["slug"]) if tier["kind"] == "system" else None,
             }
         g["from"] = rupees(min(s["price"]["value"] for s in g["services"]))
         g["count_label"] = f"{len(g['services'])} services"
@@ -361,7 +371,9 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
             if s.get("featured"):
                 s["pack"] = starter
 
-    std, phone, add = tiers["standard"], tiers["phone"], p["addon"]
+    add = p["addon"]
+    period = "launch" if launch else "standard"
+    std_bundle, phone_bundle = tiers["standard"]["bundle"][period], tiers["phone"]["bundle"][period]
     pricing = {
         "launch": launch,
         "launch_label": f"Launch pricing until {end.day} {end:%B %Y}",
@@ -370,13 +382,13 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         # (services page); bundle_rule is the one-line version.
         "rules": [
             {"k": "First system", "v": "At its own price"},
-            {"k": "Each extra system", "v": f"{rupees(std['bundle'])} (phone services {rupees(phone['bundle'])})"},
-            {"k": "A related extra", "v": f"{rupees(add['system'])} when it builds on one you've picked"},
-            {"k": "Google or WhatsApp setup", "v": f"{rupees(add['setup'])} alongside a related system"},
+            {"k": "Each further system", "v": f"{rupees(std_bundle)} (phone services {rupees(phone_bundle)})"},
+            {"k": "A related system", "v": f"Only {rupees(add['system'])} with one you've picked"},
+            {"k": "Google or WhatsApp setup", "v": f"Only {rupees(add['setup'])} with a related system"},
         ],
-        "bundle_rule": (f"Pick more than one and the extras cost less: {rupees(add['system'])} for a system that "
-                        f"builds on one you've picked, {rupees(add['setup'])} for a related setup, otherwise "
-                        f"{rupees(std['bundle'])} (phone services {rupees(phone['bundle'])})."),
+        "bundle_rule": (f"Pick more than one and the rest cost less: only {rupees(add['system'])} for a system "
+                        f"that builds on one you've picked, only {rupees(add['setup'])} for a related setup, "
+                        f"otherwise {rupees(std_bundle)} (phone services {rupees(phone_bundle)})."),
         "talk_rule": (f"Taking {_NUM_WORDS.get(p['talk_from'], p['talk_from'])} or more? Once we've gone through "
                       "exactly what you need, the price can come down from here."),
         "talk_tag": f"{p['talk_from']}+ services",
@@ -957,7 +969,38 @@ def build_images(out: Output, site: dict) -> dict:
         for r in rels:
             out.keep(r)
         info["portrait"] = True
+
+    # Digitora (studio timeline): the 2024 mobile screenshot, shown small in a
+    # phone frame. Two widths for 1x and 2x of a 220-280 px frame.
+    digitora_src = ROOT / "assets/img/digitora-2024.webp"
+    if digitora_src.exists():
+        with Image.open(digitora_src) as im:
+            im = im.convert("RGB")
+            ratio = im.height / im.width
+            info["digitora"] = {"w": DIGITORA_SIZES[0], "h": round(DIGITORA_SIZES[0] * ratio)}
+            for size in DIGITORA_SIZES:
+                for fmt, ext, kw in (("AVIF", "avif", {"quality": 60}), ("WEBP", "webp", {"quality": 78, "method": 6})):
+                    rel = f"assets/img/studio/digitora-{size}.{ext}"
+                    if not fresh(rel, digitora_src):
+                        im.resize((size, round(size * ratio)), Image.LANCZOS).save(target(rel), fmt, **kw)
+                    out.keep(rel)
     return info
+
+
+DIGITORA_SIZES = (280, 560)
+
+
+def digitora_html(info: dict) -> str:
+    """Lazy, with explicit dimensions; the frame is 220 px (phones) to 280 px wide."""
+    b = "/assets/img/studio/digitora"
+    small, large = DIGITORA_SIZES
+    sizes = "(min-width: 64rem) 264px, 204px"
+    return ('<picture>'
+            f'<source type="image/avif" srcset="{b}-{small}.avif {small}w, {b}-{large}.avif {large}w" sizes="{sizes}">'
+            f'<img class="phone__img" src="{b}-{small}.webp" srcset="{b}-{small}.webp {small}w, {b}-{large}.webp {large}w" '
+            f'sizes="{sizes}" width="{info["w"]}" height="{info["h"]}" '
+            'alt="Digitora\'s home page on mobile, 2024" loading="lazy" decoding="async">'
+            '</picture>')
 
 
 def portrait_html() -> str:
@@ -1484,6 +1527,7 @@ def build() -> int:
             "deferred_css": deferred_tags,
             "brand_mark": brand_mark_html(img),
             "portrait": portrait_html() if img.get("portrait") else "",
+            "digitora": digitora_html(img["digitora"]) if img.get("digitora") else "",
             "build_date": date.today().isoformat(),
         }
         # Case-study pages name their system; it arrives as {{ sys.* }},

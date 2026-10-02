@@ -176,7 +176,7 @@
     text-decoration-thickness: 1px;
     text-decoration-color: color-mix(in oklch, var(--c-bone-3) 80%, transparent);
   }
-  /* The add-on price: what this costs alongside a related system */
+  /* The bundle line: what this costs with a related system, as a saving */
   .svc__pair {
     display: flex;
     align-items: flex-start;
@@ -289,21 +289,22 @@
   /* Included for year one --------------------------------------------------- */
   .year__core { display: grid; gap: var(--space-l); padding: var(--space-l); }
   @container (min-width: 48rem) {
-    .year__core { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); padding: var(--space-2xl); }
-    .year__note { grid-column: 1 / -1; }
+    .year__core { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); padding: var(--space-2xl); align-items: end; }
   }
-  .year__after { color: var(--c-bone-2); max-inline-size: calc(40 * var(--ch-body)); }
+  /* After year one: an option, said plainly (never a fee) */
+  .year__after {
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--c-sunken);
+    box-shadow: inset 0 0 0 1px var(--edge-faint);
+    color: var(--c-bone-2);
+  }
+  .year__after-title { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.02em; color: var(--c-bone); }
+  .year__after p { max-inline-size: calc(46 * var(--ch-body)); text-wrap: pretty; }
   .year__after strong { color: var(--c-bone); font-weight: var(--weight-medium); }
   .year__list { display: grid; gap: 0.625rem; margin: 0; padding: 0; list-style: none; align-content: start; }
   .year__list li { display: flex; gap: 0.625rem; align-items: flex-start; color: var(--c-bone); }
   .year__list .icon { flex: none; inline-size: 1.125rem; block-size: 1.125rem; margin-block-start: 0.15em; color: var(--c-lilac); }
-  .year__note {
-    padding-block-start: var(--space-s);
-    box-shadow: inset 0 1px 0 var(--edge-faint);
-    font-size: var(--step--1);
-    color: var(--c-bone-3);
-    max-inline-size: calc(80 * var(--ch-body));
-  }
 
   /* FAQ: every answer visible, question beside answer (no accordion) -------- */
   .faq { display: grid; margin: 0; }

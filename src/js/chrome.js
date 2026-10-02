@@ -13,6 +13,27 @@ document.querySelectorAll('[data-video]').forEach((box) => {
   });
 });
 
+// "Book a call after 3:35 PM today (IST)": the earliest slot the booking
+// page will offer, in the visitor's own time. Each [data-book-after] holds
+// the notice in hours (data/booking.json, matching the Cal.com event) and,
+// until this runs, a plain "at least N hours from now". Rounded up to five
+// minutes; refreshed every minute.
+const bookAfter = () => {
+  const now = new Date();
+  document.querySelectorAll('[data-book-after]').forEach((el) => {
+    const step = 5 * 60000;
+    const at = new Date(Math.ceil((now.getTime() + Number(el.dataset.bookAfter) * 3600000) / step) * step);
+    const days = Math.round((new Date(at).setHours(0, 0, 0, 0) - new Date(now).setHours(0, 0, 0, 0)) / 86400000);
+    const day = days === 0 ? 'today' : days === 1 ? 'tomorrow' : `on ${at.toLocaleDateString('en-US', { weekday: 'long' })}`;
+    const time = at.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const zone = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' }).formatToParts(at).find((p) => p.type === 'timeZoneName')?.value;
+    el.textContent = `Book a call after ${time} ${day}${zone ? ` (${zone})` : ''}`;
+  });
+};
+bookAfter();
+setInterval(bookAfter, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) bookAfter(); });
+
 // Shared chrome: the site menu. A native modal <dialog> does the heavy
 // lifting (inert background, Esc to close, focus returned to the opener);
 // the open/close animation is pure CSS (@starting-style). This file only

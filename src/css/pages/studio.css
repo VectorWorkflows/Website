@@ -4,8 +4,7 @@
 @layer pages {
   /* Hero: Sam, with the portrait ------------------------------------------ */
   .studio-hero__grid { row-gap: var(--space-xl); align-items: start; }
-  .studio-hero__origin { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.04em; color: var(--c-bone-3); }
-  .studio-hero__note { font-size: var(--step--1); color: var(--c-bone-3); margin-block-start: calc(-1 * var(--space-s)); }
+  .studio-hero__note { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.02em; color: var(--c-bone-2); margin-block-start: calc(-1 * var(--space-s)); }
   .portrait { margin: 0; display: grid; gap: var(--space-xs); max-inline-size: 24rem; }
   .portrait__frame {
     position: relative;
@@ -31,9 +30,8 @@
   .timeline {
     display: grid;
     grid-template-columns: 1.75rem minmax(0, 1fr);
-    grid-template-rows: repeat(6, auto);
+    grid-template-rows: repeat(7, auto);
     column-gap: var(--space-s);
-    padding-block-start: var(--space-xl);
   }
   @media (min-width: 64rem) { .timeline { grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: var(--space-m); } }
   .timeline__list {
@@ -46,19 +44,8 @@
     padding: 0;
     list-style: none;
   }
-  /* The line doesn't start at the first dot: it fades in from above, the
-     years before school ended running into the story */
-  .timeline__list::before {
-    content: "";
-    position: absolute;
-    inset-inline-start: 0;
-    inset-block: calc(-1 * var(--space-xl)) auto;
-    inline-size: 1px;
-    block-size: calc(var(--space-xl) + 0.55rem);
-    background: linear-gradient(180deg, transparent, var(--edge-violet));
-  }
   /* The thread spans the four rows from 2023 to April 2026 */
-  .thread { grid-column: 1; grid-row: 2 / 6; position: relative; display: grid; justify-items: center; align-content: start; }
+  .thread { grid-column: 1; grid-row: 3 / 7; position: relative; display: grid; justify-items: center; align-content: start; }
   .thread__line {
     position: absolute;
     inset-block: 0.55rem 1.3rem;
@@ -120,6 +107,48 @@
   .tl--origin::after { background: var(--c-ground); box-shadow: inset 0 0 0 2px var(--c-violet), 0 0 0 4px var(--c-ground); }
   .tl--origin { padding-block-end: var(--space-l); }
   .tl--origin .tl__title { font-size: var(--step-1); }
+  /* The lead line: where the story starts. No dot; the line fades in beside
+     it, so the timeline doesn't begin abruptly at the first chapter. */
+  .tl--lead { padding-block: var(--space-2xs) var(--space-l); }
+  .tl--lead::after { display: none; }
+  .tl--lead::before { inset-block-start: 0; background: linear-gradient(180deg, transparent, var(--edge-violet)); }
+  .tl .tl__lead { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.04em; color: var(--c-bone-2); }
+  .tl .tl__after { margin-block-start: var(--space-2xs); color: var(--c-bone); }
+  .tl__taught .tl__points { display: grid; gap: 0.5rem; margin: 0 0 var(--space-xs); padding: 0; list-style: none; }
+  .tl__points li { position: relative; padding-inline-start: 1.25rem; color: var(--c-bone); max-inline-size: calc(54 * var(--ch-body)); text-wrap: pretty; }
+  .tl__points li::before { content: ""; position: absolute; inset-inline-start: 0.125rem; inset-block-start: 0.72em; inline-size: 0.5rem; block-size: 1px; background: var(--c-lilac-dim); }
+  .tl .tl__taught p { color: var(--c-bone-2); }
+
+  /* Digitora: text beside a small phone showing the site as it was */
+  .tl__split { display: grid; gap: var(--space-m); align-items: start; }
+  .tl__text { display: grid; gap: var(--space-2xs); min-inline-size: 0; }
+  @media (min-width: 64rem) { .tl__split { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-xl); } }
+  .phone { display: grid; gap: 0.625rem; justify-items: center; inline-size: 13.75rem; margin: 0; }
+  @media (min-width: 64rem) { .phone { inline-size: 17.5rem; } }
+  /* The upper part of a handset: rounded shoulders, an earpiece, and the
+     screen running off the bottom under a soft fade */
+  .phone__body {
+    position: relative;
+    inline-size: 100%;
+    padding: 1.625rem 0.5rem 0;
+    border-radius: 2rem 2rem 0 0;
+    background: var(--c-raised-3);
+    box-shadow: inset 0 0 0 1px var(--edge-strong), inset 0 1px 0 color-mix(in oklch, var(--c-bone) 14%, transparent);
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent);
+    mask-image: linear-gradient(180deg, #000 72%, transparent);
+  }
+  .phone__ear {
+    position: absolute;
+    inset-block-start: 0.6875rem;
+    inset-inline-start: 50%;
+    inline-size: 2.75rem;
+    block-size: 0.3125rem;
+    margin-inline-start: -1.375rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-sunken);
+  }
+  .phone__img { display: block; inline-size: 100%; block-size: auto; border-radius: 0.5rem 0.5rem 0 0; }
+  .phone figcaption { color: var(--c-bone-3); text-align: center; }
   .tl__when { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--c-lilac); }
   .tl__title { font-size: var(--step-2); letter-spacing: -0.02em; }
   .tl--milestone .tl__title { font-size: var(--step-0); color: var(--c-bone-2); }
