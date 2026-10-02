@@ -4,21 +4,46 @@ serve.py: preview the built site on your phone.
 
     python serve.py
 
-Serves the built site (this folder, the same one GitHub Pages serves) on
-every network interface, port 8000, and prints the address to open on a
-phone that is on the same Wi-Fi. Plain http, standard library only.
+Serves docs/ (the folder GitHub Pages publishes) on every network interface,
+port 8000, and prints the address to open on a phone that is on the same
+Wi-Fi. Like the live site, an address that doesn't exist gets 404.html with
+status 404. Plain http, standard library only.
 Run `python build.py` first if you have changed anything in src/ or data/.
 Stop it with Ctrl+C.
 """
 from __future__ import annotations
 
+import io
 import socket
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
-ROOT = Path(__file__).resolve().parent
+SITE = Path(__file__).resolve().parent / "docs"
 PORT = 8000
+
+
+class Handler(SimpleHTTPRequestHandler):
+    extensions_map = {**SimpleHTTPRequestHandler.extensions_map,
+                      ".js": "text/javascript", ".woff2": "font/woff2", ".avif": "image/avif"}
+
+    def send_head(self):
+        path = Path(self.translate_path(self.path))
+        if path.is_dir():
+            if not urlsplit(self.path).path.endswith("/"):
+                return super().send_head()  # redirect to the folder, as the host does
+            path = path / "index.html"
+        if path.is_file():
+            return super().send_head()
+        # No such page: the site's own 404 page, with status 404
+        page = SITE / "404.html"
+        body = page.read_bytes() if page.is_file() else b"404 Not Found"
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html; charset=utf-8" if page.is_file() else "text/plain")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        return io.BytesIO(body)
 
 
 def lan_address() -> str:
@@ -36,7 +61,9 @@ def lan_address() -> str:
 
 
 def main() -> None:
-    handler = partial(SimpleHTTPRequestHandler, directory=str(ROOT))
+    if not (SITE / "index.html").is_file():
+        raise SystemExit("docs/ has no built site yet. Run: python build.py")
+    handler = partial(Handler, directory=str(SITE))
     server = ThreadingHTTPServer(("0.0.0.0", PORT), handler)
     print(f"Open on your phone: http://{lan_address()}:{PORT}", flush=True)
     print(f"On this computer:   http://localhost:{PORT}", flush=True)

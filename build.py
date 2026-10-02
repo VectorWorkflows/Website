@@ -13,20 +13,33 @@ it will still run in ten years. Pillow (image derivatives) and fontTools
     python build.py fonts --subset      subset installed fonts to Latin, in place
                                         (needs: pip install fonttools brotli)
     python build.py check               validate the built output without writing anything
-    python build.py serve [port]        serve the site root locally (default 8000)
+    python build.py serve [port]        serve docs/ locally, gzipped like the host (default 8000)
     python build.py og                  render Open Graph / Twitter cards (1200×630 PNG) for every
                                         indexable page with headless Chrome, then rebuild to link them
                                         (re-run after installing new fonts)
 
-Source layout (everything authored lives in /src):
+The published site is docs/ and nothing else: GitHub Pages serves that folder
+of this branch as it is committed (it does not run this script). Every build
+empties docs/ and writes it again in full: the pages, their CSS and JS, the
+fonts and images, 404.html, CNAME, .nojekyll, robots.txt, sitemap.xml, and a
+byte-for-byte copy of /cutabove/. Source files, data, notes and tooling are
+never copied there, and the build fails if one turns up.
 
-    src/site.json        site-wide values: contact details, routes, socials
+Source layout:
+
+    src/site.json        site-wide values: routes, socials
     src/fonts.json       webfont source of truth (folders, @font-face, manifest)
     src/css/             token file, cascade layers, components, page CSS
     src/js/              vanilla ES modules
     src/icons/           Phosphor Light SVGs, compiled into a per-page sprite
     src/partials/        shared chrome: layout, head, header, footer
     src/pages/           one file per page: front matter + HTML body
+    data/                prices, contact details, booking notice, slider data
+    assets/              static files as they are published: the font folders,
+                         and images (originals plus the derivatives the build
+                         makes from them once and keeps)
+    cutabove/            a separate site, mirrored into docs/ untouched
+    notes/               the brief and the performance record (not published)
 
 Template syntax (deliberately tiny):
 
@@ -38,9 +51,9 @@ Template syntax (deliberately tiny):
 
 Safety: the builder never writes, moves or deletes anything inside a
 protected directory (/cutabove/ above all). It hashes every protected tree
-before and after each build and fails loudly if a single byte changed.
-It will not overwrite a file it did not create unless that page's front
-matter says `replaces_legacy: true`.
+before and after each build and fails loudly if a single byte changed, and
+checks that the copy in docs/ matches it file for file. A build that fails
+before the end leaves docs/ exactly as it was.
 """
 from __future__ import annotations
 
@@ -50,18 +63,32 @@ import html
 import json
 import os
 import re
+import shutil
 import sys
 from datetime import date
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
 DATA = ROOT / "data"
-MANIFEST_FILE = ROOT / ".build-manifest.json"
+OUT = ROOT / "docs"      # the published folder: GitHub Pages serves it from this branch
+STATIC = ROOT / "assets"
 
 # Directories the builder must never touch. site.json can add more.
-ALWAYS_PROTECTED = {".git", ".github", ".claude", ".agents", "src", "data", "node_modules", "cutabove"}
+ALWAYS_PROTECTED = {".git", ".github", ".claude", ".agents", "src", "data", "notes", "node_modules", "cutabove"}
+
+# What goes from assets/ into docs/assets/: web formats only. The originals
+# that derivatives are cut from stay behind.
+STATIC_PUBLISH = {".woff2", ".avif", ".webp", ".png", ".jpg", ".jpeg", ".svg", ".gif"}
+STATIC_ORIGINALS = {"assets/img/sam-portrait.jpg", "assets/img/digitora-2024.webp",
+                    "assets/img/brand/favicon.ico", "assets/img/brand/mark-28.png", "assets/img/brand/mark-84.png"}
+
+# Never published, wherever they sit (checked on the finished docs/ every build)
+PRIVATE_SUFFIXES = {".md", ".py", ".pyc", ".txt", ".zip", ".map", ".log", ".sh", ".ps1", ".lock"}
+PRIVATE_NAMES = {"package.json", "package-lock.json", "skills-lock.json", ".gitignore", ".build-manifest.json"}
+PRIVATE_DIRS = {"src", "data", "notes", ".git", ".github", ".claude", ".agents", ".vscode", "node_modules", "__pycache__"}
+PUBLIC_TXT = {"robots.txt"}
 
 # CSS bundles. Cascade layers are declared first (layers.css), so the order
 # files arrive in never changes which rule wins. Critical CSS is inlined in
@@ -110,54 +137,61 @@ class BuildError(Exception):
 # ---------------------------------------------------------------------------
 
 class Output:
-    """Every write goes through here. Tracks what was written for the build
-    manifest (stale-file cleanup) and refuses protected or legacy paths."""
+    """Everything published goes through here and lands in docs/ only.
 
-    def __init__(self, protected: set[str]):
-        self.protected = protected
-        self.written: set[str] = set()
-        self.previous = set(json.loads(MANIFEST_FILE.read_text("utf-8"))["files"]) if MANIFEST_FILE.exists() else set()
+    Files are collected first and written at the end: finish() empties docs/
+    and writes the whole site again, so docs/ never holds anything this
+    script didn't put there, and a build that fails part-way changes nothing.
+    A mirrored folder (/cutabove/) can only be filled by mirror()."""
 
-    def _check(self, rel: str) -> Path:
-        target = (ROOT / rel).resolve()
-        if ROOT not in target.parents:
-            raise BuildError(f"refusing to write outside the site root: {rel}")
-        top = target.relative_to(ROOT).parts[0]
-        if top in self.protected:
-            raise BuildError(f"refusing to write inside protected directory '{top}/': {rel}")
-        return target
+    def __init__(self, mirrored: set[str]):
+        self.mirrored = mirrored
+        self.files: dict[str, bytes | Path] = {}
 
-    def write(self, rel: str, data: str | bytes, *, allow_legacy: bool = False) -> None:
-        rel = rel.replace("\\", "/")
-        target = self._check(rel)
-        if target.exists() and rel not in self.previous and not allow_legacy and not rel.startswith("assets/"):
-            raise BuildError(
-                f"{rel} exists but was not created by build.py. Set `replaces_legacy: true` "
-                f"in the page's front matter to replace it deliberately.")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        if isinstance(data, str):
-            data = data.encode("utf-8")
-        if not target.exists() or target.read_bytes() != data:
-            target.write_bytes(data)
-        self.written.add(rel)
+    def _rel(self, rel: str, *, mirror: bool = False) -> str:
+        rel = rel.replace("\\", "/").lstrip("/")
+        target = (OUT / rel).resolve()
+        if OUT not in target.parents:
+            raise BuildError(f"refusing to write outside docs/: {rel}")
+        top = target.relative_to(OUT).parts[0]
+        if (top in self.mirrored) != mirror:
+            raise BuildError(f"refusing to write inside the mirrored directory '{top}/': {rel}")
+        return rel
 
-    def keep(self, rel: str) -> None:
-        """Mark a file as a build product without rewriting it (cached image derivatives)."""
-        self.written.add(rel.replace("\\", "/"))
+    def _put(self, rel: str, data: bytes | Path) -> None:
+        # The same hashed stylesheet can be asked for by several pages
+        if self.files.get(rel, data) != data:
+            raise BuildError(f"two different files want the same place in docs/: {rel}")
+        self.files[rel] = data
 
-    def finish(self) -> list[str]:
-        stale = sorted(self.previous - self.written)
-        removed = []
-        for rel in stale:
-            try:
-                target = self._check(rel)
-            except BuildError:
-                continue
-            if target.is_file():
-                target.unlink()
-                removed.append(rel)
-        MANIFEST_FILE.write_text(json.dumps({"files": sorted(self.written)}, indent=2) + "\n", "utf-8")
-        return removed
+    def write(self, rel: str, data: str | bytes) -> None:
+        self._put(self._rel(rel), data.encode("utf-8") if isinstance(data, str) else data)
+
+    def copy(self, rel: str, source: Path, *, mirror: bool = False) -> None:
+        """Publish an existing file as it is (read when docs/ is written)."""
+        self._put(self._rel(rel, mirror=mirror), source)
+
+    def read(self, rel: str) -> bytes:
+        data = self.files[rel.lstrip("/")]
+        return data.read_bytes() if isinstance(data, Path) else data
+
+    def finish(self) -> None:
+        if OUT.parent != ROOT or OUT.name != "docs":
+            raise BuildError(f"refusing to empty {OUT}: the published folder must be docs/ beside build.py")
+        try:
+            if OUT.exists():
+                for child in OUT.iterdir():
+                    if child.is_dir() and not child.is_symlink():
+                        shutil.rmtree(child)
+                    else:
+                        child.unlink()
+            for rel, data in sorted(self.files.items()):
+                target = OUT / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data.read_bytes() if isinstance(data, Path) else data)
+        except OSError as e:
+            raise BuildError(f"could not rewrite docs/ ({e}). Is a file in it open in another program? "
+                             "Close it and run the build again.")
 
 
 def tree_hash(path: Path) -> tuple[int, str]:
@@ -487,7 +521,7 @@ def expected_folder(face: dict) -> str:
     return f"{face['weight']}-{name}" + ("-Italic" if face["style"] == "italic" else "")
 
 
-def sync_fonts(cfg: dict, out: Output | None = None, *, write: bool = True,
+def sync_fonts(cfg: dict, *, write: bool = True,
                protected: set[str] = frozenset(ALWAYS_PROTECTED)) -> dict:
     """Create folders + placeholders, regenerate fonts.css and MANIFEST.md,
     and validate the whole font setup. With write=False it only validates.
@@ -527,11 +561,12 @@ def sync_fonts(cfg: dict, out: Output | None = None, *, write: bool = True,
             errors.append(f"undocumented font directory: {p.relative_to(ROOT).as_posix()}")
 
     # No font files anywhere else in the project (separate sites in protected
-    # directories such as /cutabove/ are their own business and not scanned)
+    # directories such as /cutabove/ are their own business and not scanned;
+    # docs/ holds the published copies)
     for dirpath, dirnames, filenames in os.walk(ROOT):
         here = Path(dirpath)
         if here == ROOT:
-            dirnames[:] = [d for d in dirnames if d not in (protected - {"src"})]
+            dirnames[:] = [d for d in dirnames if d not in (protected - {"src"}) and d != OUT.name]
         if here == fonts_root or fonts_root in here.parents:
             continue
         for name in filenames:
@@ -570,11 +605,9 @@ def sync_fonts(cfg: dict, out: Output | None = None, *, write: bool = True,
         # src/css/fonts.css is generated but lives in src so the CSS bundler sees it
         with open(SRC / "css" / "fonts.css", "w", encoding="utf-8", newline="\n") as fh:
             fh.write(css)
-        if out:
-            out.write(f"{cfg['root']}/MANIFEST.md", manifest)
-        else:
-            with open(fonts_root / "MANIFEST.md", "w", encoding="utf-8", newline="\n") as fh:
-                fh.write(manifest)
+        # A note for whoever installs the fonts: kept beside them, never published
+        with open(fonts_root / "MANIFEST.md", "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(manifest)
     elif render_font_css(cfg) != (SRC / "css" / "fonts.css").read_text("utf-8"):
         errors.append("src/css/fonts.css is out of date with src/fonts.json (run: python build.py fonts)")
     return {"errors": errors, "warnings": warnings, "installed": installed}
@@ -915,10 +948,11 @@ def load_icons() -> dict[str, str]:
     return icons
 
 
-def build_images(out: Output, site: dict) -> dict:
+def build_images(site: dict) -> dict:
     """Resized derivatives of the existing logo artwork (not a redesign: the
-    same pixels, scaled for the web). Cached: regenerated only when missing
-    or older than the source file."""
+    same pixels, scaled for the web). Kept in assets/img/ beside their
+    originals and regenerated only when missing or older than the source
+    file; publish_static() copies them into docs/."""
     info = {"mark_w": 41, "mark_h": 28, "have": False}
     try:
         from PIL import Image
@@ -931,7 +965,9 @@ def build_images(out: Output, site: dict) -> dict:
         return p.exists() and p.stat().st_mtime >= src.stat().st_mtime
 
     def target(rel: str) -> Path:
-        path = out._check(rel)  # same guard as every other write
+        path = (ROOT / rel).resolve()
+        if STATIC not in path.parents:
+            raise BuildError(f"image derivatives belong in assets/: {rel}")
         path.parent.mkdir(parents=True, exist_ok=True)
         return path
 
@@ -950,7 +986,6 @@ def build_images(out: Output, site: dict) -> dict:
                 rel = f"{brand}/mark-{h}.{ext}"
                 if not fresh(rel, mark_src):
                     im.resize((w, h), Image.LANCZOS).save(target(rel), fmt, **kw)
-                out.keep(rel)
 
     with Image.open(icon_src) as im:
         im = im.convert("RGBA")
@@ -968,10 +1003,8 @@ def build_images(out: Output, site: dict) -> dict:
                     base.alpha_composite(img)
                     img = base.convert("RGB")
                 img.save(target(rel), "PNG", optimize=True)
-            out.keep(rel)
-        if not fresh("favicon.ico", icon_src):
-            square.save(target("favicon.ico"), "ICO", sizes=[(16, 16), (32, 32), (48, 48)])
-        out.keep("favicon.ico")
+        if not fresh(FAVICON, icon_src):
+            square.save(target(FAVICON), "ICO", sizes=[(16, 16), (32, 32), (48, 48)])
 
     # Studio portrait: 4:5 crop, a little desaturated, with a faint violet-to-
     # ink wash so it sits in the palette. Two sizes, AVIF + WebP + JPEG.
@@ -1006,8 +1039,6 @@ def build_images(out: Output, site: dict) -> dict:
                     frame.save(target(f"assets/img/studio/sam-{size}.avif"), "AVIF", quality=62)
                     frame.save(target(f"assets/img/studio/sam-{size}.webp"), "WEBP", quality=80, method=6)
                     frame.save(target(f"assets/img/studio/sam-{size}.jpg"), "JPEG", quality=82, optimize=True, progressive=True)
-        for r in rels:
-            out.keep(r)
         info["portrait"] = True
 
     # Digitora (studio timeline): the 2024 mobile screenshot, shown small in a
@@ -1023,11 +1054,73 @@ def build_images(out: Output, site: dict) -> dict:
                     rel = f"assets/img/studio/digitora-{size}.{ext}"
                     if not fresh(rel, digitora_src):
                         im.resize((size, round(size * ratio)), Image.LANCZOS).save(target(rel), fmt, **kw)
-                    out.keep(rel)
     return info
 
 
 DIGITORA_SIZES = (280, 560)
+FAVICON = "assets/img/brand/favicon.ico"   # published as /favicon.ico
+
+
+def publish_static(out: Output) -> int:
+    """assets/ → docs/assets/: installed fonts and web images, as they are.
+    Originals, placeholders and notes stay behind."""
+    count = 0
+    for f in sorted(p for p in STATIC.rglob("*") if p.is_file()):
+        rel = f.relative_to(ROOT).as_posix()
+        if f.suffix.lower() not in STATIC_PUBLISH or rel in STATIC_ORIGINALS or f.stat().st_size == 0:
+            continue
+        out.copy(rel, f)
+        count += 1
+    if (ROOT / FAVICON).exists():
+        out.copy("favicon.ico", ROOT / FAVICON)
+        count += 1
+    return count
+
+
+def mirror_protected(out: Output, name: str) -> tuple[int, list[str]]:
+    """Copy a protected site (/cutabove/) into docs/ byte for byte. Only its
+    working notes stay behind (a README, scripts), and only if no page in it
+    refers to them. Returns (files copied, files left out)."""
+    root = ROOT / name
+    files = sorted(p for p in root.rglob("*") if p.is_file())
+    held = [p for p in files if is_private(p.relative_to(root))]
+    if held:
+        text = "\n".join(p.read_text("utf-8", "replace") for p in files
+                         if p.suffix.lower() in (".html", ".css", ".js") and p not in held)
+        for p in held:
+            if p.name in text:
+                raise BuildError(f"{name}/ refers to {p.relative_to(ROOT).as_posix()}, which would not be published")
+    for p in files:
+        if p not in held:
+            out.copy(p.relative_to(ROOT).as_posix(), p, mirror=True)
+    return len(files) - len(held), [p.relative_to(ROOT).as_posix() for p in held]
+
+
+def is_private(rel: Path) -> bool:
+    """True for anything that must never be published: notes, scripts, source
+    and tooling folders, package files."""
+    if any(part in PRIVATE_DIRS for part in rel.parts[:-1]):
+        return True
+    name = rel.name
+    if name in PRIVATE_NAMES:
+        return True
+    return rel.suffix.lower() in PRIVATE_SUFFIXES and name not in PUBLIC_TXT
+
+
+def audit_output(protected: list[str]) -> list[str]:
+    """The finished docs/ against the source: no private file anywhere in it,
+    and every mirrored file identical to its original."""
+    problems = []
+    for f in sorted(p for p in OUT.rglob("*") if p.is_file()):
+        rel = f.relative_to(OUT)
+        if is_private(rel) or (rel.name == "robots.txt" and len(rel.parts) > 1):
+            problems.append(f"private file published: docs/{rel.as_posix()}")
+    for name in protected:
+        for f in sorted(p for p in (OUT / name).rglob("*") if p.is_file()):
+            original = ROOT / f.relative_to(OUT)
+            if not original.is_file() or original.read_bytes() != f.read_bytes():
+                problems.append(f"docs/{f.relative_to(OUT).as_posix()} differs from its original")
+    return problems
 
 
 def digitora_html(info: dict) -> str:
@@ -1490,13 +1583,14 @@ def build() -> int:
     site = load_site()
     pricing = load_pricing(site)
     protected = protected_dirs(site)
-    guarded = {d: tree_hash(ROOT / d) for d in site.get("protected_dirs", [])}
-    out = Output(protected)
+    mirrored = site.get("protected_dirs", [])
+    guarded = {d: tree_hash(ROOT / d) for d in mirrored}
+    out = Output(set(mirrored))
     print("build.py: vectorworkflows.com")
 
     # Fonts
     fonts_cfg = load_fonts()
-    font_report = sync_fonts(fonts_cfg, out, protected=protected)
+    font_report = sync_fonts(fonts_cfg, protected=protected)
     for e in font_report["errors"]:
         print(f"  ✗ font: {e}")
     for w in font_report["warnings"]:
@@ -1508,8 +1602,9 @@ def build() -> int:
     print(f"  fonts: {n_inst}/{len(font_report['installed'])} faces installed"
           + (f" ({missing} placeholder(s) render the metric-matched fallback)" if missing else ""))
 
-    # Images
-    img = build_images(out, site)
+    # Images, then everything static: fonts and images go to docs/ as they are
+    img = build_images(site)
+    n_static = publish_static(out)
 
     # Shared CSS and JS
     critical_base = minify_css(read_css(CRITICAL_CSS))
@@ -1606,19 +1701,28 @@ def build() -> int:
 
         # Honest page weight: HTML (with inlined critical CSS) + deferred CSS
         # + all JS including the on-demand motion libraries, gzipped
-        weight = gz_size(doc) + sum(gz_size((ROOT / u.lstrip("/")).read_bytes()) for u in deferred_urls) \
+        weight = gz_size(doc) + sum(gz_size(out.read(u)) for u in deferred_urls) \
             + sum(gz_size(js_bytes[js_urls[n]]) for n in page_js) + vendor_bytes
         doc = doc.replace("<!--PAGE_WEIGHT-->", f"{weight / 1024:.1f}&nbsp;kB")
 
         rel = out_path_for(meta["path"])
-        out.write(rel, doc, allow_legacy=meta.get("replaces_legacy") == "true")
+        out.write(rel, doc)
         built.append((meta, rel, weight))
         print(f"  page: /{rel:<28} {weight / 1024:6.1f} kB gz   icons: {len(used)}")
 
     write_seo_files(out, site, built)
-    removed = out.finish()
-    for r in removed:
-        print(f"  removed stale: {r}")
+    # What the host needs beside the pages: the custom domain, and "serve
+    # every file as it is" (no Jekyll pass)
+    out.write("CNAME", urlsplit(site["url"]).netloc)
+    out.write(".nojekyll", "")
+    for d in mirrored:
+        copied, held = mirror_protected(out, d)
+        print(f"  mirror: {d}/ → docs/{d}/ ({copied} files"
+              + (f"; not published: {', '.join(held)})" if held else ")"))
+
+    # Everything rendered: only now is docs/ emptied and written again
+    out.finish()
+    print(f"  docs/: emptied and rewritten, {len(out.files)} files ({n_static} static)")
 
     # Protected trees must be byte-identical
     for d, before in guarded.items():
@@ -1627,9 +1731,14 @@ def build() -> int:
             raise BuildError(f"PROTECTED DIRECTORY CHANGED: {d}/  ({before} → {after})")
         print(f"  guard: {d}/ untouched ({before[0]} files, sha256 {before[1][:12]}…)")
 
-    problems = validate(site, [ROOT / rel for _, rel, _ in built])
-    print(f"  done: {len(built)} page(s), {len(out.written)} files tracked")
-    return 1 if problems else 0
+    problems = validate(site, [OUT / rel for _, rel, _ in built])
+    leaks = audit_output(mirrored)
+    for p in leaks:
+        print(f"  ✗ {p}")
+    if not leaks:
+        print("  guard: docs/ holds the site only (no notes, scripts, source or data), mirrors match")
+    print(f"  done: {len(built)} page(s)")
+    return 1 if problems or leaks else 0
 
 
 def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
@@ -1683,13 +1792,12 @@ def write_seo_files(out: Output, site: dict, built: list) -> None:
     urls = "\n".join(f"  <url><loc>{site['url']}{m['path']}</loc><lastmod>{today}</lastmod></url>"
                      for m, _ in sorted(indexable, key=lambda x: x[0]["path"]))
     out.write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
-              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "\n</urlset>\n",
-              allow_legacy=True)
-    # The site is served from the repository root, so the working folders are
-    # reachable by URL too: keep crawlers out of them as well as the demos.
-    disallow = "".join(f"Disallow: /{d}/\n" for d in [*site.get("protected_dirs", []), "src", "data", "docs"])
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "\n</urlset>\n")
+    # Only the concept demos are kept out of search. Nothing private is
+    # published, so there is nothing else to name here.
+    disallow = "".join(f"Disallow: /{d}/\n" for d in site.get("protected_dirs", []))
     out.write("robots.txt", f"User-agent: *\n{disallow}\n"
-              f"Sitemap: {site['url']}/sitemap.xml\n", allow_legacy=True)
+              f"Sitemap: {site['url']}/sitemap.xml\n")
 
 
 # ---------------------------------------------------------------------------
@@ -1701,7 +1809,7 @@ def validate(site: dict, files: list[Path]) -> list[str]:
     planned = set(site.get("planned_routes", []))
     for f in files:
         doc = f.read_text("utf-8")
-        rel = f.relative_to(ROOT).as_posix()
+        rel = f.relative_to(OUT).as_posix()
         visible = re.sub(r"<(script|style)\b.*?</\1>", "", doc, flags=re.S)
 
         h1 = len(re.findall(r"<h1[\s>]", visible))
@@ -1728,7 +1836,7 @@ def validate(site: dict, files: list[Path]) -> list[str]:
                     problems.append(f"{rel}: in-page anchor {href} has no target")
             elif href.startswith("/") and not href.startswith("//"):
                 path = href.split("#")[0].split("?")[0]
-                target = ROOT / (path.lstrip("/") + ("index.html" if path.endswith("/") else ""))
+                target = OUT / (path.lstrip("/") + ("index.html" if path.endswith("/") else ""))
                 if not target.exists():
                     if path in planned:
                         notes.append(path)
@@ -1749,9 +1857,9 @@ def check() -> int:
         print(f"  ✗ font: {e}")
     for w in report["warnings"]:
         print(f"  ! font: {w}")
-    files = [ROOT / f for f in json.loads(MANIFEST_FILE.read_text("utf-8"))["files"]
-             if f.endswith(".html")] if MANIFEST_FILE.exists() else []
-    problems = validate(site, [f for f in files if f.exists()])
+    mirrored = site.get("protected_dirs", [])
+    files = [f for f in sorted(OUT.rglob("*.html")) if f.relative_to(OUT).parts[0] not in mirrored]
+    problems = validate(site, files) + audit_output(mirrored)
     ok = not problems and not report["errors"]
     print("  ✓ all checks passed" if ok else "  ✗ checks failed")
     return 0 if ok else 1
@@ -1771,19 +1879,30 @@ def serve(port: int) -> None:
 
     class Handler(http.server.SimpleHTTPRequestHandler):
         def send_head(self):
+            import io
             path = Path(self.translate_path(self.path))
+            status = 200
             if path.is_dir():
+                if not urlsplit(self.path).path.endswith("/"):
+                    return super().send_head()  # redirect to the folder, as the host does
                 path = path / "index.html"
-            if (path.suffix in text_types and path.is_file()
-                    and "gzip" in self.headers.get("Accept-Encoding", "")):
-                body = gzip.compress(path.read_bytes(), compresslevel=6)
-                self.send_response(200)
+            if not path.is_file():
+                # A missing path gets 404.html with status 404, like the host
+                path, status = OUT / "404.html", 404
+                if not path.is_file():
+                    self.send_error(404)
+                    return None
+            if status == 404 or (path.suffix in text_types
+                                 and "gzip" in self.headers.get("Accept-Encoding", "")):
+                zipped = "gzip" in self.headers.get("Accept-Encoding", "")
+                body = gzip.compress(path.read_bytes(), compresslevel=6) if zipped else path.read_bytes()
+                self.send_response(status)
                 self.send_header("Content-Type", mimetypes.guess_type(path.name)[0] or "text/html")
-                self.send_header("Content-Encoding", "gzip")
+                if zipped:
+                    self.send_header("Content-Encoding", "gzip")
                 self.send_header("Content-Length", str(len(body)))
                 self.send_header("Cache-Control", "max-age=600")
                 self.end_headers()
-                import io
                 return io.BytesIO(body)
             return super().send_head()
 
@@ -1795,9 +1914,9 @@ def serve(port: int) -> None:
         def log_message(self, *args):
             pass
 
-    handler = functools.partial(Handler, directory=str(ROOT))
+    handler = functools.partial(Handler, directory=str(OUT))
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), handler) as httpd:
-        print(f"serving {ROOT} at http://127.0.0.1:{port}/")
+        print(f"serving {OUT} at http://127.0.0.1:{port}/")
         httpd.serve_forever()
 
 
@@ -1892,7 +2011,7 @@ def og_cards() -> int:
             meta, _ = parse_page(page)
             if meta.get("robots", "index").startswith("noindex"):
                 continue
-            built = ROOT / out_path_for(meta["path"])
+            built = OUT / out_path_for(meta["path"])
             if not built.exists():
                 raise BuildError(f"{built.relative_to(ROOT)} not built yet: run `python build.py` first")
             doc = built.read_text("utf-8")
