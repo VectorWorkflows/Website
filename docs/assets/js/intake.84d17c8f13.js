@@ -3,7 +3,9 @@
 // 15-minute call on the booking page instead.
 //
 // · Screen 1 is a multi-select of services with a live total, worked out by
-//   pricing.js from the same data that prints the prices on the page.
+//   pricing.js from the same data that prints the prices on the page. From
+//   three services up it reads "Your price will be under …" with a "Custom
+//   pricing unlocked" line and a Book a call button beneath it.
 // · Each screen is a history entry, so the browser Back button steps back.
 // · Answers persist in sessionStorage: a mistype, a reload or a trip to
 //   WhatsApp and back never loses anything.
@@ -88,9 +90,18 @@ if (form && pricing) {
       tag.classList.toggle('is-free', !!cheaper);
     });
     quoteBox.hidden = !q.count;
-    $('[data-talk]').hidden = !q.talk;
-    if (q.talk) $('[data-offer]').hidden = true;
-    else pricing.renderOffer($('[data-offer]'), picked(), addPicks);
+    // Three or more: the running total stays, as a ceiling ("Your price will
+    // be under …"), with the custom-pricing line and its call button beneath
+    $('[data-talk]').hidden = !q.custom;
+    $('[data-quote-under]').hidden = !q.custom;
+    $('[data-quote-when]').hidden = q.custom;
+    if (q.custom) {
+      $('[data-offer]').hidden = true;
+      const notes = `Services: ${q.lines.map((l) => l.name).join(', ')}. Shown on the site: ${pricing.describe(q)}.`;
+      $('[data-talk-link]').href = `${config.cal}?notes=${encodeURIComponent(notes)}`;
+    } else {
+      pricing.renderOffer($('[data-offer]'), picked(), addPicks);
+    }
     if (!q.count) {
       totalEl.dataset.value = '0';
       return q;
@@ -99,8 +110,8 @@ if (form && pricing) {
     pricing.countTo(totalEl, q.total);
     const save$ = $('[data-quote-save]');
     const notes = q.lines.filter((l) => l.note).map((l) => `${l.name}: ${l.basis === 'addon' ? 'only ' : ''}${pricing.money(l.price)} ${l.basis === 'addon' ? l.note : `(${l.note})`}`);
-    save$.hidden = q.saving <= 0;
-    save$.textContent = q.saving > 0
+    save$.hidden = q.saving <= 0 || q.custom;
+    save$.textContent = q.saving > 0 && !q.custom
       ? `You save ${pricing.money(q.saving)} against standard prices${notes.length ? `. ${notes.join(' · ')}.` : '.'}`
       : '';
     // One calm announcement once the picking pauses, not one per tick
@@ -164,10 +175,12 @@ if (form && pricing) {
     const q = pricing.quote(data.svc);
     const values = {
       services: data.unsure ? 'Not sure yet' : q.lines.map((l) => l.name).join(', '),
-      total: q.count ? pricing.money(q.total) : '',
+      total: q.count ? `${q.custom ? 'Under ' : ''}${pricing.money(q.total)}` : '',
       timeline: data.timeline,
       business: data.business,
     };
+    // A custom price is never called a total
+    $('[data-sum-total-label]').textContent = q.custom ? 'Custom price' : 'Total';
     form.querySelectorAll('[data-sum]').forEach((row) => {
       const value = values[row.dataset.sum];
       row.hidden = !value;
@@ -242,9 +255,14 @@ if (form && pricing) {
       lines.push("What I need: not sure yet, I'd like help choosing.");
     } else {
       lines.push('Services:');
-      q.lines.forEach((l) => lines.push(`· ${l.name} ${pricing.money(l.price)}${l.note ? ` (${l.note})` : ''}`));
-      lines.push(`Quoted total: ${pricing.describe(q)}`);
-      if (q.talk) lines.push("I'd like to talk the price through for these.");
+      if (q.custom) {
+        q.lines.forEach((l) => lines.push(`· ${l.name}`));
+        lines.push(`Shown on the site: ${pricing.describe(q)}`);
+        lines.push("I'd like one custom price for the whole set.");
+      } else {
+        q.lines.forEach((l) => lines.push(`· ${l.name} ${pricing.money(l.price)}${l.note ? ` (${l.note})` : ''}`));
+        lines.push(`Quoted total: ${pricing.describe(q)}`);
+      }
     }
     lines.push(`Timeline: ${d.timeline}`);
     if (d.process) lines.push('', 'How we handle this today:', d.process);

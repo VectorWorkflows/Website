@@ -5,26 +5,36 @@
   "symbol": "₹",
   "launch_end": "2026-11-30",
 
+  "_launch": "The launch block (Services, home, /start). The build adds the end date to the title and 'Prices go up on <the day after launch_end>' to the reason. After launch_end the block is not rendered at all.",
+  "launch": {
+    "title": "Launch pricing",
+    "reason": "We're new. Our first clients become our references, so they get our lowest prices."
+  },
+
   "_days": "Build times are per tier (days), shown as: Ready in under N days, once we have your details.",
 
-  "_rules": "The first system you pick is at its full price. Each further system is at its bundle rate (its own price less 1,000, in the launch period and after it), or at the related add-on rate when it builds on one you're already paying for. Setups are at their own price, or the setup add-on rate alongside a related system. An add-on always rides on a system you're paying for that costs at least as much on its own, never on another add-on or on a setup. A service marked never_addon (the website) is always a main build.",
+  "_rules": "The first system you pick is at its full price. Each further system is at its bundle rate (the same amount in the launch period and after it), or at the related add-on rate when it builds on one you're already paying for. Setups are at their own price, or the setup add-on rate alongside a related system. An add-on always rides on a system you're paying for that costs at least as much on its own, never on another add-on or on a setup. A service marked never_addon (the website) is always a main build.",
 
+  "_tier_label": "label and from are how a tier is named in the launch block's price list.",
   "tiers": {
     "standard": {
+      "label": "Websites and automations",
       "kind": "system",
       "launch": 2999,
       "standard": 4999,
-      "bundle": { "launch": 1999, "standard": 3999 },
+      "bundle": { "launch": 1999, "standard": 1999 },
       "days": 3
     },
     "phone": {
+      "label": "Phone services",
       "kind": "system",
       "launch": 3999,
       "standard": 5999,
-      "bundle": { "launch": 2999, "standard": 4999 },
+      "bundle": { "launch": 2999, "standard": 2999 },
       "days": 5
     },
     "setup": {
+      "label": "Google and WhatsApp setup",
       "kind": "setup",
       "launch": 1499,
       "standard": 2499,
@@ -83,7 +93,15 @@
     { "id": "team",     "name": "Team pack",        "services": ["job-site-log", "telegram-team-bot"] }
   ],
 
-  "talk_from": 3,
+  "_custom": "From this many services (unless the selection is exactly one of the packs above) the price is custom: the running total is shown as a ceiling ('Your price will be under ...'), never as a total, with this block and a Book a call button beside it.",
+  "custom": {
+    "from": 3,
+    "title": "Need 3 or more?",
+    "text": "You get one custom price for the whole set — almost always lower than adding them up. Pay for exactly what your business needs. We set it together on a 15-minute call.",
+    "short": "One custom price for the whole set, almost always lower than adding them up. We set it together on a 15-minute call.",
+    "unlocked": "Custom pricing unlocked",
+    "under": "Your price will be under"
+  },
 
   "included_year_one": [
     "Free hosting",

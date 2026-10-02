@@ -6,7 +6,7 @@ nav: services
 schema: organization, services
 body_class: page-services
 js: pricing, bundle
-critical_css: components/page-head.css, components/card.css, components/offer.css, pages/services.css
+critical_css: components/page-head.css, components/card.css, components/launch.css, components/offer.css, pages/services.css
 ---
 
 <section class="frame page-head" aria-labelledby="page-title">
@@ -18,12 +18,22 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
     </div>
   </div>
 
-  <div class="launch">
-    {% if pricing.launch %}<p class="launch__label"><span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span></p>{% endif %}
-    <dl class="rules" aria-label="How prices combine">
-      {% for r in pricing.rules %}<div class="rules__item"><dt>{{ r.k }}</dt><dd data-copy>{{ r.v }}</dd></div>{% endfor %}
-    </dl>
-    <p class="launch__rule">{{ pricing.talk_rule }} <a class="link-arrow" href="#packs">See the packs {% icon "arrow-down" %}</a></p>
+  <div class="price-top">
+    {% include "launch-block" %}
+
+    <aside class="custom" aria-labelledby="custom-title">
+      <h2 id="custom-title" class="custom__title">{{ pricing.custom.title }}</h2>
+      <p class="custom__text">{{ pricing.custom.text }}</p>
+      <span class="tipwrap"><a class="btn btn--primary btn--sm" href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-custom" data-tip><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>{% include "book-tip" uid="custom" %}</span>
+    </aside>
+
+    <div class="combine">
+      <p class="combine__label t-label">For one or two: how prices combine</p>
+      <dl class="rules">
+        {% for r in pricing.rules %}<div class="rules__item"><dt>{{ r.k }}</dt><dd data-copy>{{ r.v }}</dd></div>{% endfor %}
+      </dl>
+      <p class="combine__more"><a class="link-arrow" href="#packs">See the packs {% icon "arrow-down" %}</a></p>
+    </div>
   </div>
 
   <nav class="group-index" aria-label="Service groups">
@@ -200,11 +210,11 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
       <button type="button" class="offer__add" data-offer-add>{% icon "check" %}<span data-offer-label>Add it</span></button>
     </div>
     <div class="offer offer--talk bundle__offer" data-talk hidden>
-      <p class="offer__body"><span class="offer__tag">{{ pricing.talk_tag }}</span><span class="offer__text">{{ pricing.talk_rule }}</span></p>
-      <a class="offer__add" data-talk-link href="{{ site.cal_url }}" target="_blank" rel="noopener">{% icon "calendar-blank" %}<span>Talk price</span></a>
+      <p class="offer__body"><span class="offer__tag">{{ pricing.custom.unlocked }}</span><span class="offer__text">{{ pricing.custom.short }}</span></p>
+      <span class="tipwrap"><a class="offer__add" data-talk-link href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-bundle" data-tip>{% icon "calendar-blank" %}<span>Book a 15-min call</span></a>{% include "book-tip" uid="bundle" %}</span>
     </div>
     <p class="bundle__what"><span class="t-label">Your bundle</span><span data-bundle-count></span></p>
-    <p class="bundle__sum"><span class="bundle__total" data-bundle-total data-copy></span>{% if pricing.launch %}<span class="bundle__when">at launch pricing</span>{% endif %}</p>
+    <p class="bundle__sum"><span class="bundle__under" data-bundle-under hidden>{{ pricing.custom.under }}</span><span class="bundle__total" data-bundle-total data-copy></span>{% if pricing.launch %}<span class="bundle__when">at launch pricing</span>{% endif %}</p>
     <p class="bundle__save" data-bundle-save></p>
     <div class="bundle__actions">
       <button type="button" class="bundle__clear" data-bundle-clear>Clear</button>

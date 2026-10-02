@@ -1,7 +1,7 @@
 /* ==========================================================================
-   OFFER: the suggested pack / pairing for the current picks, and the
-   "talk price" nudge from three services up. Shared by the services page
-   bundle bar and the /start live total. Filled in by pricing.js.
+   OFFER: the suggested pack / pairing for the current picks (services page
+   bundle bar and the /start live total, filled in by pricing.js), and the
+   bundle bar's "Custom pricing unlocked" line from three services up.
    ========================================================================== */
 @layer components {
   .offer {
@@ -53,7 +53,11 @@
   @media (hover: hover) { .offer__add:hover { background: color-mix(in oklch, var(--c-violet) 82%, var(--c-bone)); } }
   .offer__add:active { transform: scale(0.96); }
   .offer__add:focus-visible { outline: 2px solid var(--c-lilac); outline-offset: 3px; }
-  .offer--talk { background: var(--c-raised-3); box-shadow: inset 0 0 0 1px var(--edge); }
+  /* Custom pricing unlocked (three or more): the sentence is longer, so on a
+     narrow bar its button drops beneath it instead of squeezing it */
+  .offer--talk { flex-wrap: wrap; background: var(--c-raised-3); box-shadow: inset 0 0 0 1px var(--c-violet); }
+  .offer--talk .offer__body { flex: 1 1 15rem; color: var(--c-bone); }
+  .offer--talk .offer__tag { display: block; margin-block-end: 0.125rem; }
   @media (prefers-reduced-motion: no-preference) {
     .offer:not([hidden]) { animation: offer-in var(--dur-state) var(--ease-out) both; }
   }

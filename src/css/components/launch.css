@@ -1,0 +1,145 @@
+/* ==========================================================================
+   LAUNCH and CUSTOM PRICING: the two things about price said loudly.
+
+   .launchblock   the launch offer as a headline (Services, /start): title
+                  with its end date, the reason, and each tier's launch
+                  price beside its struck-through standard price
+   .price-strip   the same offer as one compact strip (home)
+   .custom        "Need 3 or more?": one custom price, set on a call
+   .unlocked      the same, as the line under a running total of 3 or more
+
+   Everything printed here comes from data/pricing.json. After the launch
+   end date the build simply doesn't render the launch parts.
+   ========================================================================== */
+@layer components {
+  /* Launch block --------------------------------------------------------- */
+  .launchblock {
+    container-type: inline-size;
+    padding: var(--bezel);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(180deg,
+      color-mix(in oklch, var(--c-violet) 34%, transparent),
+      color-mix(in oklch, var(--c-violet) 10%, transparent) 70%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--c-violet) 45%, transparent), var(--shadow-float);
+  }
+  .launchblock__core {
+    display: grid;
+    gap: var(--space-l);
+    padding: var(--space-l) var(--space-m);
+    border-radius: calc(var(--radius-xl) - var(--bezel));
+    background:
+      radial-gradient(90% 120% at 0% 0%, var(--c-violet-wash), transparent 65%),
+      var(--c-raised-1);
+    box-shadow: var(--edge-lit);
+  }
+  @container (min-width: 52rem) {
+    .launchblock__core {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      column-gap: var(--space-2xl);
+      align-items: center;
+      padding: var(--space-xl);
+    }
+  }
+  .launchblock__say { display: grid; gap: var(--space-s); align-content: start; }
+  .launchblock__title {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--step-4);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-heading);
+    color: var(--c-bone);
+    text-wrap: balance;
+  }
+  .launchblock__title em { font-style: italic; color: var(--c-lilac); letter-spacing: -0.01em; }
+  .launchblock__reason { font-family: var(--font-ui); font-size: var(--step-0); line-height: 1.5; letter-spacing: -0.01em; color: var(--c-bone-2); max-inline-size: calc(44 * var(--ch-ui)); text-wrap: pretty; }
+
+  .launchblock__tiers { display: grid; margin: 0; padding: 0; list-style: none; }
+  .launchblock__tiers li {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.125rem var(--space-m);
+    padding-block: var(--space-xs);
+  }
+  .launchblock__tiers li + li::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--edge-violet), var(--edge-faint) 70%, transparent);
+  }
+  .launchblock__what { font-family: var(--font-ui); font-weight: var(--weight-medium); letter-spacing: -0.012em; color: var(--c-bone); }
+  .launchblock__price { display: inline-flex; align-items: baseline; gap: 0.625rem; }
+  .launchblock__now { font-family: var(--font-display); font-size: var(--step-3); line-height: 1; letter-spacing: -0.025em; color: var(--c-bone); font-variant-numeric: lining-nums; }
+  .launchblock__was { font-family: var(--font-display); font-size: var(--step-0); color: var(--c-bone-3); text-decoration-thickness: 1px; }
+
+  /* Home: one compact strip --------------------------------------------- */
+  .price-strip {
+    display: grid;
+    gap: var(--space-xs) var(--space-l);
+    align-items: center;
+    margin-block-start: var(--space-l);
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    background:
+      radial-gradient(70% 160% at 0% 0%, var(--c-violet-wash), transparent 70%),
+      var(--c-raised-1);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--c-violet) 34%, transparent), var(--edge-lit);
+  }
+  @media (min-width: 64rem) {
+    .price-strip { grid-template-columns: minmax(0, 1fr) auto; padding: var(--space-m) var(--space-l); }
+    .price-strip__why { grid-column: 1 / -1; }
+  }
+  .price-strip__line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.375rem 0.875rem; max-inline-size: none; font-family: var(--font-ui); font-size: var(--step-0); letter-spacing: -0.012em; color: var(--c-bone-2); }
+  .price-strip__item { display: inline-flex; align-items: baseline; gap: 0.5rem; white-space: nowrap; }
+  .price-strip__item strong { font-family: var(--font-display); font-weight: var(--weight-regular); font-size: var(--step-2); line-height: 1; letter-spacing: -0.025em; color: var(--c-bone); font-variant-numeric: lining-nums; }
+  .price-strip__item s { font-family: var(--font-display); font-size: var(--step--1); color: var(--c-bone-3); text-decoration-thickness: 1px; }
+  /* The dot belongs to the item before it, so a wrapped line never starts with one */
+  .price-strip__sep { margin-inline-start: 0.375rem; color: var(--c-bone-3); }
+  .price-strip__until { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--c-lilac); }
+  .price-strip .link-arrow .icon { inline-size: 0.875rem; block-size: 0.875rem; }
+  .price-strip__why { font-size: var(--step--1); line-height: 1.5; color: var(--c-bone-2); max-inline-size: none; }
+
+  /* Need 3 or more? ------------------------------------------------------- */
+  .custom {
+    display: grid;
+    gap: var(--space-s) var(--space-xl);
+    align-items: center;
+    padding: var(--space-l) var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--c-raised-1);
+    box-shadow: inset 0 0 0 1.5px var(--c-violet), var(--edge-lit);
+  }
+  @media (min-width: 64rem) {
+    .custom { grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto; padding: var(--space-l) var(--space-xl); }
+  }
+  .custom__title {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--step-4);
+    line-height: 1;
+    letter-spacing: var(--tracking-heading);
+    color: var(--c-bone);
+    white-space: nowrap;
+  }
+  .custom__text { font-family: var(--font-ui); font-size: var(--step-0); line-height: 1.5; letter-spacing: -0.01em; color: var(--c-bone); max-inline-size: calc(52 * var(--ch-ui)); text-wrap: pretty; }
+
+  /* Custom pricing unlocked (under a running total of three or more) ------- */
+  .unlocked {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+    margin-block-start: var(--space-s);
+    padding: var(--space-s) var(--space-m) var(--space-m);
+    border-radius: var(--radius-m);
+    background: color-mix(in oklch, var(--c-violet) 18%, var(--c-raised-2));
+    box-shadow: inset 0 0 0 1.5px var(--c-violet);
+  }
+  .unlocked[hidden] { display: none; }
+  .unlocked__title { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.02em; color: var(--c-bone); max-inline-size: none; }
+  .unlocked__title .icon { color: var(--c-lilac); }
+  .unlocked__text { font-size: var(--step--1); line-height: 1.5; color: var(--c-bone); max-inline-size: calc(60 * var(--ch-body)); text-wrap: pretty; }
+}

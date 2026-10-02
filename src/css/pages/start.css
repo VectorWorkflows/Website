@@ -3,6 +3,7 @@
    ========================================================================== */
 @layer pages {
   .start-head { padding-block: calc(var(--space-4xl) + 2rem) var(--space-2xl); }
+  .start-head__launch:not(:empty) { margin-block-start: var(--space-xl); }
   .start-head__title { max-inline-size: calc(19 * var(--ch-display)); font-size: var(--step-5); }
   .start-body { padding-block-end: var(--section-y); }
 
@@ -214,6 +215,9 @@
   .quote[hidden] { display: none; }
   .quote__line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.625rem; max-inline-size: none; color: var(--c-bone); }
   .quote__count { font-family: var(--font-ui); font-size: var(--step-1); letter-spacing: -0.015em; color: var(--c-bone-2); }
+  /* Three or more: the figure is a ceiling, never called a total */
+  .quote__under { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.015em; color: var(--c-bone); }
+  .quote__under[hidden], .quote__when[hidden] { display: none; }
   .quote__total {
     font-family: var(--font-display);
     font-size: var(--step-4);

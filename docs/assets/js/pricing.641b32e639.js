@@ -9,6 +9,8 @@
 // · A service related to a system being paid for rides on it at the add-on
 //   rate (never on another add-on, a setup, or a cheaper system).
 // · The cheapest valid arrangement wins. Savings are against standard prices.
+// · From three services up (data.customFrom) the price is custom: the total
+//   is shown as "Your price will be under …", never as a total.
 
 const el = document.getElementById('pricing-data');
 const data = el ? JSON.parse(el.textContent) : null;
@@ -65,7 +67,9 @@ function quote(slugs) {
     saving: standard - total,
     lines,
     pack,
-    talk: lines.length >= data.talkFrom && !pack,
+    // From data.customFrom services up (unless it's exactly a named pack) the
+    // price is custom: the total is a ceiling, and the real price is set on a call
+    custom: lines.length >= data.customFrom && !pack,
     launch: data.launch,
   };
 }
@@ -101,11 +105,13 @@ function suggest(slugs) {
   return candidates[0] || null;
 }
 
-// e.g. "3 services · ₹… at launch pricing (you save ₹…)"
+// e.g. "2 services · ₹… at launch pricing (you save ₹…)", or for a custom
+// price "4 services · your price will be under ₹… (custom price for the set)"
 function describe(q) {
   if (!q.count) return '';
   const what = q.pack ? q.pack.name : `${q.count} service${q.count === 1 ? '' : 's'}`;
   const when = q.launch ? ' at launch pricing' : '';
+  if (q.custom) return `${what} · ${data.under.toLowerCase()} ${money(q.total)} (custom price for the set)`;
   const save = q.saving > 0 ? ` (you save ${money(q.saving)})` : '';
   return `${what} · ${money(q.total)}${when}${save}`;
 }

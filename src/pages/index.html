@@ -5,7 +5,7 @@ path: /
 nav: home
 schema: organization
 body_class: page-home
-critical_css: components/replay.css, components/card.css, pages/home.css
+critical_css: components/replay.css, components/card.css, components/launch.css, pages/home.css
 ---
 
 <!-- ================================================================ HERO -->
@@ -65,9 +65,14 @@ critical_css: components/replay.css, components/card.css, pages/home.css
     {% endfor %}
   </div>
 
-  <div class="menu-note">
-    {% if pricing.launch %}<span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span>{% endif %}
-    <p>The {{ pricing.starter.name }}, a website with Google Business Profile and WhatsApp Business setup, is <span data-copy>{{ pricing.starter.price }}</span>. Related services cost less together. <a class="link-arrow" href="{{ site.routes.services }}">Every service and price {% icon "arrow-right" %}</a></p>
+  <div class="price-strip">
+    <p class="price-strip__line" data-copy>
+      <span class="price-strip__item">Websites from <strong>{{ pricing.site_from }}</strong>{% if pricing.launch %}<s><span class="sr-only">standard price </span>{{ pricing.site_was }}</s>{% endif %}<span class="price-strip__sep" aria-hidden="true">·</span></span>
+      <span class="price-strip__item">automations from <strong>{{ pricing.auto_from }}</strong>{% if pricing.launch %}<s><span class="sr-only">standard price </span>{{ pricing.auto_was }}</s><span class="price-strip__sep" aria-hidden="true">·</span>{% endif %}</span>
+      {% if pricing.launch %}<span class="price-strip__until">{{ pricing.launch_title }} {{ pricing.launch_until_short }}</span>{% endif %}
+    </p>
+    <a class="link-arrow" href="{{ site.routes.services }}">Every service and price {% icon "arrow-right" %}</a>
+    {% if pricing.launch %}<p class="price-strip__why">{{ pricing.launch_reason }}</p>{% endif %}
   </div>
 </section>
 

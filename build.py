@@ -66,7 +66,7 @@ import os
 import re
 import shutil
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from urllib.parse import quote, urlsplit
 
@@ -272,9 +272,6 @@ def protected_dirs(site: dict) -> set[str]:
 # a build time is written. Pages read the values this attaches to the site.
 # ---------------------------------------------------------------------------
 
-_NUM_WORDS = {2: "two", 3: "three", 4: "four", 5: "five"}
-
-
 def rupees(n: int) -> str:
     """Indian digit grouping: 2999 → ₹2,999; 125000 → ₹1,25,000."""
     s = str(int(n))
@@ -448,10 +445,31 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
     add = p["addon"]
     period = "launch" if launch else "standard"
     std_bundle, phone_bundle = tiers["standard"]["bundle"][period], tiers["phone"]["bundle"][period]
+    custom = p["custom"]
+    if str(custom["from"]) not in custom["title"]:
+        raise BuildError("data/pricing.json: custom.title must name the same number as custom.from")
+    rise = end + timedelta(days=1)   # the day prices go up
+    automations = [s for s in p["services"] if q.kind(s) == "system" and s != "website"]
     pricing = {
         "launch": launch,
-        "launch_label": f"Launch pricing until {end.day} {end:%B %Y}",
+        "launch_label": f"{p['launch']['title']} until {end.day} {end:%B %Y}",
         "launch_end": p["launch_end"],
+        # The launch block: headline, reason, and each tier's launch price
+        # beside its standard price. Pages render it only while launch is true.
+        "launch_title": p["launch"]["title"],
+        "launch_until": f"until {end.day} {end:%B %Y}",
+        "launch_until_short": f"until {end.day} {end:%b}",
+        "launch_reason": f"{p['launch']['reason']} Prices go up on {rise.day} {rise:%B}.",
+        "tier_rows": [{"label": t["label"], "now": rupees(t["launch" if launch else "standard"]),
+                       "was": rupees(t["standard"]) if launch else ""} for t in tiers.values()],
+        # The home page's strip: websites and automations, each "from"
+        "site_from": rupees(q.own("website")),
+        "site_was": rupees(q.standard("website")) if launch else "",
+        "auto_from": rupees(min(q.own(s) for s in automations)),
+        "auto_was": rupees(min(q.standard(s) for s in automations)) if launch else "",
+        # Three or more: one custom price, set on a call
+        "custom": {"title": custom["title"], "text": custom["text"], "short": custom["short"],
+                   "unlocked": custom["unlocked"], "under": custom["under"]},
         # The rules in owner language, from the data. rules[] is the full set
         # (services page); bundle_rule is the one-line version.
         "rules": [
@@ -463,9 +481,6 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         "bundle_rule": (f"Pick more than one and the rest cost less: only {rupees(add['system'])} for a system "
                         f"that builds on one you've picked, only {rupees(add['setup'])} for a related setup, "
                         f"otherwise {rupees(std_bundle)} (phone services {rupees(phone_bundle)})."),
-        "talk_rule": (f"Taking {_NUM_WORDS.get(p['talk_from'], p['talk_from'])} or more? Once we've gone through "
-                      "exactly what you need, the price can come down from here."),
-        "talk_tag": f"{p['talk_from']}+ services",
         "packs": packs,
         "starter": starter,
         "included": p["included_year_one"],
@@ -482,7 +497,8 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         "addon": p["addon"],
         "related": p["related"],
         "packs": [{"id": pk["id"], "name": pk["name"], "services": pk["services"]} for pk in p["packs"]],
-        "talkFrom": p["talk_from"],
+        "customFrom": custom["from"],
+        "under": custom["under"],
     }, ensure_ascii=False, separators=(",", ":"))
     return pricing
 

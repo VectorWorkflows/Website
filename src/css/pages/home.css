@@ -87,8 +87,6 @@
     font-size: var(--step--1);
     color: var(--c-bone);
   }
-  .menu-note { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-m); margin-block-start: var(--space-l); }
-  .menu-note p { color: var(--c-bone-2); max-inline-size: calc(60 * var(--ch-body)); }
   .menu-group__from {
     display: inline-flex;
     align-items: baseline;
