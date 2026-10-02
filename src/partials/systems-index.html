@@ -1,24 +1,16 @@
-<div class="sys">
-  <ol class="sys-index" role="list" data-preview-list>
-    {% for s in site.systems %}
-    <li>
-      <a class="sys-row" href="{{ site.routes.work }}{{ s.slug }}/" data-preview-text="{{ s.stack }}">
-        <span class="sys-row__num">{{ s.num }}</span>
-        <span class="sys-row__name">{{ s.name }}</span>
-        <span class="sys-row__meta">
-          <span class="t-label">{% for r in s.related %}<span class="sys-row__svc">{{ r.name }}</span>{% endfor %}</span>
-          <span class="badge{% if s.live %} badge--live{% endif %}"><span class="badge__dot"></span>{{ s.status }}</span>
-        </span>
-        <span class="sys-row__line">{{ s.line }}</span>
-        <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
-      </a>
-    </li>
-    {% endfor %}
-  </ol>
-  <div class="sys-preview" data-preview aria-hidden="true">
-    <div class="sys-preview__core">
-      <span class="t-label">Stack</span>
-      <p class="sys-preview__body" data-preview-body></p>
-    </div>
-  </div>
-</div>
+<ol class="sys-index" role="list">
+  {% for s in site.systems %}
+  <li>
+    <a class="sys-row" href="{{ site.routes.work }}{{ s.slug }}/">
+      <span class="sys-row__num">{{ s.num }}</span>
+      <span class="sys-row__name">{{ s.name }}</span>
+      <span class="sys-row__meta">
+        <span class="t-label">{% for r in s.related %}<span class="sys-row__svc">{{ r.name }}</span>{% endfor %}</span>
+        <span class="badge{% if s.live %} badge--live{% endif %}"><span class="badge__dot"></span>{{ s.status }}</span>
+      </span>
+      <span class="sys-row__line">{{ s.line }}</span>
+      <span class="sys-row__go" aria-hidden="true">{% icon "arrow-up-right" %}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ol>

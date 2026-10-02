@@ -40,7 +40,7 @@ _'Display' is GT Sectra's large-size optical cut (the family also ships GT Sectr
 - **Folder:** `assets/fonts/GT-Sectra-Display/400-Regular-Italic/`
 - **Expected file:** `font.woff2`
 - **Used for:** Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark
-- **Preloaded:** no
+- **Preloaded:** yes (once installed)
 - **Status:** Installed (28.5 kB)
 
 Fallback: `GT Sectra Display Fallback` → local Times New Roman, TimesNewRomanPSMT (calibrated), then Georgia, serif.

@@ -1,7 +1,7 @@
 /* ==========================================================================
    PAGE HEAD: the opening block of every inner page. Rail label on the left,
-   display headline hung on the body line, lead beneath. The headline rises
-   word by word in CSS (no JS on the LCP path), like the home hero.
+   display headline hung on the body line, lead beneath. All of it is plain
+   text, sharp and in place at first paint: nothing here animates in.
    ========================================================================== */
 @layer components {
   .page-head {
@@ -11,24 +11,6 @@
   .page-head__title { max-inline-size: calc(14 * var(--ch-display)); }
   .page-head__lead { max-inline-size: calc(46 * var(--ch-ui)); }
   .page-head__aside { display: flex; flex-wrap: wrap; gap: 0.625rem; }
-
-  /* Words settle into focus rather than rising from behind a mask: they are
-     painted from the very first frame (so the headline is the LCP at first
-     paint), drifting up a fraction and sharpening. transform + filter only. */
-  .rise .w { display: inline-block; vertical-align: top; }
-  .rise .w > span { display: inline-block; }
-  @media (prefers-reduced-motion: no-preference) {
-    .rise .w > span {
-      animation: word-rise var(--dur-hero) var(--ease-out) both;
-      animation-delay: calc(40ms + var(--i, 0) * 55ms);
-    }
-    .fade-in {
-      animation: hero-in 760ms var(--ease-out) both;
-      animation-delay: calc(140ms + var(--d, 0) * 70ms);
-    }
-  }
-  @keyframes word-rise { from { transform: translateY(0.22em); filter: blur(12px); } }
-  @keyframes hero-in { from { opacity: 0; transform: translateY(1.5rem); } }
 
   /* Section heading block shared by inner pages */
   .sec-head { margin-block-end: var(--space-2xl); }

@@ -59,24 +59,6 @@
   }
   .home-hero__caption span { color: var(--c-lilac); }
 
-  /* The headline settles word by word into focus, in CSS, from first paint.
-     No JS on the LCP path, and the words are painted from frame one (a
-     masked rise would hide them and push LCP back by the whole reveal). */
-  .home-hero__title .w { display: inline-block; vertical-align: top; }
-  .home-hero__title .w > span { display: inline-block; }
-  @media (prefers-reduced-motion: no-preference) {
-    .home-hero__title .w > span {
-      animation: word-rise var(--dur-hero) var(--ease-out) both;
-      animation-delay: calc(40ms + var(--i) * 55ms);
-    }
-    .hero-in {
-      animation: hero-in 760ms var(--ease-out) both;
-      animation-delay: calc(140ms + var(--d) * 70ms);
-    }
-  }
-  @keyframes word-rise { from { transform: translateY(0.22em); filter: blur(12px); } }
-  @keyframes hero-in { from { opacity: 0; transform: translateY(1.5rem); } }
-
   /* Service groups: an asymmetric bento, 5/7 then one full-width row ------ */
   .menu-groups {
     display: grid;
@@ -202,13 +184,6 @@
   .method__body { display: grid; gap: var(--space-xs); }
   .method__body h3 { font-size: var(--step-2); }
   .method__body p { max-inline-size: calc(48 * var(--ch-body)); }
-  /* Each step's number lights as the step reaches mid-screen (CSS only) */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .method__num { animation: step-lit var(--ease-out) both; animation-timeline: view(); animation-range: entry 60% cover 45%; }
-    }
-  }
-  @keyframes step-lit { from { opacity: 0.25; transform: translateY(0.5rem); } to { opacity: 1; transform: none; } }
 
   /* Under the hood: deliberately quiet ------------------------------------ */
   .hood { --reel-h: 15rem; }

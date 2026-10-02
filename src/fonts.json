@@ -53,7 +53,7 @@
           "style": "italic",
           "folder": "400-Regular-Italic",
           "used_for": "Emphasised words inside display headings (<em> within h1/h2), and 'Workflows' in the wordmark",
-          "preload": false
+          "preload": true
         }
       ],
       "zero_em": 0.562

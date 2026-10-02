@@ -190,11 +190,10 @@
     /* MOTION: duration */
     --dur-press:  120ms;   /* active/pressed feedback           */
     --dur-hover:  240ms;   /* colour and hover response         */
-    --dur-state:  420ms;   /* UI state changes, menu, steps     */
-    --dur-reveal: 800ms;   /* scroll reveals                    */
-    --dur-hero:   1100ms;  /* display type reveals              */
-    --dur-page:   520ms;   /* cross-document view transitions   */
-    --stagger:    60ms;    /* per-item offset in sequences      */
+    --dur-menu:   140ms;   /* the site menu sheet: opacity only */
+    --dur-state:  420ms;   /* UI state changes, steps           */
+    --dur-reveal: 800ms;   /* a replay's calendar blocks shifting */
+    --stagger:    60ms;    /* per-item offset inside a replay   */
 
     /* ------------------------------------------------------------------
        LAYERS: systemic z-index only
@@ -216,10 +215,9 @@
      they are state changes, not motion. */
   @media (prefers-reduced-motion: reduce) {
     :root {
+      --dur-menu:   1ms;
       --dur-state:  1ms;
       --dur-reveal: 1ms;
-      --dur-hero:   1ms;
-      --dur-page:   1ms;
       --stagger:    0ms;
     }
   }

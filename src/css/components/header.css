@@ -12,7 +12,6 @@
     z-index: var(--z-header);
     padding: var(--space-s) var(--page-gutter) 0;
     pointer-events: none;
-    view-transition-name: site-header;
   }
 
   .header-row {
@@ -42,9 +41,8 @@
     z-index: -1;
     border-radius: inherit;
     /* A solid ground. Tested translucent with backdrop blur: page text still
-       read through the pill in Chrome (the header's view-transition name
-       keeps the blur from seeing the page), so the ground is opaque in
-       every browser, with or without backdrop-filter. */
+       read through the pill in Chrome, so the ground is opaque in every
+       browser, with or without backdrop-filter. */
     background: var(--c-raised-1);
     box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit);
   }
@@ -211,7 +209,8 @@
 
   /* ==========================================================================
      SITE MENU: a full-screen modal <dialog> (inert background, Esc to close,
-     focus returns to the toggle). Entry is pure CSS via @starting-style.
+     focus returns to the toggle). It opens with one short fade of the whole
+     sheet; the links inside are in place and sharp from the start.
      ========================================================================== */
   .site-menu {
     position: fixed;
@@ -226,9 +225,9 @@
     backdrop-filter: blur(28px);
     opacity: 0;
     transition:
-      opacity var(--dur-state) var(--ease-out-soft),
-      overlay var(--dur-state) allow-discrete,
-      display var(--dur-state) allow-discrete;
+      opacity var(--dur-menu) var(--ease-out-soft),
+      overlay var(--dur-menu) allow-discrete,
+      display var(--dur-menu) allow-discrete;
   }
   .site-menu[open] { display: flex; opacity: 1; }
   @starting-style { .site-menu[open] { opacity: 0; } }
@@ -244,7 +243,7 @@
   }
 
   .site-menu__links { display: grid; gap: 0.25rem; }
-  .site-menu__links li { overflow: hidden; padding-block-end: 0.08em; }
+  .site-menu__links li { padding-block-end: 0.08em; }
 
   .site-menu__link {
     display: flex;
@@ -255,14 +254,7 @@
     line-height: 1.02;
     letter-spacing: var(--tracking-display);
     color: var(--c-bone);
-    transform: translateY(0);
-    transition:
-      transform var(--dur-reveal) var(--ease-out),
-      color var(--dur-hover) var(--ease-out-soft);
-    transition-delay: calc(80ms + var(--i, 0) * var(--stagger)), 0ms;
-  }
-  @starting-style {
-    .site-menu[open] .site-menu__link { transform: translateY(105%); }
+    transition: color var(--dur-hover) var(--ease-out-soft);
   }
   .site-menu__link .t-label { transform: translateY(-0.9em); }
   .site-menu__link[aria-current="page"] { color: var(--c-lilac); }

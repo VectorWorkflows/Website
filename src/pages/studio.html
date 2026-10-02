@@ -10,17 +10,17 @@ critical_css: components/page-head.css, pages/studio.css
 
 <section class="frame page-head studio-hero" aria-labelledby="page-title">
   <div class="grid studio-hero__grid">
-    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">ST</span><span class="index-label__rule"></span>Studio</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">ST</span><span class="index-label__rule"></span>Studio</p></div>
     <div class="studio-hero__copy stack flow-l">
-      <h1 id="page-title" class="rise page-head__title">{% rise %}Hi, I'm <em>Sam</em>.{% endrise %}</h1>
-      <p class="t-lead page-head__lead fade-in" style="--d:1">I'm Sameer Bhardwaj, and Vector Workflows is me. I work out what you need, build it, and answer when it needs changing. There's no account manager in between.</p>
-      <div class="cluster fade-in" style="--d:2; --gap: var(--space-xs)">
+      <h1 id="page-title" class="page-head__title">Hi, I'm <em>Sam</em>.</h1>
+      <p class="t-lead page-head__lead">I'm Sameer Bhardwaj, and Vector Workflows is me. I work out what you need, build it, and answer when it needs changing. There's no account manager in between.</p>
+      <div class="cluster" style="--gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
-      <p class="studio-hero__note fade-in" style="--d:3"><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></p>
+      <p class="studio-hero__note"><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></p>
     </div>
-    <figure class="portrait fade-in" style="--d:1" data-portrait>
+    <figure class="portrait" data-portrait>
       <div class="portrait__frame">{{{ portrait }}}</div>
       <figcaption class="t-label">Sameer Bhardwaj — “Sam”</figcaption>
     </figure>
@@ -32,7 +32,7 @@ critical_css: components/page-head.css, pages/studio.css
     <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>How I got here</p></div>
     <div class="g-body stack flow-l">
       <div class="stack flow-s">
-        <h2 id="story-title" class="t-h2-s" data-split>Teaching, selling, <em>building</em>.</h2>
+        <h2 id="story-title" class="t-h2-s">Teaching, selling, <em>building</em>.</h2>
         <p class="story__intro">Underneath all of it, from 2023 to April 2026, ran a BCA at Amity University, alongside the teaching, Digitora and a full-time job. It gave me the engineering grounding: how software is built properly, not just how to make it work once. It's the line running beside the chapters below.</p>
       </div>
 
@@ -106,8 +106,8 @@ critical_css: components/page-head.css, pages/studio.css
   <div class="grid">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>How it works</p></div>
     <div class="g-body">
-      <h2 id="how-title" class="t-h2-s sec-head" data-split>Small by design.</h2>
-      <div class="principles" data-reveal-group>
+      <h2 id="how-title" class="t-h2-s sec-head">Small by design.</h2>
+      <div class="principles">
         <article class="principle">
           <h3>Priced before it's built</h3>
           <p>Every service has its price and build time on the <a href="{{ site.routes.services }}">services page</a>. If something needs to grow, you hear about it before the work, not after.</p>
@@ -129,13 +129,13 @@ critical_css: components/page-head.css, pages/studio.css
   <div class="grid">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Why hand-built</p></div>
     <div class="g-body">
-      <h2 id="why-title" class="t-h2-s sec-head" data-split>Written by hand, <em>fast</em> on any phone.</h2>
+      <h2 id="why-title" class="t-h2-s sec-head">Written by hand, <em>fast</em> on any phone.</h2>
       <div class="why">
         <div class="why__lead prose">
           <p>Every site here is plain HTML, CSS and a little JavaScript, with no page builder underneath. It's the same way this site is made.</p>
           <p>This page, including its styles and scripts, is <strong><!--PAGE_WEIGHT--></strong> gzipped. That's measured when the site is built, not estimated.</p>
         </div>
-        <dl class="why__points" data-reveal-group>
+        <dl class="why__points">
           <div><dt>Fast on slow connections</dt><dd>Nothing heavy to download before the page appears, so it opens quickly on a mid-range phone on mobile data.</dd></div>
           <div><dt>Nothing to patch</dt><dd>No plugins, no admin panel, no weekly security updates. Very little can break.</dd></div>
           <div><dt>Outlives the tools</dt><dd>Plain HTML still opens in any browser years from now.</dd></div>
@@ -161,7 +161,7 @@ critical_css: components/page-head.css, pages/studio.css
 <section class="frame section studio-close" aria-labelledby="studio-close-title">
   <div class="grid">
     <div class="g-body stack flow-l">
-      <h2 id="studio-close-title" class="t-h1" data-split>Talk to the person who'll <em>build it</em>.</h2>
+      <h2 id="studio-close-title" class="t-h1">Talk to the person who'll <em>build it</em>.</h2>
       <div class="cluster" style="--gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
         <a class="btn" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>

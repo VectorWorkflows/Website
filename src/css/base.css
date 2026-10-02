@@ -1,6 +1,6 @@
 /* ==========================================================================
-   BASE: element defaults, the type system, focus, selection, texture and
-   page transitions. No layout and no components.
+   BASE: element defaults, the type system, focus, selection and texture.
+   No layout and no components.
    ========================================================================== */
 @layer base {
   html {
@@ -211,20 +211,7 @@
     white-space: nowrap; border: 0;
   }
 
-  /* ---------------------------------------------------------------------
-     Cross-document view transitions. The header keeps its own name so it
-     holds still while the page content hands over beneath it.
-     --------------------------------------------------------------------- */
-  ::view-transition-old(root) { animation: vt-out var(--dur-page) var(--ease-exit) both; }
-  ::view-transition-new(root) { animation: vt-in  var(--dur-page) var(--ease-out) both; }
-  ::view-transition-group(site-header) { animation-duration: var(--dur-page); animation-timing-function: var(--ease-shift); }
-
-  @keyframes vt-out { to   { opacity: 0; transform: translateY(-0.75rem); } }
-  @keyframes vt-in  { from { opacity: 0; transform: translateY(1.25rem); } }
-}
-
-/* Opt in to cross-document transitions only when motion is welcome.
-   Browsers without support simply navigate normally: no-transition fallback. */
-@media (prefers-reduced-motion: no-preference) {
-  @view-transition { navigation: auto; }
+  /* No page transitions: a cross-document view transition shows the new
+     page as a snapshot that fades and slides in, which reads as soft text
+     for its whole length. Pages simply arrive, sharp. */
 }

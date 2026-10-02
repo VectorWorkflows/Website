@@ -11,14 +11,14 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
 
 <section class="frame page-head" aria-labelledby="page-title">
   <div class="grid page-head__grid">
-    <div class="g-rail"><p class="index-label fade-in"><span class="index-label__num">S</span><span class="index-label__rule"></span>Services &amp; prices</p></div>
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">S</span><span class="index-label__rule"></span>Services &amp; prices</p></div>
     <div class="g-body stack flow-l">
-      <h1 id="page-title" class="rise page-head__title">{% rise %}Things you can name, <em>priced</em> in the open.{% endrise %}</h1>
-      <p class="t-lead page-head__lead fade-in" style="--d:1">Twelve services in three groups. Each one shows what you get, what it costs and how soon it's running. Pick one, or put a few together.</p>
+      <h1 id="page-title" class="page-head__title">Things you can name, <em>priced</em> in the open.</h1>
+      <p class="t-lead page-head__lead">Twelve services in three groups. Each one shows what you get, what it costs and how soon it's running. Pick one, or put a few together.</p>
     </div>
   </div>
 
-  <div class="launch fade-in" style="--d:2">
+  <div class="launch">
     {% if pricing.launch %}<p class="launch__label"><span class="badge badge--live"><span class="badge__dot"></span>{{ pricing.launch_label }}</span></p>{% endif %}
     <dl class="rules" aria-label="How prices combine">
       {% for r in pricing.rules %}<div class="rules__item"><dt>{{ r.k }}</dt><dd data-copy>{{ r.v }}</dd></div>{% endfor %}
@@ -26,7 +26,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
     <p class="launch__rule">{{ pricing.talk_rule }} <a class="link-arrow" href="#packs">See the packs {% icon "arrow-down" %}</a></p>
   </div>
 
-  <nav class="group-index fade-in" style="--d:3" aria-label="Service groups">
+  <nav class="group-index" aria-label="Service groups">
     <ol role="list">
       {% for g in site.service_groups %}
       <li>
@@ -107,7 +107,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
     <div class="g-rail"><p class="index-label"><span class="index-label__num">+</span><span class="index-label__rule"></span>Packs</p></div>
     <div class="g-body stack flow-m">
       <div class="stack flow-xs">
-        <h2 id="packs-title" class="t-h2-s" data-split>Better <em>together</em>.</h2>
+        <h2 id="packs-title" class="t-h2-s">Better <em>together</em>.</h2>
         <p class="packs__intro">These share their groundwork, so together they cost far less than they do apart. The bundle bar suggests the right one as you pick.</p>
       </div>
       <ol class="packs" role="list">
@@ -150,7 +150,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
   <div class="grid">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
     <div class="g-body">
-      <h2 id="faq-title" class="t-h2-s sec-head" data-split>Before you <em>ask</em>.</h2>
+      <h2 id="faq-title" class="t-h2-s sec-head">Before you <em>ask</em>.</h2>
       <dl class="faq">
         <div class="faq__item">
           <dt>Do my customers need to create an account?</dt>
@@ -184,7 +184,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
 <section class="frame section close-band" aria-labelledby="svc-close">
   <div class="grid">
     <div class="g-body stack flow-l">
-      <h2 id="svc-close" class="t-h1" data-split>Pick a few, see the <em>total</em>.</h2>
+      <h2 id="svc-close" class="t-h1">Pick a few, see the <em>total</em>.</h2>
       <div class="cluster" style="--gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>

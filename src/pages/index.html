@@ -14,30 +14,23 @@ js: wake
 <section class="frame home-hero" aria-labelledby="hero-title">
   <div class="grid home-hero__grid">
     <div class="home-hero__copy">
-      <p class="index-label hero-in" style="--d:0"><span class="index-label__num">VW</span><span class="index-label__rule"></span>Automation &amp; web engineering studio</p>
+      <p class="index-label"><span class="index-label__num">VW</span><span class="index-label__rule"></span>Automation &amp; web engineering studio</p>
 
-      <h1 id="hero-title" class="home-hero__title">
-        <span class="w"><span style="--i:0">Systems</span></span>
-        <span class="w"><span style="--i:1">that</span></span>
-        <span class="w"><span style="--i:2"><em>answer</em></span></span>
-        <span class="w"><span style="--i:3">when</span></span>
-        <span class="w"><span style="--i:4">you</span></span>
-        <span class="w"><span style="--i:5">can't.</span></span>
-      </h1>
+      <h1 id="hero-title" class="home-hero__title">Systems that <em>answer</em> when you can't.</h1>
 
-      <p class="t-lead home-hero__lead hero-in" style="--d:1">A one-person studio building the automations, messaging bots, phone pipelines and hand-built websites that small service businesses run on.</p>
+      <p class="t-lead home-hero__lead">A one-person studio building the automations, messaging bots, phone pipelines and hand-built websites that small service businesses run on.</p>
 
-      <div class="cluster home-hero__ctas hero-in" style="--d:2">
+      <div class="cluster home-hero__ctas">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
 
-      <ul class="home-hero__meta hero-in" style="--d:3" role="list">
+      <ul class="home-hero__meta" role="list">
         <li>Websites</li><li>WhatsApp bots</li><li>Missed-call replies</li><li>Reminders</li>
       </ul>
     </div>
 
-    <div class="home-hero__replay hero-in" style="--d:2">
+    <div class="home-hero__replay">
       <p class="home-hero__caption"><span aria-hidden="true">↳</span> A call nobody could answer, handled. Watch it run.</p>
       {% replay "missed-lead" id="hero-replay" %}
     </div>
@@ -49,12 +42,12 @@ js: wake
   <div class="grid home-head">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>What I set up</p></div>
     <div class="g-body stack flow-s">
-      <h2 id="menu-title" data-split>Things you can <em>name</em>, priced before you ask.</h2>
+      <h2 id="menu-title">Things you can <em>name</em>, priced before you ask.</h2>
       <p class="t-lead measure">A website, your Google and WhatsApp listings, a bot that answers, a phone line that never leaves a caller hanging. Each has a price and a build time you can plan around.</p>
     </div>
   </div>
 
-  <div class="menu-groups" data-reveal-group>
+  <div class="menu-groups">
     {% for g in site.service_groups %}
     <a class="card menu-group" href="{{ site.routes.services }}#{{ g.id }}">
       <div class="card__core">
@@ -82,7 +75,7 @@ js: wake
   <div class="grid home-head">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Systems</p></div>
     <div class="g-body stack flow-s">
-      <h2 id="systems-title" data-split>Three systems, built <em>end to end</em>.</h2>
+      <h2 id="systems-title">Three systems, built <em>end to end</em>.</h2>
       <p class="t-lead measure">Studio-built rather than client work: each one proves a pattern before it goes to a business. Each has a public repo, a walkthrough video and a replay.</p>
     </div>
   </div>
@@ -92,7 +85,7 @@ js: wake
 
 <!-- ================================================================ TRY IT LIVE -->
 <section class="frame section-tight" aria-labelledby="live-title">
-  <div class="card card--accent live" data-reveal>
+  <div class="card card--accent live">
     <div class="card__core live__core">
       <div class="live__copy stack flow-s">
         <span class="badge badge--live"><span class="badge__dot"></span>Live — Open for Public Use</span>
@@ -119,7 +112,7 @@ js: wake
   <div class="grid home-head">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Concepts</p></div>
     <div class="g-body stack flow-s">
-      <h2 id="concepts-title" data-split>Unsolicited, <em>on purpose</em>.</h2>
+      <h2 id="concepts-title">Unsolicited, <em>on purpose</em>.</h2>
       <p class="t-lead measure">Speculative redesigns of real local businesses' websites, made to show what a hand-built site can do. Not commissioned, and not affiliated with the businesses they reimagine.</p>
     </div>
   </div>
@@ -133,7 +126,7 @@ js: wake
   <div class="grid home-head">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Method</p></div>
     <div class="g-body stack flow-s">
-      <h2 id="method-title" data-split>How a build <em>runs</em>.</h2>
+      <h2 id="method-title">How a build <em>runs</em>.</h2>
     </div>
   </div>
 
@@ -187,7 +180,7 @@ js: wake
 <section class="frame section close" aria-labelledby="close-title">
   <div class="grid">
     <div class="g-body close__inner">
-      <h2 id="close-title" class="t-display close__title" data-split>Tell me what keeps <em>slipping</em>.</h2>
+      <h2 id="close-title" class="t-display close__title">Tell me what keeps <em>slipping</em>.</h2>
       <p class="t-lead measure">Describe the part of the week that goes wrong. You'll get a straight answer on whether it can be automated and what it would cost.</p>
       <div class="cluster close__ctas">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>

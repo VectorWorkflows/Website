@@ -1,9 +1,7 @@
 /* ==========================================================================
-   SYSTEMS INDEX: editorial list of case studies, with a pointer-trailing preview
+   SYSTEMS INDEX: editorial list of case studies
    ========================================================================== */
 @layer components {
-  /* Systems index -------------------------------------------------------- */
-  .sys { position: relative; }
   .sys-index { margin: 0; padding: 0; list-style: none; }
   .sys-index li { position: relative; }
   .sys-index li::before,
@@ -72,38 +70,11 @@
     .sys-row__meta { align-self: end; }
     .sys-row__line { align-self: start; }
   }
-  /* Once motion.js tracks the pointer (.is-tracked), it marks the row under
-     it with .is-hover, which stays right while the page scrolls under a
-     still mouse; :hover is the fallback until then */
   @media (hover: hover) {
-    .sys:not(.is-tracked) .sys-row:hover::before, .sys-row.is-hover::before { opacity: 1; }
-    .sys:not(.is-tracked) .sys-row:hover .sys-row__name, .sys-row.is-hover .sys-row__name { transform: translateX(0.5rem); }
-    .sys:not(.is-tracked) .sys-row:hover .sys-row__go, .sys-row.is-hover .sys-row__go { transform: rotate(45deg); background: var(--c-violet); }
+    .sys-row:hover::before { opacity: 1; }
+    .sys-row:hover .sys-row__name { transform: translateX(0.5rem); }
+    .sys-row:hover .sys-row__go { transform: rotate(45deg); background: var(--c-violet); }
   }
-
-  /* Trailing preview (desktop pointer only; positioned by motion.js) */
-  .sys-preview {
-    position: absolute;
-    inset: 0 auto auto 0;
-    z-index: var(--z-raised);
-    pointer-events: none;
-    display: none;
-  }
-  @media (hover: hover) and (pointer: fine) { .sys-preview { display: block; } }
-  .sys-preview__core {
-    inline-size: 17rem;
-    padding: 1rem 1.125rem;
-    border-radius: var(--radius-m);
-    background: color-mix(in oklch, var(--c-raised-2) 92%, transparent);
-    box-shadow: inset 0 0 0 1px var(--edge), var(--edge-lit), var(--shadow-lift);
-    display: grid;
-    gap: 0.5rem;
-    transform: translate(1.5rem, -110%) scale(0.92);
-    opacity: 0;
-    transition: opacity var(--dur-hover) var(--ease-out-soft), transform var(--dur-state) var(--ease-out);
-  }
-  .sys-preview.is-on .sys-preview__core { opacity: 1; transform: translate(1.5rem, -110%) scale(1); }
-  .sys-preview__body { font-family: var(--font-mono); font-size: var(--step--2); line-height: 1.6; color: var(--c-bone); max-inline-size: none; }
 
   /* Keyboard focus gets the hover treatment; press confirms on touch, where
      there is no hover to preview the row */

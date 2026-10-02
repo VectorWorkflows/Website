@@ -85,5 +85,4 @@ if (pricing && bar) {
   try { saved = JSON.parse(sessionStorage.getItem(KEY) || '[]'); } catch {}
   boxes.forEach((b) => { b.checked = saved.includes(b.value); });
   update({ announce: false });
-  document.documentElement.classList.add('bundle-ready');
 }
