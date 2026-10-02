@@ -23,7 +23,7 @@ _'Display' is GT Sectra's large-size optical cut (the family also ships GT Sectr
 - **CSS style:** normal
 - **Folder:** `assets/fonts/GT-Sectra-Display/400-Regular/`
 - **Expected file:** `font.woff2`
-- **Used for:** h1 and h2 display headings, the footer email line, and the italic half of the wordmark
+- **Used for:** h1 and h2 display headings, prices, the wake-time readout and the 404 numerals
 - **Preloaded:** yes (once installed)
 - **Status:** Installed (26.8 kB)
 
@@ -153,7 +153,7 @@ _'Mono' is GT America's monospaced width subfamily. The CSS family name is 'GT A
 - **CSS style:** normal
 - **Folder:** `assets/fonts/GT-America-Mono/400-Regular/`
 - **Expected file:** `font.woff2`
-- **Used for:** Eyebrow labels, badges, metadata rail, the Replay clock and the raw event log, step counters, footer colophon
+- **Used for:** Eyebrow labels, badges, metadata rail, the Replay clock and the raw event log, step counters, the footer's copyright line
 - **Preloaded:** no
 - **Status:** Installed (6.0 kB)
 

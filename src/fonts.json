@@ -44,7 +44,7 @@
           "weight": 400,
           "style": "normal",
           "folder": "400-Regular",
-          "used_for": "h1 and h2 display headings, the footer email line, and the italic half of the wordmark",
+          "used_for": "h1 and h2 display headings, prices, the wake-time readout and the 404 numerals",
           "preload": true
         },
         {
@@ -226,7 +226,7 @@
           "weight": 400,
           "style": "normal",
           "folder": "400-Regular",
-          "used_for": "Eyebrow labels, badges, metadata rail, the Replay clock and the raw event log, step counters, footer colophon",
+          "used_for": "Eyebrow labels, badges, metadata rail, the Replay clock and the raw event log, step counters, the footer's copyright line",
           "preload": false
         }
       ],

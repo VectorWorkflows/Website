@@ -110,7 +110,6 @@ CRITICAL_CSS = [
 DEFERRED_CSS = [
     "components/card.css",
     "components/footer.css",
-    "components/sys-index.css",
     "components/concept.css",
     "components/cursor.css",
 ]
