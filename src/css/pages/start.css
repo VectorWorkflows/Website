@@ -307,6 +307,12 @@
   }
 
   .start-alt { margin-block-start: var(--space-2xl); }
-  .start-alt a { text-decoration: none; }
-  .start-alt a:hover { color: var(--c-lilac); }
+  /* Links inside a line of text: a hairline underline marks them without
+     relying on colour (WCAG 1.4.1) */
+  .start-alt a {
+    text-decoration: underline 1px color-mix(in oklch, currentColor 45%, transparent);
+    text-underline-offset: 0.3em;
+    transition: color var(--dur-hover) var(--ease-out-soft), text-decoration-color var(--dur-hover) var(--ease-out-soft);
+  }
+  .start-alt a:hover { color: var(--c-lilac); text-decoration-color: currentColor; }
 }
