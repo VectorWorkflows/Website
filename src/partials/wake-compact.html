@@ -1,0 +1,25 @@
+<div class="wk wk--compact" data-wake data-zone="{{ site.scheduler.zone_id }}">
+  <div class="wk__head">
+    <p class="wk__readout"><span class="t-label">Wake</span><output class="wk__time" for="wake-range" aria-live="off" data-wake-time>{{ site.scheduler.start_label }}</output></p>
+    <div class="wk__zone">
+      <p class="wk__zone-name"><span data-wake-zone>{{ site.scheduler.zone }}</span><span class="wk__tag">Example template</span></p>
+      <p class="wk__zone-line" data-wake-line>{{ site.scheduler.line }}</p>
+    </div>
+  </div>
+
+  <div class="wk__slider">
+    <label class="sr-only" for="wake-range">Wake-up time</label>
+    <input class="wk__range" type="range" id="wake-range" min="{{ site.scheduler.min }}" max="{{ site.scheduler.max }}" step="{{ site.scheduler.step }}" value="{{ site.scheduler.start }}" aria-valuetext="{{ site.scheduler.valuetext }}" data-wake-range>
+    <div class="wk__track" aria-hidden="true"><span class="wk__bands"><span></span><span></span><span></span></span><span class="wk__thumb"></span></div>
+    <ol class="wk__ticks" role="list" aria-hidden="true">{% for t in site.scheduler.ticks %}<li style="--p:{{ t.p }}">{{ t.label }}</li>{% endfor %}</ol>
+  </div>
+
+  <ol class="wk__list" role="list" aria-hidden="true" style="--rows:{{ site.scheduler.compact_rows }}" data-limit="{{ site.scheduler.compact_rows }}" data-wake-list></ol>
+  <ol class="sr-only" aria-label="The start of the example day for this wake-up time" data-wake-spoken></ol>
+  <p class="sr-only" aria-live="polite" data-wake-live></p>
+
+  <div class="wk__foot">
+    <p class="wk__note">Illustration of the idea. The live bot applies your own early, normal or late template when you send /awake. <a class="link-arrow" href="{{ site.routes.work }}dynamic-scheduler/#wake">See the whole day {% icon "arrow-right" %}</a></p>
+  </div>
+</div>
+<script type="application/json" id="wake-data">{{{ site.scheduler.json }}}</script>

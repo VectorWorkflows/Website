@@ -7,6 +7,8 @@ replaces_legacy: true
 schema: organization
 body_class: page-home
 critical_css: components/replay.css, components/card.css, pages/home.css
+css: components/wake.css
+js: wake
 ---
 
 <!-- ================================================================ HERO -->
@@ -97,13 +99,11 @@ critical_css: components/replay.css, components/card.css, pages/home.css
         <span class="badge badge--live"><span class="badge__dot"></span>Live — Open for Public Use</span>
         <h2 id="live-title" class="t-h2-s">Try one yourself: send <code class="live__cmd">/awake</code></h2>
         <p>The Dynamic Scheduler runs on Telegram and is open to anyone. Save an early, normal and late version of your day, then message /awake when you're up. It checks the time and loads the matching template.</p>
+        <a class="btn btn--primary" href="{{ site.telegram_bot }}" target="_blank" rel="noopener"><span class="btn__label">Send /awake on Telegram</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <p class="live__handle t-label">Telegram · {{ site.telegram_bot_handle }}</p>
       </div>
       <div class="live__action">
-        <div class="live__prompt" aria-hidden="true">
-          <span class="t-label">Telegram · {{ site.telegram_bot_handle }}</span>
-          <span class="live__typed">/awake<span class="live__caret"></span></span>
-        </div>
-        <a class="btn btn--primary" href="{{ site.telegram_bot }}" target="_blank" rel="noopener"><span class="btn__label">Open in Telegram</span><span class="btn__icon">{% icon "telegram-logo" %}</span></a>
+        {% include "wake-compact" %}
       </div>
       <div class="live__more">
         <span class="t-label">Two more to try</span>

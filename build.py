@@ -196,9 +196,37 @@ def load_site() -> dict:
     site["sys"] = {s["slug"].replace("-", "_"): s for s in site["systems"]}
     # Booking notice: chrome.js turns the fallback into an exact local time
     hours = json.loads((DATA / "booking.json").read_text("utf-8"))["minNoticeHours"]
+    site["scheduler"] = load_scheduler_demo()
     site["booking"] = {"hours": hours,
                        "fallback": f"Pick a slot at least {hours} hour{'' if hours == 1 else 's'} from now"}
     return site
+
+
+def load_scheduler_demo() -> dict:
+    """data/scheduler-demo.json for the wake-time slider: the values the
+    template prints (range, ticks, the starting readout) and the data itself
+    for wake.js, with the notes stripped."""
+    sd = json.loads((DATA / "scheduler-demo.json").read_text("utf-8"))
+
+    def mm(v: str) -> int:
+        return int(v[:2]) * 60 + int(v[3:])
+
+    lo, hi, start = mm(sd["min"]), mm(sd["max"]), mm(sd["start"])
+    zone = [z for z in sd["zones"] if mm(z["from"]) <= start][-1]
+    hour = start // 60
+    spoken = f"{hour % 12 or 12}:{start % 60:02d} {'AM' if hour < 12 else 'PM'}"
+    ids = [b["id"] for b in sd["blocks"]]
+    if len(set(ids)) != len(ids) or len(sd["zones"]) != 3:
+        raise BuildError("data/scheduler-demo.json: block ids must be unique and there must be three zones")
+    return {
+        "json": json.dumps({k: v for k, v in sd.items() if not k.startswith("_")},
+                           ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"),
+        "min": lo, "max": hi, "step": sd["step"], "start": start, "start_label": sd["start"],
+        "rows": sd["rows"], "compact_rows": sd["compactRows"],
+        "ticks": [{"label": t, "p": f"{(mm(t) - lo) / (hi - lo):.4f}"} for t in sd["ticks"]],
+        "zone": zone["name"], "zone_id": zone["id"], "line": zone["line"],
+        "valuetext": f"Wake at {spoken}, {zone['name'].lower()}",
+    }
 
 
 def protected_dirs(site: dict) -> set[str]:

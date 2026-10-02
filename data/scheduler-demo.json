@@ -1,0 +1,45 @@
+{
+  "_comment": "The wake-time slider on the Dynamic Scheduler case study and the home page. An illustration of the idea, not the bot's logic: the live bot applies the user's own early, normal or late template. Times are minutes after midnight unless written HH:MM. Per-zone values are [early, normal, late] and blend over the last `blend` minutes before each zone edge (so a zone is fully itself from its first minute), so blocks shrink, grow, fade and change places as the slider moves.",
+
+  "min": "03:00",
+  "max": "15:00",
+  "step": 15,
+  "start": "07:00",
+  "ticks": ["03:00", "07:00", "11:00", "15:00"],
+
+  "day": 960,
+  "_day": "The waking day: 16 hours from the wake time, then the sleep block.",
+  "sleep": { "label": "Sleep", "duration": 480 },
+
+  "blend": 75,
+  "fade": 45,
+  "_fade": "A block fades in or out over this many minutes of wake time, inside the ends of its show range.",
+  "gap": { "label": "Open time", "from": 45 },
+  "_gap": "Time no block claims becomes an Open time row once it is at least this long.",
+  "bar": 240,
+  "_bar": "A duration bar is full at this many minutes.",
+  "rows": 13,
+  "compactRows": 6,
+
+  "zones": [
+    { "id": "early",  "name": "Early day",  "from": "03:00", "line": "A long workout first, time for a hobby and good habits, then focused work and a light early evening." },
+    { "id": "normal", "name": "Normal day", "from": "07:00", "line": "Crucial tasks come first. Everything else shrinks or slides later, and the workout gets short." },
+    { "id": "late",   "name": "Late day",   "from": "11:00", "line": "A slow start, one focus block, then leisure, people and errands. Sleep lands the next morning." }
+  ],
+
+  "_blocks": "show: the wake-time range the block exists in. duration, priority: [early, normal, late]; the lowest priority goes first. anchor (optional; without one a block simply follows the block before it): wake = not before this many minutes after waking; clock = not before this time of day.",
+  "blocks": [
+    { "id": "slow",      "label": "Slow start",         "show": ["10:15", "15:00"], "duration": [0, 0, 75],      "priority": [5, 5, 5] },
+    { "id": "workout",   "label": "Workout",            "show": ["03:00", "11:00"], "duration": [90, 25, 0],     "priority": [10, 75, 75] },
+    { "id": "hobby",     "label": "Hobby time",         "show": ["03:00", "15:00"], "duration": [75, 30, 105],   "priority": [20, 90, 30] },
+    { "id": "habits",    "label": "Stretch & journal",  "show": ["03:00", "07:00"], "duration": [30, 10, 0],     "priority": [30, 12, 12] },
+    { "id": "breakfast", "label": "Breakfast",          "show": ["03:00", "11:00"], "duration": [40, 20, 0],     "priority": [40, 10, 10] },
+    { "id": "crucial",   "label": "Crucial tasks",      "show": ["06:15", "11:00"], "duration": [0, 180, 0],     "priority": [45, 20, 20] },
+    { "id": "focus",     "label": "Focused work",       "show": ["03:00", "15:00"], "duration": [240, 120, 120], "priority": [50, 40, 20] },
+    { "id": "lunch",     "label": "Lunch",              "show": ["03:00", "11:00"], "duration": [45, 45, 30],    "priority": [55, 30, 30] },
+    { "id": "errands",   "label": "Errands",            "show": ["03:00", "15:00"], "duration": [45, 30, 60],    "priority": [60, 50, 40] },
+    { "id": "social",    "label": "Friends & family",   "show": ["03:00", "15:00"], "duration": [90, 60, 150],   "priority": [70, 95, 60] },
+    { "id": "dinner",    "label": "Dinner",             "show": ["03:00", "15:00"], "duration": [40, 40, 45],    "priority": [80, 80, 50], "anchor": { "clock": ["16:30", "19:00", "19:30"] } },
+    { "id": "film",      "label": "Film or a game",     "show": ["10:15", "15:00"], "duration": [0, 0, 120],     "priority": [85, 85, 70] }
+  ]
+}
