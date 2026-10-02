@@ -34,7 +34,7 @@
         <p class="project__svc"><span class="t-label">Offered as</span>{% for r in site.sys.dynamic_scheduler.related %}<a href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}</a>{% endfor %}</p>
         <a class="link-arrow project__go" href="{{ site.routes.work }}dynamic-scheduler/">Read the case study {% icon "arrow-right" %}</a>
       </div>
-      <div class="project__replay">{% replay "scheduler" id="work-ds" view="owner" %}</div>
+      <div class="project__replay">{% include "wake-compact" %}</div>
     </div>
   </article>
 </div>

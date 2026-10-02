@@ -175,4 +175,17 @@
   .wk__nojs { font-size: var(--step--1); color: var(--c-bone-2); }
   .wk-head { margin-block: var(--space-2xl) var(--space-l); }
   .wk-intro { font-family: var(--font-ui); font-size: var(--step-1); line-height: 1.42; letter-spacing: -0.015em; color: var(--c-bone); max-inline-size: calc(46 * var(--ch-ui)); text-wrap: pretty; }
+
+  /* Compact (Work index card): the start of the day, under a soft fade ------- */
+  .wk--compact { --wk-row: 2.375rem; --wk-thumb: 1.75rem; display: grid; gap: var(--space-m); min-inline-size: 0; }
+  .wk--compact .wk__head { grid-template-columns: none; gap: var(--space-xs); }
+  .wk--compact .wk__time { font-size: var(--step-5); }
+  .wk--compact .wk__zone-name { font-size: var(--step-0); }
+  .wk--compact .wk__list {
+    -webkit-mask-image: linear-gradient(180deg, #000 68%, transparent);
+    mask-image: linear-gradient(180deg, #000 68%, transparent);
+  }
+  .wk--compact .wk__row { grid-template-columns: 3.5rem minmax(0, 1fr) minmax(3.75rem, 38%); }
+  .wk--compact .wk__len { display: none; }
+  .wk--compact .wk__note { flex-basis: 100%; }
 }

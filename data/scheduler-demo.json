@@ -24,6 +24,7 @@
   "bar": 240,
   "_bar": "A duration bar is full at this many minutes.",
   "rows": 13,
+  "compactRows": 6,
 
   "zones": [
     { "id": "early",  "name": "Early start",  "from": "03:00", "line": "A long workout first, time for a hobby and good habits, then focused work and a light early evening." },

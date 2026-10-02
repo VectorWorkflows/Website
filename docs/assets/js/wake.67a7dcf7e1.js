@@ -103,6 +103,7 @@ if (dataEl && roots.length) {
     timeEl.innerHTML = `<span class="sr-only">${timeEl.textContent}</span><span class="wk__odo" aria-hidden="true">${reel(hours)}<span class="wk__colon">:</span>${reel(minutes)}</span>`;
     const timeText = timeEl.querySelector('.sr-only').firstChild;
     const [hourReel, minuteReel] = [...timeEl.querySelectorAll('.wk__reel > span')];
+    const limit = Number(list.dataset.limit) || Infinity; // the compact version shows the start of the day
     const rowEls = new Map();
     // Write only what changed: `was` remembers the last value per element
     const put = (el, key, value, write) => {
@@ -170,7 +171,7 @@ if (dataEl && roots.length) {
       rows.forEach((row, i) => {
         const el = rowFor(row);
         seen.add(row.id);
-        place(el, i, row.o.toFixed(2));
+        place(el, Math.min(i, limit), i < limit ? row.o.toFixed(2) : '0');
         put(el, 'd', clamp(row.dur / D.bar).toFixed(3), (v) => { el.parts.bar.style.transform = `scaleX(${v})`; });
         if (!el.wk.at) label(row); // a new row never shows an empty time
       });
@@ -199,7 +200,7 @@ if (dataEl && roots.length) {
       // The readable list for assistive tech, once the slider settles
       clearTimeout(spokenTimer);
       spokenTimer = setTimeout(() => {
-        spokenList.replaceChildren(...rows.filter((r) => r.o > 0.5).map((r) => {
+        spokenList.replaceChildren(...rows.slice(0, limit).filter((r) => r.o > 0.5).map((r) => {
           const li = document.createElement('li');
           li.textContent = `${spoken(r.start)}${Math.round(r.start) >= 1440 ? ' the next day' : ''}: ${r.label}, ${length(r.dur)}`;
           return li;

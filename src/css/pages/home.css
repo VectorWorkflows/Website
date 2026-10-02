@@ -1,7 +1,7 @@
 /* ==========================================================================
    HOME: what the studio does for a business owner, said broadly. A
    typographic hero, one replay as proof, the three service groups, a quiet
-   list of selected work, the method, who's behind it, and a close.
+   list of selected work, the method, and a close.
    ========================================================================== */
 @layer pages {
   .home-head { margin-block-end: var(--space-2xl); }
@@ -200,24 +200,6 @@
   .method__body { display: grid; gap: var(--space-xs); }
   .method__body h3 { font-size: var(--step-2); }
   .method__body p { max-inline-size: calc(48 * var(--ch-body)); }
-
-  /* Who's behind this: a small portrait and a way to the Studio page ------- */
-  .who { display: grid; gap: var(--space-l); align-items: center; }
-  @media (min-width: 40rem) { .who { grid-template-columns: 11rem minmax(0, 1fr); column-gap: var(--space-xl); } }
-  @media (min-width: 64rem) { .who { grid-template-columns: 13rem minmax(0, 1fr); column-gap: var(--space-2xl); } }
-  .who__photo {
-    margin: 0;
-    inline-size: 9rem;
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    border-radius: var(--radius-l);
-    background: var(--c-raised-1);
-    box-shadow: inset 0 0 0 1px var(--edge-faint), var(--shadow-float);
-  }
-  @media (min-width: 40rem) { .who__photo { inline-size: 100%; } }
-  .who__photo img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
-  .who__text { color: var(--c-bone-2); font-size: var(--step-1); line-height: 1.45; font-family: var(--font-ui); letter-spacing: -0.015em; max-inline-size: calc(42 * var(--ch-ui)); text-wrap: pretty; }
-  .who .link-arrow .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
   /* Close ---------------------------------------------------------------- */
   .close { position: relative; padding-block-end: calc(var(--section-y) + var(--space-l)); }
