@@ -215,24 +215,24 @@ def load_site() -> dict:
     # phone number are written. whatsapp.base (the link without its pre-filled
     # text) is what /start composes its own message onto.
     contact = json.loads((DATA / "contact.json").read_text("utf-8"))
-    wa, ivr = contact["whatsappBot"], contact["ivrLine"]
+    wa, ivr = contact["whatsapp"], contact["ivrLine"]
     if not re.fullmatch(r"https://wa\.me/\d+(\?text=\S*)?", wa["url"]):
-        raise BuildError("data/contact.json: whatsappBot.url must be a https://wa.me/<number> link")
+        raise BuildError("data/contact.json: whatsapp.url must be a https://wa.me/<number> link")
     if "".join(ch for ch in ivr["display"] if ch.isdigit()) != ivr["tel"].lstrip("+"):
         raise BuildError("data/contact.json: ivrLine.display and ivrLine.tel are different numbers")
     site["contact"] = {
         "whatsapp": {"label": wa["label"], "url": wa["url"], "base": wa["url"].split("?")[0]},
-        "ivr": {"label": ivr["label"], "tel": ivr["tel"], "display": ivr["display"],
-                "tip": ivr["tip"], "india_label": ivr["indiaLabel"], "india_tip": ivr["indiaTip"],
-                "note": ivr["note"], "note_link": ivr["noteLink"]},
+        "ivr": {"tel": ivr["tel"], "display": ivr["display"],
+                "tip": ivr["tip"], "india_label": ivr["indiaLabel"], "india_tip": ivr["indiaTip"]},
     }
     # Templates can't index lists: site.sys.missed_lead_responder.name etc.
     site["sys"] = {s["slug"].replace("-", "_"): s for s in site["systems"]}
-    # Booking notice: chrome.js turns the fallback into an exact local time
+    # Booking notice, shown only as the tooltip of a "Book a 15-min call"
+    # link: chrome.js turns the fallback into an exact local time
     hours = json.loads((DATA / "booking.json").read_text("utf-8"))["minNoticeHours"]
     site["scheduler"] = load_scheduler_demo()
     site["booking"] = {"hours": hours,
-                       "fallback": f"Pick a slot at least {hours} hour{'' if hours == 1 else 's'} from now"}
+                       "fallback": f"Earliest slot: at least {hours} hour{'' if hours == 1 else 's'} from now"}
     return site
 
 

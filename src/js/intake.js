@@ -269,13 +269,7 @@ if (form && pricing) {
       url = `${config.cal}?notes=${encodeURIComponent(message)}`;
       $('[data-done-badge]').textContent = 'Booking page open';
       $('[data-done-title]').textContent = 'Pick a time that suits you.';
-      // The earliest bookable time, kept current by chrome.js
-      const hint = $('[data-callnote] [data-book-after]').cloneNode(true);
-      $('[data-done-text]').replaceChildren(
-        'The booking page should have opened in a new tab, with your answers in the notes. ',
-        hint,
-        '. If the page didn\'t open, use the button below.'
-      );
+      $('[data-done-text]').textContent = 'The booking page should have opened in a new tab, with your answers in the notes. If the page didn\'t open, use the button below.';
       $('[data-reopen-label]').textContent = 'Open the booking page';
     } else if (d.via === 'email') {
       const subject = d.unsure || !d.svc.length ? `Project enquiry · ${d.business}` : `Project enquiry: ${d.svc.length} service${d.svc.length === 1 ? '' : 's'} · ${d.business}`;

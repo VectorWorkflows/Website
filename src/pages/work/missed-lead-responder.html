@@ -69,8 +69,7 @@ critical_css: components/page-head.css, components/replay.css, pages/case.css
       </div>
       <div class="demo-line">
         <h3 class="t-label">Try the phone side</h3>
-        <a class="demo-line__call" href="tel:{{ site.contact.ivr.tel }}">{% icon "phone" %}<span><span class="demo-line__label">{{ site.contact.ivr.label }}</span><span class="demo-line__num" data-copy>{{ site.contact.ivr.display }}</span></span></a>
-        <p class="demo-line__note">{{ site.contact.ivr.note }} <a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.ivr.note_link }}</a></p>
+        {% include "phone-pill" uid="case" %}
       </div>
       <div class="status-note">
         <span class="badge"><span class="badge__dot"></span>{{ sys.status }}</span>

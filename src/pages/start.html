@@ -150,7 +150,6 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
         </div>
         <div class="callnote" data-callnote hidden>
           <p>{% icon "calendar-blank" %}<span>The booking page asks for your name and business, so there's nothing else to fill in here. Your answers so far go into the booking notes.</span></p>
-          <p>{% icon "clock" %}<span><strong><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></strong>, so there's time to read your answers before we talk.</span></p>
         </div>
       </fieldset>
 
@@ -181,7 +180,7 @@ critical_css: components/page-head.css, components/offer.css, pages/start.css
     </div>
   </noscript>
 
-  <p class="start-alt t-label">Prefer to talk first? <a href="{{ site.cal_url }}" target="_blank" rel="noopener">Book a 15-min call</a> · <a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.whatsapp.label }}</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+  <p class="start-alt t-label">Prefer to talk first? <span class="tipwrap"><a href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-start" data-tip>Book a 15-min call</a>{% include "book-tip" uid="start" %}</span> ·<a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.whatsapp.label }}</a> · <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
 </section>
 
 <script type="application/json" id="pricing-data">{{{ pricing.json }}}</script>

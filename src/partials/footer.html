@@ -1,51 +1,51 @@
 <footer class="site-footer frame">
-  <div class="footer-inner">
-    <p class="index-label"><span class="index-label__num">&rarr;</span><span class="index-label__rule"></span>Start a conversation</p>
-    <p class="footer-mail-line">
-      <a class="footer-mail" href="mailto:{{ site.email }}">{{ site.email }}</a>
-    </p>
-
-    <div class="grid footer-grid">
-      <div class="footer-lede">
-        <p class="t-small">A one-person automation and web engineering studio. Backend systems, messaging bots, telephony pipelines and hand-built websites for service businesses.</p>
-      </div>
-
-      <div class="footer-col">
-        <h2>Contact</h2>
-        <ul role="list">
-          <li><a href="mailto:{{ site.email }}">{% icon "envelope-simple" %}Email</a></li>
-          <li><a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{% icon "whatsapp-logo" %}{{ site.contact.whatsapp.label }}</a></li>
-          <li class="ivr"><a href="tel:{{ site.contact.ivr.tel }}">{% icon "phone" %}<span class="ivr__text"><span>{{ site.contact.ivr.label }}</span><span class="ivr__num" data-copy>{{ site.contact.ivr.display }}</span></span></a>
-            <p class="footer-hint">{{ site.contact.ivr.note }} <a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{{ site.contact.ivr.note_link }}</a></p></li>
-          <li><a href="{{ site.cal_url }}" target="_blank" rel="noopener">{% icon "calendar-blank" %}Book a 15-min call</a>
-            <p class="footer-hint"><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></p></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h2>Elsewhere</h2>
-        <ul role="list">
-          <li><a href="{{ site.social.github }}" target="_blank" rel="noopener">{% icon "github-logo" %}GitHub</a></li>
-          <li><a href="{{ site.social.youtube }}" target="_blank" rel="noopener">{% icon "youtube-logo" %}YouTube</a></li>
-          <li><a href="{{ site.social.instagram }}" target="_blank" rel="noopener">{% icon "instagram-logo" %}Instagram</a></li>
-          <li><a href="{{ site.social.x }}" target="_blank" rel="noopener">{% icon "x-logo" %}X</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h2>Index</h2>
-        <ul role="list">
-          <li><a href="{{ site.routes.work }}">Work</a></li>
-          <li><a href="{{ site.routes.services }}">Services</a></li>
-          <li><a href="{{ site.routes.studio }}">Studio</a></li>
-          <li><a href="{{ site.routes.start }}">Start a project</a></li>
-        </ul>
-      </div>
+  <nav class="footer-dir" aria-label="Site directory">
+    <div class="footer-col">
+      <h2>Services</h2>
+      <ul role="list">
+        {% for g in site.service_groups %}<li><a href="{{ site.routes.services }}#{{ g.id }}">{{ g.name }}</a></li>
+        {% endfor %}<li><a href="{{ site.routes.services }}">All services &amp; prices</a></li>
+      </ul>
     </div>
 
-    <div class="colophon">
-      <p class="t-label">&copy; {{ site.year }} {{ site.name }} &middot; <a href="{{ site.routes.privacy }}">Privacy</a> &middot; <a href="{{ site.routes.terms }}">Terms</a></p>
-      <p class="t-label">Hand-built static HTML &middot; No cookies, no trackers &middot; This page: <!--PAGE_WEIGHT--> gzipped</p>
+    <div class="footer-col">
+      <h2>Case studies</h2>
+      <ul role="list">
+        {% for s in site.systems %}<li><a href="{{ site.routes.work }}{{ s.slug }}/">{{ s.name }}</a></li>
+        {% endfor %}<li><a href="{{ site.routes.work }}">All work</a></li>
+      </ul>
     </div>
-  </div>
+
+    <div class="footer-col">
+      <h2>Studio</h2>
+      <ul role="list">
+        <li><a href="{{ site.routes.studio }}">Studio</a></li>
+        <li><a href="{{ site.routes.start }}">Start a project</a></li>
+        <li><a href="{{ site.routes.privacy }}">Privacy</a></li>
+        <li><a href="{{ site.routes.terms }}">Terms</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col footer-col--contact">
+      <h2>Contact</h2>
+      <ul role="list">
+        <li><span class="tipwrap"><a href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-footer" data-tip>{% icon "calendar-blank" %}Book a 15-min call</a>{% include "book-tip" uid="footer" %}</span></li>
+        <li><a href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener">{% icon "whatsapp-logo" %}{{ site.contact.whatsapp.label }}</a></li>
+        <li><a href="mailto:{{ site.email }}">{% icon "envelope-simple" %}{{ site.email }}</a></li>
+        <li class="footer-phone">{% include "phone-pill" uid="footer" %}</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h2>Elsewhere</h2>
+      <ul role="list">
+        <li><a href="{{ site.social.github }}" target="_blank" rel="noopener">{% icon "github-logo" %}GitHub</a></li>
+        <li><a href="{{ site.social.youtube }}" target="_blank" rel="noopener">{% icon "youtube-logo" %}YouTube</a></li>
+        <li><a href="{{ site.social.instagram }}" target="_blank" rel="noopener">{% icon "instagram-logo" %}Instagram</a></li>
+        <li><a href="{{ site.social.x }}" target="_blank" rel="noopener">{% icon "x-logo" %}X</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <p class="footer-legal t-label">&copy; {{ site.year }} {{ site.name }}</p>
 </footer>

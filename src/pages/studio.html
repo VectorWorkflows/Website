@@ -14,11 +14,6 @@ critical_css: components/page-head.css, pages/studio.css
     <div class="studio-hero__copy stack flow-l">
       <h1 id="page-title" class="page-head__title">Hi, I'm <em>Sam</em>.</h1>
       <p class="t-lead page-head__lead">I'm Sameer Bhardwaj, and Vector Workflows is me. I work out what you need, build it, and answer when it needs changing. There's no account manager in between.</p>
-      <div class="cluster" style="--gap: var(--space-xs)">
-        <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
-        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
-      </div>
-      <p class="studio-hero__note"><span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span></p>
     </div>
     <figure class="portrait" data-portrait>
       <div class="portrait__frame">{{{ portrait }}}</div>
@@ -98,6 +93,14 @@ critical_css: components/page-head.css, pages/studio.css
       </div>
 
       <p class="signoff">— Sam</p>
+
+      <div class="reach">
+        <p class="reach__line">That's the story so far. If you'd like to talk about your business, I'm easy to reach.</p>
+        <div class="cluster" style="--gap: var(--space-xs)">
+          <span class="tipwrap"><a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-studio" data-tip><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>{% include "book-tip" uid="studio" %}</span>
+          <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -145,7 +148,7 @@ critical_css: components/page-head.css, pages/studio.css
   </div>
 </section>
 
-<section class="frame section-tight" aria-labelledby="kit-title">
+<section class="frame section-tight studio-close" aria-labelledby="kit-title">
   <div class="grid">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Toolkit</p></div>
     <div class="g-body stack flow-m">
@@ -154,19 +157,6 @@ critical_css: components/page-head.css, pages/studio.css
         <li>Python</li><li>FastAPI</li><li>MongoDB</li><li>Twilio</li><li>WhatsApp Cloud API</li><li>Telegram Bot API</li><li>Google Workspace APIs</li><li>Google Cloud Platform</li><li>Docker</li><li>HTML · CSS · JavaScript</li>
       </ul>
       <p class="t-small">The code for every system on this site is public: <a href="{{ site.social.github }}" target="_blank" rel="noopener">github.com/VectorWorkflows</a>. Walkthroughs are on <a href="{{ site.social.youtube }}" target="_blank" rel="noopener">YouTube</a>.</p>
-    </div>
-  </div>
-</section>
-
-<section class="frame section studio-close" aria-labelledby="studio-close-title">
-  <div class="grid">
-    <div class="g-body stack flow-l">
-      <h2 id="studio-close-title" class="t-h1">Talk to the person who'll <em>build it</em>.</h2>
-      <div class="cluster" style="--gap: var(--space-xs)">
-        <a class="btn btn--primary" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>
-        <a class="btn" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
-        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
-      </div>
     </div>
   </div>
 </section>

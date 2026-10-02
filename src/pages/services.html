@@ -174,7 +174,7 @@ critical_css: components/page-head.css, components/card.css, components/offer.cs
         </div>
         <div class="faq__item">
           <dt>What if I'm not sure which ones I need?</dt>
-          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <a href="{{ site.cal_url }}" target="_blank" rel="noopener">book a 15-minute call</a>. Describe how your week runs and you'll get a straight answer on what's worth setting up. <span data-book-after="{{ site.booking.hours }}">{{ site.booking.fallback }}</span>.</dd>
+          <dd>Choose "Not sure — help me choose" on the <a href="{{ site.routes.start }}">start page</a>, or <span class="tipwrap"><a href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-faq" data-tip>book a 15-minute call</a>{% include "book-tip" uid="faq" %}</span>. Describe how your week runs and you'll get a straight answer on what's worth setting up.</dd>
         </div>
       </dl>
     </div>

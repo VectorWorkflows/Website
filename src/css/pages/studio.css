@@ -4,7 +4,6 @@
 @layer pages {
   /* Hero: Sam, with the portrait ------------------------------------------ */
   .studio-hero__grid { row-gap: var(--space-xl); align-items: start; }
-  .studio-hero__note { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.02em; color: var(--c-bone-2); margin-block-start: calc(-1 * var(--space-s)); }
   .portrait { margin: 0; display: grid; gap: var(--space-xs); max-inline-size: 24rem; }
   .portrait__frame {
     position: relative;
@@ -167,6 +166,24 @@
   .tl a:hover { text-decoration-color: var(--c-lilac); }
   .tl a:active { color: var(--c-lilac); }
   .signoff { font-family: var(--font-display); font-style: italic; font-size: var(--step-3); color: var(--c-bone); }
+
+  /* After the story: one calm line and the two ways to reach Sam */
+  .reach {
+    position: relative;
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    padding-block-start: var(--space-l);
+  }
+  .reach::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--edge-violet), var(--edge-faint) 50%, transparent);
+  }
+  .reach__line { font-family: var(--font-ui); font-size: var(--step-1); line-height: 1.42; letter-spacing: -0.015em; color: var(--c-bone); max-inline-size: calc(40 * var(--ch-ui)); text-wrap: pretty; }
 
   /* Motion: the photo wipes in; the timeline draws itself as you scroll ---- */
   @media (prefers-reduced-motion: no-preference) {

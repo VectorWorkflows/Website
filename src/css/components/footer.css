@@ -1,7 +1,7 @@
 /* ==========================================================================
-   FOOTER: the address block. A display-size email line (sized to its own
-   container so it never overflows), then the index, contact and social
-   columns, then the colophon.
+   FOOTER: a link directory and a copyright line. No sentences: anything a
+   link needs to explain (the earliest call slot, what the phone demo is,
+   calling from India) is in its tooltip.
    ========================================================================== */
 @layer components {
   .site-footer {
@@ -21,27 +21,21 @@
     background: linear-gradient(90deg, var(--edge-violet), var(--edge) 35%, transparent 85%);
   }
 
-  .footer-inner { container-type: inline-size; }
-  .footer-mail-line { margin-block-start: var(--space-s); max-inline-size: none; }
-
-  .footer-mail {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-size: min(var(--step-6), 6.1cqi);
-    line-height: 1;
-    letter-spacing: var(--tracking-display);
-    color: var(--c-bone);
-    text-decoration: none;
-    padding-block-end: 0.12em;
-    transition: color var(--dur-hover) var(--ease-out-soft);
+  /* Two columns on a phone (contact runs full width, for the phone pill),
+     three on a tablet, five across on a desktop */
+  .footer-dir {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xl) var(--grid-gap);
   }
-  @media (hover: hover) {
-    .footer-mail:hover { color: var(--c-lilac); }
+  .footer-col--contact { grid-column: 1 / -1; }
+  @media (min-width: 40rem) {
+    .footer-dir { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .footer-col--contact { grid-column: span 2; }
   }
-
-  .footer-grid {
-    margin-block-start: var(--space-2xl);
-    --row-gap: var(--space-xl);
+  @media (min-width: 64rem) {
+    .footer-dir { grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 2fr) minmax(0, 4fr) minmax(0, 2fr); }
+    .footer-col--contact { grid-column: auto; }
   }
 
   .footer-col h2 {
@@ -53,8 +47,9 @@
     color: var(--c-bone-3);
     margin-block-end: var(--space-s);
   }
-  .footer-col ul { display: grid; gap: 0.125rem; }
-  .footer-col a {
+  .footer-col ul { display: grid; gap: 0.125rem; justify-items: start; }
+  .footer-col li > a,
+  .footer-col .tipwrap > a {
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
@@ -64,50 +59,24 @@
     font-size: var(--step-0);
     letter-spacing: -0.012em;
     text-decoration: none;
+    overflow-wrap: anywhere;
     transition: color var(--dur-hover) var(--ease-out-soft);
   }
   .footer-col a .icon { color: var(--c-bone-3); transition: transform var(--dur-state) var(--ease-overshoot), color var(--dur-hover) var(--ease-out-soft); }
   @media (hover: hover) {
-    .footer-col a:hover { color: var(--c-bone); }
-    .footer-col a:hover .icon { color: var(--c-lilac); transform: translate(0.125rem, -0.125rem); }
+    .footer-col li > a:hover, .footer-col .tipwrap > a:hover { color: var(--c-bone); }
+    .footer-col li > a:hover .icon, .footer-col .tipwrap > a:hover .icon { color: var(--c-lilac); transform: translate(0.125rem, -0.125rem); }
   }
-  /* The phone demo: label over number, both inside the one tel: link */
-  .footer-col .ivr a { align-items: flex-start; padding-block: 0.375rem; }
-  .footer-col .ivr a .icon { margin-block-start: 0.2em; }
-  .ivr__text { display: grid; }
-  .ivr__num { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.02em; color: var(--c-bone); }
+  .footer-col li > a:active, .footer-col .tipwrap > a:active { color: var(--c-lilac); }
+  .footer-phone { margin-block-start: 0.5rem; max-inline-size: 100%; }
 
-  /* A small line under a contact link (the earliest bookable time, the note
-     under the phone demo), indented to the link's text */
-  .footer-hint {
-    padding-inline-start: 1.875rem;
-    margin-block-end: 0.375rem;
-    font-size: var(--step--1);
-    line-height: 1.45;
-    color: var(--c-bone-2);
-    max-inline-size: 19rem;
-    text-wrap: pretty;
-  }
-  .footer-hint a { display: inline; min-block-size: 0; font-size: inherit; color: var(--c-bone); text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--c-lilac) 50%, transparent); text-underline-offset: 0.2em; }
-
-  @media (min-width: 40rem) {
-    .footer-grid > .footer-col { grid-column: span 4; }
-  }
-  @media (min-width: 64rem) {
-    .footer-grid > .footer-lede { grid-column: 1 / span 3; }
-    .footer-grid > .footer-col  { grid-column: span 3; }
-  }
-
-  .colophon {
-    margin-block-start: var(--space-2xl);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--space-s) var(--space-l);
-    padding-block-start: var(--space-m);
+  .footer-legal {
     position: relative;
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    max-inline-size: none;
   }
-  .colophon::before {
+  .footer-legal::before {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -115,15 +84,4 @@
     block-size: 1px;
     background: linear-gradient(90deg, var(--edge), var(--edge-faint) 60%, transparent);
   }
-  .colophon p { max-inline-size: none; }
-  /* Links inside a line of text: a hairline underline marks them without
-     relying on colour (WCAG 1.4.1) */
-  .colophon a {
-    color: var(--c-bone-2);
-    text-decoration: underline 1px color-mix(in oklch, currentColor 45%, transparent);
-    text-underline-offset: 0.3em;
-    transition: color var(--dur-hover) var(--ease-out-soft), text-decoration-color var(--dur-hover) var(--ease-out-soft);
-  }
-  .colophon a:hover { color: var(--c-lilac); text-decoration-color: currentColor; }
-  .colophon a:active { color: var(--c-bone); }
 }

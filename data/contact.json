@@ -1,17 +1,14 @@
 {
-  "_comment": "The only two ways to reach the demos, and the only place either is written. build.py reads this file; no page, partial or script contains a phone number or a wa.me link. whatsappBot.url is the link the site has always used, pre-filled text included. ivrLine is voice only: never offer WhatsApp or SMS on it. Its tip and indiaTip are the two tooltips of the split phone pill (footer, Work page, Missed Lead Responder case study).",
-  "whatsappBot": {
-    "label": "Message the bot on WhatsApp",
+  "_comment": "The only two ways to reach the demos, and the only place either is written. build.py reads this file; no page, partial or script contains a phone number or a wa.me link. whatsapp.url is the link the site has always used, pre-filled text included; its label is the wording of every WhatsApp link on the site. ivrLine is voice only: never offer WhatsApp or SMS on it. ivrLine.tip and ivrLine.indiaTip are the two tooltips of the split phone pill (footer, Work page, Missed Lead Responder case study).",
+  "whatsapp": {
+    "label": "Message us on WhatsApp",
     "url": "https://wa.me/919311550616?text=Hi%2C%20saw%20Vector%20Workflows%20%E2%80%94%20I%27d%20like%20to%20ask%20about%20automation%20for%20my%20business."
   },
   "ivrLine": {
-    "label": "Hear the phone demo (US number)",
     "tel": "+14704706323",
     "display": "+1 470 470 6323",
     "tip": "Call to try our IVR and missed-call responder.",
     "indiaLabel": "From India?",
-    "indiaTip": "Calling from India needs international calling enabled on your SIM.",
-    "note": "Calling from India needs international calling. Prefer not to?",
-    "noteLink": "Message the bot instead."
+    "indiaTip": "Calling from India needs international calling enabled on your SIM."
   }
 }

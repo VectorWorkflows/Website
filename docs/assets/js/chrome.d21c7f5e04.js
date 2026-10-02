@@ -13,11 +13,12 @@ document.querySelectorAll('[data-video]').forEach((box) => {
   });
 });
 
-// "Book a call after 3:35 PM today (IST)": the earliest slot the booking
-// page will offer, in the visitor's own time. Each [data-book-after] holds
-// the notice in hours (data/booking.json, matching the Cal.com event) and,
-// until this runs, a plain "at least N hours from now". Rounded up to five
-// minutes; refreshed every minute.
+// "Earliest slot: after 3:35 PM today (IST)": the earliest slot the booking
+// page will offer, in the visitor's own time. It is the tooltip of every
+// "Book a 15-min call" link (hover and keyboard focus; never shown as page
+// text). Each [data-book-after] holds the notice in hours (data/booking.json,
+// matching the Cal.com event) and, until this runs, a plain "at least N
+// hours from now". Rounded up to five minutes; refreshed every minute.
 const bookAfter = () => {
   const now = new Date();
   document.querySelectorAll('[data-book-after]').forEach((el) => {
@@ -27,7 +28,7 @@ const bookAfter = () => {
     const day = days === 0 ? 'today' : days === 1 ? 'tomorrow' : `on ${at.toLocaleDateString('en-US', { weekday: 'long' })}`;
     const time = at.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     const zone = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' }).formatToParts(at).find((p) => p.type === 'timeZoneName')?.value;
-    el.textContent = `Book a call after ${time} ${day}${zone ? ` (${zone})` : ''}`;
+    el.textContent = `Earliest slot: after ${time} ${day}${zone ? ` (${zone})` : ''}`;
   });
 };
 bookAfter();
