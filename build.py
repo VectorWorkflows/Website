@@ -271,14 +271,15 @@ def protected_dirs(site: dict) -> set[str]:
 # a build time is written. Pages read the values this attaches to the site.
 # ---------------------------------------------------------------------------
 
-def rupees(n: int) -> str:
-    """Indian digit grouping: 2999 → ₹2,999; 125000 → ₹1,25,000."""
-    s = str(int(n))
-    if len(s) > 3:
-        head, tail = s[:-3], s[-3:]
-        head = ",".join([head[max(0, i - 2):i] for i in range(len(head), 0, -2)][::-1])
-        s = f"{head},{tail}"
-    return f"₹{s}"
+def money_format(p: dict):
+    """How an amount is printed, as data/pricing.json says: its symbol, its
+    thousands separator and its decimals. src/js/pricing.js prints the same."""
+    symbol, sep, decimals = p["symbol"], p["thousands"], p["decimals"]
+
+    def money(n: int) -> str:
+        whole, _, frac = f"{n:,.{decimals}f}".partition(".")
+        return symbol + whole.replace(",", sep) + (f".{frac}" if frac else "")
+    return money
 
 
 class Quoter:
@@ -293,6 +294,7 @@ class Quoter:
     def __init__(self, p: dict, launch: bool):
         self.p = p
         self.launch = launch
+        self.addon = {kind: rate["launch" if launch else "standard"] for kind, rate in p["addon"].items()}
         self.order = list(p["services"])
         self.tier = {slug: p["tiers"][e["tier"]] for slug, e in p["services"].items()}
         self.related: dict[str, list[str]] = {s: [] for s in self.order}
@@ -346,7 +348,7 @@ class Quoter:
                 if not via:
                     ok = False
                     break
-                lines.append({"slug": s, "price": self.p["addon"][self.kind(s)], "basis": "addon", "via": via})
+                lines.append({"slug": s, "price": self.addon[self.kind(s)], "basis": "addon", "via": via})
             if not ok:
                 continue
             total = sum(line["price"] for line in lines)
@@ -367,6 +369,7 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
     """Attach prices to every service in site['service_groups'] and return the
     page-level pricing context. After launch_end only standard prices render."""
     p = json.loads((DATA / "pricing.json").read_text("utf-8"))
+    money = money_format(p)
     end = date.fromisoformat(p["launch_end"])
     launch = (today or date.today()) <= end
     tiers = p["tiers"]
@@ -389,11 +392,11 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
             hosts = q.hosts(s["slug"])
             s["tier"] = entry["tier"]
             s["price"] = {
-                "now": rupees(q.own(s["slug"])),
-                "was": rupees(tier["standard"]) if launch else "",
+                "now": money(q.own(s["slug"])),
+                "was": money(tier["standard"]) if launch else "",
                 "value": q.own(s["slug"]),
-                # "Get it for only ₹N with the X or Y (instead of ₹own)"
-                "addon": rupees(p["addon"][tier["kind"]]) if hosts else "",
+                # "Get it for only N with the X or Y (instead of its own price)"
+                "addon": money(q.addon[tier["kind"]]) if hosts else "",
                 "addon_with": f"with the {_join_or([short[h] for h in hosts])}" if hosts else "",
                 "ready": f"Ready in under {days} days, once we have your details.",
                 "days": days,
@@ -405,7 +408,7 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
                 "now": q.own(s["slug"]), "standard": tier["standard"],
                 "bundle": q.bundle(s["slug"]) if tier["kind"] == "system" else None,
             }
-        g["from"] = rupees(min(s["price"]["value"] for s in g["services"]))
+        g["from"] = money(min(s["price"]["value"] for s in g["services"]))
         g["count_label"] = f"{len(g['services'])} services"
 
     for sysm in site["systems"]:
@@ -430,9 +433,9 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
             "services": [names[s] for s in pack["services"]],
             "label": " + ".join(names[s] for s in pack["services"]),
             "slugs": ",".join(pack["services"]),
-            "price": rupees(quote_now["total"]),
-            "was": rupees(q_std.quote(pack["services"])["total"]) if launch else "",
-            "own": rupees(quote_now["own"]),
+            "price": money(quote_now["total"]),
+            "was": money(q_std.quote(pack["services"])["total"]) if launch else "",
+            "own": money(quote_now["own"]),
             "value": quote_now["total"],
         })
     starter = next(pk for pk in packs if pk["featured"])
@@ -441,7 +444,7 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
             if s.get("featured"):
                 s["pack"] = starter
 
-    add = p["addon"]
+    add = q.addon
     period = "launch" if launch else "standard"
     std_bundle, phone_bundle = tiers["standard"]["bundle"][period], tiers["phone"]["bundle"][period]
     custom = p["custom"]
@@ -451,6 +454,10 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
     automations = [s for s in p["services"] if q.kind(s) == "system" and s != "website"]
     pricing = {
         "launch": launch,
+        # The currency every amount is in: the code for structured data, and
+        # the one line that says so on the services page
+        "currency": p["currency"],
+        "currency_note": f"All prices in {p['currency']}.",
         "launch_label": f"{p['launch']['title']} until {end.day} {end:%B %Y}",
         "launch_end": p["launch_end"],
         # The launch block: headline, reason, and each tier's launch price
@@ -459,13 +466,13 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         "launch_until": f"until {end.day} {end:%B %Y}",
         "launch_until_short": f"until {end.day} {end:%b}",
         "launch_reason": f"{p['launch']['reason']} Prices go up on {rise.day} {rise:%B}.",
-        "tier_rows": [{"label": t["label"], "now": rupees(t["launch" if launch else "standard"]),
-                       "was": rupees(t["standard"]) if launch else ""} for t in tiers.values()],
+        "tier_rows": [{"label": t["label"], "now": money(t["launch" if launch else "standard"]),
+                       "was": money(t["standard"]) if launch else ""} for t in tiers.values()],
         # The home page's strip: websites and automations, each "from"
-        "site_from": rupees(q.own("website")),
-        "site_was": rupees(q.standard("website")) if launch else "",
-        "auto_from": rupees(min(q.own(s) for s in automations)),
-        "auto_was": rupees(min(q.standard(s) for s in automations)) if launch else "",
+        "site_from": money(q.own("website")),
+        "site_was": money(q.standard("website")) if launch else "",
+        "auto_from": money(min(q.own(s) for s in automations)),
+        "auto_was": money(min(q.standard(s) for s in automations)) if launch else "",
         # Three or more: one custom price, set on a call
         "custom": {"title": custom["title"], "text": custom["text"], "short": custom["short"],
                    "unlocked": custom["unlocked"], "under": custom["under"]},
@@ -473,27 +480,28 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         # (services page); bundle_rule is the one-line version.
         "rules": [
             {"k": "First system", "v": "At its own price"},
-            {"k": "Each further system", "v": f"{rupees(std_bundle)} (phone services {rupees(phone_bundle)})"},
-            {"k": "A related system", "v": f"Only {rupees(add['system'])} with one you've picked"},
-            {"k": "Google or WhatsApp setup", "v": f"Only {rupees(add['setup'])} with a related system"},
+            {"k": "Each further system", "v": f"{money(std_bundle)} (phone services {money(phone_bundle)})"},
+            {"k": "A related system", "v": f"Only {money(add['system'])} with one you've picked"},
+            {"k": "Google or WhatsApp setup", "v": f"Only {money(add['setup'])} with a related system"},
         ],
-        "bundle_rule": (f"Pick more than one and the rest cost less: only {rupees(add['system'])} for a system "
-                        f"that builds on one you've picked, only {rupees(add['setup'])} for a related setup, "
-                        f"otherwise {rupees(std_bundle)} (phone services {rupees(phone_bundle)})."),
+        "bundle_rule": (f"Pick more than one and the rest cost less: only {money(add['system'])} for a system "
+                        f"that builds on one you've picked, only {money(add['setup'])} for a related setup, "
+                        f"otherwise {money(std_bundle)} (phone services {money(phone_bundle)})."),
         "packs": packs,
         "starter": starter,
         "included": p["included_year_one"],
-        "care_monthly": rupees(p["care_plan"]["monthly"]),
-        "care_yearly": rupees(p["care_plan"]["yearly"]),
+        "care_monthly": money(p["care_plan"]["monthly"]),
+        "care_yearly": money(p["care_plan"]["yearly"]),
         "usage_note": p["usage_note"],
-        "from": rupees(min(q.own(s) for s in p["services"] if q.kind(s) == "system")),
+        "from": money(min(q.own(s) for s in p["services"] if q.kind(s) == "system")),
     }
     # What the browser needs to quote a selection (shared by /start and /services)
     pricing["json"] = json.dumps({
         "launch": launch,
         "order": q.order,
         "services": js_services,
-        "addon": p["addon"],
+        "money": {"symbol": p["symbol"], "thousands": p["thousands"], "decimals": p["decimals"]},
+        "addon": add,
         "related": p["related"],
         "packs": [{"id": pk["id"], "name": pk["name"], "services": pk["services"]} for pk in p["packs"]],
         "customFrom": custom["from"],
@@ -1761,7 +1769,7 @@ def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
     if "services" in wanted:
         for group in site["service_groups"]:
             for svc in group["services"]:
-                offer = {"@type": "Offer", "priceCurrency": "INR", "price": svc["price"]["value"]}
+                offer = {"@type": "Offer", "priceCurrency": pricing["currency"],"price": svc["price"]["value"]}
                 if pricing["launch"]:
                     offer["priceValidUntil"] = pricing["launch_end"]
                 graph.append({

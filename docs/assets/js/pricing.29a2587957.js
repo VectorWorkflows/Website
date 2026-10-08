@@ -14,9 +14,14 @@
 
 const el = document.getElementById('pricing-data');
 const data = el ? JSON.parse(el.textContent) : null;
-const inr = new Intl.NumberFormat('en-IN');
+// Amounts print as the data says (symbol, thousands separator, decimals),
+// the same as build.py's money_format
+const fmt = data ? data.money : null;
 
-const money = (n) => `₹${inr.format(n)}`;
+const money = (n) => {
+  const [whole, frac] = n.toFixed(fmt.decimals).split('.');
+  return `${fmt.symbol}${whole.replace(/\B(?=(\d{3})+$)/g, fmt.thousands)}${frac ? `.${frac}` : ''}`;
+};
 
 let related = {};
 if (data) {
@@ -105,8 +110,8 @@ function suggest(slugs) {
   return candidates[0] || null;
 }
 
-// e.g. "2 services · ₹… at launch pricing (you save ₹…)", or for a custom
-// price "4 services · your price will be under ₹… (custom price for the set)"
+// e.g. "2 services · $… at launch pricing (you save $…)", or for a custom
+// price "4 services · your price will be under $… (custom price for the set)"
 function describe(q) {
   if (!q.count) return '';
   const what = q.pack ? q.pack.name : `${q.count} service${q.count === 1 ? '' : 's'}`;
