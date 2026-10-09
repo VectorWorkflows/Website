@@ -47,7 +47,7 @@
     z-index: -1;
     background: radial-gradient(120% 80% at 50% 0%, var(--c-raised-2), var(--c-raised-1) 70%);
     opacity: 0;
-    transition: opacity var(--dur-state) var(--ease-out-soft);
+    transition: opacity var(--dur-hover-move) var(--ease-out-soft);
   }
 
   :is(a, button).card {
