@@ -116,14 +116,10 @@ if (menu && typeof menu.showModal === 'function') {
     btn.addEventListener('click', () => {
       menu.showModal();
       setExpanded(true);
-      document.dispatchEvent(new Event('menu:open')); // motion.js pauses smooth scroll
     })
   );
 
-  menu.addEventListener('close', () => {
-    setExpanded(false);
-    document.dispatchEvent(new Event('menu:close'));
-  });
+  menu.addEventListener('close', () => setExpanded(false));
 
   menu.addEventListener('click', (event) => {
     // Close on the close button, or when any link inside is followed

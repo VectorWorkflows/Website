@@ -200,7 +200,7 @@ if (form && pricing) {
       if (!reduced) {
         to.animate(
           [{ opacity: 0, transform: `translateX(${direction * 2.5}rem)` }, { opacity: 1, transform: 'none' }],
-          { duration: 520, easing: ease }
+          { duration: 320, easing: ease }
         );
       }
     }

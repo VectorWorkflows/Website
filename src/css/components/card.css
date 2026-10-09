@@ -54,7 +54,7 @@
     display: block;
     text-decoration: none;
     color: inherit;
-    transition: transform var(--dur-state) var(--ease-out-soft);
+    transition: transform var(--dur-hover-move) var(--ease-out-soft);
   }
   @media (hover: hover) {
     :is(a, button).card:hover { transform: translateY(-0.25rem); }

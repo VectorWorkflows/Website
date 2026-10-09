@@ -62,7 +62,7 @@
     overflow-wrap: anywhere;
     transition: color var(--dur-hover) var(--ease-out-soft);
   }
-  .footer-col a .icon { color: var(--c-bone-3); transition: transform var(--dur-state) var(--ease-overshoot), color var(--dur-hover) var(--ease-out-soft); }
+  .footer-col a .icon { color: var(--c-bone-3); transition: transform var(--dur-hover-move) var(--ease-overshoot), color var(--dur-hover) var(--ease-out-soft); }
   @media (hover: hover) {
     .footer-col li > a:hover, .footer-col .tipwrap > a:hover { color: var(--c-bone); }
     .footer-col li > a:hover .icon, .footer-col .tipwrap > a:hover .icon { color: var(--c-lilac); transform: translate(0.125rem, -0.125rem); }

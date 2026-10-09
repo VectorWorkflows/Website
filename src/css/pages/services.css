@@ -377,10 +377,10 @@
     justify-content: center;
     pointer-events: none;
     transform: translateY(calc(100% + 1.5rem));
-    transition: transform var(--dur-reveal) var(--ease-out), visibility 0s var(--ease-out) var(--dur-reveal);
+    transition: transform var(--dur-swap) var(--ease-out), visibility 0s var(--ease-out) var(--dur-swap);
     visibility: hidden;
   }
-  .bundle.is-open { transform: none; visibility: visible; transition: transform var(--dur-reveal) var(--ease-out), visibility 0s; }
+  .bundle.is-open { transform: none; visibility: visible; transition: transform var(--dur-swap) var(--ease-out), visibility 0s; }
   @media (prefers-reduced-motion: reduce) { .bundle, .bundle.is-open { transition: none; } }
   .bundle__inner {
     pointer-events: auto;

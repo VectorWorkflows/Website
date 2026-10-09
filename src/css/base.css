@@ -95,12 +95,6 @@
 
   ::selection { background: var(--c-violet); color: var(--c-bone); }
 
-  /* Lenis (smooth scroll) hooks: it drives the real scroll, so native
-     smooth-scrolling must stand down while it runs */
-  html.lenis, html.lenis body { block-size: auto; }
-  .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  .lenis.lenis-stopped { overflow: clip; }
-
   /* ---------------------------------------------------------------------
      Focus: a lilac ring that follows border-radius and sits clear of the
      element. Matches the accent system instead of fighting it.
@@ -199,7 +193,6 @@
     font-weight: var(--weight-medium);
     font-size: var(--step--1);
     transform: translateY(calc(-100% - 2rem));
-    transition: transform var(--dur-state) var(--ease-out);
   }
   .skip-link:focus-visible { transform: none; outline-color: var(--c-violet); }
 

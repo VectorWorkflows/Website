@@ -190,7 +190,9 @@
     /* MOTION: duration */
     --dur-press:  120ms;   /* active/pressed feedback           */
     --dur-hover:  240ms;   /* colour and hover response         */
+    --dur-hover-move: 220ms; /* things that move on hover: lifts, nudges */
     --dur-menu:   140ms;   /* the site menu sheet: opacity only */
+    --dur-swap:   320ms;   /* a surface arriving: the bundle dock, a replay view */
     --dur-state:  420ms;   /* UI state changes, steps           */
     --dur-reveal: 800ms;   /* a replay's calendar blocks shifting */
     --stagger:    60ms;    /* per-item offset inside a replay   */
@@ -216,7 +218,9 @@
      they are state changes, not motion. */
   @media (prefers-reduced-motion: reduce) {
     :root {
+      --dur-hover-move: 1ms;
       --dur-menu:   1ms;
+      --dur-swap:   1ms;
       --dur-state:  1ms;
       --dur-reveal: 1ms;
       --stagger:    0ms;

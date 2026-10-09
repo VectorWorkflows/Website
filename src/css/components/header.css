@@ -94,7 +94,7 @@
     color: var(--c-bone);
   }
   @media (hover: hover) {
-    .wordmark__dot { transition: transform var(--dur-state) var(--ease-overshoot); }
+    .wordmark__dot { transition: transform var(--dur-hover-move) var(--ease-overshoot); }
     .brand:hover .wordmark__dot { transform: translateY(0.05em) scale(1.6); }
   }
 
@@ -129,7 +129,7 @@
     opacity: 0;
     transform: scale(0.92);
     transition: opacity var(--dur-hover) var(--ease-out-soft),
-                transform var(--dur-state) var(--ease-out-soft);
+                transform var(--dur-hover-move) var(--ease-out-soft);
   }
   @media (hover: hover) {
     .nav-link:hover { color: var(--c-bone); }
@@ -173,7 +173,7 @@
     block-size: 1.25px;
     border-radius: 1px;
     background: currentColor;
-    transition: transform var(--dur-state) var(--ease-shift);
+    transition: transform var(--dur-hover-move) var(--ease-shift);
   }
   .menu-lines::before { inset-block-start: 0; }
   .menu-lines::after  { inset-block-end: 0; }

@@ -160,7 +160,7 @@
   html.js .replay__view {
     grid-area: 1 / 1;
     box-shadow: none;
-    transition: opacity var(--dur-state) var(--ease-out-soft), visibility 0s;
+    transition: opacity var(--dur-swap) var(--ease-out-soft), visibility 0s;
   }
   /* The view going away fades, then leaves the accessibility tree */
   html.js .replay:not([data-view="customer"]) .replay__view[data-panel="customer"],

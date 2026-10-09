@@ -113,13 +113,7 @@ DEFERRED_CSS = [
     "components/concept.css",
     "components/cursor.css",
 ]
-SITE_JS = ["chrome.js", "motion.js", "cursor.js"]
-# Third-party libraries, self-hosted. motion.js loads them on demand (only
-# when motion is allowed), so they never block rendering. Their hashed URLs
-# are injected into any script containing the __VENDOR_MAP__ token.
-VENDOR_JS = {
-    "Lenis": "lenis.min.js",
-}
+SITE_JS = ["chrome.js", "cursor.js"]
 
 CSS_WEIGHT_NAMES = {100: "Thin", 200: "ExtraLight", 300: "Light", 400: "Regular", 500: "Medium",
                     600: "Semibold", 700: "Bold", 800: "ExtraBold", 900: "Black"}
@@ -1615,14 +1609,9 @@ def build() -> int:
     critical_base = minify_css(read_css(CRITICAL_CSS))
     deferred_site = minify_css(read_css(DEFERRED_CSS))
     deferred_site_url = emit_hashed(out, "css", "site", "css", deferred_site)
-    vendor_map, vendor_bytes = {}, 0
-    for key, fname in VENDOR_JS.items():
-        code = (SRC / "js" / "vendor" / fname).read_text("utf-8")
-        vendor_map[key] = emit_hashed(out, "js/vendor", Path(fname).stem, "js", code)
-        vendor_bytes += gz_size(code)
     js_urls, js_bytes = {}, {}
     for name in SITE_JS + [p.name for p in (SRC / "js").glob("*.js") if p.name not in SITE_JS]:
-        code = (SRC / "js" / name).read_text("utf-8").replace("__VENDOR_MAP__", json.dumps(vendor_map))
+        code = (SRC / "js" / name).read_text("utf-8")
         js_urls[name] = emit_hashed(out, "js", Path(name).stem, "js", code)
         js_bytes[js_urls[name]] = code
 
@@ -1704,9 +1693,9 @@ def build() -> int:
         doc = doc.replace("<!--SPRITE-->", sprite)
 
         # Honest page weight: HTML (with inlined critical CSS) + deferred CSS
-        # + all JS including the on-demand motion libraries, gzipped
+        # + all JS, gzipped
         weight = gz_size(doc) + sum(gz_size(out.read(u)) for u in deferred_urls) \
-            + sum(gz_size(js_bytes[js_urls[n]]) for n in page_js) + vendor_bytes
+            + sum(gz_size(js_bytes[js_urls[n]]) for n in page_js)
         doc = doc.replace("<!--PAGE_WEIGHT-->", f"{weight / 1024:.1f}&nbsp;kB")
 
         rel = out_path_for(meta["path"])

@@ -14,7 +14,7 @@
     text-decoration: none;
     transition: color var(--dur-hover) var(--ease-out-soft);
   }
-  .case-back .icon { inline-size: 1rem; block-size: 1rem; transition: transform var(--dur-state) var(--ease-overshoot); }
+  .case-back .icon { inline-size: 1rem; block-size: 1rem; transition: transform var(--dur-hover-move) var(--ease-overshoot); }
   @media (hover: hover) {
     .case-back:hover { color: var(--c-lilac); }
     .case-back:hover .icon { transform: translateX(-0.1875rem); }
@@ -141,7 +141,7 @@
     border-radius: 50%;
     background: var(--c-violet);
     box-shadow: inset 0 1px 0 color-mix(in oklch, var(--c-bone) 20%, transparent), var(--shadow-lift);
-    transition: transform var(--dur-state) var(--ease-overshoot);
+    transition: transform var(--dur-hover-move) var(--ease-overshoot);
   }
   .video__text { display: grid; gap: 0.25rem; }
   .video__title { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-2); letter-spacing: -0.025em; }
@@ -178,7 +178,7 @@
     background: linear-gradient(90deg, var(--edge-violet), var(--edge) 40%, transparent);
   }
   .next-case .t-label { grid-area: label; }
-  .next-case__name { grid-area: name; font-family: var(--font-display); font-size: var(--step-6); line-height: 1; letter-spacing: var(--tracking-display); transition: transform var(--dur-state) var(--ease-out); }
+  .next-case__name { grid-area: name; font-family: var(--font-display); font-size: var(--step-6); line-height: 1; letter-spacing: var(--tracking-display); transition: transform var(--dur-hover-move) var(--ease-out); }
   .next-case__go {
     grid-area: go;
     display: grid;
@@ -187,7 +187,7 @@
     block-size: 3.5rem;
     border-radius: 50%;
     box-shadow: inset 0 0 0 1px var(--edge-strong);
-    transition: transform var(--dur-state) var(--ease-overshoot), background-color var(--dur-hover) var(--ease-out-soft);
+    transition: transform var(--dur-hover-move) var(--ease-overshoot), background-color var(--dur-hover) var(--ease-out-soft);
   }
   @media (hover: hover) {
     .next-case:hover .next-case__name { transform: translateX(0.75rem); }

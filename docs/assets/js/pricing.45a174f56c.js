@@ -125,22 +125,26 @@ function describe(q) {
 const list = (names) => (names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`);
 
 // Count a number up (or down) to its new value. Reduced motion: set it.
+// A count interrupted part-way carries on from the number on screen.
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 function countTo(node, to) {
-  const from = Number(node.dataset.value || 0);
+  const from = node._raf ? node._shown : Number(node.dataset.value || 0);
   node.dataset.value = String(to);
   cancelAnimationFrame(node._raf);
+  node._raf = 0;
   if (reduced.matches || from === to) {
     node.textContent = money(to);
     return;
   }
   const start = performance.now();
-  const dur = 520;
+  const dur = 250;
+  node._shown = from;
   const step = (now) => {
     const k = Math.min(1, (now - start) / dur);
     const eased = 1 - Math.pow(1 - k, 4);
-    node.textContent = money(Math.round(from + (to - from) * eased));
-    if (k < 1) node._raf = requestAnimationFrame(step);
+    node._shown = Math.round(from + (to - from) * eased);
+    node.textContent = money(node._shown);
+    node._raf = k < 1 ? requestAnimationFrame(step) : 0;
   };
   node._raf = requestAnimationFrame(step);
 }
