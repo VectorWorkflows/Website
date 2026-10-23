@@ -493,7 +493,7 @@
     color: var(--c-bone-2);
   }
   .log-ts  { color: var(--c-bone-3); font-variant-numeric: tabular-nums; }
-  .log-sys { color: var(--c-lilac-dim); }
+  .log-sys { color: var(--c-lilac-2); }
   .log-ev  { color: var(--c-lilac); letter-spacing: 0.02em; }
   .log-kv  { grid-column: 3; overflow-wrap: anywhere; }
   .log-kv .k { color: var(--c-bone-3); }

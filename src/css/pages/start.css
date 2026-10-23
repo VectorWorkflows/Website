@@ -315,4 +315,8 @@
     transition: color var(--dur-hover) var(--ease-out-soft), text-decoration-color var(--dur-hover) var(--ease-out-soft);
   }
   .start-alt a:hover { color: var(--c-lilac); text-decoration-color: currentColor; }
+  /* The call link is a flex item in its tip wrapper, so it doesn't count as
+     an inline target: padding makes it 24px+ tall, the negative margin
+     keeps the line where it was (WCAG 2.5.8) */
+  .start-alt .tipwrap > a { padding-block: 0.375rem; margin-block: -0.375rem; }
 }

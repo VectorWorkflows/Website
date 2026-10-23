@@ -65,6 +65,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -1803,8 +1804,10 @@ def build() -> int:
         entry["fit"] = fit_for(entry["slugs"], site, pricing, entry["path"])
     site["industries"], site["guides"] = listing["industry"], listing["guide"]
     names = {m["path"]: m.get("crumb") or m["title"].split(" · ")[0] for _, m, _ in pages}
+    lastmods = source_dates([page for page, _, _ in pages])
     built = []
     for page, meta, body in pages:
+        meta["lastmod"] = lastmods[page]
         used: set[str] = set()
         where = f"pages/{page.relative_to(SRC / 'pages').as_posix()}"
 
@@ -2057,14 +2060,45 @@ def jsonld_for(meta: dict, site: dict, pricing: dict, ctx: dict) -> str:
     return f'<script type="application/ld+json">\n{payload}\n</script>'
 
 
+def source_dates(pages: list[Path]) -> dict[Path, str]:
+    """When each page last changed, for the sitemap's <lastmod>: the date of
+    the last commit that touched its source, or today while it has changes
+    not yet committed. Search engines only trust lastmod that moves when the
+    page does, so a shared partial changing doesn't date every page. Without
+    git, every page gets today."""
+    today = date.today().isoformat()
+    dates = dict.fromkeys(pages, today)
+
+    def git(*args: str) -> str:
+        return subprocess.run(["git", *args, "--", "src/pages"], cwd=ROOT, capture_output=True,
+                              text=True, encoding="utf-8", timeout=30, check=True).stdout
+    try:
+        status = git("status", "--porcelain", "--untracked-files=all")   # paths from the repo root
+        log = git("log", "--format=>%cs", "--name-only")
+    except (OSError, subprocess.SubprocessError):
+        return dates
+    dirty = {line[3:].split(" -> ")[-1].strip('"') for line in status.splitlines()}
+    committed: dict[str, str] = {}
+    day = today
+    for line in log.splitlines():   # newest commit first
+        if line.startswith(">"):
+            day = line[1:]
+        elif line:
+            committed.setdefault(line, day)
+    for page in pages:
+        rel = page.relative_to(ROOT).as_posix()
+        if rel not in dirty and rel in committed:
+            dates[page] = committed[rel]
+    return dates
+
+
 def write_seo_files(out: Output, site: dict, built: list) -> None:
     """robots.txt and sitemap.xml. Only written once at least one indexable
     page is built by this script, so the legacy site is never half-described."""
     indexable = [(m, rel) for m, rel, _ in built if not m.get("robots", "index").startswith("noindex")]
     if not indexable:
         return
-    today = date.today().isoformat()
-    urls = "\n".join(f"  <url><loc>{site['url']}{m['path']}</loc><lastmod>{today}</lastmod></url>"
+    urls = "\n".join(f"  <url><loc>{site['url']}{m['path']}</loc><lastmod>{m['lastmod']}</lastmod></url>"
                      for m, _ in sorted(indexable, key=lambda x: x[0]["path"]))
     out.write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "\n</urlset>\n")

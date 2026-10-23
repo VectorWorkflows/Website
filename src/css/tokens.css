@@ -48,7 +48,11 @@
     /* Derived tints (color-mix in OKLCH so hue never drifts) */
     --c-violet-wash:  color-mix(in oklch, var(--c-violet) 16%, transparent);
     --c-violet-glow:  color-mix(in oklch, var(--c-violet) 32%, transparent);
+    /* lilac-dim: rules, dots and markers only (3.32:1 on ground, not text).
+       lilac-2: the quieter lilac for small mono text, numerals and log
+       columns. 6.12 / 5.86 / 5.45 / 4.86:1 on ground to raised-3 (AA). */
     --c-lilac-dim:    color-mix(in oklch, var(--c-lilac) 55%, var(--c-ground));
+    --c-lilac-2:      color-mix(in oklch, var(--c-lilac) 78%, var(--c-ground));
     --c-bone-veil:    color-mix(in oklch, var(--c-bone) 3%, transparent);
 
     /* Edges: warm, tinted hairlines. Never a flat grey 1px rule. */
