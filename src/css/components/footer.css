@@ -21,8 +21,10 @@
     background: linear-gradient(90deg, var(--edge-violet), var(--edge) 35%, transparent 85%);
   }
 
-  /* Two columns on a phone (contact runs full width, for the phone pill),
-     three on a tablet, five across on a desktop */
+  /* Two columns on a phone, three on a tablet, five across on a desktop.
+     Contact always runs the full width (the email and the phone pill need
+     the room): in reading order on a phone, last from a tablet up, and
+     laid out in a row on a desktop. */
   .footer-dir {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -31,11 +33,13 @@
   .footer-col--contact { grid-column: 1 / -1; }
   @media (min-width: 40rem) {
     .footer-dir { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .footer-col--contact { grid-column: span 2; }
+    .footer-col--contact { order: 1; }
   }
   @media (min-width: 64rem) {
-    .footer-dir { grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 2fr) minmax(0, 4fr) minmax(0, 2fr); }
-    .footer-col--contact { grid-column: auto; }
+    .footer-dir { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    /* .footer-dir in front: .footer-col ul (below) must not win */
+    .footer-dir .footer-col--contact ul { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem var(--space-l); }
+    .footer-dir .footer-col--contact .footer-phone { margin-block-start: 0; }
   }
 
   .footer-col h2 {

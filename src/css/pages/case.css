@@ -27,37 +27,11 @@
   .case-head__offer .link-arrow { color: var(--c-bone); }
   .case-head__offer .link-arrow .icon { inline-size: 0.875rem; block-size: 0.875rem; }
 
-  .sec-head--tight { margin-block-end: var(--space-l); }
-  .case-replay-head { margin-block-end: var(--space-l); }
 
   /* Prose */
   .prose { display: grid; gap: var(--space-s); align-content: start; }
   .prose p { font-size: var(--step-1); line-height: 1.5; color: var(--c-bone-2); max-inline-size: calc(44 * var(--ch-body)); font-family: var(--font-body); }
   .prose p:first-child { color: var(--c-bone); }
-
-  /* Steps: numbered, hung on a hairline */
-  .steps { margin: 0; padding: 0; list-style: none; display: grid; }
-  .steps li {
-    position: relative;
-    display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr);
-    gap: var(--space-s);
-    padding-block: var(--space-m);
-  }
-  .steps li::before {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    inset-block-start: 0;
-    block-size: 1px;
-    background: linear-gradient(90deg, var(--edge), var(--edge-faint) 60%, transparent);
-  }
-  .steps__n { font-family: var(--font-display); font-style: italic; font-size: var(--step-2); color: var(--c-lilac); line-height: 1.1; }
-  .steps h3 { font-size: var(--step-1); margin-block-end: 0.375rem; }
-  .steps p { max-inline-size: calc(56 * var(--ch-body)); }
-  @media (min-width: 64rem) {
-    .steps { grid-template-columns: 1fr 1fr; column-gap: var(--space-2xl); }
-  }
 
   /* Stack list */
   .stack-list { margin: 0; display: grid; gap: 0; }

@@ -1,0 +1,66 @@
+{
+  "title": "Missed call, detailing studio",
+  "system": "missed-lead-responder",
+  "base": "14:20:00",
+  "summary": "Replay with simulated data, on the Missed Lead Responder. A call to Sundial Detailing from a number ending 2217 goes unanswered while the team is in the booth. Four seconds later the caller gets a text apologising and asking what the vehicle is and what it needs. The owner gets a Telegram alert with Call back and Mark handled buttons, and a row is added to the Leads sheet marked Awaiting reply. The caller replies: a 2024 Model Y that needs full front paint protection film and maybe ceramic coating. The row fills in and is marked Replied, the owner is pinged again, and the caller is told the request is logged and the studio will call back today with a price. A reminder is set in case the lead stays unhandled.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Caller's phone",
+      "icon": "phone",
+      "anchor": "bottom",
+      "height": { "narrow": "22rem", "wide": "20rem" },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Owner · Sundial Detailing",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": { "narrow": "27rem", "wide": "21.5rem" },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    { "t": "00:00", "lane": "a", "type": "call", "from": "••• 2217", "status": "Unanswered" },
+    {
+      "t": "00:04", "lane": "a", "type": "sms", "dir": "out",
+      "text": "Hi, it's Sundial Detailing. Sorry we missed you, we're with a car in the booth. What's the vehicle, and what does it need?",
+      "meta": "SMS · auto-reply · 14:20"
+    },
+    {
+      "t": "00:05", "lane": "b", "type": "telegram", "from": "Lead Desk",
+      "text": "Missed call from ••• 2217. Auto-reply sent. No response yet.",
+      "buttons": ["Call back", "Mark handled"]
+    },
+    {
+      "t": "00:05", "lane": "b", "type": "sheet", "id": "lead", "sheet": "Leads",
+      "columns": [
+        { "key": "time", "label": "Time" },
+        { "key": "caller", "label": "Caller" },
+        { "key": "car", "label": "Vehicle" },
+        { "key": "wants", "label": "Wants" },
+        { "key": "status", "label": "Status" }
+      ],
+      "row": { "time": "14:20", "caller": "••• 2217", "car": "—", "wants": "—", "status": "Awaiting reply" },
+      "tones": { "status": "wait" }
+    },
+    {
+      "t": "01:30", "lane": "a", "type": "sms", "dir": "in",
+      "text": "2024 Model Y, white. Full front PPF, maybe ceramic on the rest. Any chance this week?",
+      "meta": "SMS · from ••• 2217 · 14:21"
+    },
+    {
+      "t": "01:31", "type": "sheet", "op": "update", "target": "lead",
+      "set": { "car": "2024 Model Y", "wants": "Full front PPF, ceramic?", "status": "Replied" },
+      "tones": { "status": "ok" }
+    },
+    { "t": "01:31", "lane": "b", "type": "event", "text": "Owner pinged again with the reply" },
+    {
+      "t": "01:32", "lane": "a", "type": "sms", "dir": "out",
+      "text": "Thanks, that's logged. We'll call you back today with a price and the first free day in the bay.",
+      "meta": "SMS · auto-reply · 14:21"
+    },
+    { "t": "01:32", "lane": "b", "type": "event", "text": "Reminder set if the lead stays unhandled" }
+  ]
+}

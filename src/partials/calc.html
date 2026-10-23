@@ -1,0 +1,49 @@
+<div class="card calc" id="calculator" data-calc>
+  <div class="card__core calc__core">
+    <div class="calc__head">
+      <p class="calc__kicker t-label">Calculator · your numbers</p>
+      <h3 class="calc__title">{{ calc.title }}</h3>
+      <p class="calc__lede">{{ calc.lede }}</p>
+    </div>
+
+    <div class="calc__body">
+      <div class="calc__inputs">
+        {% for i in calc.inputs %}<div class="calc__in">
+          <div class="calc__row"><label for="calc-{{ calc.id }}-{{ i.id }}">{{ i.label }}</label><output class="calc__val" for="calc-{{ calc.id }}-{{ i.id }}" data-calc-out="{{ i.id }}" data-copy>{{ i.shown }}</output></div>
+          <input class="calc__range" type="range" id="calc-{{ calc.id }}-{{ i.id }}" min="{{ i.min }}" max="{{ i.max }}" step="{{ i.step }}" value="{{ i.value }}" aria-valuetext="{{ i.shown }}" data-calc-in="{{ i.id }}" data-unit="{{ i.unit }}">
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="calc__out">
+        {% if calc.is_recover %}<p class="calc__big" data-calc-big><span class="calc__big-k">Won back each month</span> <span class="calc__big-v" data-calc-res="monthly" data-copy>{{ calc.res.monthly }}</span></p>
+        <dl class="calc__res">
+          <div><dt>{{ calc.won }} a month</dt><dd data-calc-res="won">{{ calc.res.won }}</dd></div>
+          <div><dt>{{ calc.won }} to cover its price</dt><dd data-calc-res="payback">{{ calc.res.payback }}</dd></div>
+        </dl>
+        <p class="calc__vs">The <a href="{{ site.routes.services }}#{{ calc.service_slug }}">{{ calc.service }}</a> is <strong data-copy>{{ calc.price }}</strong>, once{% if calc.was %}, at launch pricing (then <span data-copy>{{ calc.was }}</span>){% endif %}.</p>{% endif %}
+
+        {% if calc.is_commission %}<p class="calc__big" data-calc-big><span class="calc__big-k">The app's cut each month</span> <span class="calc__big-v" data-calc-res="monthly" data-copy>{{ calc.res.monthly }}</span></p>
+        <dl class="calc__res">
+          <div><dt>Over a year</dt><dd data-calc-res="yearly" data-copy>{{ calc.res.yearly }}</dd></div>
+          <div><dt>Months of that cut to equal our price</dt><dd data-calc-res="months">{{ calc.res.months }}</dd></div>
+        </dl>
+        <p class="calc__vs">Your own booking link with <a href="{{ site.routes.services }}#{{ calc.service_slug }}">WhatsApp reminders</a> is <strong data-copy>{{ calc.price }}</strong>, once{% if calc.was %}, at launch pricing{% endif %}, and takes no cut of any booking.</p>{% endif %}
+
+        {% if calc.is_hours %}<p class="calc__big" data-calc-big><span class="calc__big-k">Hours a month on repeat questions</span> <span class="calc__big-v" data-calc-res="hours">{{ calc.res.hours }}</span></p>
+        <p class="calc__vs">The <a href="{{ site.routes.services }}#{{ calc.service_slug }}">{{ calc.service }}</a> answers those at any hour for <strong data-copy>{{ calc.price }}</strong>, once{% if calc.was %}, at launch pricing{% endif %}. Anything it can't answer still comes to you.</p>{% endif %}
+
+        {% if calc.is_tco %}<p class="calc__big" data-calc-big><span class="calc__big-k">A builder plan over these years</span> <span class="calc__big-v" data-calc-res="builder" data-copy>{{ calc.res.builder }}</span></p>
+        <dl class="calc__res">
+          <div><dt>Hand-built, paid once</dt><dd data-calc-res="ours" data-copy>{{ calc.res.ours }}</dd></div>
+          <div><dt>With our optional care plan from year two</dt><dd data-calc-res="ours_care" data-copy>{{ calc.res.ours_care }}</dd></div>
+        </dl>
+        <p class="calc__vs">Year one includes hosting, your domain, SSL and small changes. After it everything keeps running; the care plan (<span data-copy>{{ calc.care }}</span> a month) is optional, and the domain renews at the market price.</p>{% endif %}
+      </div>
+    </div>
+
+    <p class="calc__note">{{ calc.note }}</p>
+    <p class="sr-only" aria-live="polite" data-calc-live></p>
+    <script type="application/json" data-calc-cfg>{{{ calc.json }}}</script>
+  </div>
+</div>

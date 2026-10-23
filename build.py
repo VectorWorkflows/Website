@@ -415,10 +415,17 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         g["from"] = money(min(s["price"]["value"] for s in g["services"]))
         g["count_label"] = f"{len(g['services'])} services"
 
+    # A service's "case" is the case study it links to: a system it's built
+    # on, or a website build that shows it
     for sysm in site["systems"]:
         sysm["related"] = [s for g in site["service_groups"] for s in g["services"] if s.get("case") == sysm["slug"]]
         for s in sysm["related"]:
             s["case_name"] = sysm["name"]
+            s["case_label"] = f"Built on the {sysm['name']}"
+    for b in site["builds"]:
+        for s in (s for g in site["service_groups"] for s in g["services"] if s.get("case") == b["slug"] and b["case"]):
+            s["case_name"] = b["name"]
+            s["case_label"] = f"See the {b['short'].lower()}"
     unknown = [s["case"] for g in site["service_groups"] for s in g["services"]
                if s.get("case") and not s.get("case_name")]
     if unknown:
@@ -519,7 +526,140 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         "customFrom": custom["from"],
         "under": custom["under"],
     }, ensure_ascii=False, separators=(",", ":"))
+    # For the solutions pages (fit_for, calc_for): the same quoting rules
+    # and number format. Leading underscores: build.py only, never templates.
+    pricing["_quote"] = q.quote
+    pricing["_money"] = money
+    pricing["_money_fmt"] = {"symbol": p["symbol"], "thousands": p["thousands"], "decimals": p["decimals"]}
+    pricing["_packs"] = [sorted(pk["services"]) for pk in p["packs"]]
+    pricing["_custom_from"] = custom["from"]
+    pricing["_care_monthly"] = p["care_plan"]["monthly"]
     return pricing
+
+
+# ---------------------------------------------------------------------------
+# Solutions and guides. A page's front matter places it (kind: industry or
+# guide, crumb, teaser, order), names the services that fit the trade, and
+# names its calculator in data/calculators.json. Every price on these pages
+# is worked out from data/pricing.json, never written in them.
+# ---------------------------------------------------------------------------
+
+def page_listing(metas: list[dict]) -> dict[str, list[dict]]:
+    """Industry and guide pages, in their front matter's order: the hub,
+    the footer and each page's related links list them."""
+    listing: dict[str, list[dict]] = {"industry": [], "guide": []}
+    for m in metas:
+        if m.get("kind") in listing:
+            for req in ("crumb", "teaser"):
+                if not m.get(req):
+                    raise BuildError(f"{m['path']}: a {m['kind']} page needs '{req}' in its front matter")
+            listing[m["kind"]].append({"path": m["path"], "crumb": m["crumb"], "short": m.get("short") or m["crumb"],
+                                       "teaser": m["teaser"], "order": int(m.get("order", 99)),
+                                       "slugs": split_list(m.get("services"))})
+    for pages in listing.values():
+        pages.sort(key=lambda x: (x["order"], x["path"]))
+    return listing
+
+
+def fit_for(slugs: list[str], site: dict, pricing: dict, where: str) -> dict:
+    """The services that fit a trade, as the menu prints them, with what
+    they cost together and a /start link that arrives with them picked."""
+    svc = {s["slug"]: s for g in site["service_groups"] for s in g["services"]}
+    unknown = [s for s in slugs if s not in svc]
+    if unknown:
+        raise BuildError(f"{where}: unknown services {unknown}")
+    money, quote = pricing["_money"], pricing["_quote"](slugs)
+    custom = len(slugs) >= pricing["_custom_from"] and sorted(slugs) not in pricing["_packs"]
+    return {
+        "services": [svc[s] for s in slugs],
+        "start": f"{site['routes']['start']}?service={','.join(slugs)}",
+        "count": len(slugs),
+        "total": money(quote["total"]),
+        "own": money(quote["own"]),
+        "save": money(quote["own"] - quote["total"]) if quote["own"] > quote["total"] else "",
+        "custom": custom,
+        "from": money(min(s["price"]["value"] for s in svc.values() if s["slug"] in slugs)),
+    }
+
+
+def load_calculators() -> dict:
+    return json.loads((DATA / "calculators.json").read_text("utf-8"))
+
+
+def calc_for(cid: str, calcs: dict, site: dict, pricing: dict, where: str) -> dict:
+    """One calculator from data/calculators.json, its defaults worked out
+    here so the page reads correctly before (or without) roi-calc.js. The
+    same formulas run in the browser as the sliders move."""
+    if cid not in calcs:
+        raise BuildError(f"{where}: unknown calculator '{cid}' (add it to data/calculators.json)")
+    c = calcs[cid]
+    money = pricing["_money"]
+    svc = {s["slug"]: s for g in site["service_groups"] for s in g["services"]}
+    if c["service"] not in svc:
+        raise BuildError(f"data/calculators.json: '{cid}' names unknown service '{c['service']}'")
+    s = svc[c["service"]]
+    vals = {i["id"]: i["value"] for i in c["inputs"]}
+    res = calc_results(c["kind"], vals, s["price"]["value"], pricing["_care_monthly"])
+    # Half up, as Math.round does in roi-calc.js (Python's round() and
+    # f-strings round halves to even), so the first paint and the slider agree
+    whole = lambda n: int(n + 0.5)  # noqa: E731 (inputs are never negative)
+    fmt = {"money": lambda n: money(whole(n)), "count": lambda n: f"{whole(n):,}", "hours": lambda n: f"{whole(n):,}",
+           "months": lambda n: f"{whole(n * 10) / 10:g}"}
+    inputs = []
+    for i in c["inputs"]:
+        shown = money(i["value"]) if i["unit"] == "money" else f"{i['value']}%" if i["unit"] == "percent" else str(i["value"])
+        inputs.append({**i, "shown": shown})
+    return {
+        "id": cid, "kind": c["kind"], f"is_{c['kind']}": True, "title": c["title"], "lede": c["lede"], "note": c["note"],
+        "won": c.get("won", "Customers"),
+        "inputs": inputs,
+        # The starting values by id, for a worked example in the page's prose
+        "shown": {i["id"]: i["shown"] for i in inputs},
+        "service": s["name"], "service_slug": s["slug"],
+        "price": s["price"]["now"], "was": s["price"]["was"], "price_value": s["price"]["value"],
+        "care": money(pricing["_care_monthly"]),
+        "res": {k: fmt[u](v) for k, (v, u) in res.items()},
+        "json": json.dumps({"kind": c["kind"], "price": s["price"]["value"], "care": pricing["_care_monthly"],
+                            "money": pricing["_money_fmt"]}, ensure_ascii=False, separators=(",", ":")),
+    }
+
+
+def calc_results(kind: str, v: dict, price: int, care: int) -> dict:
+    """The calculators' arithmetic (roi-calc.js has the same): each result
+    as (value, unit). Weekly figures become monthly at 52 weeks / 12."""
+    month = 52 / 12
+    if kind == "recover":        # missed calls a week, value of one, share who'd book
+        won = v["n"] * month * v["r"] / 100
+        return {"won": (won, "count"), "monthly": (won * v["v"], "money"),
+                "payback": (max(1, -(-price // v["v"])), "count")}
+    if kind == "commission":     # bookings a month through an app, ticket, fee per booking
+        monthly = v["n"] * v["v"] * v["r"] / 100
+        return {"monthly": (monthly, "money"), "yearly": (monthly * 12, "money"),
+                "months": (price / monthly if monthly else 0, "months")}
+    if kind == "hours":          # messages a week, minutes each, share that are routine
+        return {"hours": (v["n"] * month * v["t"] * v["r"] / 100 / 60, "hours")}
+    if kind == "tco":            # builder plan and apps a month, over a number of years
+        builder = (v["p"] + v["a"]) * 12 * v["y"]
+        return {"builder": (builder, "money"), "ours": (price, "money"),
+                "ours_care": (price + care * 12 * max(0, v["y"] - 1), "money")}
+    raise BuildError(f"data/calculators.json: unknown calculator kind '{kind}'")
+
+
+def crumbs_for(meta: dict, names: dict[str, str]) -> list[dict]:
+    """Home › … › this page. The parent is `parent` in the front matter, or
+    the page one level up; each level is named by its own `crumb`."""
+    trail = [{"name": "Home", "url": "/"}]
+    parent = meta.get("parent")
+    if not parent:
+        parts = meta["path"].strip("/").split("/")
+        parent = "/" + "/".join(parts[:-1]) + "/" if len(parts) > 1 else ""
+    if parent and parent != "/":
+        if parent not in names:
+            raise BuildError(f"{meta['path']}: its parent page {parent} isn't built")
+        trail.append({"name": names[parent], "url": parent})
+    if meta["path"] != "/":
+        trail.append({"name": names[meta["path"]], "url": meta["path"]})
+    return trail
 
 
 # ---------------------------------------------------------------------------
@@ -1559,7 +1699,10 @@ def render_replay(name: str, where: str, dom_id: str = "", compact: str = "") ->
         f'<span class="replay__vw"> view</span></button>'
         for lane in lanes)
     toggle = "" if compact else f'<div class="replay__views" role="group" aria-label="Replay view">{buttons}</div>'
-    final_t = data["steps"][-1]["t"]
+    # A replay that spans days ("clock": "off") carries its times in each
+    # message instead of a running t+ clock
+    clock = ("" if data.get("clock") == "off" else
+             f'<span class="replay__clock" data-clock aria-hidden="true">{data["steps"][-1]["t"]}</span>')
     return f'''<figure class="replay{" replay--compact" if compact else ""}" id="{rid}" data-replay data-duration="{data["_duration"]}" data-view="{first}" aria-labelledby="{rid}-name">
   <div class="replay__core">
     <div class="replay__bar">
@@ -1567,7 +1710,7 @@ def render_replay(name: str, where: str, dom_id: str = "", compact: str = "") ->
         <span class="replay__name" id="{rid}-name">{_esc(data["title"])}{f'<span class="sr-only"> · {VIEW_NAMES[compact].lower()} view</span>' if compact else ""}</span>
         <span class="replay__sim">{_esc(data.get("sim", "Simulated data · real system flow"))}</span>
       </div>
-      <span class="replay__clock" data-clock aria-hidden="true">{final_t}</span>
+      {clock}
       {toggle}
       <button type="button" class="replay__play" data-play aria-label="Pause replay">
         <span class="replay__icon-pause">{{% icon "pause" %}}</span><span class="replay__icon-play">{{% icon "play" %}}</span>
@@ -1650,10 +1793,18 @@ def build() -> int:
                              f'as="font" type="font/woff2" crossorigin>\n')
 
     icons = load_icons()
-    pages = sorted((SRC / "pages").rglob("*.html"))
+    pages = [(page, *parse_page(page)) for page in sorted((SRC / "pages").rglob("*.html"))]
+    # Front matter of every page, read first: the solutions hub, the footer
+    # and the related links list the industry and guide pages, and each
+    # page's breadcrumb names its parent by the parent's own crumb.
+    listing = page_listing([m for _, m, _ in pages])
+    calcs = load_calculators()
+    for entry in listing["industry"] + listing["guide"]:
+        entry["fit"] = fit_for(entry["slugs"], site, pricing, entry["path"])
+    site["industries"], site["guides"] = listing["industry"], listing["guide"]
+    names = {m["path"]: m.get("crumb") or m["title"].split(" · ")[0] for _, m, _ in pages}
     built = []
-    for page in pages:
-        meta, body = parse_page(page)
+    for page, meta, body in pages:
         used: set[str] = set()
         where = f"pages/{page.relative_to(SRC / 'pages').as_posix()}"
 
@@ -1702,6 +1853,15 @@ def build() -> int:
             cases = site["cases"]
             idx = next(i for i, c in enumerate(cases) if c["slug"] == case)
             ctx["next_case"] = cases[(idx + 1) % len(cases)]
+        # Solutions and guides: the services that fit, the calculator, where
+        # the page sits, and the other industry and guide pages
+        ctx["crumbs"] = crumbs_for(meta, names)
+        if meta.get("services"):
+            ctx["fit"] = fit_for(split_list(meta["services"]), site, pricing, where)
+        if meta.get("calc"):
+            ctx["calc"] = calc_for(meta["calc"], calcs, site, pricing, where)
+        ctx["related"] = {"industries": [e for e in site["industries"] if e["path"] != meta["path"]],
+                          "guides": [e for e in site["guides"] if e["path"] != meta["path"]]}
         content = render(body, ctx, icons, used, where)
         ctx["content"] = content
 

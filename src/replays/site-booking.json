@@ -1,0 +1,80 @@
+{
+  "title": "From a search to a booked appointment",
+  "system": "website",
+  "sim": "Simulated data · example flow",
+  "clock": "off",
+  "base": "21:10:00",
+  "summary": "Replay with simulated data, combining a business website and the enquiry tracker. At 9:10 pm someone searching for a physio opens Corner Physio's website on their phone and fills in a two-line booking request, which the site turns into a WhatsApp message they send. The clinic's WhatsApp receives it and the enquiry is logged in its Enquiries sheet as New. In the morning the tracker reminds the clinic of one open enquiry; the clinic offers Tuesday at 6:30 pm, the visitor accepts, and the row changes to Booked.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Visitor's phone",
+      "icon": "phone",
+      "anchor": "bottom",
+      "height": { "narrow": "28rem", "wide": "25rem" },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Clinic · Corner Physio",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": { "narrow": "28rem", "wide": "25rem" },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    { "t": "00:00", "lane": "a", "type": "event", "text": "Searches for a physio nearby and opens Corner Physio's site" },
+    {
+      "t": "00:30", "lane": "a", "type": "form", "label": "Corner Physio's website",
+      "title": "Book a first appointment",
+      "fields": [
+        { "k": "What for", "v": "Lower back" },
+        { "k": "Suits me", "v": "Weekday evenings" }
+      ],
+      "button": "Send on WhatsApp"
+    },
+    {
+      "t": "00:40", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Hi, I'd like a first appointment for my lower back. Weekday evenings suit me.",
+      "meta": "WhatsApp · written by the site, sent by the visitor · 21:12"
+    },
+    {
+      "t": "00:40", "lane": "b", "type": "whatsapp", "dir": "in",
+      "text": "Hi, I'd like a first appointment for my lower back. Weekday evenings suit me.",
+      "meta": "WhatsApp · from ••• 6631 · 21:12"
+    },
+    {
+      "t": "00:41", "lane": "b", "type": "sheet", "id": "enq", "sheet": "Enquiries",
+      "columns": [
+        { "key": "time", "label": "Time" },
+        { "key": "who", "label": "From" },
+        { "key": "need", "label": "Need" },
+        { "key": "status", "label": "Status" }
+      ],
+      "row": { "time": "Mon 21:12", "who": "••• 6631", "need": "Lower back, evenings", "status": "New" },
+      "tones": { "status": "wait" }
+    },
+    { "t": "01:40", "lane": "b", "type": "event", "text": "Tue 08:30 · reminder: one enquiry still open" },
+    {
+      "t": "02:10", "lane": "b", "type": "whatsapp", "dir": "out",
+      "text": "Good morning! We can see you on Tuesday at 6:30 pm. Does that suit you?",
+      "meta": "WhatsApp · reply from the clinic · Tue 08:40"
+    },
+    {
+      "t": "02:10", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Good morning! We can see you on Tuesday at 6:30 pm. Does that suit you?",
+      "meta": "WhatsApp · from Corner Physio · Tue 08:40"
+    },
+    {
+      "t": "02:40", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Perfect, thank you.",
+      "meta": "WhatsApp · Tue 08:44"
+    },
+    {
+      "t": "02:41", "type": "sheet", "op": "update", "target": "enq",
+      "set": { "status": "Booked · Tue 18:30" },
+      "tones": { "status": "ok" }
+    }
+  ]
+}

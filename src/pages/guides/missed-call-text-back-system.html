@@ -1,0 +1,160 @@
+---
+title: Missed-Call Text-Back, Explained (with a Calculator) · Vector Workflows
+description: How a missed-call responder turns an unanswered call into a text conversation and a logged lead: the first ten seconds, what the text should say, what it can't do, and a calculator for what your missed calls are worth.
+path: /guides/missed-call-text-back-system/
+parent: /solutions/
+kind: guide
+order: 1
+crumb: Missed-call text-back
+teaser: What happens in the ten seconds after a missed call, what the text should say, what it can't do, and a calculator for what your missed calls are worth.
+services: missed-call-responder, enquiry-tracker
+calc: missed-call
+body_class: page-guide
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">G1</span><span class="index-label__rule"></span>Guide</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">How a missed-call responder saves the <em>enquiries</em> you'd lose</h1>
+      <p class="t-lead sol-head__lead">A plain guide to missed-call text-back: what happens in the ten seconds after a call rings out, what the text should say, what it can't do, and what your own missed calls are worth, worked out with your numbers.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-label="The guide">
+  <div class="grid">
+    <nav class="g-rail toc" aria-labelledby="toc-title">
+      <p class="toc__title t-label" id="toc-title">In this guide</p>
+      <ol role="list">
+        <li><a href="#what">What it is</a></li>
+        <li><a href="#seconds">The first ten seconds</a></li>
+        <li><a href="#text">What the text should say</a></li>
+        <li><a href="#worth">What your missed calls are worth</a></li>
+        <li><a href="#watch">Watch one happen</a></li>
+        <li><a href="#compare">Compared with the alternatives</a></li>
+        <li><a href="#limits">What it can't do</a></li>
+        <li><a href="#cost">What it costs</a></li>
+      </ol>
+    </nav>
+    <div class="g-body longread">
+      <h2 id="what">What it is</h2>
+      <p>A missed-call responder watches your business line. When a call ends without anyone picking up, it sends the caller a text message within seconds, alerts you with their number, and writes the call into a sheet. When the caller texts back, the sheet updates and you're told again.</p>
+      <p>It doesn't answer the phone or pretend to be a person on a call. Its job is narrower and more useful: make sure nobody who rings you is left with silence, and make sure you know exactly who to call back.</p>
+
+      <h2 id="seconds">The first ten seconds</h2>
+      <ol>
+        <li><strong>00:00</strong> The call ends unanswered. Your phone line tells the system straight away.</li>
+        <li><strong>00:04</strong> The caller gets a text from your business: who you are, a short apology, and one question.</li>
+        <li><strong>00:05</strong> You get an alert on your phone, with the number and two buttons: call back, or mark it handled.</li>
+        <li><strong>00:05</strong> A row appears in your sheet: the time, the number, and the status "Awaiting reply".</li>
+        <li><strong>Later</strong> The caller replies. The row changes to "Replied" with their reason, and you're pinged again. If nobody follows up, a reminder comes back round.</li>
+      </ol>
+      <p>That is the order of events in the <a href="{{ site.sys.missed_lead_responder.url }}">Missed Lead Responder</a>, the system we built and tested end to end. The timings are from its replay.</p>
+
+      <h2 id="text">What the text should say</h2>
+      <p>The text decides whether the caller replies or rings the next business. Four rules cover most of it:</p>
+      <ul>
+        <li><strong>Say who you are first.</strong> A text from an unknown number gets ignored. Start with your business name.</li>
+        <li><strong>Apologise once, briefly.</strong> "Sorry we missed you" is enough. Don't explain your whole day.</li>
+        <li><strong>Ask one question.</strong> "What can we help with?" gets more replies than a list of options.</li>
+        <li><strong>Only promise what you'll keep.</strong> "We'll call you back today" is good if it's true, and costly if it isn't.</li>
+      </ul>
+      <div class="say"><span class="say__k">For most businesses</span><p>Hi, it's Northgate Plumbing. Sorry we missed your call. What can we help with? Reply here and we'll get straight back to you.</p></div>
+      <div class="say"><span class="say__k">When your hands are busy</span><p>Hi, it's Sundial Detailing. Sorry we missed you, we're with a car in the booth. What's the vehicle, and what does it need?</p></div>
+      <div class="say"><span class="say__k">Out of hours</span><p>Hi, it's Lakeside Dental. We're closed until 8 tomorrow morning. Reply with what you need and we'll call you first thing.</p></div>
+
+      <h2 id="worth">What your missed calls are worth</h2>
+      <p>Three numbers you can find yourself: how many calls you miss in a week (your phone keeps the list), what one customer is worth, and how many of those callers would have booked if someone had got back to them. The last one is a judgement. Be honest with yourself about it, and the answer is still usually worth knowing.</p>
+      {% include "calc" %}
+      <p class="cite">The calculator multiplies your inputs: calls a week × 4.33 weeks × the share who'd book × what a customer is worth. It uses no industry averages, because none would be true for your business.</p>
+
+      <h2 id="watch">Watch one happen</h2>
+      <p>One missed call to a fictional plumber, from the caller's phone and from the owner's side, on the same clock. Simulated data, real system flow.</p>
+      {% replay "missed-lead" id="guide-replay" %}
+
+      <h2 id="compare">Compared with the alternatives</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">Four ways to handle calls you can't answer</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Question</span></th><th scope="col">Voicemail</th><th scope="col">Forward to your mobile</th><th scope="col">Answering service</th><th scope="col">Missed-call text-back</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">When you can't pick up</th><td>Records a message, if they leave one</td><td>Rings you somewhere else, which helps only if you're free there</td><td>A person answers for you</td><td>Texts the caller back</td></tr>
+            <tr><th scope="row">The caller hears back</th><td>When you return the call</td><td>Only if you answer</td><td>Straight away, live</td><td>Within seconds, by text</td></tr>
+            <tr><th scope="row">The details get written down</th><td>As a recording</td><td>No</td><td>Usually, in a message to you</td><td>In a sheet, updated when they reply</td></tr>
+            <tr><th scope="row">How it's paid for</th><td>Usually part of your phone plan</td><td>Usually part of your phone plan</td><td>Typically a monthly fee or a per-call charge</td><td>A one-off setup here, then texts and the line at cost</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cite">An answering service is the only option where a person talks to the caller live, and for some businesses that's worth paying for. A text-back is for the businesses where a fast written reply and a clear list of who to call back are enough.</p>
+
+      <h2 id="limits">What it can't do</h2>
+      <ul>
+        <li><strong>It can't text a landline.</strong> You still get the alert and the number, so you can ring them back.</li>
+        <li><strong>It doesn't hold a conversation.</strong> It sends the first reply and writes down the answer. A person takes it from there.</li>
+        <li><strong>It needs a phone line it can watch.</strong> Usually your existing number forwards the calls you don't answer, so customers keep the number they know. We check with your phone provider before setting it up.</li>
+        <li><strong>US numbers need registering for texting.</strong> Business texting from a US local number goes through carrier registration (A2P 10DLC), which is part of the phone-line activation time.</li>
+      </ul>
+
+      <h2 id="cost">What it costs</h2>
+      <p>The missed-call responder is <strong data-copy>{{ site.svc.missed_call_responder.price.now }}</strong> to set up{% if pricing.launch %} at launch pricing (standard <span data-copy>{{ site.svc.missed_call_responder.price.was }}</span>){% endif %}, and {{ site.svc.missed_call_responder.price.ready }} ({{ site.svc.missed_call_responder.condition_text }}) It pairs with the enquiry tracker, which puts your website and WhatsApp enquiries in the same sheet as your calls.</p>
+      {% include "fit" %}
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Common <em>questions</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Will callers think it's spam?</dt>
+          <dd>Less often when the text starts with your business name and arrives seconds after they called you. They know who it's from because they just rang that number.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can I change what the text says?</dt>
+          <dd>Yes. It's written in your words when we set it up, and changing the wording later counts as a small change.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Does it work outside business hours?</dt>
+          <dd>It works at any hour. Out of hours the text can say when you're open and when you'll call back.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Where do I see the calls?</dt>
+          <dd>On your phone, as an alert for each one, and in a Google Sheet that lists every missed call with its status.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can I try it first?</dt>
+          <dd>Yes. Call the demo line on the <a href="{{ site.routes.work }}#try">Work page</a> to try the IVR menu and the missed-call responder for yourself.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Nobody who calls you hears <em>nothing</em>.</h2>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <span class="tipwrap"><a class="btn btn--ghost" href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-close" data-tip><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>{% include "book-tip" uid="close" %}</span>
+      </div>
+    </div>
+  </div>
+</section>

@@ -145,6 +145,8 @@
   .replay__stage { position: relative; contain: layout paint; display: grid; }
   .logreel__list { contain: layout paint; }
   .replay__ticks { display: none; }
+  /* The heading block above a replay, wherever one is placed */
+  .case-replay-head { margin-block-end: var(--space-l); }
 
   /* Customer view and Owner view. Without JS both show, one after the
      other. With JS they share one grid cell: the stage is as tall as the

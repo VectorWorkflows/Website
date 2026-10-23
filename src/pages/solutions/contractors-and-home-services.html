@@ -1,0 +1,167 @@
+---
+title: Missed-Call Text-Back for Contractors · Vector Workflows
+description: For plumbers, electricians, builders and home-service trades: a text back for every call missed on the job, every enquiry in one sheet with follow-up reminders, and site logs your crew send from WhatsApp in a photo and a line.
+path: /solutions/contractors-and-home-services/
+kind: industry
+order: 6
+crumb: Contractors & home services
+short: Contractors
+teaser: A text back for every call missed on a roof or under a sink, every enquiry in one sheet, and site logs your crew send from WhatsApp.
+services: missed-call-responder, enquiry-tracker, job-site-log
+calc: contractor
+body_class: page-solution
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Missed-call text-back, quote requests and WhatsApp site logs for <em>contractors</em></h1>
+      <p class="t-lead sol-head__lead">You can't answer the phone from a ladder. The caller gets a text back in seconds asking what the job is, you get an alert, every enquiry lands in one sheet with a reminder until it's handled, and your crew log site issues with a photo and a line on WhatsApp.</p>
+      <ul class="sol-head__fit" role="list">{% for s in fit.services %}<li>{{ s.name }}</li>{% endfor %}<li class="sol-head__from">from <span data-copy>{{ fit.from }}</span></li></ul>
+      <div class="cluster sol-head__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.routes.work }}#try"><span class="btn__label">Call our demo line</span><span class="btn__icon">{% icon "phone" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="slip-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Where jobs go</p></div>
+    <div class="g-body">
+      <h2 id="slip-title" class="t-h2-s sec-head--tight">A job day, <em>call by call</em>.</h2>
+      <ol class="slips" role="list">
+        <li class="slip"><span class="slip__time">07:30</span><h3>The first call of the day</h3><p>You're loading the van. The caller with a burst pipe needs someone this morning, and hangs up after five rings.</p></li>
+        <li class="slip"><span class="slip__time">11:20</span><h3>Up a ladder</h3><p>Two missed calls while you're on a roof. You ring back at lunch, and one of them has already booked someone else.</p></li>
+        <li class="slip"><span class="slip__time">15:00</span><h3>The photo in the group chat</h3><p>A crew member sends a photo of a cracked tile to the group. By Friday it's forty messages up and nobody can find it for the invoice.</p></li>
+        <li class="slip"><span class="slip__time">20:30</span><h3>Quotes from the kitchen table</h3><p>You write quotes in the evening from memory, because the details from today's calls are scattered across texts, voicemails and the back of a receipt.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="math-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The arithmetic</p></div>
+    <div class="g-body sol-math__say">
+      <h2 id="math-title" class="t-h2-s">A missed call is a <em>job</em>, not a call.</h2>
+      <p>For a trade, the caller who hangs up isn't a lost conversation; they're a lost job. Your phone keeps a list of the calls you missed. Take a normal fortnight, halve it for a week, and put it in.</p>
+      <p class="sol-math__worked">For example: <strong>{{ calc.shown.n }}</strong> calls missed on the job each week, <strong>{{ calc.shown.r }}</strong> of those callers would have hired you, and the average job is <strong>{{ calc.shown.v }}</strong>. That's about <strong>{{ calc.res.won }}</strong> jobs a month, worth <strong>{{ calc.res.monthly }}</strong>.</p>
+    </div>
+  </div>
+  {% include "calc" %}
+</section>
+
+<section class="frame section" aria-labelledby="run-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>How it runs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="run-title" class="t-h2-s">A leaking sink, <em>logged</em> before you've climbed down.</h2>
+      <p class="t-small">The <a href="{{ site.sys.missed_lead_responder.url }}">Missed Lead Responder</a>, on simulated data for a fictional plumber. Switch between the caller's phone and the owner's side.</p>
+    </div>
+  </div>
+  {% replay "missed-lead" id="sol-replay" %}
+</section>
+
+<section class="frame section" aria-labelledby="log-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Site logs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="log-title" class="t-h2-s">A photo and a line, filed <em>properly</em>.</h2>
+      <p class="t-small">The <a href="{{ site.sys.site_fault_tracker.url }}">Site Fault Tracker</a>, behind the job &amp; site log: a WhatsApp photo and a short note become one dated row, with the location from the message and a severity flag marked as a rough estimate. Simulated data.</p>
+    </div>
+  </div>
+  {% replay "site-fault" id="sol-replay-2" %}
+</section>
+
+<section class="frame section" aria-labelledby="fit-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>What we'd set up</p></div>
+    <div class="g-body">
+      <h2 id="fit-title" class="t-h2-s sec-head--tight">Three services, priced in the <em>open</em>.</h2>
+      {% include "fit" %}
+      <p class="compare__note">Want callers to pick an option before it rings? The <a href="{{ site.routes.services }}#ivr">IVR phone line</a> pairs with the missed-call responder as the Phone pack. A <a href="{{ site.routes.services }}#website">website</a> with a quote request form is on the same menu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="compare-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Compared</p></div>
+    <div class="g-body">
+      <h2 id="compare-title" class="t-h2-s sec-head--tight">Voicemail, and a text <em>back</em>.</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">Voicemail compared with a missed-call text-back</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Question</span></th><th scope="col">Voicemail</th><th scope="col">Missed-call text-back</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">What the caller gets</th><td>A beep</td><td>A text from your business within seconds</td></tr>
+            <tr><th scope="row">The details of the job</th><td>If they leave a message, and if it's clear</td><td>The text asks what the job is, and the reply is written down</td></tr>
+            <tr><th scope="row">When you find out</th><td>When you next check voicemail</td><td>An alert straight away, with the caller's number</td></tr>
+            <tr><th scope="row">What's on record</th><td>A recording</td><td>A row in a sheet that updates when they reply</td></tr>
+            <tr><th scope="row">If nobody follows up</th><td>Nothing happens</td><td>A reminder comes back round</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Questions trades <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Can I keep my current number?</dt>
+          <dd>Usually, yes. Calls you don't answer on your existing number can be forwarded to the line the system watches, so customers keep calling the number they know. We check with your phone provider before anything is set up.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What if the caller rang from a landline?</dt>
+          <dd>A text can't reach a landline. You still get the alert with their number, so you can ring them back.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What if it's an emergency?</dt>
+          <dd>The text is written in your words, so it can tell people what to do if it's urgent. The system makes sure they hear back; it doesn't replace you picking up.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>How does the site log work?</dt>
+          <dd>Your crew send a photo and a short note to one WhatsApp number. Each becomes a dated row in a sheet, with the photo attached and the location taken from the message. <a href="{{ site.sys.site_fault_tracker.url }}">See the case study.</a></dd>
+        </div>
+        <div class="faq__item">
+          <dt>Is there anything to register for texting in the US?</dt>
+          <dd>Yes. Businesses texting from a US local number have to register with the carriers (it's called A2P 10DLC). It's done as part of setting up the line, which is one reason phone services say "plus phone-line activation time".</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Stay on the ladder. The phone's <em>handled</em>.</h2>
+      <p class="t-lead measure">Call our demo line to try the IVR menu and the missed-call responder for yourself, then tell us how your phones work today.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        {% include "phone-pill" uid="close" %}
+      </div>
+    </div>
+  </div>
+</section>

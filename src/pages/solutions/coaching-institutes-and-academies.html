@@ -1,0 +1,179 @@
+---
+title: Coaching Centre Websites & WhatsApp Admissions · Vector Workflows
+description: For coaching centres, tuition centres and academies: an enquiry-first website parents can read in thirty seconds, a WhatsApp bot that answers batch and fee questions at any hour, and an enquiry tracker for admission season.
+path: /solutions/coaching-institutes-and-academies/
+kind: industry
+order: 3
+crumb: Coaching centres & academies
+short: Coaching centres
+teaser: An enquiry-first site parents can read in thirty seconds, a WhatsApp bot for batch and fee questions, and every enquiry tracked through admission season.
+services: website, whatsapp-bot, enquiry-tracker
+calc: coaching
+body_class: page-solution
+critical_css: components/page-head.css, components/card.css, components/seg.css, pages/solutions.css
+css: components/calc.css, components/showcase.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Enquiry websites and WhatsApp admissions for <em>coaching centres</em></h1>
+      <p class="t-lead sol-head__lead">Parents ask the same five questions: which batch, what time, how much, how far, and can my child try a class first. Answer them on a site a parent can read in thirty seconds, on WhatsApp at ten at night, and keep every enquiry in one sheet through admission season.</p>
+      <ul class="sol-head__fit" role="list">{% for s in fit.services %}<li>{{ s.name }}</li>{% endfor %}<li class="sol-head__from">from <span data-copy>{{ fit.from }}</span></li></ul>
+      <div class="cluster sol-head__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.bld.reliance_coaching_centre.url }}"><span class="btn__label">See the centre we built for</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="slip-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Where admissions go</p></div>
+    <div class="g-body">
+      <h2 id="slip-title" class="t-h2-s sec-head--tight">Admission season, <em>hour by hour</em>.</h2>
+      <ol class="slips" role="list">
+        <li class="slip"><span class="slip__time">11:00</span><h3>The same question, forty times</h3><p>Batch timings, fees, boards, holidays. The same questions arrive again and again, on WhatsApp, by phone and at the door, and each one takes a teacher away from something else.</p></li>
+        <li class="slip"><span class="slip__time">17:30</span><h3>Teaching when the phone rings</h3><p>Classes run in the evening, which is exactly when parents get home and call. Every teacher is in a classroom.</p></li>
+        <li class="slip"><span class="slip__time">21:45</span><h3>The question asked after hours</h3><p>A parent asks about batch timings at night and hears back the next afternoon. By then, a centre down the road has already replied.</p></li>
+        <li class="slip"><span class="slip__time">Day 3</span><h3>The demo class nobody followed up</h3><p>A child sat in on a free class. Nobody got back to the parent afterwards, and they took the silence to mean the centre wasn't keen.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="math-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The arithmetic</p></div>
+    <div class="g-body sol-math__say">
+      <h2 id="math-title" class="t-h2-s">A student is worth a <em>year</em>, not a month.</h2>
+      <p>One admission brings a year of fees, sometimes several years and a younger sibling. So an enquiry left unanswered for a day costs far more than the reply would have taken.</p>
+      <p class="sol-math__worked">For example: <strong>{{ calc.shown.n }}</strong> enquiries a week get a late reply or none, <strong>{{ calc.shown.r }}</strong> of those parents would have joined, and a year's fees come to <strong>{{ calc.shown.v }}</strong>. That's about <strong>{{ calc.res.won }}</strong> admissions a month, worth <strong>{{ calc.res.monthly }}</strong> in fees.</p>
+    </div>
+  </div>
+  {% include "calc" %}
+</section>
+
+<section class="frame section" aria-labelledby="built-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Built for one</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="built-title" class="t-h2-s">A site we've built for a <em>real</em> centre.</h2>
+      <p class="t-lead measure">Reliance Coaching Centre in New Delhi, where Sam taught classes 6 to 9 in 2023. English and Hindi, notebook paper and a red pen, and only facts the centre has confirmed.</p>
+    </div>
+  </div>
+  <div class="card build build--b sol-build">
+    <div class="card__core build__core">
+      {% include "shot-rcc" uid="sol" %}
+      <div class="build__text">
+        <div class="build__meta"><span class="badge"><span class="badge__dot"></span>{{ site.bld.reliance_coaching_centre.status }}</span></div>
+        <p class="build__kind t-label">{{ site.bld.reliance_coaching_centre.kind }}</p>
+        <h3 class="build__name"><a href="{{ site.bld.reliance_coaching_centre.url }}">{{ site.bld.reliance_coaching_centre.name }}</a></h3>
+        <p class="build__line">{{ site.bld.reliance_coaching_centre.line }}</p>
+        <dl class="specs">{% for sp in site.bld.reliance_coaching_centre.specs %}<div><dt>{{ sp.k }}</dt><dd>{{ sp.v }}</dd></div>{% endfor %}</dl>
+        <a class="link-arrow build__go" href="{{ site.bld.reliance_coaching_centre.url }}">Read the case study {% icon "arrow-right" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="run-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>How it runs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="run-title" class="t-h2-s">A 9:42 pm question, <em>answered</em>.</h2>
+      <p class="t-small">The WhatsApp auto-reply bot answers from your own list and takes the demo request; the enquiry tracker logs it and reminds you. Simulated data, for a fictional centre; switch between the parent's WhatsApp and the centre's side.</p>
+    </div>
+  </div>
+  {% replay "coaching-enquiry" id="sol-replay" %}
+</section>
+
+<section class="frame section" aria-labelledby="fit-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>What we'd set up</p></div>
+    <div class="g-body">
+      <h2 id="fit-title" class="t-h2-s sec-head--tight">Three services, priced in the <em>open</em>.</h2>
+      {% include "fit" %}
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="compare-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Compared</p></div>
+    <div class="g-body">
+      <h2 id="compare-title" class="t-h2-s sec-head--tight">The usual coaching site, and an <em>enquiry-first</em> one.</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">A typical coaching site compared with an enquiry-first site</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Moment</span></th><th scope="col">The usual coaching site</th><th scope="col">Enquiry-first</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">The first screen</th><td>A slider of toppers and a blinking "Admissions open"</td><td>The classes, the subjects and the area, in one line, with a way to ask</td></tr>
+            <tr><th scope="row">Finding a batch</th><td>Call and ask</td><td>Pick the class and subject and see the batches</td></tr>
+            <tr><th scope="row">Fees</th><td>Call and ask</td><td>Shown, shown as "from", or a clear "ask us": your choice</td></tr>
+            <tr><th scope="row">A question at 10 pm</th><td>Waits for the morning</td><td>Answered on WhatsApp from your own list; you confirm anything it can't</td></tr>
+            <tr><th scope="row">Language</th><td>English only</td><td>The languages your parents read, side by side</td></tr>
+            <tr><th scope="row">Enquiries</th><td>Scattered across phones and notebooks</td><td>One sheet, with a status and a reminder for each</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Questions centres <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Can the site be in English and Hindi?</dt>
+          <dd>Yes. The <a href="{{ site.bld.reliance_coaching_centre.url }}">Reliance Coaching Centre</a> site is built in both, with a switch at the top and the Hindi set in a typeface made for it. Other languages can work the same way.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can parents see the fees without calling?</dt>
+          <dd>If you want them to. Fees can be a full table, a "from" price or a clear "ask us". It's one setting, and you can change your mind later.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What will the WhatsApp bot answer?</dt>
+          <dd>The questions you give it answers to: batches, timings, fees, boards, the address, holidays. Anything else it passes to you, and it says so to the parent.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Will it book demo classes by itself?</dt>
+          <dd>It takes the request and passes it to you to confirm. You decide which batch a child sits in, and when.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What about results and toppers?</dt>
+          <dd>Only results you can stand behind, and we don't put children's names or photographs on a website. A site of confirmed facts reads as more serious than a collage.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Every parent's question, <em>answered</em>.</h2>
+      <p class="t-lead measure">Tell us how admissions work at your centre today. We'll tell you what's worth setting up before the next season, and what it costs.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

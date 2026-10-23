@@ -1,0 +1,93 @@
+---
+title: Solutions by trade · websites and automations · Vector Workflows
+description: What we set up for detailing studios, clinics, coaching centres, gyms, salons and contractors, with the arithmetic behind each, plus three plain guides for owners on missed-call text-back, WhatsApp automation and hand-built websites.
+path: /solutions/
+crumb: Solutions
+body_class: page-solutions
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">S</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="page-head__title">Built around how your <em>trade</em> works.</h1>
+      <p class="t-lead page-head__lead">The same menu of services, set up for six kinds of business: where their customers slip away, what that costs, and what we'd set up first. Then three guides for owners who'd rather understand it before they buy it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="trades-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>By trade</p></div>
+    <div class="g-body">
+      <h2 id="trades-title" class="t-h2-s sec-head--tight">Six trades, six <em>answers</em>.</h2>
+      <ol class="trades" role="list">
+        {% for e in site.industries %}<li>
+          <a class="trade" href="{{ e.path }}">
+            <span class="trade__num">{{ loop.num }}</span>
+            <span class="trade__name">{{ e.crumb }}</span>
+            <span class="trade__teaser">{{ e.teaser }}</span>
+            <span class="trade__fit">{% for s in e.fit.services %}<strong>{{ s.name }}</strong>{% if not loop.last %} · {% endif %}{% endfor %} · from <span data-copy>{{ e.fit.from }}</span></span>
+            <span class="trade__go" aria-hidden="true">{% icon "arrow-right" %}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="guides-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Guides</p></div>
+    <div class="g-body">
+      <h2 id="guides-title" class="t-h2-s sec-head--tight">Three guides, no <em>jargon</em>.</h2>
+      <ol class="trades trades--guides" role="list">
+        {% for e in site.guides %}<li>
+          <a class="trade" href="{{ e.path }}">
+            <span class="trade__num">{{ loop.num }}</span>
+            <span class="trade__name">{{ e.crumb }}</span>
+            <span class="trade__teaser">{{ e.teaser }}</span>
+            <span class="trade__go" aria-hidden="true">{% icon "arrow-right" %}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="unsure-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Not listed</p></div>
+    <div class="g-body">
+      <div class="unsure">
+        <h2 id="unsure-title">Your trade isn't here?</h2>
+        <p>Most service businesses lose customers in the same few places: the call nobody answered, the message answered tomorrow, the customer nobody asked back. Tell us how your week runs and we'll say what's worth setting up, and what isn't.</p>
+        <div class="cluster" style="--gap: var(--space-xs) var(--space-m)">
+          <a class="btn btn--primary btn--sm" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+          <a class="link-arrow" href="{{ site.routes.services }}">Every service and price {% icon "arrow-right" %}</a>
+          <a class="link-arrow" href="{{ site.routes.work }}">The work behind them {% icon "arrow-right" %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Priced before you <em>ask</em>.</h2>
+      <p class="t-lead measure">Every service on these pages has its price and its build time on the <a href="{{ site.routes.services }}">services page</a>. Pick what fits, and the total works itself out.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

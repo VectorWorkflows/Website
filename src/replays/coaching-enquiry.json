@@ -1,0 +1,75 @@
+{
+  "title": "Late-night enquiry, admission season",
+  "system": "coaching",
+  "sim": "Simulated data · example flow",
+  "clock": "off",
+  "base": "21:42:00",
+  "summary": "Replay with simulated data, combining the WhatsApp auto-reply bot and the enquiry tracker. At 9:42 pm a parent asks Brightpath Tutorials on WhatsApp about class 8 maths batch timings and fees. The bot answers from the centre's own list and offers a free demo class. The parent asks for Saturday; the bot says it has passed the request to the centre. On the centre's side the enquiry is logged in the Enquiries sheet as Demo requested, and the owner gets a Telegram alert to confirm. The next morning the owner confirms Saturday at 11 and the row changes to Demo booked.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Parent's WhatsApp",
+      "icon": "whatsapp-logo",
+      "anchor": "bottom",
+      "height": { "narrow": "27rem", "wide": "24rem" },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Centre · Brightpath Tutorials",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": { "narrow": "30rem", "wide": "24rem" },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    {
+      "t": "00:00", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Hi, what are the batch timings for class 8 maths? And the fees?",
+      "meta": "WhatsApp · 21:42"
+    },
+    {
+      "t": "00:02", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Hello! Class 8 maths runs Mon, Wed and Fri, 5 to 6 pm. This term's fees are on our Classes page. Would your child like a free demo class first?",
+      "meta": "WhatsApp · auto-reply · 21:42"
+    },
+    { "t": "00:02", "lane": "b", "type": "event", "text": "Bot answered: batch timings, fees" },
+    {
+      "t": "00:30", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Yes please. Can he come on Saturday?",
+      "meta": "WhatsApp · 21:43"
+    },
+    {
+      "t": "00:31", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "I've passed your request for a Saturday demo to the centre. They'll confirm the time here.",
+      "meta": "WhatsApp · auto-reply · 21:43"
+    },
+    {
+      "t": "00:31", "lane": "b", "type": "sheet", "id": "enq", "sheet": "Enquiries",
+      "columns": [
+        { "key": "time", "label": "Time" },
+        { "key": "parent", "label": "Parent" },
+        { "key": "ask", "label": "Asked about" },
+        { "key": "status", "label": "Status" }
+      ],
+      "row": { "time": "21:43", "parent": "••• 5520", "ask": "Class 8 maths", "status": "Demo requested · Sat" },
+      "tones": { "status": "wait" }
+    },
+    {
+      "t": "00:32", "lane": "b", "type": "telegram", "from": "Enquiry desk",
+      "text": "Demo request: class 8 maths, Saturday, from ••• 5520. Batch timings and fees already sent.",
+      "buttons": ["Confirm a time", "Call parent"]
+    },
+    {
+      "t": "02:00", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Good morning! Saturday at 11 is confirmed for the demo class. See you both then.",
+      "meta": "WhatsApp · from the centre · Thu 08:50"
+    },
+    {
+      "t": "02:01", "type": "sheet", "op": "update", "target": "enq",
+      "set": { "status": "Demo booked · Sat 11:00" },
+      "tones": { "status": "ok" }
+    }
+  ]
+}

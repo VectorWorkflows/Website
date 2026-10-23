@@ -20,6 +20,7 @@
     "work": "/work/",
     "services": "/services/",
     "studio": "/studio/",
+    "solutions": "/solutions/",
     "start": "/start/",
     "privacy": "/privacy/",
     "terms": "/terms/"
@@ -47,7 +48,8 @@
             "Call, WhatsApp and directions buttons on every page",
             "Pairs with Google Business Profile and WhatsApp Business setup as the Starter pack"
           ],
-          "condition": ""
+          "condition": "",
+          "case": "auto-detailing-flagship"
         },
         {
           "slug": "google-business-profile",

@@ -1,0 +1,169 @@
+---
+title: Trial Booking & Member Follow-Up for Gyms · Vector Workflows
+description: For gyms, fitness and pilates studios: trial classes booked at any hour on WhatsApp, reminders that get people through the door, review requests after the class, and a nudge for members whose visits have stopped.
+path: /solutions/gyms-fitness-and-pilates-studios/
+kind: industry
+order: 4
+crumb: Gyms, fitness & pilates
+short: Gyms & studios
+teaser: Trial classes booked at any hour, reminders that get people through the door, and a quiet nudge for members who stop coming.
+services: whatsapp-bot, appointment-reminders, repeat-customer-tracker
+calc: gym
+body_class: page-solution
+critical_css: components/page-head.css, components/card.css, components/steps.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Trial-class booking and member follow-up for <em>gyms</em> and studios</h1>
+      <p class="t-lead sol-head__lead">People decide to start late at night and drift away quietly. Answer the trial question the moment it's asked, remind them the evening before, ask for a review while the class is fresh, and notice when a member's visits stop.</p>
+      <ul class="sol-head__fit" role="list">{% for s in fit.services %}<li>{{ s.name }}</li>{% endfor %}<li class="sol-head__from">from <span data-copy>{{ fit.from }}</span></li></ul>
+      <div class="cluster sol-head__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.routes.services }}#run-smoother"><span class="btn__label">See the prices</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="slip-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Where members go</p></div>
+    <div class="g-body">
+      <h2 id="slip-title" class="t-h2-s sec-head--tight">From first message to <em>last visit</em>.</h2>
+      <ol class="slips" role="list">
+        <li class="slip"><span class="slip__time">23:10</span><h3>The 11 pm decision</h3><p>Someone finally decides to start, messages to ask about a trial, and hears back the next afternoon. By then the moment has passed.</p></li>
+        <li class="slip"><span class="slip__time">06:00</span><h3>The trial that didn't show</h3><p>Booked on Monday for Thursday at six. No reminder, a cold morning, and the place in the class goes empty.</p></li>
+        <li class="slip"><span class="slip__time">09:30</span><h3>The class that went well</h3><p>They loved it and went home. Nobody asked for a review while it was fresh, and a week later nobody will think to.</p></li>
+        <li class="slip"><span class="slip__time">Week 3</span><h3>The member who drifted</h3><p>Three visits a week, then one, then none. Nobody noticed until the cancellation email arrived.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="math-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The arithmetic</p></div>
+    <div class="g-body sol-math__say">
+      <h2 id="math-title" class="t-h2-s">A cold enquiry costs a <em>membership</em>.</h2>
+      <p>A trial enquiry isn't worth one class; it's worth what that person would have paid over their membership. Count how many a week go unanswered until the next day, or never get a booking link at all.</p>
+      <p class="sol-math__worked">For example: <strong>{{ calc.shown.n }}</strong> trial enquiries a week go cold, <strong>{{ calc.shown.r }}</strong> of those would have joined, and a member pays <strong>{{ calc.shown.v }}</strong> over their membership. That's about <strong>{{ calc.res.won }}</strong> members a month, worth <strong>{{ calc.res.monthly }}</strong>.</p>
+    </div>
+  </div>
+  {% include "calc" %}
+</section>
+
+<section class="frame section" aria-labelledby="run-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>How it runs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="run-title" class="t-h2-s">One trial, from question to <em>review</em>.</h2>
+      <p class="t-small">A question on Tuesday night, a booked trial a minute later, a reminder on Wednesday, the review link on Thursday. Simulated data, for a fictional gym; switch between the visitor's WhatsApp and the gym's side.</p>
+    </div>
+  </div>
+  {% replay "gym-trial" id="sol-replay" %}
+</section>
+
+<section class="frame section-tight" aria-labelledby="drift-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Members who drift</p></div>
+    <div class="g-body">
+      <h2 id="drift-title" class="t-h2-s sec-head--tight">Notice the quiet <em>ones</em>.</h2>
+      <ol class="steps" role="list">
+        <li><span class="steps__n">01</span><div><h3>A list by last visit</h3><p>The <a href="{{ site.routes.services }}#repeat-customer-tracker">repeat-customer tracker</a> keeps members in order of when they last came in, so the drifting ones rise to the top on their own.</p></div></li>
+        <li><span class="steps__n">02</span><div><h3>A friendly message, in your words</h3><p>Past the gap you choose, a member gets one WhatsApp from your business number: a hello, not a sales push. You write it once.</p></div></li>
+        <li><span class="steps__n">03</span><div><h3>Only to people who said yes</h3><p>Members agree to WhatsApp messages when they join, as WhatsApp's rules require, and anyone can ask you to stop.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="fit-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>What we'd set up</p></div>
+    <div class="g-body">
+      <h2 id="fit-title" class="t-h2-s sec-head--tight">Three services, priced in the <em>open</em>.</h2>
+      {% include "fit" %}
+      <p class="compare__note">The <a href="{{ site.routes.services }}#review-requester">review requester</a> pairs with appointment reminders as the Bookings pack, if you want the review link after every class too.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="compare-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Compared</p></div>
+    <div class="g-body">
+      <h2 id="compare-title" class="t-h2-s sec-head--tight">A trial, with and <em>without</em> follow-up.</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">A trial class with no follow-up, and with the three services</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Moment</span></th><th scope="col">No follow-up</th><th scope="col">With the three services</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">A question at 11 pm</th><td>Answered tomorrow, if someone remembers</td><td>Answered at once, with the trial times and a booking link</td></tr>
+            <tr><th scope="row">The evening before</th><td>Nothing</td><td>A WhatsApp reminder, in your words</td></tr>
+            <tr><th scope="row">After the class</th><td>A goodbye at the door</td><td>A thank-you with your Google review link, if you add the review requester</td></tr>
+            <tr><th scope="row">Three weeks without a visit</th><td>Unnoticed until they cancel</td><td>Near the top of the list, with a friendly message sent</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Questions studios <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Can people book regular classes, not just trials?</dt>
+          <dd>Yes. The booking link can list any class or session you run, and the reminders work the same way for all of them.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>We already have gym software. Do we need to switch?</dt>
+          <dd>No. If your software already takes bookings, the bot can send people straight to it, and we'll talk through whether reminders should come from it or from us before anything is built.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Won't the nudge annoy members?</dt>
+          <dd>It's one message in your words, sent only after the gap you choose, to members who agreed to hear from you on WhatsApp. Anyone can ask you to stop.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What does the bot say when it doesn't know?</dt>
+          <dd>That it's passing the question to the team, and then it does. You'll see the chat on your phone like any other.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+        <div class="faq__item">
+          <dt>How long does it take?</dt>
+          <dd>Each of the three: {{ site.svc.appointment_reminders.price.ready }} ({{ site.svc.appointment_reminders.condition_text }})</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">More trials, fewer <em>quiet exits</em>.</h2>
+      <p class="t-lead measure">Tell us how people find you, book a trial and leave today. You'll get a straight answer on what's worth setting up.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

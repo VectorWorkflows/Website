@@ -1,0 +1,23 @@
+<div class="fit">
+  <ol class="fit__list" role="list">
+    {% for s in fit.services %}<li class="fit__row">
+      <span class="fit__num">{{ loop.num }}</span>
+      <div class="fit__what">
+        <h3 class="fit__name"><a href="{{ site.routes.services }}#{{ s.slug }}">{{ s.name }}</a></h3>
+        <p class="fit__line">{{ s.line }}</p>
+        <p class="fit__ready">{% icon "clock" %}<span>{{ s.price.ready }}{% if s.condition_text %} <span class="fit__cond">({{ s.condition_text }})</span>{% endif %}</span></p>
+      </div>
+      <p class="fit__price" data-copy><span class="fit__now">{{ s.price.now }}</span>{% if s.price.was %}<s><span class="sr-only">standard price </span>{{ s.price.was }}</s>{% endif %}</p>
+    </li>
+    {% endfor %}
+  </ol>
+  <div class="fit__sum">
+    {% if fit.custom %}<p class="fit__total"><span class="fit__k">{{ pricing.custom.under }}</span><strong data-copy>{{ fit.total }}</strong>{% if pricing.launch %}<span class="fit__when">at launch pricing</span>{% endif %}</p>
+    <p class="fit__note"><span class="fit__tag">{{ pricing.custom.unlocked }}</span>{{ pricing.custom.short }}</p>{% else %}<p class="fit__total"><span class="fit__k">Together</span><strong data-copy>{{ fit.total }}</strong>{% if pricing.launch %}<span class="fit__when">at launch pricing</span>{% endif %}</p>
+    {% if fit.save %}<p class="fit__note">Instead of <span data-copy>{{ fit.own }}</span> bought one at a time: related services share their groundwork.</p>{% endif %}{% endif %}
+    <div class="cluster fit__go">
+      <a class="btn btn--primary btn--sm" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+      <a class="link-arrow" href="{{ site.routes.services }}">Every service and price {% icon "arrow-right" %}</a>
+    </div>
+  </div>
+</div>

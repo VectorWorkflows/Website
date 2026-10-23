@@ -1,0 +1,79 @@
+{
+  "title": "Missed call to a booked visit",
+  "system": "clinic",
+  "sim": "Simulated data · example flow",
+  "clock": "off",
+  "base": "09:15:00",
+  "summary": "Replay with simulated data, combining the missed-call responder and appointment reminders. A call to Lakeside Dental from a number ending 3391 goes unanswered while the front desk is with a patient. The caller gets a text with the practice's booking link and an offer to call back; the practice gets a Telegram alert and a row in its Calls sheet. A minute later the caller books a check-up and clean for Thursday at 10:30 on the booking page. The row changes to Booked, and the visit appears in Thursday's calendar. On Wednesday at 6 pm the patient gets a WhatsApp reminder and replies that they'll be there.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Patient's phone",
+      "icon": "phone",
+      "anchor": "bottom",
+      "height": { "narrow": "26rem", "wide": "24rem" },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Practice · Lakeside Dental",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": { "narrow": "30rem", "wide": "24rem" },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    { "t": "00:00", "lane": "a", "type": "call", "from": "••• 3391", "status": "Unanswered" },
+    {
+      "t": "00:04", "lane": "a", "type": "sms", "dir": "out",
+      "text": "Hi, it's Lakeside Dental. Sorry we missed your call, we're with a patient. Tap here to book a time online, or reply and we'll call you back.",
+      "meta": "SMS · auto-reply · Mon 09:15"
+    },
+    {
+      "t": "00:05", "lane": "b", "type": "telegram", "from": "Front desk",
+      "text": "Missed call from ••• 3391. Booking link sent.",
+      "buttons": ["Call back", "Mark handled"]
+    },
+    {
+      "t": "00:05", "lane": "b", "type": "sheet", "id": "call", "sheet": "Calls",
+      "columns": [
+        { "key": "time", "label": "Time" },
+        { "key": "caller", "label": "Caller" },
+        { "key": "status", "label": "Status" }
+      ],
+      "row": { "time": "Mon 09:15", "caller": "••• 3391", "status": "Link sent" },
+      "tones": { "status": "wait" }
+    },
+    {
+      "t": "01:10", "lane": "a", "type": "form", "label": "Booking page",
+      "title": "Check-up and clean",
+      "fields": [
+        { "k": "Day", "v": "Thursday 30 Oct" },
+        { "k": "Time", "v": "10:30" }
+      ],
+      "button": "Book this time"
+    },
+    {
+      "t": "01:11", "type": "sheet", "op": "update", "target": "call",
+      "set": { "status": "Booked · Thu 10:30" },
+      "tones": { "status": "ok" }
+    },
+    {
+      "t": "01:11", "lane": "b", "type": "calendar", "id": "thu", "title": "Thursday 30 Oct", "template": "3 booked",
+      "blocks": [["09:00", "Filling · ••• 1180"], ["10:30", "Check-up and clean · ••• 3391"], ["11:15", "Whitening · ••• 7402"]]
+    },
+    { "t": "01:12", "lane": "b", "type": "event", "text": "Reminder set for Wednesday, 18:00" },
+    {
+      "t": "02:30", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Reminder: your check-up at Lakeside Dental is tomorrow, Thursday, at 10:30. If you need to change it, reply here.",
+      "meta": "WhatsApp · reminder · Wed 18:00"
+    },
+    {
+      "t": "02:40", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Thanks, I'll be there.",
+      "meta": "WhatsApp · Wed 18:03"
+    },
+    { "t": "02:41", "lane": "b", "type": "event", "text": "Reminder delivered and answered" }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "title": "After-hours order, handed to a person",
+  "system": "whatsapp-bot",
+  "sim": "Simulated data · example flow",
+  "clock": "off",
+  "base": "22:40:00",
+  "summary": "Replay with simulated data, on a WhatsApp auto-reply bot for Maple Street Bakery. At 10:40 pm a customer asks whether the bakery is open on Sunday and what a 1 kg chocolate cake costs. The bot answers both from the bakery's own list and offers to take an order. The customer wants the cake for Sunday with Happy 40th Maya written on it; a custom message needs a person, so the bot logs the order as To confirm and tells the customer the team will reply in the morning. At 8:05 the next morning someone from the bakery confirms it, and the order row changes to Confirmed.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Customer's WhatsApp",
+      "icon": "whatsapp-logo",
+      "anchor": "bottom",
+      "height": { "narrow": "28rem", "wide": "25rem" },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Owner · Maple Street Bakery",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": { "narrow": "24rem", "wide": "25rem" },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    {
+      "t": "00:00", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Hi, are you open on Sunday? And how much is a 1 kg chocolate cake?",
+      "meta": "WhatsApp · Fri 22:40"
+    },
+    {
+      "t": "00:02", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Hi! We're open Sunday, 8 am to 2 pm. A 1 kg chocolate cake is $32, and a cake with a message needs a day's notice. Would you like to order one?",
+      "meta": "WhatsApp · auto-reply · 22:40"
+    },
+    { "t": "00:02", "lane": "b", "type": "event", "text": "Bot answered: Sunday hours, cake price" },
+    {
+      "t": "00:40", "lane": "a", "type": "whatsapp", "dir": "in",
+      "text": "Yes, for Sunday morning. Can you write Happy 40th Maya on it?",
+      "meta": "WhatsApp · 22:41"
+    },
+    {
+      "t": "00:42", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Lovely! A message on the cake needs a person to check it, so I've passed your order to the team. They'll confirm here in the morning, from 8.",
+      "meta": "WhatsApp · auto-reply · 22:41"
+    },
+    {
+      "t": "00:42", "lane": "b", "type": "sheet", "id": "order", "sheet": "Orders",
+      "columns": [
+        { "key": "time", "label": "Time" },
+        { "key": "who", "label": "Customer" },
+        { "key": "order", "label": "Order" },
+        { "key": "status", "label": "Status" }
+      ],
+      "row": { "time": "Fri 22:41", "who": "••• 4410", "order": "1 kg chocolate, Sun, \"Happy 40th Maya\"", "status": "To confirm" },
+      "tones": { "status": "wait" }
+    },
+    { "t": "00:43", "lane": "b", "type": "event", "text": "Chat handed to the team: custom message" },
+    {
+      "t": "02:20", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Good morning! Your cake is confirmed for Sunday, ready from 10 am, with Happy 40th Maya on top. Pay when you collect.",
+      "meta": "WhatsApp · from the team · Sat 08:05"
+    },
+    {
+      "t": "02:21", "type": "sheet", "op": "update", "target": "order",
+      "set": { "status": "Confirmed" },
+      "tones": { "status": "ok" }
+    }
+  ]
+}

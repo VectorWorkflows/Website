@@ -1,0 +1,61 @@
+{
+  "title": "One booking, start to rebooking",
+  "system": "salon",
+  "sim": "Simulated data · example flow",
+  "clock": "off",
+  "base": "20:14:00",
+  "summary": "Replay with simulated data, combining appointment reminders, the review requester and the repeat-customer tracker. A client books a cut and blow-dry at Studio Nine for Saturday at 10 through the salon's own booking link, and it lands in Saturday's calendar with no fee to anyone. On Friday evening they get a WhatsApp reminder. After the visit on Saturday they get the salon's Google review link. Six weeks later, with no new booking, the repeat-customer tracker sends a friendly nudge to book again.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Client's phone",
+      "icon": "phone",
+      "anchor": "bottom",
+      "height": { "narrow": "28rem", "wide": "25rem" },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Salon · Studio Nine",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": { "narrow": "26rem", "wide": "25rem" },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    {
+      "t": "00:00", "lane": "a", "type": "form", "label": "Booking link, from the salon's Instagram",
+      "title": "Book an appointment",
+      "fields": [
+        { "k": "Service", "v": "Cut and blow-dry" },
+        { "k": "Stylist", "v": "First available" },
+        { "k": "When", "v": "Saturday, 10:00" }
+      ],
+      "button": "Book"
+    },
+    {
+      "t": "00:01", "lane": "b", "type": "calendar", "id": "sat", "title": "Saturday", "template": "3 booked",
+      "blocks": [["09:00", "Colour · ••• 1022"], ["10:00", "Cut and blow-dry · ••• 8810"], ["11:30", "Trim · ••• 4567"]]
+    },
+    { "t": "00:02", "lane": "b", "type": "event", "text": "Booked through your own link: no commission" },
+    {
+      "t": "01:20", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "See you tomorrow at 10 for your cut and blow-dry at Studio Nine. Running late or need to move it? Reply here.",
+      "meta": "WhatsApp · reminder · Fri 18:00"
+    },
+    { "t": "01:21", "lane": "b", "type": "event", "text": "Reminder sent, Friday 18:00" },
+    {
+      "t": "02:40", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Thank you for coming in today! If you're happy with it, a Google review helps a small salon more than anything. The link opens our review page.",
+      "meta": "WhatsApp · review request · Sat 12:10"
+    },
+    { "t": "02:41", "lane": "b", "type": "event", "text": "Review link sent after the visit" },
+    {
+      "t": "04:00", "lane": "a", "type": "whatsapp", "dir": "out",
+      "text": "Hi! It's been six weeks since your cut. Shall we save you a Saturday? Book with the usual link.",
+      "meta": "WhatsApp · six weeks later"
+    },
+    { "t": "04:01", "lane": "b", "type": "event", "text": "Six weeks without a booking: nudge sent" }
+  ]
+}

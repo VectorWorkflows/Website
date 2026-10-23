@@ -1,0 +1,170 @@
+---
+title: Auto Detailing & PPF Websites and Booking · Vector Workflows
+description: Hand-built websites for detailing, paint protection film and ceramic studios: a coverage switcher, a tint shade previewer, booking requests that name the car and the work, and a text back for every call missed in the booth.
+path: /solutions/auto-detailing-ppf-websites/
+kind: industry
+order: 1
+crumb: Auto detailing, PPF & ceramic
+short: Auto detailing & PPF
+teaser: Coverage and tint previewers, booking requests that name the car and the work, and a text back for every call missed in the booth.
+services: website, missed-call-responder, appointment-reminders
+calc: detailing
+body_class: page-solution
+critical_css: components/page-head.css, components/card.css, components/seg.css, pages/solutions.css
+css: components/calc.css, components/demo.css, components/replay.css, components/faq.css
+js: roi-calc, demos
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Websites and booking for <em>detailing</em>, PPF and ceramic studios</h1>
+      <p class="t-lead sol-head__lead">Your customers are about to spend real money on their car. Give them a site that shows exactly what each package covers, lets them try a tint shade, and takes a booking request that names the car and the work. Then make sure every call you miss in the booth gets a text back.</p>
+      <ul class="sol-head__fit" role="list">{% for s in fit.services %}<li>{{ s.name }}</li>{% endfor %}<li class="sol-head__from">from <span data-copy>{{ fit.from }}</span></li></ul>
+      <div class="cluster sol-head__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.bld.auto_detailing_flagship.url }}"><span class="btn__label">See the flagship build</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="slip-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Where jobs go</p></div>
+    <div class="g-body">
+      <h2 id="slip-title" class="t-h2-s sec-head--tight">Where detailing jobs <em>slip away</em>.</h2>
+      <ol class="slips" role="list">
+        <li class="slip"><span class="slip__time">08:40</span><h3>Gloves on, phone ringing</h3><p>You're halfway through correcting black paint. The phone rings out, and the caller with a new Model Y tries the next studio on Google before you've rinsed your hands.</p></li>
+        <li class="slip"><span class="slip__time">13:15</span><h3>"How much for full front?"</h3><p>The same question arrives by call, text and Instagram, worded three ways. Without a page that shows what full front covers, every answer turns into a ten-minute call.</p></li>
+        <li class="slip"><span class="slip__time">17:30</span><h3>The quote that went quiet</h3><p>You priced a ceramic job on Tuesday and never heard back. Nobody followed up, because the enquiry was never written down anywhere you'd see it again.</p></li>
+        <li class="slip"><span class="slip__time">21:10</span><h3>Comparing studios from the sofa</h3><p>Someone looks at three studios on their phone at night. The one whose site opens quickly, shows real work and takes a booking request without a phone call gets the message.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="math-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The arithmetic</p></div>
+    <div class="g-body sol-math__say">
+      <h2 id="math-title" class="t-h2-s">One recovered job usually <em>covers it</em>.</h2>
+      <p>Detailing has a small team and a high price per job. That makes every unanswered call expensive, and the fix cheap by comparison: if your average job is worth more than the missed-call responder costs, the first customer it brings back has paid for it.</p>
+      <p class="sol-math__worked">For example: <strong>{{ calc.shown.n }}</strong> missed calls a week, and <strong>{{ calc.shown.r }}</strong> of those callers would have booked a <strong>{{ calc.shown.v }}</strong> job. That's about <strong>{{ calc.res.won }}</strong> jobs a month, or <strong>{{ calc.res.monthly }}</strong>. Your numbers will differ, so try yours below.</p>
+    </div>
+  </div>
+  {% include "calc" %}
+</section>
+
+<section class="frame section" aria-labelledby="see-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Show, don't explain</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="see-title" class="t-h2-s">Let customers <em>see</em> the coverage.</h2>
+      <p class="t-lead measure">Two of the controls from <a href="{{ site.bld.auto_detailing_flagship.url }}">our detailing flagship</a>, rebuilt small. On your site they carry your own packages, your prices if you want them shown, and your state's tint limit.</p>
+    </div>
+  </div>
+  <div class="demo-stack">
+    {% include "demo-ppf" uid="sol" %}
+    {% include "demo-tint" uid="sol" %}
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="run-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>How it runs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="run-title" class="t-h2-s">A missed call, answered from <em>the booth</em>.</h2>
+      <p class="t-small">The <a href="{{ site.sys.missed_lead_responder.url }}">Missed Lead Responder</a> with a detailing studio's words, on simulated data. Switch between the caller's phone and the owner's side.</p>
+    </div>
+  </div>
+  {% replay "detailing-quote" id="sol-replay" %}
+</section>
+
+<section class="frame section" aria-labelledby="fit-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>What we'd set up</p></div>
+    <div class="g-body">
+      <h2 id="fit-title" class="t-h2-s sec-head--tight">Three things, priced in the <em>open</em>.</h2>
+      {% include "fit" %}
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="compare-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Compared</p></div>
+    <div class="g-body">
+      <h2 id="compare-title" class="t-h2-s sec-head--tight">Three ways to take a <em>booking</em>.</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">Phone only, a contact form, and a booking request that names the car, compared</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Question</span></th><th scope="col">Phone only</th><th scope="col">Contact form</th><th scope="col">Booking request</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Works while you're in the booth</th><td>No: the call rings out</td><td>Yes</td><td>Yes</td></tr>
+            <tr><th scope="row">You know the car and the work before replying</th><td>Only if you pick up</td><td>Sometimes, if they think to say</td><td>Always: vehicle and services are steps one and two</td></tr>
+            <tr><th scope="row">You can price it before you call back</th><td>No</td><td>Rarely</td><td>Usually, from your own price list</td></tr>
+            <tr><th scope="row">The customer knows it arrived</th><td>Only if you call back</td><td>Depends on the form</td><td>A confirmation on screen, and your reply by text or call</td></tr>
+            <tr><th scope="row">Day and time</th><td>Agreed on the call</td><td>Back and forth</td><td>They pick from the days you're open; you confirm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="compare__note">A booking request never takes payment and never confirms a booking by itself: you confirm every one. Pair it with the missed-call responder so callers who'd rather phone aren't lost either.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Questions detailers <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Can the site show my real prices?</dt>
+          <dd>Yes, once you've confirmed them. Until then a service reads "Quote" or "Priced on inspection". A price on your site is a promise to a customer, so nothing goes up that you haven't signed off.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Do I need the 3D car?</dt>
+          <dd>No. The 3D car is the flagship's showpiece, loaded only on devices that can run it, with a still image everywhere else. Your site can lead with your own photographs instead and still have the coverage switcher and the tint previewer.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>How does the tint previewer deal with the law?</dt>
+          <dd>It flags any front-window shade darker than your state allows. The AZ Detailers preview is set to Arizona, where film on the front side windows must let through at least 33% of the light. We set it to the figure for your state, which you confirm.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Where do booking requests go?</dt>
+          <dd>To you, by email, text or WhatsApp, whichever you check. Each one names the vehicle, the services and the day the customer would like. You call or text back to confirm.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What happens when I miss a call?</dt>
+          <dd>With the <a href="{{ site.routes.services }}#missed-call-responder">missed-call responder</a>, the caller gets a text within seconds asking about the car, you get an alert with their number, and the call is logged in a sheet that updates when they reply. You can <a href="{{ site.routes.work }}#try">call our demo line</a> to try it.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>How long does it take?</dt>
+          <dd>The website: {{ site.svc.website.price.ready }} The missed-call responder: {{ site.svc.missed_call_responder.price.ready }} ({{ site.svc.missed_call_responder.condition_text }})</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">A flagship site for <em>your</em> studio.</h2>
+      <p class="t-lead measure">Your packages, your prices, your photographs and hours, and nobody left listening to a phone ring out.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <span class="tipwrap"><a class="btn btn--ghost" href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-close" data-tip><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>{% include "book-tip" uid="close" %}</span>
+      </div>
+    </div>
+  </div>
+</section>

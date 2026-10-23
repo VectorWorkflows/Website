@@ -9,6 +9,14 @@
     </div>
 
     <div class="footer-col">
+      <h2>Solutions</h2>
+      <ul role="list">
+        {% for e in site.industries %}<li><a href="{{ e.path }}">{{ e.short }}</a></li>
+        {% endfor %}<li><a href="{{ site.routes.solutions }}">Solutions &amp; guides</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
       <h2>Case studies</h2>
       <ul role="list">
         {% for c in site.cases %}<li><a href="{{ c.url }}">{{ c.short }}</a></li>

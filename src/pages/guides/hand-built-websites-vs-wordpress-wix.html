@@ -1,0 +1,148 @@
+---
+title: Hand-Built Websites vs WordPress and Wix · Vector Workflows
+description: Speed, cost over the years, upkeep and booking: how a hand-built static website compares with WordPress and Wix for a small service business, with measured page weights, a cost calculator, and when a builder is the better choice.
+path: /guides/hand-built-websites-vs-wordpress-wix/
+parent: /solutions/
+kind: guide
+order: 3
+crumb: Hand-built vs WordPress & Wix
+teaser: Speed, cost over the years, upkeep and bookings, compared honestly, including when a website builder is the better choice.
+services: website, google-business-profile, whatsapp-business
+calc: website
+body_class: page-guide
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">G3</span><span class="index-label__rule"></span>Guide</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Hand-built static websites vs WordPress and Wix: speed, cost and <em>bookings</em></h1>
+      <p class="t-lead sol-head__lead">For a small service business, a website has three jobs: open fast on a phone, cost what you expected for years, and turn a visitor into a call, a message or a booking. Here's how the three ways of building one compare on each, including where a builder wins.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-label="The guide">
+  <div class="grid">
+    <nav class="g-rail toc" aria-labelledby="toc-title">
+      <p class="toc__title t-label" id="toc-title">In this guide</p>
+      <ol role="list">
+        <li><a href="#what">What "hand-built" means</a></li>
+        <li><a href="#speed">Speed, measured</a></li>
+        <li><a href="#cost">Cost over the years</a></li>
+        <li><a href="#upkeep">Upkeep and security</a></li>
+        <li><a href="#bookings">Bookings</a></li>
+        <li><a href="#compare">Side by side</a></li>
+        <li><a href="#builder">When a builder is the better choice</a></li>
+      </ol>
+    </nav>
+    <div class="g-body longread">
+      <h2 id="what">What "hand-built" means</h2>
+      <p>A hand-built static site is a set of plain files, HTML, CSS and a little JavaScript, written for one business and served as they are. There's no content management system behind it, no database, no page builder and no admin login. When a visitor opens a page, the server hands over the finished page; nothing is assembled on the fly.</p>
+      <p>WordPress builds each page from a database, a theme and plugins. Wix and Squarespace are builders: you design on their platform, with their editor, and they host the result.</p>
+
+      <h2 id="speed">Speed, measured</h2>
+      <p>The page you're reading weighs <strong data-copy><!--PAGE_WEIGHT--></strong> of HTML, CSS and JavaScript, compressed, calculator and replay included. With the fonts that load straight away, our home page comes to <strong>189 kB</strong> in total and the services page to <strong>193 kB</strong>, measured with Lighthouse on 23 October 2026.</p>
+      <p>For comparison, the median mobile web page in 2024 weighed <strong>2,311 kB</strong>, according to the HTTP Archive's <a href="https://almanac.httparchive.org/en/2024/page-weight" target="_blank" rel="noopener">Web Almanac</a>. Weight isn't everything, but on a mid-range phone over mobile data every one of those kilobytes is something to download and run before the page is useful.</p>
+      <p>Google's yardstick for a page that feels fast is its Core Web Vitals: the main content should appear within <strong>2.5 seconds</strong>, the page should respond to a tap within <strong>200 milliseconds</strong>, and it shouldn't jump around while loading (<a href="https://web.dev/articles/defining-core-web-vitals-thresholds" target="_blank" rel="noopener">web.dev</a>). Google recommends meeting them "for success with Search". Any platform can meet them; a hand-built site starts with far less to strip away.</p>
+
+      <h2 id="cost">Cost over the years</h2>
+      <p>A builder or managed WordPress plan is a monthly cost for as long as the site is up, and paid themes, plugins and booking apps add their own. A hand-built site is paid for once. With us, year one includes hosting, your domain, SSL and small changes; after that it keeps running, you renew the domain at the market price, and a care plan is optional.</p>
+      {% include "calc" %}
+
+      <h2 id="upkeep">Upkeep and security</h2>
+      <p>A WordPress site is software that needs looking after: the core, the theme and each plugin get updates, and each plugin is someone else's code running on your site. Builders handle that for you, which is a real advantage. A static site has very little to look after: with no database and no login page, the usual ways in aren't there.</p>
+      <ul>
+        <li><strong>WordPress:</strong> update the core, the theme and every plugin, and keep backups.</li>
+        <li><strong>Wix or Squarespace:</strong> the platform updates itself; you live within what its editor and apps allow.</li>
+        <li><strong>Hand-built:</strong> nothing to update on your side; changes are made to the files and published again.</li>
+      </ul>
+
+      <h2 id="bookings">Bookings</h2>
+      <p>A site earns its keep when it turns a visitor into a call, a message or a booking. The things that matter most are not platform features: a page that opens quickly, a way to act on every screen (call, WhatsApp, book), and a request that still works at 9 pm. Here's one, from a search to a booked appointment, on a fictional clinic's site. Simulated data.</p>
+      {% replay "site-booking" id="guide-replay" %}
+
+      <h2 id="compare">Side by side</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">A hand-built static site, WordPress, and a website builder compared</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Question</span></th><th scope="col">WordPress</th><th scope="col">Wix or Squarespace</th><th scope="col">Hand-built static</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">What a phone downloads</th><td>The theme, plus each plugin's scripts and styles</td><td>The builder's own scripts, plus your content</td><td>Only what the page needs</td></tr>
+            <tr><th scope="row">Ongoing cost</th><td>Hosting, plus paid themes and plugins</td><td>A monthly or yearly plan</td><td>None for year one; after that the domain, and an optional care plan</td></tr>
+            <tr><th scope="row">Editing it yourself</th><td>Yes, in the admin</td><td>Yes, drag and drop</td><td>You send the change; small ones are included</td></tr>
+            <tr><th scope="row">Updates and security</th><td>Core, theme and plugins to keep updated</td><td>Handled by the platform</td><td>No database or login to attack, nothing to update</td></tr>
+            <tr><th scope="row">If you want to move</th><td>Possible, with some work</td><td>Generally means rebuilding elsewhere</td><td>Plain files any host can serve</td></tr>
+            <tr><th scope="row">Booking</th><td>Through a booking plugin</td><td>Through the builder's booking app</td><td>A request, WhatsApp or call button built for how you work</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="builder">When a builder is the better choice</h2>
+      <ul>
+        <li><strong>You want to change pages yourself every week</strong>, add posts, rearrange sections. A builder's editor is made for that.</li>
+        <li><strong>You're running a real online shop</strong>, with stock, shipping and payments. That isn't what we build.</li>
+        <li><strong>You need something today and can't spend anything yet.</strong> A free builder plan, with the builder's branding, beats having no site.</li>
+      </ul>
+      <p>For a service business whose site's job is to be found, open fast and bring in calls, messages and bookings, hand-built is the better trade. That's the only kind of site we make, and the <a href="{{ site.bld.auto_detailing_flagship.url }}">detailing flagship</a> and <a href="{{ site.bld.reliance_coaching_centre.url }}">Reliance Coaching Centre</a> are two of them.</p>
+
+      {% include "fit" %}
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Common <em>questions</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Can I edit a hand-built site myself?</dt>
+          <dd>Not with a drag-and-drop editor. You send the change on WhatsApp or by email; text, prices, hours and photos count as small changes, included in year one and in the optional care plan after that.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What happens if we stop working together?</dt>
+          <dd>The site is a set of plain files. You keep them, and any developer or host can serve them. Nothing is locked to a platform.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Will a hand-built site rank higher on Google?</dt>
+          <dd>Not for being hand-built. Google ranks pages that answer the search well. It does recommend good Core Web Vitals, and a light, fast site makes those easier to meet.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can you move my existing site?</dt>
+          <dd>We rebuild it rather than move it, keeping your domain, and your page addresses where we can, so existing links and search results keep working.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What does it cost after the first year?</dt>
+          <dd>Everything keeps running. Renew the domain yourself at the market price, or choose the optional care plan for <span data-copy>{{ pricing.care_monthly }}</span> a month (<span data-copy>{{ pricing.care_yearly }}</span> a year).</dd>
+        </div>
+        <div class="faq__item">
+          <dt>How long does a website take?</dt>
+          <dd>{{ site.svc.website.price.ready }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Fast, paid for once, and <em>yours</em>.</h2>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with the Starter pack</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.routes.work }}#websites"><span class="btn__label">See the websites</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

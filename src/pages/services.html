@@ -6,7 +6,8 @@ nav: services
 schema: organization, services
 body_class: page-services
 js: pricing, bundle
-critical_css: components/page-head.css, components/card.css, components/launch.css, components/offer.css, pages/services.css
+css: components/tradelinks.css
+critical_css: components/page-head.css, components/card.css, components/launch.css, components/offer.css, components/faq.css, pages/services.css
 ---
 
 <section class="frame page-head" aria-labelledby="page-title">
@@ -83,7 +84,7 @@ critical_css: components/page-head.css, components/card.css, components/launch.c
             <ul role="list" class="svc__tags">{% for item in pricing.included %}<li>{{ item }}</li>{% endfor %}</ul>
           </div>
           {% endif %}
-          {% if s.case %}<p class="svc__case"><a class="link-arrow" href="{{ site.routes.work }}{{ s.case }}/">{% icon "play" %}Built on the {{ s.case_name }}</a></p>{% endif %}
+          {% if s.case %}<p class="svc__case"><a class="link-arrow" href="{{ site.routes.work }}{{ s.case }}/">{% icon "play" %}{{ s.case_label }}</a></p>{% endif %}
         </div>
 
         <div class="svc__foot">
@@ -153,6 +154,17 @@ critical_css: components/page-head.css, components/card.css, components/launch.c
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="trades-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">→</span><span class="index-label__rule"></span>By trade</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="trades-title" class="t-h2-s">See it set up for your <em>trade</em>.</h2>
+      <p class="measure">The same services for six kinds of business: where their customers slip away, what that's worth, and what we'd set up first. Plus three plain guides.</p>
+      <ul class="tradelinks" role="list">{% for e in site.industries %}<li><a href="{{ e.path }}">{{ e.short }}</a></li>{% endfor %}<li class="tradelinks__all"><a href="{{ site.routes.solutions }}">All solutions and guides {% icon "arrow-right" %}</a></li></ul>
     </div>
   </div>
 </section>

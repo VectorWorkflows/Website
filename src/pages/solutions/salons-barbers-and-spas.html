@@ -1,0 +1,157 @@
+---
+title: Salon & Barber Booking Without Commission · Vector Workflows
+description: For salons, barbers and spas: your own booking link with no cut taken from any booking, WhatsApp reminders the day before, review requests after the visit, and a nudge when a regular is overdue for their next appointment.
+path: /solutions/salons-barbers-and-spas/
+kind: industry
+order: 5
+crumb: Salons, barbers & spas
+short: Salons & barbers
+teaser: Your own booking link with no cut taken, reminders the day before, review links after, and a nudge when a regular is overdue.
+services: appointment-reminders, review-requester, repeat-customer-tracker
+calc: salon
+body_class: page-solution
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Zero-commission booking and WhatsApp reminders for <em>salons</em> and barbers</h1>
+      <p class="t-lead sol-head__lead">Your regulars already know where you are. Give them a booking link of your own that takes no cut of any booking, a WhatsApp reminder the day before, your review link after the visit, and a friendly nudge when they're overdue.</p>
+      <ul class="sol-head__fit" role="list">{% for s in fit.services %}<li>{{ s.name }}</li>{% endfor %}<li class="sol-head__from">from <span data-copy>{{ fit.from }}</span></li></ul>
+      <div class="cluster sol-head__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.routes.services }}#packs"><span class="btn__label">See the packs</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="slip-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Where clients go</p></div>
+    <div class="g-body">
+      <h2 id="slip-title" class="t-h2-s sec-head--tight">Where the chair goes <em>empty</em>.</h2>
+      <ol class="slips" role="list">
+        <li class="slip"><span class="slip__time">10:15</span><h3>Hands in someone's hair</h3><p>The phone rings in the middle of a colour. By the time you've rinsed, the caller has booked somewhere that answered.</p></li>
+        <li class="slip"><span class="slip__time">14:00</span><h3>The no-show at two</h3><p>A cut booked a fortnight ago, forgotten. A reminder the evening before keeps the chair full, or frees it in time for someone else.</p></li>
+        <li class="slip"><span class="slip__time">18:40</span><h3>A regular, booked through an app</h3><p>Someone who has sat in your chair for years books through a marketplace app, and depending on your plan, the app takes a share of a booking you'd have had anyway.</p></li>
+        <li class="slip"><span class="slip__time">Week 7</span><h3>The regular who went quiet</h3><p>Every six weeks like clockwork, until they weren't. A short message saying it's been a while costs nothing to send.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="math-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The arithmetic</p></div>
+    <div class="g-body sol-math__say">
+      <h2 id="math-title" class="t-h2-s">Know what the app's cut <em>adds up to</em>.</h2>
+      <p>A marketplace that sends you a new client has earned its fee. A share taken from a regular who'd have booked you anyway is a different matter, and it's worth knowing the yearly figure before you decide where your regulars should book.</p>
+      <p class="sol-math__worked">For example: <strong>{{ calc.shown.n }}</strong> bookings a month through the app, an average ticket of <strong>{{ calc.shown.v }}</strong>, and <strong>{{ calc.shown.r }}</strong> taken from each. That's <strong>{{ calc.res.monthly }}</strong> a month, or <strong>{{ calc.res.yearly }}</strong> a year.</p>
+    </div>
+  </div>
+  {% include "calc" %}
+</section>
+
+<section class="frame section" aria-labelledby="run-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>How it runs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="run-title" class="t-h2-s">One booking, start to <em>rebooking</em>.</h2>
+      <p class="t-small">Booked through your own link on Monday, reminded on Friday, the review link on Saturday, a nudge six weeks later. Simulated data, for a fictional salon; switch between the client's phone and the salon's side.</p>
+    </div>
+  </div>
+  {% replay "salon-rebook" id="sol-replay" %}
+</section>
+
+<section class="frame section" aria-labelledby="fit-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>What we'd set up</p></div>
+    <div class="g-body">
+      <h2 id="fit-title" class="t-h2-s sec-head--tight">Three services that <em>share</em> their groundwork.</h2>
+      {% include "fit" %}
+      <p class="compare__note">Want a site to put the booking link on? See <a href="{{ site.bld.cutabove.url }}">Cut Above</a>, an unsolicited concept for a long-established salon with a price list you can search, the team and the gallery, or the <a href="{{ site.routes.services }}#website">business website</a> on the menu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="compare-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Compared</p></div>
+    <div class="g-body">
+      <h2 id="compare-title" class="t-h2-s sec-head--tight">A marketplace app, and a link of your <em>own</em>.</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">A marketplace booking app compared with your own booking link</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Question</span></th><th scope="col">Marketplace app</th><th scope="col">Your own booking link</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Finds you new clients</th><td>Yes. That's what it's for</td><td>No. It's for the clients who already know you</td></tr>
+            <tr><th scope="row">Fee per booking</th><td>Depends on your plan: a share, a fee, or a monthly subscription</td><td>No cut. You pay once for the setup; each WhatsApp reminder carries Meta's small fee, at cost</td></tr>
+            <tr><th scope="row">Whose name the client sees</th><td>The app's, alongside other salons</td><td>Yours, on your own link</td></tr>
+            <tr><th scope="row">Reminders</th><td>From the app, in its words</td><td>On WhatsApp, from your number, in your words</td></tr>
+            <tr><th scope="row">Your client list</th><td>Held in the app, under its terms</td><td>In your own calendar and sheet</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="compare__note">You don't have to choose: a marketplace can keep finding you new clients while your regulars book on your own link.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Questions salons <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Should I leave the booking apps?</dt>
+          <dd>Not necessarily. They're good at finding new clients. The point of your own link is that the clients who already know you don't have to book through someone else.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Where do bookings go?</dt>
+          <dd>Into your own calendar. The client gets a WhatsApp reminder the day before, from your business number.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can clients move an appointment?</dt>
+          <dd>They reply to the reminder and you move it, or they rebook with the same link.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Will review requests put clients off?</dt>
+          <dd>It's one message after the visit, at a time you choose, with your Google review link in it. Nothing follows if they don't reply.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Who gets the overdue nudge?</dt>
+          <dd>Clients who agreed to hear from you on WhatsApp and haven't been in for longer than the gap you set. One message, in your words; anyone can ask you to stop.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Your chair, your clients, your <em>link</em>.</h2>
+      <p class="t-lead measure">Tell us how bookings reach you today. You'll get a straight answer on what's worth setting up, and what it costs.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

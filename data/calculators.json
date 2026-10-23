@@ -1,0 +1,126 @@
+{
+  "_comment": "The calculators on the solutions and guide pages. Every input is the visitor's own number; the values here are only where each slider starts, and each page says so. No industry averages. kind picks the arithmetic (build.py calc_results, the same in src/js/roi-calc.js): recover = n a week x 52/12 x r% x v; commission = n a month x v x r%; hours = n a week x 52/12 x t minutes x r% / 60; tco = (p + a) x 12 x y against our price. service is the menu item the result is set against; its price comes from data/pricing.json. won (recover only) names what comes back: jobs, new patients, admissions.",
+
+  "detailing": {
+    "kind": "recover",
+    "service": "missed-call-responder",
+    "title": "What missed calls cost a detailing studio",
+    "lede": "Gloves on, car in the booth, phone in the office. Slide in your own numbers.",
+    "won": "Jobs",
+    "inputs": [
+      { "id": "n", "label": "Calls you miss in a week", "min": 1, "max": 30, "step": 1, "value": 5, "unit": "count" },
+      { "id": "v", "label": "Average job", "min": 50, "max": 5000, "step": 50, "value": 450, "unit": "money" },
+      { "id": "r", "label": "Of those callers, how many would have booked", "min": 5, "max": 80, "step": 5, "value": 20, "unit": "percent" }
+    ],
+    "note": "Calls you miss × 4.33 weeks × the share who'd have booked × the average job. The starting numbers are an example, not a statistic: set them from your own call log."
+  },
+
+  "clinic": {
+    "kind": "recover",
+    "service": "missed-call-responder",
+    "title": "What unanswered calls cost a practice",
+    "lede": "The front desk is with a patient; the phone rings out. Slide in your own numbers.",
+    "won": "New patients",
+    "inputs": [
+      { "id": "n", "label": "Calls the front desk misses in a week", "min": 1, "max": 60, "step": 1, "value": 10, "unit": "count" },
+      { "id": "v", "label": "What a new patient's first visit is worth", "min": 20, "max": 1000, "step": 10, "value": 120, "unit": "money" },
+      { "id": "r", "label": "Of those callers, how many would have booked", "min": 5, "max": 80, "step": 5, "value": 25, "unit": "percent" }
+    ],
+    "note": "Calls missed × 4.33 weeks × the share who'd have booked × a first visit. It leaves out everything a patient is worth after the first visit, so the real figure is usually higher. The starting numbers are an example: use your own."
+  },
+
+  "coaching": {
+    "kind": "recover",
+    "service": "whatsapp-bot",
+    "title": "What a slow reply costs in admission season",
+    "lede": "Classes are running when parents message. Slide in your own numbers.",
+    "won": "Admissions",
+    "inputs": [
+      { "id": "n", "label": "Enquiries a week that get a late reply or none", "min": 1, "max": 40, "step": 1, "value": 5, "unit": "count" },
+      { "id": "v", "label": "Fees from one student over a year", "min": 50, "max": 3000, "step": 25, "value": 300, "unit": "money" },
+      { "id": "r", "label": "Of those parents, how many would have joined", "min": 5, "max": 80, "step": 5, "value": 15, "unit": "percent" }
+    ],
+    "note": "Enquiries missed × 4.33 weeks × the share who'd have joined × a year's fees. The starting numbers are an example, not a statistic: count a fortnight of your own enquiries."
+  },
+
+  "gym": {
+    "kind": "recover",
+    "service": "whatsapp-bot",
+    "title": "What a cold trial enquiry costs",
+    "lede": "Someone asks about a trial class at 11 pm and hears back the next afternoon. Slide in your own numbers.",
+    "won": "Members",
+    "inputs": [
+      { "id": "n", "label": "Trial enquiries a week that go cold", "min": 1, "max": 40, "step": 1, "value": 4, "unit": "count" },
+      { "id": "v", "label": "What a member pays over their membership", "min": 30, "max": 3000, "step": 10, "value": 360, "unit": "money" },
+      { "id": "r", "label": "Of those, how many would have joined", "min": 5, "max": 80, "step": 5, "value": 20, "unit": "percent" }
+    ],
+    "note": "Cold enquiries × 4.33 weeks × the share who'd have joined × what a member pays. The starting numbers are an example: your booking sheet has the real ones."
+  },
+
+  "salon": {
+    "kind": "commission",
+    "service": "appointment-reminders",
+    "title": "What a booking app's cut adds up to",
+    "lede": "For the clients who already know you and book through an app that takes a share. Slide in your own numbers.",
+    "inputs": [
+      { "id": "n", "label": "Bookings a month that go through the app", "min": 5, "max": 400, "step": 5, "value": 60, "unit": "count" },
+      { "id": "v", "label": "Average ticket", "min": 10, "max": 300, "step": 5, "value": 45, "unit": "money" },
+      { "id": "r", "label": "What the app takes from each booking", "min": 1, "max": 40, "step": 1, "value": 10, "unit": "percent" }
+    ],
+    "note": "Bookings × average ticket × the app's share. Apps charge in different ways: some only for new clients they send you, some a flat monthly plan. Use what your own plan charges; a new client an app finds for you can be worth its fee."
+  },
+
+  "contractor": {
+    "kind": "recover",
+    "service": "missed-call-responder",
+    "title": "What a missed call costs on a job day",
+    "lede": "On a roof, under a sink, driving between jobs. Slide in your own numbers.",
+    "won": "Jobs",
+    "inputs": [
+      { "id": "n", "label": "Calls you miss on the job in a week", "min": 1, "max": 40, "step": 1, "value": 6, "unit": "count" },
+      { "id": "v", "label": "Average job", "min": 50, "max": 10000, "step": 50, "value": 600, "unit": "money" },
+      { "id": "r", "label": "Of those callers, how many would have hired you", "min": 5, "max": 80, "step": 5, "value": 20, "unit": "percent" }
+    ],
+    "note": "Calls missed × 4.33 weeks × the share who'd have hired you × the average job. The starting numbers are an example, not a statistic: your phone's call log has a fortnight of real ones."
+  },
+
+  "missed-call": {
+    "kind": "recover",
+    "service": "missed-call-responder",
+    "title": "Your missed calls, in money",
+    "lede": "Three numbers you can read off your own phone and your own books.",
+    "won": "Customers",
+    "inputs": [
+      { "id": "n", "label": "Missed calls a week", "min": 1, "max": 60, "step": 1, "value": 8, "unit": "count" },
+      { "id": "v", "label": "Average customer value", "min": 10, "max": 5000, "step": 10, "value": 200, "unit": "money" },
+      { "id": "r", "label": "Callers who'd book if someone got back to them", "min": 5, "max": 80, "step": 5, "value": 20, "unit": "percent" }
+    ],
+    "note": "Missed calls × 4.33 weeks × the share who'd book × what one customer is worth. The starting numbers are an example, not an industry figure: the share who'd book is the one to be honest with yourself about."
+  },
+
+  "whatsapp": {
+    "kind": "hours",
+    "service": "whatsapp-bot",
+    "title": "Time spent answering the same questions",
+    "lede": "Count a normal week of chats. Slide in your own numbers.",
+    "inputs": [
+      { "id": "n", "label": "WhatsApp messages you answer in a week", "min": 10, "max": 600, "step": 10, "value": 140, "unit": "count" },
+      { "id": "t", "label": "Minutes each one takes", "min": 1, "max": 10, "step": 1, "value": 2, "unit": "count" },
+      { "id": "r", "label": "How many are questions you've answered before", "min": 10, "max": 90, "step": 5, "value": 60, "unit": "percent" }
+    ],
+    "note": "Messages × 4.33 weeks × minutes each × the share that are repeats, in hours. Routine questions are the part a bot can answer; the rest still comes to you. The starting numbers are an example: use your own week."
+  },
+
+  "website": {
+    "kind": "tco",
+    "service": "website",
+    "title": "What a website costs over the years",
+    "lede": "Put in what you pay, or would pay, each month. Slide in your own numbers.",
+    "inputs": [
+      { "id": "p", "label": "Website builder or hosting plan, a month", "min": 0, "max": 80, "step": 1, "value": 20, "unit": "money" },
+      { "id": "a", "label": "Paid apps, plugins and themes, a month", "min": 0, "max": 80, "step": 1, "value": 10, "unit": "money" },
+      { "id": "y", "label": "Years", "min": 1, "max": 5, "step": 1, "value": 3, "unit": "count" }
+    ],
+    "note": "Builder or hosting plan plus paid add-ons, × 12 months × years, against a hand-built site paid for once. The starting numbers are an example, not any provider's price list: check your own plan."
+  }
+}

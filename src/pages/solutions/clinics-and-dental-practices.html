@@ -1,0 +1,170 @@
+---
+title: Websites & Reminders for Clinics and Dentists · Vector Workflows
+description: For clinics and dental practices: a text back for every call the front desk misses, a booking link that works after hours, WhatsApp reminders the day before, and review requests after each visit. Priced in the open.
+path: /solutions/clinics-and-dental-practices/
+kind: industry
+order: 2
+crumb: Clinics & dental practices
+short: Clinics & dentists
+teaser: A text back for every call the front desk misses, a booking link that works at midnight, and a WhatsApp reminder the day before each visit.
+services: missed-call-responder, appointment-reminders, review-requester
+calc: clinic
+body_class: page-solution
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Solutions</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">Reminders and missed-call recovery for <em>clinics</em> and dentists</h1>
+      <p class="t-lead sol-head__lead">The front desk can answer one phone at a time, and patients forget appointments they booked weeks ago. Every missed call gets a text back with your booking link, every booking gets a WhatsApp reminder the day before, and every visit ends with your review link.</p>
+      <ul class="sol-head__fit" role="list">{% for s in fit.services %}<li>{{ s.name }}</li>{% endfor %}<li class="sol-head__from">from <span data-copy>{{ fit.from }}</span></li></ul>
+      <div class="cluster sol-head__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.sys.missed_lead_responder.url }}"><span class="btn__label">See the system behind it</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="slip-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Where patients go</p></div>
+    <div class="g-body">
+      <h2 id="slip-title" class="t-h2-s sec-head--tight">A day at the front <em>desk</em>.</h2>
+      <ol class="slips" role="list">
+        <li class="slip"><span class="slip__time">08:50</span><h3>The empty chair at nine</h3><p>A patient who booked three weeks ago has forgotten. A reminder the evening before would have kept the slot, or freed it in time for someone else.</p></li>
+        <li class="slip"><span class="slip__time">09:05</span><h3>Two lines, one receptionist</h3><p>A patient at the desk, another on hold, a third call ringing out. The third caller wanted a new-patient appointment, and by lunch has booked somewhere else.</p></li>
+        <li class="slip"><span class="slip__time">12:40</span><h3>The voicemail nobody plays back</h3><p>A message left at lunchtime gets heard at five. Plenty of callers won't leave one at all; they'll just try the next practice on the map.</p></li>
+        <li class="slip"><span class="slip__time">18:30</span><h3>The check-up nobody booked</h3><p>Recalls slip because nobody has time to work through the list. The patient isn't unhappy. They just weren't asked to come back.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="math-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The arithmetic</p></div>
+    <div class="g-body sol-math__say">
+      <h2 id="math-title" class="t-h2-s">Count one week of <em>missed calls</em>.</h2>
+      <p>Your phone or your phone provider already lists the calls nobody answered. Multiply them out and a missed call stops being an inconvenience and becomes a number. The calculator counts only a first visit, so it understates what a patient who stays is worth.</p>
+      <p class="sol-math__worked">For example: <strong>{{ calc.shown.n }}</strong> calls missed a week, <strong>{{ calc.shown.r }}</strong> of those callers would have booked, and a first visit is worth <strong>{{ calc.shown.v }}</strong>. That's about <strong>{{ calc.res.won }}</strong> new patients a month, or <strong>{{ calc.res.monthly }}</strong> before any of them come back.</p>
+    </div>
+  </div>
+  {% include "calc" %}
+</section>
+
+<section class="frame section" aria-labelledby="run-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>How it runs</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="run-title" class="t-h2-s">From a missed call to a <em>kept</em> appointment.</h2>
+      <p class="t-small">A missed call on Monday, a booking a minute later, a reminder on Wednesday evening. Simulated data; switch between the patient's phone and the practice's side.</p>
+    </div>
+  </div>
+  {% replay "clinic-recovery" id="sol-replay" %}
+</section>
+
+<section class="frame section-tight" aria-labelledby="privacy-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Privacy</p></div>
+    <div class="g-body">
+      <h2 id="privacy-title" class="t-h2-s sec-head--tight">What stays out of the <em>messages</em>.</h2>
+      <div class="sol-privacy">
+        <p>A reminder says who it's from, the day and the time, and how to change it. Nothing about the treatment, and nothing a patient would mind someone reading over their shoulder.</p>
+        <p>None of this needs your patient records. It works from an appointment time and a phone number, and your practice software stays exactly where it is.</p>
+        <p>Tell us which privacy rules your practice works under (HIPAA in the US, for example) before anything is set up, and we'll keep identifying details out of messages and sheets accordingly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="fit-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>What we'd set up</p></div>
+    <div class="g-body">
+      <h2 id="fit-title" class="t-h2-s sec-head--tight">Three services, priced in the <em>open</em>.</h2>
+      {% include "fit" %}
+      <p class="compare__note">No website yet, or a listing on Google Maps that's out of date? A <a href="{{ site.routes.services }}#website">business website</a> and <a href="{{ site.routes.services }}#google-business-profile">Google Business Profile setup</a> are on the same menu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="compare-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Compared</p></div>
+    <div class="g-body">
+      <h2 id="compare-title" class="t-h2-s sec-head--tight">The same front desk, with <em>help</em>.</h2>
+      <div class="compare" role="region" aria-labelledby="compare-cap" tabindex="0">
+        <table>
+          <caption id="compare-cap" class="sr-only">A front desk alone, and the same desk with the three services</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Moment</span></th><th scope="col">Front desk alone</th><th scope="col">With the three services</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">A busy hour on the phones</th><td>Some calls ring out, and some of those callers don't try again</td><td>Every missed call gets a text within seconds, with your booking link</td></tr>
+            <tr><th scope="row">Booking after hours</th><td>Wait for the morning, and hope they remember to call</td><td>The booking link works at any hour</td></tr>
+            <tr><th scope="row">The day before an appointment</th><td>Calls to remind patients, if there's time</td><td>A WhatsApp reminder goes out by itself</td></tr>
+            <tr><th scope="row">Who to call back</th><td>A list on a sticky note</td><td>One sheet, with the status of every missed call</td></tr>
+            <tr><th scope="row">After the visit</th><td>Asking for a review in person, sometimes</td><td>Your Google review link, sent at a time you choose</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Questions practices <em>ask</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Will messages mention a patient's treatment?</dt>
+          <dd>No. Reminders carry the practice's name, the day and time, and how to change it. That's all they need.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Does this replace our practice software?</dt>
+          <dd>No. It runs beside it. The booking link can be one your software already gives you, or a simple one we set up, and appointments land in a calendar you already use.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What about patients who don't use WhatsApp?</dt>
+          <dd>The reply to a missed call goes out as a text message, so it reaches any mobile phone. Reminders go out on WhatsApp; patients without it can still book online or be called.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can patients reply to a reminder?</dt>
+          <dd>Yes. A reply arrives on your WhatsApp like any other message, so the front desk can move the appointment there and then.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+        <div class="faq__item">
+          <dt>How long does it take to set up?</dt>
+          <dd>The missed-call responder: {{ site.svc.missed_call_responder.price.ready }} ({{ site.svc.missed_call_responder.condition_text }}) Appointment reminders: {{ site.svc.appointment_reminders.price.ready }} ({{ site.svc.appointment_reminders.condition_text }})</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">Fewer empty chairs, fewer <em>lost calls</em>.</h2>
+      <p class="t-lead measure">Tell us how your front desk runs today. You'll get a straight answer on what's worth setting up, and what it costs.</p>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <span class="tipwrap"><a class="btn btn--ghost" href="{{ site.cal_url }}" target="_blank" rel="noopener" aria-describedby="tip-book-close" data-tip><span class="btn__label">Book a 15-min call</span><span class="btn__icon">{% icon "calendar-blank" %}</span></a>{% include "book-tip" uid="close" %}</span>
+      </div>
+    </div>
+  </div>
+</section>

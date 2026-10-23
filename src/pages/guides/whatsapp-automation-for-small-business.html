@@ -1,0 +1,161 @@
+---
+title: WhatsApp Business App vs an Auto-Reply Bot · Vector Workflows
+description: What the free WhatsApp Business app does on its own, what an auto-reply bot on the WhatsApp Business Platform adds, what Meta charges for, whether you can keep the app on your phone, and how to tell which one your business needs.
+path: /guides/whatsapp-automation-for-small-business/
+parent: /solutions/
+kind: guide
+order: 2
+crumb: WhatsApp setup or a bot?
+teaser: What the free WhatsApp Business app does on its own, what an auto-reply bot adds, what Meta charges for, and how to choose.
+services: whatsapp-business, whatsapp-bot
+calc: whatsapp
+body_class: page-guide
+critical_css: components/page-head.css, components/card.css, pages/solutions.css
+css: components/calc.css, components/replay.css, components/faq.css
+js: roi-calc
+schema: organization
+---
+
+<section class="frame page-head sol-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">G2</span><span class="index-label__rule"></span>Guide</p>
+      {% include "crumbs" %}
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="sol-head__title">WhatsApp Business setup or a WhatsApp <em>auto-reply bot</em>: an owner's guide</h1>
+      <p class="t-lead sol-head__lead">Two different things share the name WhatsApp Business. One is a free app you can set up properly in an afternoon; the other lets a bot answer for you at any hour. Here's what each does, what Meta charges for, and how to tell which one your business needs.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-label="The guide">
+  <div class="grid">
+    <nav class="g-rail toc" aria-labelledby="toc-title">
+      <p class="toc__title t-label" id="toc-title">In this guide</p>
+      <ol role="list">
+        <li><a href="#two">Two things with one name</a></li>
+        <li><a href="#app">What the app does well</a></li>
+        <li><a href="#bot">What a bot adds</a></li>
+        <li><a href="#meta">What Meta charges for</a></li>
+        <li><a href="#phone">Can I keep the app on my phone?</a></li>
+        <li><a href="#which">Which one do you need?</a></li>
+        <li><a href="#time">The time it takes now</a></li>
+        <li><a href="#watch">Watch a bot hand over</a></li>
+      </ol>
+    </nav>
+    <div class="g-body longread">
+      <h2 id="two">Two things with one name</h2>
+      <p><strong>The WhatsApp Business app</strong> is a free app on your phone, separate from personal WhatsApp. You answer customers yourself, with some tools that make it quicker.</p>
+      <p><strong>The WhatsApp Business Platform</strong> is how software talks to WhatsApp. It's what a bot runs on: your number is connected to a system that can read a message, look up the answer in your own list, reply, and pass the chat to a person when it should.</p>
+
+      <h2 id="app">What the app does well</h2>
+      <p>Set up properly, the free app already does a lot. This is what our WhatsApp Business setup covers:</p>
+      <ul>
+        <li><strong>A catalogue</strong> of what you sell or offer, with prices and photos, that customers can browse inside the chat.</li>
+        <li><strong>Greeting and away messages</strong>, so a first message or one sent after hours gets an answer.</li>
+        <li><strong>Quick replies</strong>: your common answers saved as shortcuts, typed in two keystrokes.</li>
+        <li><strong>Labels</strong> to sort chats into new, waiting for payment, done, or whatever fits your week.</li>
+        <li><strong>A click-to-chat link and a QR code</strong> for your website, your counter and your business card.</li>
+      </ul>
+      <p>What the app can't do is think. Its away message is the same text for everyone. It can't look up whether Saturday is free, take an order with the details in the right place, or decide that a question needs you. A person still answers every chat.</p>
+
+      <h2 id="bot">What a bot adds</h2>
+      <ul>
+        <li><strong>Answers from your own list</strong>: prices, hours, location, the questions you're asked every day, at any hour.</li>
+        <li><strong>Booking and order requests</strong>, taken in a structured way and passed to you to confirm. It doesn't confirm anything you haven't agreed.</li>
+        <li><strong>A handover to a person</strong> when the question is new, unusual or needs judgement, and it tells the customer that's what it's doing.</li>
+        <li><strong>A record</strong>: with the enquiry tracker, every request lands in one sheet with its status.</li>
+      </ul>
+
+      <h2 id="meta">What Meta charges for</h2>
+      <p>The app is free. On the Platform, Meta charges for some messages and not others, and the line is simple once you see it:</p>
+      <ul>
+        <li><strong>Replies are free.</strong> When a customer messages you, you can reply freely for the next 24 hours. A bot answering questions sits almost entirely here.</li>
+        <li><strong>Messages your business starts are charged.</strong> A reminder, a follow-up or a nudge sent outside that 24-hour window has to use a template Meta has approved, and since July 2025 Meta charges for those per message. The price depends on the kind of message and the customer's country.</li>
+        <li><strong>Some are free in the window.</strong> Utility templates, such as an appointment confirmation, cost nothing when sent within those 24 hours.</li>
+      </ul>
+      <div class="say"><span class="say__k">On our services page</span><p>{{ pricing.usage_note }}</p></div>
+      <p class="cite">Source: Meta's <a href="https://developers.facebook.com/docs/whatsapp/pricing" target="_blank" rel="noopener">pricing for the WhatsApp Business Platform</a>, checked 23 October 2026. Rates change; we give you the current ones before anything is set up.</p>
+
+      <h2 id="phone">Can I keep the app on my phone?</h2>
+      <p>Often, yes. Meta now lets one number work in the Business app and on the Platform at the same time, which it calls coexistence: a bot handles the routine chats, and you can still open the app and reply yourself. It needs a recent version of the app and isn't offered for every number or country, so we check yours before we start. Where it isn't available, the bot runs on a number of its own.</p>
+
+      <h2 id="which">Which one do you need?</h2>
+      <div class="compare" role="region" aria-labelledby="which-cap" tabindex="0">
+        <table>
+          <caption id="which-cap" class="sr-only">The WhatsApp Business app on its own, set up properly, and with an auto-reply bot</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Question</span></th><th scope="col">The app, as installed</th><th scope="col">The app, set up properly</th><th scope="col">An auto-reply bot</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Cost from Meta</th><td>Free</td><td>Free</td><td>Free replies; messages you start are charged per message</td></tr>
+            <tr><th scope="row">A message at 11 pm</th><td>Waits for you</td><td>Gets your away message</td><td>Gets an actual answer</td></tr>
+            <tr><th scope="row">"How much is it?"</th><td>You type it out again</td><td>A quick reply, or the catalogue</td><td>Answered from your own price list</td></tr>
+            <tr><th scope="row">"Can I book Saturday?"</th><td>A conversation</td><td>A conversation, a bit quicker</td><td>Taken as a request, passed to you to confirm</td></tr>
+            <tr><th scope="row">A question nobody expected</th><td>You answer</td><td>You answer</td><td>Handed to you, and the customer is told</td></tr>
+            <tr><th scope="row">Best for</th><td>Getting started</td><td>A handful of chats a day</td><td>Dozens of chats, or many after hours</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A rough rule: if you answer the same questions more than a few times a day, or a lot of your messages arrive when you're closed, the bot earns its place. If not, a properly set-up app is enough, and cheaper.</p>
+
+      <h2 id="time">The time it takes now</h2>
+      <p>Count a normal week of chats and how long each takes you. Most of the saving comes from the questions you've answered a hundred times before.</p>
+      {% include "calc" %}
+
+      <h2 id="watch">Watch a bot hand over</h2>
+      <p>A late-night cake order for a fictional bakery: the bot answers the hours and the price, and passes the custom message to a person, who confirms it in the morning. Simulated data.</p>
+      {% replay "wa-bot" id="guide-replay" %}
+
+      {% include "fit" %}
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="faq-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">?</span><span class="index-label__rule"></span>Questions</p></div>
+    <div class="g-body">
+      <h2 id="faq-title" class="t-h2-s sec-head">Common <em>questions</em>.</h2>
+      <dl class="faq">
+        <div class="faq__item">
+          <dt>Will customers know they're talking to a bot?</dt>
+          <dd>They should. We recommend the first reply says it's automatic: people are fine with a fast, accurate answer from a bot, and what annoys them is a bot pretending to be a person.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Does Meta have to approve anything?</dt>
+          <dd>Yes. Meta reviews the business's display name, approves the templates used for messages you start, and may ask to verify the business. We set it up and walk you through it; it's why WhatsApp services say "plus Meta's approval time".</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can the bot take payments?</dt>
+          <dd>Not ours. It takes the request and passes it to you; you take payment the way you do now.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Can I message all my customers at once?</dt>
+          <dd>Only those who agreed to hear from you on WhatsApp, and each message you start uses an approved template and is charged by Meta. Done carelessly, it gets numbers reported and limited.</dd>
+        </div>
+        <div class="faq__item">
+          <dt>What if I just want the app set up properly?</dt>
+          <dd>That's the <a href="{{ site.routes.services }}#whatsapp-business">WhatsApp Business setup</a>: catalogue, greeting and away messages, quick replies, labels, a click-to-chat link and a QR code. {{ site.svc.whatsapp_business.price.ready }}</dd>
+        </div>
+        <div class="faq__item">
+          <dt>Are there running costs?</dt>
+          <dd>{{ pricing.usage_note }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% include "related" %}
+
+<section class="frame section sol-close" aria-labelledby="close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="close-title" class="t-h1">The same questions, answered <em>once</em>.</h2>
+      <div class="cluster sol-close__ctas">
+        <a class="btn btn--primary" href="{{ fit.start }}"><span class="btn__label">Start with these</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+</section>

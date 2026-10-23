@@ -5,7 +5,7 @@ path: /work/reliance-coaching-centre/
 nav: work
 build: reliance-coaching-centre
 body_class: page-case
-critical_css: components/page-head.css, components/card.css, components/seg.css, components/showcase.css, components/replay.css, pages/case.css
+critical_css: components/page-head.css, components/card.css, components/seg.css, components/showcase.css, components/replay.css, components/steps.css, pages/case.css
 ---
 
 {% include "build-head" %}
@@ -118,6 +118,7 @@ critical_css: components/page-head.css, components/card.css, components/seg.css,
         <a class="btn btn--primary" href="{{ site.routes.start }}?service=website,enquiry-tracker"><span class="btn__label">Start with these two</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
       </div>
+      <p><a class="link-arrow" href="/solutions/coaching-institutes-and-academies/">What we set up for coaching centres and academies {% icon "arrow-right" %}</a></p>
     </div>
   </div>
   {% include "next-case" %}
