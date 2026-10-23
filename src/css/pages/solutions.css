@@ -14,14 +14,6 @@
   .sol-head__fit .sol-head__from { padding-inline: 0.25rem; background: none; box-shadow: none; font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--c-bone-3); }
   .sol-head__ctas { --gap: var(--space-xs); }
 
-  /* Breadcrumb: mono, in the rail, under the index label */
-  .crumbs ol { display: flex; flex-wrap: wrap; gap: 0.25rem 0; margin: 0; padding: 0; list-style: none; }
-  .crumbs li { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.06em; color: var(--c-bone-3); }
-  .crumbs li + li::before { content: "/"; margin-inline: 0.5rem; color: var(--edge-strong); }
-  .crumbs a { color: var(--c-bone-2); text-decoration: none; transition: color var(--dur-hover) var(--ease-out-soft); }
-  @media (hover: hover) { .crumbs a:hover { color: var(--c-lilac); } }
-  .crumbs [aria-current] { color: var(--c-bone-3); }
-
   /* A day where jobs slip away: the time, what happens, what it costs ---- */
   .slips { display: grid; margin: 0; padding: 0; list-style: none; }
   @media (min-width: 56rem) { .slips { grid-template-columns: 1fr 1fr; column-gap: var(--space-2xl); } }

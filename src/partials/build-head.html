@@ -2,7 +2,7 @@
   <div class="grid page-head__grid">
     <div class="g-rail stack flow-xs">
       <p class="index-label"><span class="index-label__num">{{ bld.num }}</span><span class="index-label__rule"></span>Case study · Website</p>
-      <p class="t-label"><a class="case-back" href="{{ site.routes.work }}#websites">{% icon "arrow-left" %}All work</a></p>
+      {% include "crumbs" %}
     </div>
     <div class="g-body stack flow-l">
       <h1 id="page-title" class="case-head__title">{{ bld.name }}</h1>

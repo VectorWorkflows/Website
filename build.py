@@ -1873,7 +1873,7 @@ def build() -> int:
             if n not in js_urls:
                 raise BuildError(f"{where}: unknown script '{n}'")
         ctx["scripts"] = "\n".join(f'<script type="module" src="{js_urls[n]}"></script>' for n in page_js)
-        ctx["jsonld"] = jsonld_for(meta, site, pricing)
+        ctx["jsonld"] = jsonld_for(meta, site, pricing, ctx)
         doc = render((SRC / "partials" / "layout.html").read_text("utf-8"), ctx, icons, used, "partials/layout.html")
 
         # Current-page marker on every nav link that points here
@@ -1928,11 +1928,34 @@ def build() -> int:
     return 1 if problems or leaks else 0
 
 
-def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
-    """Structured data named in front matter: `schema: organization, services`."""
-    wanted = split_list(meta.get("schema"))
-    if not wanted:
+RE_FAQ_ITEM = re.compile(r'<div class="faq__item">\s*<dt>(.*?)</dt>\s*<dd>(.*?)</dd>\s*</div>', re.S)
+
+
+def plain(fragment: str) -> str:
+    """The visible text of an HTML fragment, for structured data."""
+    return " ".join(html.unescape(re.sub(r"<[^>]+>", "", fragment)).split())
+
+
+def jsonld_for(meta: dict, site: dict, pricing: dict, ctx: dict) -> str:
+    """One JSON-LD @graph per page, from its front matter:
+
+        schema: organization, services    the studio, and the priced menu
+        faq: true                         FAQPage, read from the page's own FAQ
+        breadcrumbs: true                 BreadcrumbList, the same trail the page shows
+        case_study: SoftwareApplication   a system's case study (its source code too)
+        case_study: CreativeWork          a website's case study
+
+    Any of them also describes the page itself (WebPage) and the site
+    (WebSite). Questions, answers and breadcrumbs are read from what the
+    page shows, so the markup can't say something the page doesn't."""
+    wanted = set(split_list(meta.get("schema")))
+    faq = meta.get("faq") == "true"
+    trail = meta.get("breadcrumbs") == "true"
+    case = meta.get("case_study", "")
+    if not (wanted or faq or trail or case):
         return ""
+    base, url = site["url"], ctx["canonical"]
+    org_id, site_id, page_id = f"{base}/#organization", f"{base}/#website", f"{url}#webpage"
     org = {
         "@type": "Organization",
         "@id": f"{site['url']}/#organization",
@@ -1946,9 +1969,58 @@ def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
         "contactPoint": [{"@type": "ContactPoint", "contactType": "sales", "email": site["email"],
                           "availableLanguage": "English"}],
     }
-    graph = []
-    if "organization" in wanted:
-        graph.append(org)
+    # The studio and the site are always present: every other node points at them
+    graph = [org, {"@type": "WebSite", "@id": site_id, "url": base + "/", "name": site["name"],
+                   "description": site["description"], "publisher": {"@id": org_id}, "inLanguage": "en"}]
+    page = {"@type": "WebPage", "@id": page_id, "url": url, "name": meta["title"],
+            "description": meta["description"], "isPartOf": {"@id": site_id}, "inLanguage": "en"}
+    if ctx.get("og_image_url"):
+        page["primaryImageOfPage"] = {"@type": "ImageObject", "url": ctx["og_image_url"], "width": 1200, "height": 630}
+    graph.append(page)
+
+    if trail:
+        page["breadcrumb"] = {"@id": f"{url}#breadcrumb"}
+        graph.append({"@type": "BreadcrumbList", "@id": f"{url}#breadcrumb", "itemListElement": [
+            {"@type": "ListItem", "position": i, "name": c["name"], "item": base + c["url"]}
+            for i, c in enumerate(ctx["crumbs"], 1)]})
+
+    if faq:
+        pairs = RE_FAQ_ITEM.findall(ctx["content"])
+        if not pairs:
+            raise BuildError(f"{meta['path']}: 'faq: true' but the page has no FAQ (dl.faq > .faq__item)")
+        page["@type"] = ["WebPage", "FAQPage"]
+        page["mainEntity"] = [{"@type": "Question", "name": plain(q),
+                               "acceptedAnswer": {"@type": "Answer", "text": plain(a)}} for q, a in pairs]
+
+    if case:
+        subject = ctx.get("sys") or ctx.get("bld")
+        if not subject:
+            raise BuildError(f"{meta['path']}: 'case_study' needs a system: or build: in the front matter")
+        work = {"@type": "CreativeWork", "@id": f"{url}#case-study", "name": f"{subject['name']}: a case study",
+                "headline": subject["name"], "description": meta["description"], "genre": "Case study",
+                "url": url, "inLanguage": "en", "author": {"@id": org_id}, "publisher": {"@id": org_id},
+                "isPartOf": {"@id": site_id}, "mainEntityOfPage": {"@id": page_id}}
+        if ctx.get("og_image_url"):
+            work["image"] = ctx["og_image_url"]
+        if not faq:
+            page["mainEntity"] = {"@id": work["@id"]}
+        graph.append(work)
+        if case == "SoftwareApplication":
+            app_id = f"{url}#software"
+            work["about"] = {"@id": app_id}
+            graph.append({"@type": "SoftwareApplication", "@id": app_id, "name": subject["name"],
+                          "description": subject["line"], "applicationCategory": "BusinessApplication",
+                          "operatingSystem": "Web", "url": url, "creator": {"@id": org_id}})
+            graph.append({"@type": "SoftwareSourceCode", "@id": f"{url}#source",
+                          "name": f"{subject['name']} source code", "codeRepository": subject["repo"],
+                          "programmingLanguage": "Python", "creator": {"@id": org_id},
+                          "targetProduct": {"@id": app_id}})
+        elif case == "CreativeWork":
+            work["keywords"] = subject["kind"]
+            work["creativeWorkStatus"] = subject["status"]
+        else:
+            raise BuildError(f"{meta['path']}: case_study is SoftwareApplication or CreativeWork, not '{case}'")
+
     if "services" in wanted:
         for group in site["service_groups"]:
             for svc in group["services"]:
@@ -1965,7 +2037,23 @@ def jsonld_for(meta: dict, site: dict, pricing: dict) -> str:
                     "url": f"{site['url']}{site['routes']['services']}#{svc['slug']}",
                     "offers": offer,
                 })
+
+    # Every {"@id": ...} reference must point at a node in this graph
+    def refs(node):
+        if isinstance(node, dict):
+            if set(node) == {"@id"}:
+                yield node["@id"]
+            else:
+                for v in node.values():
+                    yield from refs(v)
+        elif isinstance(node, list):
+            for v in node:
+                yield from refs(v)
+    missing = sorted(set(refs(graph)) - {n["@id"] for n in graph if "@id" in n})
+    if missing:
+        raise BuildError(f"{meta['path']}: JSON-LD refers to nodes it doesn't define: {missing}")
     payload = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=1)
+    payload = payload.replace("</", "<\\/")  # never closes its own <script>
     return f'<script type="application/ld+json">\n{payload}\n</script>'
 
 
@@ -1991,13 +2079,42 @@ def write_seo_files(out: Output, site: dict, built: list) -> None:
 # Validation
 # ---------------------------------------------------------------------------
 
+CROSS_LINKED = ("solutions/", "guides/", "work/")   # these pages must lead on to the core pages
+
+
 def validate(site: dict, files: list[Path]) -> list[str]:
-    problems, notes = [], []
+    problems, notes, long_meta = [], [], []
     planned = set(site.get("planned_routes", []))
+    seen: dict[str, dict[str, str]] = {"title": {}, "description": {}}
     for f in files:
         doc = f.read_text("utf-8")
         rel = f.relative_to(OUT).as_posix()
         visible = re.sub(r"<(script|style)\b.*?</\1>", "", doc, flags=re.S)
+        indexable = 'name="robots" content="noindex' not in doc
+
+        # Search snippets: unique titles and descriptions, of a sensible length
+        meta = {"title": (re.search(r"<title>(.*?)</title>", doc, re.S) or [None, ""])[1],
+                "description": (re.search(r'<meta name="description" content="([^"]*)"', doc) or [None, ""])[1]}
+        for kind, value in meta.items():
+            value = html.unescape(value).strip()
+            if indexable and value in seen[kind]:
+                problems.append(f"{rel}: same {kind} as {seen[kind][value]}")
+            seen[kind][value] = rel
+        if indexable and (len(html.unescape(meta["title"])) > 70 or not 70 <= len(html.unescape(meta["description"])) <= 240):
+            long_meta.append(rel)
+
+        # Structured data must parse
+        for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', doc, re.S):
+            try:
+                json.loads(block)
+            except ValueError as e:
+                problems.append(f"{rel}: JSON-LD doesn't parse ({e})")
+
+        # Solutions, guides and case studies lead on to the core pages
+        if rel.startswith(CROSS_LINKED) and rel != "work/index.html":
+            for route in ("services", "work", "start"):
+                if f'href="{site["routes"][route]}' not in visible:
+                    problems.append(f"{rel}: no link to {site['routes'][route]}")
 
         h1 = len(re.findall(r"<h1[\s>]", visible))
         if h1 != 1:
@@ -2033,6 +2150,8 @@ def validate(site: dict, files: list[Path]) -> list[str]:
         print(f"  ✗ {p}")
     if notes:
         print(f"  · planned routes not built yet (expected at this stage): {', '.join(sorted(set(notes)))}")
+    if long_meta:
+        print(f"  · titles over 70 or descriptions outside 70–240 characters (search may cut them): {', '.join(long_meta)}")
     return problems
 
 
