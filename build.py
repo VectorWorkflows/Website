@@ -2243,6 +2243,13 @@ def og_slug(url_path: str) -> str:
     return url_path.strip("/").replace("/", "-").removesuffix(".html") or "default"
 
 
+def og_headline_px(headline: str) -> int:
+    """The card's headline size: 92 px for a short one, stepping down so a
+    long, keyword-carrying headline still fits in three lines of 960 px."""
+    n = len(re.sub(r"<[^>]+>", "", headline))
+    return 92 if n <= 46 else 80 if n <= 66 else 68 if n <= 90 else 60
+
+
 def og_card_html(headline: str, kicker: str, fonts_css: str, mark_uri: str) -> str:
     grain = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E"
              "%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E"
@@ -2268,7 +2275,7 @@ body::after {{ content:""; position:absolute; inset:0; opacity:.05; background:u
 .kicker {{ display:flex; align-items:center; gap:16px; margin-bottom:30px; font-family:"GT America Mono","GT America Mono Fallback",monospace;
           font-size:18px; letter-spacing:.08em; text-transform:uppercase; color:var(--lilac); }}
 .kicker::before {{ content:""; width:40px; height:1px; background:var(--lilac); }}
-h1 {{ font-family:"GT Sectra Display","GT Sectra Display Fallback",Georgia,serif; font-weight:400; font-size:92px; line-height:1;
+h1 {{ font-family:"GT Sectra Display","GT Sectra Display Fallback",Georgia,serif; font-weight:400; font-size:{og_headline_px(headline)}px; line-height:1.02;
      letter-spacing:-.018em; text-wrap:balance; max-width:960px; }}
 h1 em {{ font-style:italic; color:var(--lilac); letter-spacing:-.01em; }}
 .tick {{ position:absolute; left:108px; bottom:120px; width:9px; height:9px; border-radius:50%; background:var(--violet); }}
@@ -2327,6 +2334,12 @@ def og_cards() -> int:
             if meta.get("system") or meta.get("build"):
                 case = next(c for c in site["systems"] + site["builds"] if c["slug"] in (meta.get("system"), meta.get("build")))
                 kicker = f"Case study · {html.escape(case['status'])}"
+            elif meta.get("kind") == "industry":
+                kicker = f"Solutions · {html.escape(meta.get('short') or meta['crumb'])}"
+            elif meta.get("kind") == "guide":
+                kicker = "A guide for owners"
+            elif meta["path"] == site["routes"]["solutions"]:
+                kicker = "Solutions &amp; guides"
             else:
                 head = doc.split('class="frame page-head', 1)[-1] if "page-head" in doc else doc
                 m = re.search(r'index-label__rule"></span>(.*?)</p>', head, re.S)
