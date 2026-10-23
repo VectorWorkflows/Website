@@ -1,0 +1,124 @@
+---
+title: Reliance Coaching Centre · a case study by Vector Workflows
+description: An enquiry-first website in English and Hindi for a neighbourhood coaching centre in New Delhi. Parents see what's taught and ask for a free demo class on WhatsApp in one tap. In onboarding, with the owner reviewing.
+path: /work/reliance-coaching-centre/
+nav: work
+build: reliance-coaching-centre
+body_class: page-case
+critical_css: components/page-head.css, components/card.css, components/seg.css, components/showcase.css, components/replay.css, pages/case.css
+---
+
+{% include "build-head" %}
+
+<section class="frame case-hero-shot" aria-label="Screenshots of the build">
+  <div class="rcc-shots">
+    <figure class="shot shot--browser">
+      <div class="shot__frame">
+        <div class="shot__bar" aria-hidden="true"><span class="shot__dots"><i></i><i></i><i></i></span><span class="shot__url">Reliance Coaching Centre · preview build</span></div>
+        <div class="shot__panes">
+          {% include "shot-pane" img="rcc-en-desktop" sizes="(min-width: 64rem) 62vw, 96vw" alt="The Reliance Coaching Centre site on a desktop: All subjects for Classes 1 to 9 on ruled notebook paper with a red margin line, a red-pen tick beside The demo class is free, and Free demo and Call buttons in the header." %}
+        </div>
+      </div>
+      <figcaption>The preview build at 1440 px wide, and on a phone in English and in Hindi.</figcaption>
+    </figure>
+    {% include "shot-rcc" uid="case" %}
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="who-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Who it's for</p></div>
+    <div class="g-body stack flow-m">
+      <h2 id="who-title" class="t-h2-s">Built for a parent with <em>thirty seconds</em>.</h2>
+    </div>
+    <div class="g-text prose">
+      <p>Most visitors are parents on mid-range Android phones, often on mobile data, deciding whether to send their child for a free demo class. The site has to show them a serious, caring centre, what it teaches, and a way to ask in one tap.</p>
+      <p>Sam taught classes 6 to 9 here in 2023, so the questions parents ask weren't guesswork: which classes, which subjects, how far it is, what it costs, and whether their child can sit in on a class first.</p>
+      <p>Coaching sites in Delhi tend to look alike: banner sliders, a blinking "Admissions open", stock photographs. This one is calm and specific, in English and in Hindi.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="idea-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>The idea</p></div>
+    <div class="g-body">
+      <h2 id="idea-title" class="t-h2-s sec-head--tight">The look of a <em>school notebook</em>.</h2>
+      <ol class="steps" role="list">
+        <li><span class="steps__n">01</span><div><h3>One accent: the red pen</h3><p>Off-white paper, ink-blue type, and the teacher's red pen used the way a teacher uses it: a tick, a line under the phrase that matters, a short note in the margin.</p></div></li>
+        <li><span class="steps__n">02</span><div><h3>The margin line</h3><p>The notebook's red margin runs down the left of every page on a desktop, and the ruled lines sit behind the text.</p></div></li>
+        <li><span class="steps__n">03</span><div><h3>School objects as the parts</h3><p>A timetable grid for the week, a report card for progress, a ruled page for questions, a date sheet for notices. Each appears as the centre confirms what goes in it.</p></div></li>
+        <li><span class="steps__n">04</span><div><h3>Nothing moves but the pen</h3><p>No stock photographs, clip art or handwriting fonts, and no text that fades in. Only the red-pen marks draw themselves, once, and with reduced motion they're simply there.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="replay-title">
+  <div class="grid case-replay-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Replay</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="replay-title" class="t-h4">One free-demo request, start to finish</h2>
+      <p class="t-small">Simulated data, showing the admission flow being set up with the centre. Switch between the parent's phone and the centre's side: both run on the same clock. The site writes the WhatsApp message; a person at the centre answers it.</p>
+    </div>
+  </div>
+  {% replay "rcc-admission" id="case-replay" %}
+</section>
+
+<section class="frame section-tight" aria-labelledby="facts-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>Confirmed facts only</p></div>
+    <div class="g-body stack flow-m">
+      <h2 id="facts-title" class="t-h2-s">Nothing on it is <em>guessed</em>.</h2>
+    </div>
+    <div class="g-text prose">
+      <p>Every fact the site shows lives in one file of confirmed facts. Anything the centre hasn't confirmed yet, such as fees, batch timings, results or photographs, is left out of the live site entirely.</p>
+      <p>The draft shows those gaps as dashed "to confirm" notes and red "sample" stamps, so the owner sees the finished design and what's missing at the same time. Every build also writes the missing facts out as a plain checklist.</p>
+      <p>The live build refuses to finish if any sample text has leaked into it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="light-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Measured</p></div>
+    <div class="g-body">
+      <h2 id="light-title" class="t-h2-s sec-head--tight">Light enough for <em>mobile data</em>.</h2>
+      <dl class="specs specs--four">
+        <div><dt>Code, gzipped</dt><dd>13.7 kB</dd></div>
+        <div><dt>JavaScript</dt><dd>2 kB</dd></div>
+        <div><dt>Desktop LCP</dt><dd>0.66 s</dd></div>
+        <div><dt>Phone LCP</dt><dd>3.4 s</dd></div>
+      </dl>
+      <p class="measure sec-after">The HTML, CSS and script together come to under 14 kB. Most of what a phone downloads is the three font files, 203 kB between them, which carry both English and Hindi in the site's own typefaces, Mukta and Tiro Devanagari Hindi, both under the SIL Open Font License.</p>
+      <p class="build__note">Lighthouse 12 on the preview build, 23 October 2026: its desktop preset, and its default mobile run (simulated slow 4G, a processor four times slower). LCP is the moment the largest thing on screen has painted.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="status-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Status</p></div>
+    <div class="g-body">
+      <h2 id="status-title" class="t-h3 sec-head--tight">Where it stands</h2>
+      <div class="status-note">
+        <span class="badge"><span class="badge__dot"></span>{{ bld.status }}</span>
+        <p>The owner is reviewing the first build. Batch timings, fees and photographs go in as the centre confirms them, and the site moves to the centre's own domain once it's approved.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section case-close" aria-labelledby="case-close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="case-close-title" class="t-h1">Run a coaching centre or an <em>academy</em>?</h2>
+      <p class="t-lead measure">An enquiry-first website, and an enquiry tracker so no parent's message is forgotten in admission season. In your languages, built from facts you confirm.</p>
+      <div class="cluster" style="--gap: var(--space-xs)">
+        <a class="btn btn--primary" href="{{ site.routes.start }}?service=website,enquiry-tracker"><span class="btn__label">Start with these two</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+  {% include "next-case" %}
+</section>

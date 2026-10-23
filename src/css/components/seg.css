@@ -1,0 +1,65 @@
+/* ==========================================================================
+   SEGMENTED CONTROL: a row of radio buttons drawn as one pill, the same
+   look as the replay's view toggle. Plain radios underneath, so arrow keys
+   move between options, the choice survives without JS, and CSS (:has)
+   can show what belongs to the checked one.
+
+   <fieldset class="seg">
+     <legend class="sr-only">Coverage</legend>
+     <label><input type="radio" name="x" value="a" checked><span>A</span></label>
+     <label><input type="radio" name="x" value="b"><span>B</span></label>
+   </fieldset>
+   ========================================================================== */
+@layer components {
+  .seg {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-self: start;
+    gap: 0.125rem;
+    margin: 0;
+    padding: 0.1875rem;
+    border: 0;
+    border-radius: 1.375rem;
+    background: var(--c-sunken);
+    box-shadow: inset 0 0 0 1px var(--edge-faint);
+    max-inline-size: 100%;
+    min-inline-size: 0;
+  }
+  .seg label { position: relative; display: block; cursor: pointer; }
+  .seg input { position: absolute; opacity: 0; inline-size: 1px; block-size: 1px; pointer-events: none; }
+  .seg span {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    min-block-size: 2.5rem;
+    padding-inline: 0.875rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--c-bone-3);
+    transition: color var(--dur-hover) var(--ease-out-soft);
+  }
+  .seg span::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--c-raised-3);
+    box-shadow: var(--edge-lit);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity var(--dur-hover) var(--ease-out-soft), transform var(--dur-swap) var(--ease-out-soft);
+  }
+  .seg input:checked + span { color: var(--c-bone); }
+  .seg input:checked + span::before { opacity: 1; transform: none; }
+  .seg input:focus-visible + span { outline: 2px solid var(--c-lilac); outline-offset: 2px; }
+  @media (hover: hover) { .seg label:hover span { color: var(--c-bone); } }
+  .seg label:active span::before { opacity: 1; transform: scale(0.96); }
+  /* Devanagari labels: the system's own face at UI size, not the Latin mono */
+  .seg span[lang="hi"] { font-family: var(--font-ui); font-size: var(--step--1); letter-spacing: 0; text-transform: none; }
+}

@@ -1,0 +1,161 @@
+---
+title: Auto Detailing & PPF Flagship · a case study by Vector Workflows
+description: A seven-page website for a paint protection and ceramic studio, with a 3D car to turn, a PPF coverage switcher, a window tint shade previewer and a three-step booking request. Built for AZ Detailers in Phoenix and measured page by page.
+path: /work/auto-detailing-flagship/
+nav: work
+build: auto-detailing-flagship
+body_class: page-case
+critical_css: components/page-head.css, components/card.css, components/seg.css, components/showcase.css, pages/case.css
+css: components/demo.css
+js: demos
+---
+
+{% include "build-head" %}
+
+<section class="frame case-hero-shot" aria-label="Screenshots of the build">
+  {% include "shot-az" uid="case" sizes="(min-width: 64rem) 84vw, 96vw" hero="1" %}
+</section>
+
+<section class="frame section-tight" aria-labelledby="brief-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>The brief</p></div>
+    <div class="g-body stack flow-m">
+      <h2 id="brief-title" class="t-h2-s">A considered purchase deserves a site that <em>shows</em> it.</h2>
+    </div>
+    <div class="g-text prose">
+      <p>Paint protection film, ceramic coating and window tint are researched purchases. Before anyone books, they want to know which panels a package covers, how dark a shade really is, and when the shop can take the car.</p>
+      <p>Most detailing sites answer with a gallery and a phone number. This one answers each question with something to try: turn the car, switch the coverage, slide the tint, then send a booking request that already says what the car needs.</p>
+      <p>It was built first for AZ Detailers, a paint protection and ceramic studio in Phoenix. The same build is ready for any studio that sells high-ticket protection work.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="try-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Try it</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="try-title" class="t-h2-s">Three controls, <em>rebuilt</em> for this page.</h2>
+      <p class="t-lead measure">Small re-creations of the build's own controls, with the same packages, shades and steps. The real site draws them on renders of its 3D car; these are line drawings, so this page stays light.</p>
+    </div>
+  </div>
+
+  <div class="demo-rows">
+    <div class="demo-row">
+      <div class="demo-row__say">
+        <h3>Coverage switcher</h3>
+        <p>Pick a package and the film lands on the panels it covers, from above and from the side, with the panels listed beneath. No sales call needed to explain what "track pack" means.</p>
+      </div>
+      {% include "demo-ppf" uid="case" %}
+    </div>
+    <div class="demo-row">
+      <div class="demo-row__say">
+        <h3>Tint shade previewer</h3>
+        <p>Slide each window's shade and watch the cabin disappear behind it. The build flags any front shade darker than the state allows; this one is set for Arizona, as AZ Detailers' is.</p>
+      </div>
+      {% include "demo-tint" uid="case" %}
+    </div>
+    <div class="demo-row">
+      <div class="demo-row__say">
+        <h3>Three-step booking request</h3>
+        <p>The vehicle, the services, then a day. Each step is checked before the next, so the shop gets a request it can price, not a "call me".</p>
+      </div>
+      {% include "demo-book" uid="case" %}
+    </div>
+  </div>
+</section>
+
+<section class="frame section" aria-labelledby="pages-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">03</span><span class="index-label__rule"></span>Seven pages</p></div>
+    <div class="g-body">
+      <h2 id="pages-title" class="t-h2-s sec-head--tight">Seven pages, <em>one file</em> of facts.</h2>
+      <p class="measure sec-lede">Everything on the site comes from one brief about the business, with a source noted for every fact: its own website, its Google listing and what the owner says. Change the brief and the whole site rebuilds in seconds.</p>
+      <ol class="steps" role="list">
+        <li><span class="steps__n">01</span><div><h3>Home</h3><p>The name over a 3D car the visitor can turn and repaint, the services with their prices, a before and after, Google reviews, hours with a live "Open now" sign, a map, and buttons to call, text and book.</p></div></li>
+        <li><span class="steps__n">02</span><div><h3>Services</h3><p>Each service in depth: what's included, the packages and their prices, the coverage switcher, a ceramic durability scale and the tint previewer.</p></div></li>
+        <li><span class="steps__n">03</span><div><h3>Work</h3><p>The shop's own photographs, filtered by service, opening full screen with the keyboard or a swipe.</p></div></li>
+        <li><span class="steps__n">04</span><div><h3>Book</h3><p>Vehicle, services, then the customer's details and an open day. The request reaches the shop by email, and the shop confirms.</p></div></li>
+        <li><span class="steps__n">05</span><div><h3>Privacy</h3><p>Plain English, written from what the site actually does with a booking request.</p></div></li>
+        <li><span class="steps__n">06</span><div><h3>Terms</h3><p>Plain English as well. Either legal page can be switched off with one setting.</p></div></li>
+        <li><span class="steps__n">07</span><div><h3>Not found</h3><p>A page for wrong addresses, in the same design, with the way back to the rest of the site.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="built-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">04</span><span class="index-label__rule"></span>How it's built</p></div>
+    <div class="g-body">
+      <h2 id="built-title" class="t-h3 sec-head--tight">A compiler that refuses to guess</h2>
+      <dl class="stack-list">
+        <div><dt>Client brief</dt><dd>One file of facts about the business, each with its source. A brief with anything left to fill in doesn't build.</dd></div>
+        <div><dt>Compiler</dt><dd>Python. It merges the brief over the studio's catalogue of services, renders seven HTML templates and checks its own output: nothing left unfilled, every link and image resolving, one main heading a page.</dd></div>
+        <div><dt>Images</dt><dd>Turned upright, location data stripped, saved as WebP at 640, 1280 and 1920 pixels, and cached, so a rebuild takes about two seconds.</dd></div>
+        <div><dt>3D showroom</dt><dd>three.js, the only bundled script. It loads where the device can run it. With reduced motion, without WebGL or with data saving on, the visitor gets a still image of the same car.</dd></div>
+        <div><dt>Structured data</dt><dd>The business, its FAQ, its prices and its breadcrumbs as JSON-LD, written from the same brief.</dd></div>
+        <div><dt>Booking</dt><dd>A form service emails each request to the shop. The site never takes payment and never confirms a booking on its own.</dd></div>
+      </dl>
+      <div class="limits">
+        <h3 class="t-label">What it won't do</h3>
+        <p>Show a price the owner hasn't confirmed, label a testimonial from the shop's own site as a Google review, or show opening hours nobody gave it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="measured-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">05</span><span class="index-label__rule"></span>Measured</p></div>
+    <div class="g-body">
+      <h2 id="measured-title" class="t-h2-s sec-head--tight">Measured, not <em>promised</em>.</h2>
+      <div class="mtable" role="region" aria-labelledby="measured-cap" tabindex="0">
+        <table>
+          <caption id="measured-cap" class="sr-only">Load times and weights of four pages of the preview build</caption>
+          <thead><tr><th scope="col">Page</th><th scope="col">Desktop LCP</th><th scope="col">Phone LCP</th><th scope="col">Code, gzipped</th><th scope="col">Everything loaded</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Home</th><td>0.69 s</td><td>3.16 s</td><td>40.8 kB</td><td>2.9 MB, with the 3D car</td></tr>
+            <tr><th scope="row">Services</th><td>0.73 s</td><td>3.91 s</td><td>39.8 kB</td><td>0.65 MB</td></tr>
+            <tr><th scope="row">Work</th><td>0.84 s</td><td>3.99 s</td><td>33.9 kB</td><td>1.4 MB</td></tr>
+            <tr><th scope="row">Book</th><td>0.61 s</td><td>2.78 s</td><td>33.8 kB</td><td>0.79 MB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="measure sec-after">Each of these pages shows its main content in under a second on a desktop. On a simulated mid-range phone over slow 4G it takes 2.8 to 4 seconds, and the home page brings the 3D car (1.4 MB compressed) to the devices that can run it. That is the next thing to trim.</p>
+      <dl class="specs specs--four">
+        <div><dt>Browser QA</dt><dd>30 page runs</dd></div>
+        <div><dt>Checks</dt><dd>241, 0 failed</dd></div>
+        <div><dt>Widths</dt><dd>375 to 1920 px</dd></div>
+        <div><dt>Console errors</dt><dd>0</dd></div>
+      </dl>
+      <p class="build__note">Lighthouse 12 on the preview build, 23 October 2026: its desktop preset, and its default mobile run (simulated slow 4G, a processor four times slower). LCP is the moment the largest thing on screen has painted. The browser QA ran every page at 375, 768, 1280 and 1920 px wide, with every control exercised and reduced motion checked.</p>
+    </div>
+  </div>
+</section>
+
+<section class="frame section-tight" aria-labelledby="status-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">06</span><span class="index-label__rule"></span>Status</p></div>
+    <div class="g-body">
+      <h2 id="status-title" class="t-h3 sec-head--tight">Where it stands</h2>
+      <div class="status-note">
+        <span class="badge"><span class="badge__dot"></span>{{ bld.status }}</span>
+        <p>A preview built for AZ Detailers. It goes live when the owner signs it off; until then search engines are asked not to index it and its booking form doesn't send. The same build is ready for other paint protection, ceramic and tint studios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="frame section case-close" aria-labelledby="case-close-title">
+  <div class="grid">
+    <div class="g-body stack flow-l">
+      <h2 id="case-close-title" class="t-h1">Want one for <em>your</em> studio?</h2>
+      <p class="t-lead measure">The same build with your services, prices, photographs and hours. Start with the website, and add booking reminders or a missed-call responder when you want them.</p>
+      <div class="cluster" style="--gap: var(--space-xs)">
+        <a class="btn btn--primary" href="{{ site.routes.start }}?service=website"><span class="btn__label">Start with a website</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
+        <a class="btn btn--ghost" href="{{ site.contact.whatsapp.url }}" target="_blank" rel="noopener"><span class="btn__label">{{ site.contact.whatsapp.label }}</span><span class="btn__icon">{% icon "whatsapp-logo" %}</span></a>
+      </div>
+    </div>
+  </div>
+  {% include "next-case" %}
+</section>

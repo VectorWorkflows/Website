@@ -1,0 +1,13 @@
+<figure class="shot shot--phone">
+        <fieldset class="seg shot__pick">
+          <legend class="sr-only">Language of the Reliance Coaching Centre site</legend>
+          <label><input type="radio" name="shot-rcc-{{ uid }}" checked><span>English</span></label>
+          <label><input type="radio" name="shot-rcc-{{ uid }}"><span lang="hi">हिंदी</span></label>
+        </fieldset>
+        <div class="shot__handset">
+          <div class="shot__panes">
+            {% include "shot-phone-pane" img="rcc-en-phone" alt="The Reliance Coaching Centre site on a phone, in English: All subjects for Classes 1 to 9 highlighted on ruled notebook paper, with a red-pen note that the demo class is free." %}
+            {% include "shot-phone-pane" img="rcc-hi-phone" alt="The same page in Hindi, on the same ruled paper, with the English and Hindi switch at the top." %}
+          </div>
+        </div>
+      </figure>

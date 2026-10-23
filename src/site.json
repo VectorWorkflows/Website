@@ -22,8 +22,7 @@
     "studio": "/studio/",
     "start": "/start/",
     "privacy": "/privacy/",
-    "terms": "/terms/",
-    "concept_cutabove": "/cutabove/"
+    "terms": "/terms/"
   },
   "conditions": {
     "meta": "plus Meta's approval time",
@@ -244,6 +243,75 @@
       "repo": "https://github.com/VectorWorkflows/Dynamic-Scheduler-TG-BOT",
       "video": "naB59uo86v4",
       "docs": "https://app.notion.com/p/Dynamic-Scheduler-Bot-3b9d07dc818580b5ab2dec4c95e80547?source=copy_link"
+    }
+  ],
+  "_builds": "Websites, shown first on Work and home. status is shown exactly as written. specs are measured, never estimated: measured says how and when. A build with case: true has a case study page at url; the others link straight to the site.",
+  "builds": [
+    {
+      "slug": "auto-detailing-flagship",
+      "num": "01",
+      "name": "Auto Detailing & PPF Flagship",
+      "short": "Auto detailing flagship",
+      "client": "AZ Detailers",
+      "place": "Phoenix, Arizona",
+      "kind": "Website · 7 pages · 3D car",
+      "teaser": "A 3D car to turn, a coverage switcher, a tint previewer and a three-step booking request.",
+      "status": "Flagship Preview · Ready for Client Launch",
+      "line": "A seven-page site for a paint protection and ceramic studio: a 3D car to turn and repaint, a coverage switcher, a tint shade previewer and a three-step booking request.",
+      "url": "/work/auto-detailing-flagship/",
+      "case": "true",
+      "offered": ["website"],
+      "specs": [
+        { "k": "Pages", "v": "7" },
+        { "k": "Desktop LCP", "v": "0.6–0.8 s" },
+        { "k": "Code per page", "v": "31–41 kB" },
+        { "k": "Browser QA", "v": "241 checks, 0 failed" }
+      ],
+      "measured": "Lighthouse 12, desktop preset, on the preview build, 23 October 2026. Code is gzipped HTML, CSS and JS; the 3D car (1.4 MB) loads only where the device can run it."
+    },
+    {
+      "slug": "cutabove",
+      "num": "02",
+      "name": "Cut Above",
+      "short": "Cut Above concept",
+      "client": "",
+      "place": "Dubai",
+      "kind": "Website concept · 6 pages",
+      "teaser": "An unsolicited salon redesign: a price list you can search, the team and the gallery.",
+      "status": "Concept · Unaffiliated Demonstration",
+      "line": "An unsolicited redesign for a long-established hair and beauty salon: a price list you can search, the team, the gallery and a booking request. Static pages, no page builder.",
+      "url": "/cutabove/",
+      "case": "",
+      "offered": ["website"],
+      "specs": [
+        { "k": "Pages", "v": "6" },
+        { "k": "Desktop LCP", "v": "1.1 s" },
+        { "k": "Code per page", "v": "43–47 kB" },
+        { "k": "Built with", "v": "HTML, CSS, JS" }
+      ],
+      "measured": "Lighthouse 12, desktop preset, 23 October 2026. Code is gzipped HTML, CSS and JS; the salon's photographs come on top."
+    },
+    {
+      "slug": "reliance-coaching-centre",
+      "num": "03",
+      "name": "Reliance Coaching Centre",
+      "short": "Reliance Coaching Centre",
+      "client": "",
+      "place": "Palam Colony, New Delhi",
+      "kind": "Website · English and Hindi",
+      "teaser": "An enquiry-first site in English and Hindi for the centre where Sam taught.",
+      "status": "In Onboarding · Owner Review",
+      "line": "An enquiry-first site for the neighbourhood coaching centre where Sam taught in 2023. Parents see what's taught and reach the centre on WhatsApp in one tap, in English or Hindi.",
+      "url": "/work/reliance-coaching-centre/",
+      "case": "true",
+      "offered": ["website", "enquiry-tracker"],
+      "specs": [
+        { "k": "Languages", "v": "English, Hindi" },
+        { "k": "Desktop LCP", "v": "0.7 s" },
+        { "k": "Code", "v": "14 kB" },
+        { "k": "JavaScript", "v": "2 kB" }
+      ],
+      "measured": "Lighthouse 12, desktop preset, on the preview build, 23 October 2026. Code is gzipped HTML, CSS and JS; the three font files that carry the Hindi add 203 kB."
     }
   ],
   "protected_dirs": [

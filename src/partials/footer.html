@@ -11,7 +11,7 @@
     <div class="footer-col">
       <h2>Case studies</h2>
       <ul role="list">
-        {% for s in site.systems %}<li><a href="{{ site.routes.work }}{{ s.slug }}/">{{ s.name }}</a></li>
+        {% for c in site.cases %}<li><a href="{{ c.url }}">{{ c.short }}</a></li>
         {% endfor %}<li><a href="{{ site.routes.work }}">All work</a></li>
       </ul>
     </div>

@@ -110,7 +110,6 @@ CRITICAL_CSS = [
 DEFERRED_CSS = [
     "components/card.css",
     "components/footer.css",
-    "components/concept.css",
     "components/cursor.css",
 ]
 SITE_JS = ["chrome.js", "cursor.js"]
@@ -218,8 +217,19 @@ def load_site() -> dict:
         "ivr": {"tel": ivr["tel"], "display": ivr["display"],
                 "tip": ivr["tip"], "india_label": ivr["indiaLabel"], "india_tip": ivr["indiaTip"]},
     }
-    # Templates can't index lists: site.sys.missed_lead_responder.name etc.
+    # Templates can't index lists: site.sys.missed_lead_responder.name,
+    # site.bld.auto_detailing_flagship.status etc.
+    for s in site["systems"]:
+        s["url"] = f"{site['routes']['work']}{s['slug']}/"
     site["sys"] = {s["slug"].replace("-", "_"): s for s in site["systems"]}
+    site["bld"] = {b["slug"].replace("-", "_"): b for b in site["builds"]}
+    # Every case study, websites first. The footer lists them, and each case
+    # page's "next case study" link walks through them in this order.
+    site["cases"] = (
+        [{"slug": b["slug"], "name": b["name"], "short": b["short"], "url": b["url"], "group": "Website"}
+         for b in site["builds"] if b["case"]]
+        + [{"slug": s["slug"], "name": s["name"], "short": s["name"], "url": s["url"], "group": "System"}
+           for s in site["systems"]])
     # Booking notice, shown only as the tooltip of a "Book a 15-min call"
     # link: chrome.js turns the fallback into an exact local time
     hours = json.loads((DATA / "booking.json").read_text("utf-8"))["minNoticeHours"]
@@ -413,6 +423,14 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
                if s.get("case") and not s.get("case_name")]
     if unknown:
         raise BuildError(f"src/site.json: services point at unknown case studies {unknown}")
+    # A website build is "offered as" services from the menu
+    svc = {s["slug"]: s for g in site["service_groups"] for s in g["services"]}
+    for b in site["builds"]:
+        unknown = [slug for slug in b["offered"] if slug not in svc]
+        if unknown:
+            raise BuildError(f"src/site.json: build '{b['slug']}' is offered as unknown services {unknown}")
+        b["offered_services"] = [svc[slug] for slug in b["offered"]]
+    site["svc"] = {slug.replace("-", "_"): s for slug, s in svc.items()}
 
     # Packs: named combinations, priced by the same rules as any selection
     packs = []
@@ -1458,6 +1476,15 @@ def _artifact(step: dict, muts: dict, data: dict) -> str:
                 f'{_mut(muts, step["id"] + ".template")}</div><ol class="rp-cal__list" role="list">{blocks}</ol></div></li>')
     if kind == "event":
         return f'<li class="rp-item rp-event" {at}><span aria-hidden="true">↳</span> {_esc(step["text"])}</li>'
+    if kind == "form":
+        # A website form as the visitor filled it in, with its send button
+        rows = "".join(f'<div class="rp-field"><dt>{_esc(f["k"])}</dt><dd>{_esc(f["v"])}</dd></div>'
+                       for f in step["fields"])
+        return (f'<li class="rp-item" {at}><div class="rp-card rp-form">'
+                f'<p class="rp-kicker">{_esc(step.get("label", "Website form"))} · {wall}</p>'
+                f'<p class="rp-form__title">{_esc(step["title"])}</p>'
+                f'<dl class="rp-form__fields">{rows}</dl>'
+                f'<span class="rp-form__btn">{_esc(step["button"])}</span></div></li>')
     if kind == "consent":
         scopes = "".join(f'<li>{{% icon "check" %}}<span>{_esc(s)}</span></li>' for s in step["scopes"])
         return (f'<li class="rp-item" {at}><div class="rp-card rp-consent">'
@@ -1538,7 +1565,7 @@ def render_replay(name: str, where: str, dom_id: str = "", compact: str = "") ->
     <div class="replay__bar">
       <div class="replay__id">
         <span class="replay__name" id="{rid}-name">{_esc(data["title"])}{f'<span class="sr-only"> · {VIEW_NAMES[compact].lower()} view</span>' if compact else ""}</span>
-        <span class="replay__sim">Simulated data · real system flow</span>
+        <span class="replay__sim">{_esc(data.get("sim", "Simulated data · real system flow"))}</span>
       </div>
       <span class="replay__clock" data-clock aria-hidden="true">{final_t}</span>
       {toggle}
@@ -1659,15 +1686,22 @@ def build() -> int:
             "digitora": digitora_html(img["digitora"]) if img.get("digitora") else "",
             "build_date": date.today().isoformat(),
         }
-        # Case-study pages name their system; it arrives as {{ sys.* }},
-        # with the following system (wrapping) as {{ next_sys.* }}
+        # Case-study pages name their system ({{ sys.* }}) or their website
+        # build ({{ bld.* }}). Either way the next case study in
+        # site.cases (wrapping) arrives as {{ next_case.* }}.
         if meta.get("system"):
-            systems = site["systems"]
-            idx = next((i for i, s in enumerate(systems) if s["slug"] == meta["system"]), None)
-            if idx is None:
+            ctx["sys"] = next((s for s in site["systems"] if s["slug"] == meta["system"]), None)
+            if not ctx["sys"]:
                 raise BuildError(f"{where}: unknown system '{meta['system']}'")
-            ctx["sys"] = systems[idx]
-            ctx["next_sys"] = systems[(idx + 1) % len(systems)]
+        if meta.get("build"):
+            ctx["bld"] = next((b for b in site["builds"] if b["slug"] == meta["build"] and b["case"]), None)
+            if not ctx["bld"]:
+                raise BuildError(f"{where}: no build '{meta['build']}' with a case study in src/site.json")
+        case = meta.get("system") or meta.get("build")
+        if case:
+            cases = site["cases"]
+            idx = next(i for i, c in enumerate(cases) if c["slug"] == case)
+            ctx["next_case"] = cases[(idx + 1) % len(cases)]
         content = render(body, ctx, icons, used, where)
         ctx["content"] = content
 
@@ -2011,9 +2045,9 @@ def og_cards() -> int:
             h1 = re.search(r"<h1[^>]*>(.*?)</h1>", doc, re.S).group(1)
             headline = " ".join(re.sub(r"<(?!/?em\b)[^>]+>", "", h1).split())
             headline = headline.replace("</em> <em>", " ")
-            if meta.get("system"):
-                sys_ = next(s for s in site["systems"] if s["slug"] == meta["system"])
-                kicker = f"Case study · {html.escape(sys_['status'])}"
+            if meta.get("system") or meta.get("build"):
+                case = next(c for c in site["systems"] + site["builds"] if c["slug"] in (meta.get("system"), meta.get("build")))
+                kicker = f"Case study · {html.escape(case['status'])}"
             else:
                 head = doc.split('class="frame page-head', 1)[-1] if "page-head" in doc else doc
                 m = re.search(r'index-label__rule"></span>(.*?)</p>', head, re.S)

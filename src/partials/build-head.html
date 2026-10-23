@@ -1,0 +1,17 @@
+<section class="frame page-head case-head" aria-labelledby="page-title">
+  <div class="grid page-head__grid">
+    <div class="g-rail stack flow-xs">
+      <p class="index-label"><span class="index-label__num">{{ bld.num }}</span><span class="index-label__rule"></span>Case study · Website</p>
+      <p class="t-label"><a class="case-back" href="{{ site.routes.work }}#websites">{% icon "arrow-left" %}All work</a></p>
+    </div>
+    <div class="g-body stack flow-l">
+      <h1 id="page-title" class="case-head__title">{{ bld.name }}</h1>
+      <p class="t-lead page-head__lead">{{ bld.line }}</p>
+      <div class="cluster case-head__meta">
+        <span class="badge"><span class="badge__dot"></span>{{ bld.status }}</span>
+        <span class="badge badge--quiet">{% if bld.client %}{{ bld.client }} · {% endif %}{{ bld.place }}</span>
+      </div>
+      <p class="case-head__offer"><span class="t-label">Offered as</span>{% for r in bld.offered_services %}<a class="link-arrow" href="{{ site.routes.services }}#{{ r.slug }}">{{ r.name }}{% icon "arrow-up-right" %}</a>{% endfor %}</p>
+    </div>
+  </div>
+</section>

@@ -48,9 +48,5 @@
       </div>
     </div>
   </div>
-  <a class="next-case" href="{{ site.routes.work }}{{ next_sys.slug }}/">
-    <span class="t-label">Next case study · {{ next_sys.num }}</span>
-    <span class="next-case__name">{{ next_sys.name }}</span>
-    <span class="next-case__go" aria-hidden="true">{% icon "arrow-right" %}</span>
-  </a>
+  {% include "next-case" %}
 </section>

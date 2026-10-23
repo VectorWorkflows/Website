@@ -1,0 +1,69 @@
+<div class="card demo bk" id="booking" data-bk>
+  <div class="card__core demo__core">
+    <div class="demo__head">
+      <p class="demo__kicker t-label">Booking request · three steps</p>
+      <ol class="bk__steps" role="list">
+        <li data-bk-tab="1" aria-current="step"><span>1</span>Vehicle</li>
+        <li data-bk-tab="2"><span>2</span>Services</li>
+        <li data-bk-tab="3"><span>3</span>Day</li>
+      </ol>
+    </div>
+
+    <form class="bk__form" data-bk-form novalidate aria-label="Booking request, a demo that sends nothing">
+      <fieldset class="bk__step" data-step="1">
+        <legend class="bk__q" tabindex="-1">What are we working on?</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="bk-vehicle-{{ uid }}" value="Coupe or compact"><span>Coupe / compact</span></label>
+          <label class="choice"><input type="radio" name="bk-vehicle-{{ uid }}" value="Sedan"><span>Sedan</span></label>
+          <label class="choice"><input type="radio" name="bk-vehicle-{{ uid }}" value="SUV or truck"><span>SUV / truck</span></label>
+          <label class="choice"><input type="radio" name="bk-vehicle-{{ uid }}" value="Large SUV or van"><span>Large SUV / van</span></label>
+          <label class="choice"><input type="radio" name="bk-vehicle-{{ uid }}" value="Exotic"><span>Exotic</span></label>
+        </div>
+        <p class="bk__err" data-bk-err hidden>{% icon "warning-circle" %}Pick the vehicle first.</p>
+      </fieldset>
+
+      <fieldset class="bk__step" data-step="2">
+        <legend class="bk__q" tabindex="-1">What does it need?</legend>
+        <div class="choices">
+          <label class="choice"><input type="checkbox" name="bk-svc-{{ uid }}" value="Paint protection film"><span>Paint protection film</span></label>
+          <label class="choice"><input type="checkbox" name="bk-svc-{{ uid }}" value="Ceramic coating"><span>Ceramic coating</span></label>
+          <label class="choice"><input type="checkbox" name="bk-svc-{{ uid }}" value="Window tint"><span>Window tint</span></label>
+          <label class="choice"><input type="checkbox" name="bk-svc-{{ uid }}" value="Paint correction"><span>Paint correction</span></label>
+          <label class="choice"><input type="checkbox" name="bk-svc-{{ uid }}" value="Detailing"><span>Detailing</span></label>
+        </div>
+        <p class="bk__err" data-bk-err hidden>{% icon "warning-circle" %}Pick at least one service.</p>
+      </fieldset>
+
+      <fieldset class="bk__step" data-step="3">
+        <legend class="bk__q" tabindex="-1">When suits you?</legend>
+        <div class="choices" data-bk-days>
+          <label class="choice"><input type="radio" name="bk-day-{{ uid }}" value="A weekday"><span>A weekday</span></label>
+          <label class="choice"><input type="radio" name="bk-day-{{ uid }}" value="Saturday"><span>Saturday</span></label>
+        </div>
+        <div class="choices choices--quiet">
+          <label class="choice"><input type="radio" name="bk-time-{{ uid }}" value="morning" checked><span>Morning</span></label>
+          <label class="choice"><input type="radio" name="bk-time-{{ uid }}" value="afternoon"><span>Afternoon</span></label>
+        </div>
+        <p class="bk__err" data-bk-err hidden>{% icon "warning-circle" %}Pick a day.</p>
+      </fieldset>
+
+      <div class="bk__nav">
+        <button type="button" class="bk__back" data-bk-back>{% icon "arrow-left" %}Back</button>
+        <button type="submit" class="btn btn--primary btn--sm" data-bk-next><span class="btn__label" data-bk-next-label>Next</span><span class="btn__icon">{% icon "arrow-right" %}</span></button>
+      </div>
+
+      <div class="bk__done" data-bk-done hidden>
+        <p class="bk__done-title" tabindex="-1">Request ready <span class="t-label">· nothing was sent</span></p>
+        <dl class="bk__sum">
+          <div><dt>Vehicle</dt><dd data-bk-sum="vehicle"></dd></div>
+          <div><dt>Services</dt><dd data-bk-sum="svc"></dd></div>
+          <div><dt>Day</dt><dd data-bk-sum="day"></dd></div>
+        </dl>
+        <p class="bk__then">In the real build this arrives at the shop by email, with the customer's name and number, and the shop calls or texts to confirm the day. The site never takes payment and never confirms a booking on its own.</p>
+        <button type="button" class="bk__back" data-bk-reset>{% icon "arrow-counter-clockwise" %}Start again</button>
+      </div>
+    </form>
+    <p class="sr-only" aria-live="polite" data-bk-live></p>
+    <p class="demo__note bk__nojs">Step through it with JavaScript on. The real build asks for a name and number on the last step; this demo doesn't.</p>
+  </div>
+</div>

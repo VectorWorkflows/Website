@@ -113,6 +113,22 @@
   /* Selected work: three quiet rows. Name, one line, status, a way in.
      The demos live on the Work page; nothing plays here. ------------------- */
   .picks__title { max-inline-size: calc(34 * var(--ch-ui)); font-weight: var(--weight-regular); color: var(--c-bone-2); margin-block-end: var(--space-l); }
+  /* Two groups: websites, then systems. A mono label heads each list. */
+  .picks__group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block: var(--space-xl) var(--space-xs);
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--step--2);
+    line-height: var(--leading-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--c-lilac);
+  }
+  .picks__title + .picks__group { margin-block-start: 0; }
+  .picks__group::after { content: ""; flex: 1; block-size: 1px; background: linear-gradient(90deg, var(--edge-violet), transparent 70%); }
   .picks { margin: 0; padding: 0; list-style: none; }
   .picks li { position: relative; }
   .picks li::before,

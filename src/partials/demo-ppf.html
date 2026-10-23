@@ -1,0 +1,100 @@
+<div class="card demo ppf" id="coverage">
+  <div class="card__core demo__core">
+    <div class="demo__head">
+      <p class="demo__kicker t-label">Paint protection film · coverage</p>
+      <fieldset class="seg ppf__pick">
+        <legend class="sr-only">Coverage package</legend>
+        <label><input type="radio" name="ppf-{{ uid }}" value="partial"><span>Partial front</span></label>
+        <label><input type="radio" name="ppf-{{ uid }}" value="front" checked><span>Full front</span></label>
+        <label><input type="radio" name="ppf-{{ uid }}" value="track"><span>Track pack</span></label>
+        <label><input type="radio" name="ppf-{{ uid }}" value="full"><span>Full body</span></label>
+      </fieldset>
+    </div>
+
+    <div class="ppf__views">
+      <figure class="ppf__view">
+        <svg class="ppf__svg" viewBox="0 0 520 200" aria-hidden="true" focusable="false">
+          <defs>
+            <pattern id="ppf-film" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="ppf__wash" width="6" height="6"/><rect class="ppf__strand" width="1.4" height="6"/></pattern>
+            <clipPath id="ppf-plan-{{ uid }}"><path d="M496 100C496 76 490 58 477 46C463 33 441 26 412 23L352 21L150 21C102 21 66 23 48 29C34 34 27 50 26 70L26 130C27 150 34 166 48 171C66 177 102 179 150 179L352 179L412 177C441 174 463 167 477 154C490 142 496 124 496 100Z"/></clipPath>
+          </defs>
+          <g clip-path="url(#ppf-plan-{{ uid }})">
+            <rect class="z p f t a" x="470" y="0" width="40" height="200"/>
+            <rect class="z p f t a" x="430" y="37" width="40" height="126"/>
+            <rect class="z f t a" x="352" y="38" width="78" height="124"/>
+            <rect class="z p f t a" x="430" y="0" width="40" height="37"/><rect class="z p f t a" x="430" y="163" width="40" height="37"/>
+            <rect class="z f t a" x="352" y="0" width="78" height="38"/><rect class="z f t a" x="352" y="162" width="78" height="38"/>
+            <rect class="z t a" x="268" y="44" width="28" height="112"/>
+            <rect class="z a" x="200" y="44" width="68" height="112"/>
+            <rect class="z a" x="240" y="0" width="112" height="46"/><rect class="z a" x="240" y="154" width="112" height="46"/>
+            <rect class="z a" x="48" y="0" width="192" height="47"/><rect class="z a" x="48" y="153" width="192" height="47"/>
+            <rect class="z a" x="48" y="40" width="92" height="120"/>
+            <rect class="z a" x="0" y="0" width="48" height="200"/>
+          </g>
+          <path class="car__glass" d="M296 47L350 40L350 160L296 153Z"/>
+          <path class="car__glass" d="M140 51L198 47L198 153L140 149Z"/>
+          <path class="z t a edge" d="M296 47L350 40L352 37L294 44Z"/><path class="z t a edge" d="M296 153L350 160L352 163L294 156Z"/>
+          <path class="z p f t a edge" d="M338 21L343 9L357 9L357 21Z"/><path class="z p f t a edge" d="M338 179L343 191L357 191L357 179Z"/>
+          <path class="z p f t a edge" d="M473 43C480 49 485 57 488 66L482 64C479 57 475 51 468 46Z"/><path class="z p f t a edge" d="M473 157C480 151 485 143 488 134L482 136C479 143 475 149 468 154Z"/>
+          <path class="car__line" d="M496 100C496 76 490 58 477 46C463 33 441 26 412 23L352 21L150 21C102 21 66 23 48 29C34 34 27 50 26 70L26 130C27 150 34 166 48 171C66 177 102 179 150 179L352 179L412 177C441 174 463 167 477 154C490 142 496 124 496 100Z"/>
+          <path class="car__line" d="M338 21L343 9L357 9L357 21M338 179L343 191L357 191L357 179"/>
+          <path class="car__seam" d="M470 41L470 159M352 21L352 179M352 38L470 41M352 162L470 159M240 21L240 46M240 154L240 179M48 29L48 171M48 40L140 46M48 160L140 154M200 47L200 153M268 46L268 154M200 46L296 46M200 154L296 154"/>
+        </svg>
+        <figcaption class="t-label">Plan</figcaption>
+      </figure>
+      <figure class="ppf__view">
+        <svg class="ppf__svg" viewBox="0 0 520 190" aria-hidden="true" focusable="false">
+          <defs>
+            <clipPath id="ppf-side-{{ uid }}"><path d="M34 162C28 160 25 150 25 140L26 112C27 104 32 99 40 96C56 92 74 90 94 89C128 68 166 50 206 46C232 43 258 43 284 44C308 56 332 70 352 84C392 88 432 93 462 98C478 101 488 106 492 114C496 122 497 136 495 148C493 156 486 161 474 162L435.1 162A33 33 0 1 0 372.9 162L157.1 162A33 33 0 1 0 94.9 162Z"/></clipPath>
+          </defs>
+          <g clip-path="url(#ppf-side-{{ uid }})">
+            <rect class="z p f t a" x="440" y="0" width="70" height="200"/>
+            <rect class="z p f t a" x="410" y="0" width="30" height="200"/>
+            <rect class="z f t a" x="356" y="0" width="54" height="200"/>
+            <rect class="z t a" x="156" y="150" width="218" height="40"/>
+            <rect class="z t a" x="46" y="124" width="62" height="70"/>
+            <rect class="z a" x="242" y="0" width="114" height="150"/>
+            <path class="z a" d="M46 0H242V150H108V124H46Z"/>
+            <rect class="z a" x="0" y="0" width="46" height="200"/>
+          </g>
+          <path class="car__glass" d="M164 85C178 70 196 57 214 53L242 51L242 85Z"/>
+          <path class="car__glass" d="M250 50L282 49C298 58 318 70 336 84L250 85Z"/>
+          <path class="z t a edge" d="M284 44L292 44C313 56 335 71 356 84L350 85C330 71 306 56 284 44Z"/>
+          <path class="z p f t a edge" d="M446 101L481 106L487 113L452 110Z"/>
+          <path class="z p f t a edge" d="M332 76L350 72L355 82L338 86Z"/>
+          <path class="car__line" d="M34 162C28 160 25 150 25 140L26 112C27 104 32 99 40 96C56 92 74 90 94 89C128 68 166 50 206 46C232 43 258 43 284 44C308 56 332 70 352 84C392 88 432 93 462 98C478 101 488 106 492 114C496 122 497 136 495 148C493 156 486 161 474 162L435.1 162A33 33 0 1 0 372.9 162L157.1 162A33 33 0 1 0 94.9 162Z"/>
+          <path class="car__line" d="M332 76L350 72L355 82L338 86Z"/>
+          <path class="car__seam" d="M150 86L352 86M242 51L242 150M356 86L356 162M440 96L440 162M46 95L46 162M156 150L374 150"/>
+          <circle class="car__tyre" cx="126" cy="151" r="27"/><circle class="car__hub" cx="126" cy="151" r="16"/>
+          <circle class="car__tyre" cx="404" cy="151" r="27"/><circle class="car__hub" cx="404" cy="151" r="16"/>
+          <line class="car__ground" x1="8" y1="178.5" x2="512" y2="178.5"/>
+        </svg>
+        <figcaption class="t-label">Side</figcaption>
+      </figure>
+    </div>
+
+    <div class="ppf__info">
+      <div class="ppf__pkg" data-pkg="partial">
+        <p class="ppf__name">Partial front</p>
+        <p class="ppf__note">The impact zone. The film's edge sits across the hood.</p>
+        <ul class="ppf__panels" role="list"><li>Front bumper</li><li>First 18 to 24 in (45 to 60 cm) of the hood</li><li>First 18 to 24 in of the front fenders</li><li>Mirror caps</li><li>Headlights</li></ul>
+      </div>
+      <div class="ppf__pkg" data-pkg="front">
+        <p class="ppf__name">Full front</p>
+        <p class="ppf__note">No line across the hood: the whole front, edge to edge.</p>
+        <ul class="ppf__panels" role="list"><li>Front bumper</li><li>Full hood</li><li>Full front fenders</li><li>Mirror caps</li><li>Headlights</li></ul>
+      </div>
+      <div class="ppf__pkg" data-pkg="track">
+        <p class="ppf__name">Track pack</p>
+        <p class="ppf__note">Full front, plus everything a tyre throws at.</p>
+        <ul class="ppf__panels" role="list"><li>Everything in the full front</li><li>Rocker panels</li><li>Behind the rear wheels</li><li>A-pillars and the leading edge of the roof</li></ul>
+      </div>
+      <div class="ppf__pkg" data-pkg="full">
+        <p class="ppf__name">Full body</p>
+        <p class="ppf__note">The whole car, so no edge of film is ever in sight.</p>
+        <ul class="ppf__panels" role="list"><li>Every painted panel</li><li>Door jambs and edges where the panel allows</li><li>Headlights and mirror caps</li></ul>
+      </div>
+      <p class="ppf__key"><span class="ppf__swatch" aria-hidden="true"></span>Film</p>
+    </div>
+  </div>
+</div>

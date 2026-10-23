@@ -1,0 +1,19 @@
+<figure class="shot shot--browser{% if hero %} shot--hero{% endif %}">
+        <fieldset class="seg shot__pick">
+          <legend class="sr-only">Show a page of the AZ Detailers build</legend>
+          <label><input type="radio" name="shot-az-{{ uid }}" checked><span>Home</span></label>
+          <label><input type="radio" name="shot-az-{{ uid }}"><span>Coverage</span></label>
+          <label><input type="radio" name="shot-az-{{ uid }}"><span>Tint</span></label>
+          <label><input type="radio" name="shot-az-{{ uid }}"><span>Book</span></label>
+        </fieldset>
+        <div class="shot__frame">
+          <div class="shot__bar" aria-hidden="true"><span class="shot__dots"><i></i><i></i><i></i></span><span class="shot__url">AZ Detailers · preview build</span></div>
+          <div class="shot__panes">
+            {% include "shot-pane" img="az-home" alt="The AZ Detailers home page: AZ Detailers set huge in black on yellow, a 3D car with numbered callouts for its glass, cabin, paint and leading edges, and swatches to repaint it." %}
+            {% include "shot-pane" img="az-coverage" alt="The paint protection section: four coverage buttons with Track pack chosen, hatching the covered panels on a plan view and a side view of the car." %}
+            {% include "shot-pane" img="az-tint" alt="The window tint previewer: the car's glass at 35 per cent, a shade slider from no film to 5 per cent, and UV and heat figures for carbon and ceramic film." %}
+            {% include "shot-pane" img="az-book" alt="The booking page: Book the bay in large type above three steps, vehicle, services, and details and day, with the request summarised beside them." %}
+          </div>
+        </div>
+        <figcaption>Screenshots of the preview build at 1440 px wide. 3D car: <a href="https://sketchfab.com/3d-models/bmw-m4csl-b53782a00cc240a191d5d7d005af1423" target="_blank" rel="noopener">“BMW M4csl” by Mpgs Studios</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, modified.</figcaption>
+      </figure>

@@ -1,0 +1,63 @@
+<div class="builds">
+  <article class="card build build--wide" aria-labelledby="b-az">
+    <div class="card__core build__core">
+      <div class="build__text">
+        <div class="build__meta"><span class="t-label c-lilac">{{ site.bld.auto_detailing_flagship.num }}</span><span class="badge"><span class="badge__dot"></span>{{ site.bld.auto_detailing_flagship.status }}</span></div>
+        <p class="build__kind t-label">{{ site.bld.auto_detailing_flagship.kind }}</p>
+        <h3 id="b-az" class="build__name"><a href="{{ site.bld.auto_detailing_flagship.url }}">{{ site.bld.auto_detailing_flagship.name }}</a></h3>
+        <p class="build__client">Built for <strong>{{ site.bld.auto_detailing_flagship.client }}</strong>, {{ site.bld.auto_detailing_flagship.place }}</p>
+        <p class="build__line">{{ site.bld.auto_detailing_flagship.line }}</p>
+        <dl class="specs">{% for sp in site.bld.auto_detailing_flagship.specs %}<div><dt>{{ sp.k }}</dt><dd>{{ sp.v }}</dd></div>{% endfor %}</dl>
+        <p class="build__note">{{ site.bld.auto_detailing_flagship.measured }}</p>
+        <a class="link-arrow build__go" href="{{ site.bld.auto_detailing_flagship.url }}">Read the case study {% icon "arrow-right" %}</a>
+      </div>
+      {% include "shot-az" uid="work" sizes="(min-width: 64rem) 52vw, 92vw" %}
+    </div>
+  </article>
+
+  <article class="card build build--a" aria-labelledby="b-ca">
+    <div class="card__core build__core">
+      <figure class="shot shot--browser">
+        <fieldset class="seg shot__pick">
+          <legend class="sr-only">Show a page of the Cut Above concept</legend>
+          <label><input type="radio" name="shot-ca" checked><span>Home</span></label>
+          <label><input type="radio" name="shot-ca"><span>Treatments</span></label>
+          <label><input type="radio" name="shot-ca"><span>Gallery</span></label>
+        </fieldset>
+        <div class="shot__frame">
+          <div class="shot__bar" aria-hidden="true"><span class="shot__dots"><i></i><i></i><i></i></span><span class="shot__url">vectorworkflows.com/cutabove</span></div>
+          <div class="shot__panes">
+            {% include "shot-pane" img="ca-home" sizes="(min-width: 64rem) 52vw, 92vw" alt="The Cut Above concept home page: Thirty-four years of never doing the same head twice, beside a photograph of a long balayage, under a notice bar saying it is an unaffiliated concept." %}
+            {% include "shot-pane" img="ca-services" sizes="(min-width: 64rem) 52vw, 92vw" alt="The concept's treatments page: Everything we do, and what it costs, with hair, skin, nails and body filters and a search box over the price list." %}
+            {% include "shot-pane" img="ca-gallery" sizes="(min-width: 64rem) 52vw, 92vw" alt="The concept's gallery: The work, not the stock photos, with colour, hair, nails and salon filters above a grid of photographs." %}
+          </div>
+        </div>
+      </figure>
+      <div class="build__text">
+        <div class="build__meta"><span class="t-label c-lilac">{{ site.bld.cutabove.num }}</span><span class="badge"><span class="badge__dot"></span>{{ site.bld.cutabove.status }}</span></div>
+        <p class="build__kind t-label">{{ site.bld.cutabove.kind }}</p>
+        <h3 id="b-ca" class="build__name"><a href="{{ site.bld.cutabove.url }}">{{ site.bld.cutabove.name }}</a></h3>
+        <p class="build__line">{{ site.bld.cutabove.line }}</p>
+        <dl class="specs">{% for sp in site.bld.cutabove.specs %}<div><dt>{{ sp.k }}</dt><dd>{{ sp.v }}</dd></div>{% endfor %}</dl>
+        <p class="build__note">Not commissioned, and it says so on every page: a concept demonstration, not affiliated with the salon. {{ site.bld.cutabove.measured }}</p>
+        <a class="link-arrow build__go" href="{{ site.bld.cutabove.url }}">View the concept {% icon "arrow-up-right" %}</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="card build build--b" aria-labelledby="b-rcc">
+    <div class="card__core build__core">
+      {% include "shot-rcc" uid="work" %}
+      <div class="build__text">
+        <div class="build__meta"><span class="t-label c-lilac">{{ site.bld.reliance_coaching_centre.num }}</span><span class="badge"><span class="badge__dot"></span>{{ site.bld.reliance_coaching_centre.status }}</span></div>
+        <p class="build__kind t-label">{{ site.bld.reliance_coaching_centre.kind }}</p>
+        <h3 id="b-rcc" class="build__name"><a href="{{ site.bld.reliance_coaching_centre.url }}">{{ site.bld.reliance_coaching_centre.name }}</a></h3>
+        <p class="build__client">{{ site.bld.reliance_coaching_centre.place }}</p>
+        <p class="build__line">{{ site.bld.reliance_coaching_centre.line }}</p>
+        <dl class="specs">{% for sp in site.bld.reliance_coaching_centre.specs %}<div><dt>{{ sp.k }}</dt><dd>{{ sp.v }}</dd></div>{% endfor %}</dl>
+        <p class="build__note">{{ site.bld.reliance_coaching_centre.measured }}</p>
+        <a class="link-arrow build__go" href="{{ site.bld.reliance_coaching_centre.url }}">Read the case study {% icon "arrow-right" %}</a>
+      </div>
+    </div>
+  </article>
+</div>

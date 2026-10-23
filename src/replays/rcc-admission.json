@@ -1,0 +1,117 @@
+{
+  "title": "Free demo request",
+  "system": "reliance-coaching-centre",
+  "sim": "Simulated data · flow in onboarding",
+  "base": "16:05:00",
+  "summary": "Replay with simulated data, showing the admission flow being set up for Reliance Coaching Centre. On the centre's website a parent picks Class 7, Maths and Saturday evening for a free demo class and taps Send on WhatsApp. The request is added to the centre's Demo bookings sheet with the status New, and WhatsApp opens on the parent's phone with the message already written; the parent sends it. A few minutes later someone at the centre replies that Saturday evening is fine, and marks the row Demo booked. The parent thanks them.",
+  "lanes": [
+    {
+      "id": "a",
+      "label": "Parent's phone",
+      "icon": "phone",
+      "anchor": "bottom",
+      "height": {
+        "narrow": "27rem",
+        "wide": "25rem"
+      },
+      "view": "customer"
+    },
+    {
+      "id": "b",
+      "label": "Centre · WhatsApp and sheet",
+      "icon": "bell-simple",
+      "anchor": "bottom",
+      "height": {
+        "narrow": "30rem",
+        "wide": "25rem"
+      },
+      "view": "owner"
+    }
+  ],
+  "steps": [
+    {
+      "t": "00:00",
+      "lane": "a",
+      "type": "form",
+      "label": "Centre's website",
+      "title": "Book a free demo class",
+      "fields": [
+        { "k": "Class", "v": "7" },
+        { "k": "Subject", "v": "Maths" },
+        { "k": "Preferred", "v": "Saturday, evening" }
+      ],
+      "button": "Send on WhatsApp"
+    },
+    {
+      "t": "00:01",
+      "lane": "b",
+      "type": "sheet",
+      "id": "demo",
+      "sheet": "Demo bookings",
+      "columns": [
+        { "key": "time", "label": "Time" },
+        { "key": "cls", "label": "Class" },
+        { "key": "subject", "label": "Subject" },
+        { "key": "pref", "label": "Preferred" },
+        { "key": "status", "label": "Status" }
+      ],
+      "row": { "time": "16:05", "cls": "7", "subject": "Maths", "pref": "Sat, evening", "status": "New" },
+      "tones": { "status": "wait" }
+    },
+    {
+      "t": "00:03",
+      "lane": "a",
+      "type": "whatsapp",
+      "dir": "in",
+      "text": "Hello, I would like a free demo class. Class 7, Maths. Saturday evening suits us.",
+      "meta": "WhatsApp · written by the site, sent by the parent · 16:05"
+    },
+    {
+      "t": "00:03",
+      "lane": "b",
+      "type": "whatsapp",
+      "dir": "in",
+      "text": "Hello, I would like a free demo class. Class 7, Maths. Saturday evening suits us.",
+      "meta": "WhatsApp · from ••• 4417 · 16:05"
+    },
+    {
+      "t": "03:40",
+      "lane": "b",
+      "type": "whatsapp",
+      "dir": "out",
+      "text": "Namaste! Saturday evening is fine. We'll see you both at the centre.",
+      "meta": "WhatsApp · reply from the centre · 16:08"
+    },
+    {
+      "t": "03:40",
+      "lane": "a",
+      "type": "whatsapp",
+      "dir": "out",
+      "text": "Namaste! Saturday evening is fine. We'll see you both at the centre.",
+      "meta": "WhatsApp · from the centre · 16:08"
+    },
+    {
+      "t": "03:52",
+      "lane": "b",
+      "type": "sheet",
+      "op": "update",
+      "target": "demo",
+      "set": { "status": "Demo booked" },
+      "tones": { "status": "ok" }
+    },
+    {
+      "t": "03:52",
+      "lane": "b",
+      "type": "event",
+      "text": "Status changed by the centre"
+    },
+    {
+      "t": "04:05",
+      "lane": "a",
+      "type": "whatsapp",
+      "dir": "in",
+      "text": "Thank you, we'll be there.",
+      "meta": "WhatsApp · 16:09"
+    }
+  ]
+}

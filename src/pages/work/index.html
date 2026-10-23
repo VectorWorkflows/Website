@@ -1,10 +1,10 @@
 ---
-title: Work · systems and concepts by Vector Workflows
-description: Three studio-built systems, a missed-call lead responder, a WhatsApp site-fault tracker and a live Telegram scheduling bot, each with a replay, walkthrough video and public repo, and three ways to try them yourself. Plus unsolicited concept work.
+title: Work · websites and automation systems by Vector Workflows
+description: Websites built for real businesses, from a 3D flagship for a paint protection studio to a coaching centre's enquiry site, then three back-office systems you can play back step by step. Measured, with honest status labels.
 path: /work/
 nav: work
 body_class: page-work
-critical_css: components/page-head.css, components/card.css, components/replay.css, pages/work.css
+critical_css: components/page-head.css, components/card.css, components/seg.css, components/showcase.css, components/replay.css, pages/work.css
 css: components/wake.css
 js: wake
 ---
@@ -13,13 +13,54 @@ js: wake
   <div class="grid page-head__grid">
     <div class="g-rail"><p class="index-label"><span class="index-label__num">W</span><span class="index-label__rule"></span>Work</p></div>
     <div class="g-body stack flow-l">
-      <h1 id="page-title" class="page-head__title">Systems, built <em>end to end</em>.</h1>
-      <p class="t-lead page-head__lead">Three studio-built systems, each proving a pattern before it goes to a business, each with a replay, a walkthrough and public code. Below them, three ways to try them yourself, and concept work.</p>
+      <h1 id="page-title" class="page-head__title">Websites and systems, built <em>end to end</em>.</h1>
+      <p class="t-lead page-head__lead">Websites for real businesses come first: a 3D flagship for a paint protection studio, a salon concept and a coaching centre's enquiry site. Below them, the back-office systems, each one played back step by step.</p>
     </div>
   </div>
+
+  <nav class="work-index" aria-label="Kinds of work">
+    <ol role="list">
+      <li>
+        <a href="#websites">
+          <span class="work-index__num">01</span>
+          <span class="work-index__name">Websites &amp; flagship builds</span>
+          <span class="work-index__count t-label">3 builds</span>
+        </a>
+      </li>
+      <li>
+        <a href="#systems">
+          <span class="work-index__num">02</span>
+          <span class="work-index__name">Automation systems</span>
+          <span class="work-index__count t-label">3 interactive simulators</span>
+        </a>
+      </li>
+    </ol>
+  </nav>
 </section>
 
-<section class="frame section-tight" aria-label="Case studies">
+<section class="frame section-tight work-sites" id="websites" aria-labelledby="websites-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">01</span><span class="index-label__rule"></span>Websites</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="websites-title">Websites &amp; flagship <em>builds</em>.</h2>
+      <p class="t-lead measure">Hand-built sites for real businesses, from a file of facts the owner has confirmed. Each one says exactly where it stands, and every number on it was measured, not promised.</p>
+    </div>
+  </div>
+  {% include "build-cards" %}
+</section>
+
+<section class="frame section work-systems" id="systems" aria-labelledby="systems-title">
+  <div class="grid sec-head">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">02</span><span class="index-label__rule"></span>Interactive simulators</p></div>
+    <div class="g-body stack flow-s">
+      <h2 id="systems-title">Automation systems, <em>played back</em>.</h2>
+      <p class="t-lead measure">Three working back-office systems: the part of a business that answers the missed call, files the site photo and plans the day. Each one is an interactive simulator on simulated data. Open a case study to replay one real event step by step, switching between the customer's phone and the owner's side.</p>
+      <ul class="sim-legend" role="list">
+        <li><span class="sim-legend__k">Customer view</span><span>What the caller, the field worker or the user sees on their own phone</span></li>
+        <li><span class="sim-legend__k">Owner view</span><span>The alert, the sheet row and the calendar on the business's side</span></li>
+      </ul>
+    </div>
+  </div>
   {% include "project-cards" %}
 </section>
 
@@ -28,7 +69,7 @@ js: wake
     <div class="g-rail"><p class="index-label"><span class="index-label__num">T</span><span class="index-label__rule"></span>Live</p></div>
     <div class="g-body stack flow-s">
       <h2 id="try-title">Try them <em>yourself</em>.</h2>
-      <p class="t-lead measure">The replays above use simulated data. These three are live, and you can use them right now.</p>
+      <p class="t-lead measure">The simulators above use simulated data. These three are live, and you can use them right now.</p>
     </div>
   </div>
 
@@ -66,17 +107,6 @@ js: wake
   </ol>
 </section>
 
-<section class="frame section" id="concepts" aria-labelledby="concepts-title">
-  <div class="grid sec-head">
-    <div class="g-rail"><p class="index-label"><span class="index-label__num">C</span><span class="index-label__rule"></span>Concepts</p></div>
-    <div class="g-body stack flow-s">
-      <h2 id="concepts-title">Unsolicited, <em>on purpose</em>.</h2>
-      <p class="t-lead measure">Speculative redesigns of real local businesses' web presence, made to show what a hand-built site can do. They aren't commissioned, and they carry their own notice saying so: each is a concept demonstration, not affiliated with the business it reimagines.</p>
-    </div>
-  </div>
-  {% include "concept-cutabove" %}
-</section>
-
 <section class="frame section-tight hood" aria-labelledby="hood-title">
   <div class="grid">
     <div class="g-rail stack flow-xs">
@@ -84,7 +114,7 @@ js: wake
     </div>
     <div class="g-text stack flow-s">
       <h2 id="hood-title" class="t-h4">For the developers reading</h2>
-      <p class="t-small">The same three systems as the raw events they emit, cycling. The replays above show what the customer and the owner see; this is what the code sees.</p>
+      <p class="t-small">The same three systems as the raw events they emit, cycling. The simulators above show what the customer and the owner see; this is what the code sees.</p>
       {% logreel "missed-lead, site-fault, scheduler" %}
     </div>
   </div>
@@ -93,7 +123,7 @@ js: wake
 <section class="frame section work-close" aria-labelledby="work-close-title">
   <div class="grid">
     <div class="g-body stack flow-l">
-      <h2 id="work-close-title" class="t-h1">Your process could be <em>next</em>.</h2>
+      <h2 id="work-close-title" class="t-h1">Your website or your process could be <em>next</em>.</h2>
       <div class="cluster" style="--gap: var(--space-xs)">
         <a class="btn btn--primary" href="{{ site.routes.start }}"><span class="btn__label">Start a project</span><span class="btn__icon">{% icon "arrow-up-right" %}</span></a>
         <a class="btn btn--ghost" href="{{ site.routes.services }}"><span class="btn__label">See services &amp; pricing</span><span class="btn__icon">{% icon "arrow-right" %}</span></a>

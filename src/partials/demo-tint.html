@@ -1,0 +1,59 @@
+<div class="card demo tint" id="tint" data-tint data-limit="33">
+  <div class="card__core demo__core">
+    <div class="demo__head">
+      <p class="demo__kicker t-label">Window tint · shade</p>
+      <p class="tint__read"><span>Front <b data-tint-out="front">35%</b></span><span>Rear <b data-tint-out="rear">20%</b></span></p>
+    </div>
+
+    <figure class="tint__car">
+      <svg class="tint__svg" viewBox="0 0 520 190" aria-hidden="true" focusable="false">
+        <path class="tint__body" d="M34 162C28 160 25 150 25 140L26 112C27 104 32 99 40 96C56 92 74 90 94 89C128 68 166 50 206 46C232 43 258 43 284 44C308 56 332 70 352 84C392 88 432 93 462 98C478 101 488 106 492 114C496 122 497 136 495 148C493 156 486 161 474 162L435.1 162A33 33 0 1 0 372.9 162L157.1 162A33 33 0 1 0 94.9 162Z"/>
+        <g class="tint__cabin">
+          <path class="car__glass" d="M164 85C178 70 196 57 214 53L242 51L242 85Z"/>
+          <path class="car__glass" d="M250 50L282 49C298 58 318 70 336 84L250 85Z"/>
+          <path class="tint__seat" d="M206 85L208 66C208 62 211 60 215 60L224 60C228 60 230 63 230 67L228 85Z"/>
+          <path class="tint__seat" d="M262 85L264 62C264 58 267 56 271 56L281 56C285 56 287 59 287 63L285 85Z"/>
+          <path class="tint__seat" d="M302 84C304 76 309 70 316 68C322 66 328 68 332 72"/>
+        </g>
+        <path class="tint__film" data-glass="rear" d="M164 85C178 70 196 57 214 53L242 51L242 85Z" style="opacity:.8"/>
+        <path class="tint__film" data-glass="front" d="M250 50L282 49C298 58 318 70 336 84L250 85Z" style="opacity:.64"/>
+        <path class="tint__glint" d="M262 78L282 54M272 80L288 61M180 80L200 60"/>
+        <path class="car__line" d="M34 162C28 160 25 150 25 140L26 112C27 104 32 99 40 96C56 92 74 90 94 89C128 68 166 50 206 46C232 43 258 43 284 44C308 56 332 70 352 84C392 88 432 93 462 98C478 101 488 106 492 114C496 122 497 136 495 148C493 156 486 161 474 162L435.1 162A33 33 0 1 0 372.9 162L157.1 162A33 33 0 1 0 94.9 162Z"/>
+        <path class="car__line" d="M332 76L350 72L355 82L338 86Z"/>
+        <path class="car__seam" d="M150 86L352 86M242 51L242 150M356 86L356 162M440 96L440 162M46 95L46 162M156 150L374 150M446 101L481 106L487 113L452 110Z"/>
+        <circle class="car__tyre" cx="126" cy="151" r="27"/><circle class="car__hub" cx="126" cy="151" r="16"/>
+        <circle class="car__tyre" cx="404" cy="151" r="27"/><circle class="car__hub" cx="404" cy="151" r="16"/>
+        <line class="car__ground" x1="8" y1="178.5" x2="512" y2="178.5"/>
+      </svg>
+    </figure>
+
+    <div class="tint__controls">
+      <div class="tint__ctl">
+        <label class="t-label" for="tint-front-{{ uid }}">Front side windows</label>
+        <input class="tint__range" type="range" id="tint-front-{{ uid }}" min="0" max="5" step="1" value="3" aria-valuetext="35 per cent of light through" data-tint-range="front">
+        <ol class="tint__ticks" role="list" aria-hidden="true"><li>None</li><li>70%</li><li>50%</li><li>35%</li><li>20%</li><li>5%</li></ol>
+      </div>
+      <div class="tint__ctl">
+        <label class="t-label" for="tint-rear-{{ uid }}">Rear windows</label>
+        <input class="tint__range" type="range" id="tint-rear-{{ uid }}" min="0" max="5" step="1" value="4" aria-valuetext="20 per cent of light through" data-tint-range="rear">
+        <ol class="tint__ticks" role="list" aria-hidden="true"><li>None</li><li>70%</li><li>50%</li><li>35%</li><li>20%</li><li>5%</li></ol>
+      </div>
+    </div>
+    <p class="tint__law" data-tint-law aria-live="polite">In Arizona, film on the front side windows must let through at least 33% of the light. 35% is within it. Behind the driver there is no shade limit.</p>
+
+    <div class="tint__films">
+      <fieldset class="seg tint__pick">
+        <legend class="sr-only">Film type</legend>
+        <label><input type="radio" name="tint-film-{{ uid }}" value="carbon"><span>Carbon</span></label>
+        <label><input type="radio" name="tint-film-{{ uid }}" value="ceramic" checked><span>Ceramic</span></label>
+      </fieldset>
+      <dl class="tint__specs">
+        <div><dt>UV blocked</dt><dd><span class="tint__bar" style="--v:.99"></span><span>99%</span></dd></div>
+        <div class="tint__ir" data-film="carbon"><dt>Infrared heat rejected</dt><dd><span class="tint__bar" style="--v:.6"></span><span>40 to 60%</span></dd></div>
+        <div class="tint__ir" data-film="ceramic"><dt>Infrared heat rejected</dt><dd><span class="tint__bar" style="--v:.95"></span><span>80 to 95%</span></dd></div>
+        <div><dt>Phone and GPS</dt><dd>No interference</dd></div>
+      </dl>
+    </div>
+    <p class="demo__note">Shades are visible light transmission: the lower the number, the darker the glass. Film figures are typical for the class, not one brand's specification.</p>
+  </div>
+</div>

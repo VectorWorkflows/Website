@@ -1,8 +1,47 @@
 /* ==========================================================================
-   WORK INDEX: one card per system, each running a compact replay of itself
-   while it's on screen.
+   WORK INDEX: two kinds of work, in this order. Websites first (the build
+   cards, components/showcase.css), then the systems: one card per system,
+   each running a compact replay of itself while it's on screen.
    ========================================================================== */
 @layer pages {
+  /* The two parts, named under the page head: a number, a name, a count */
+  .work-index { margin-block-start: var(--space-xl); }
+  .work-index ol { display: grid; margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 48rem) { .work-index ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--grid-gap); } }
+  .work-index li { position: relative; }
+  .work-index li::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--edge-violet), var(--edge-faint) 60%, transparent);
+  }
+  .work-index a {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "num name" ". count";
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+    padding: var(--space-s) var(--space-2xs) var(--space-m) 0;
+    color: var(--c-bone);
+    text-decoration: none;
+  }
+  .work-index__num { grid-area: num; font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); color: var(--c-lilac); padding-block-start: 0.45em; }
+  .work-index__name { grid-area: name; font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-2); line-height: 1.15; letter-spacing: -0.025em; transition: color var(--dur-hover) var(--ease-out-soft); }
+  .work-index__count { grid-area: count; }
+  @media (hover: hover) { .work-index a:hover .work-index__name { color: var(--c-lilac); } }
+  .work-index a:active .work-index__name { color: var(--c-lilac); }
+  .work-index a:focus-visible { outline-offset: -2px; border-radius: var(--radius-s); }
+
+  /* Customer view and Owner view, named once above the systems */
+  .sim-legend { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; max-inline-size: calc(58 * var(--ch-body)); }
+  .sim-legend li { display: grid; gap: 0.125rem 0.75rem; color: var(--c-bone-2); font-size: var(--step--1); line-height: 1.45; }
+  @media (min-width: 40rem) { .sim-legend li { grid-template-columns: 9rem minmax(0, 1fr); align-items: baseline; } }
+  .sim-legend__k { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--c-lilac); }
+
+  .work-sites { padding-block-start: var(--space-l); }
+
   .projects { display: grid; gap: var(--space-l); }
 
   .project__core { display: grid; gap: var(--space-l); padding: var(--space-m) var(--space-s) var(--space-s); }
