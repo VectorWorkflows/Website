@@ -6,7 +6,8 @@
 {% if noindex %}<meta name="robots" content="noindex, nofollow">
 {% endif %}<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="{{ site.theme_color }}">
-<script>document.documentElement.classList.replace('no-js','js')</script>
+{% if site.google_site_verification %}<meta name="google-site-verification" content="{{ site.google_site_verification }}">
+{% endif %}<script>document.documentElement.classList.replace('no-js','js')</script>
 {{{ preloads }}}<style>{{{ critical_css }}}</style>
 {{{ deferred_css }}}<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/brand/icon-192.png" type="image/png" sizes="192x192">
