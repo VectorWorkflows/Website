@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 
 notepad.txt
+
+# Private notes are kept outside the repository
+notes/

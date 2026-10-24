@@ -39,7 +39,6 @@ Source layout:
                          and images (originals plus the derivatives the build
                          makes from them once and keeps)
     cutabove/            a separate site, mirrored into docs/ untouched
-    notes/               the brief and the performance record (not published)
 
 Template syntax (deliberately tiny):
 
