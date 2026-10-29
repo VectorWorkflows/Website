@@ -514,6 +514,46 @@ def load_pricing(site: dict, today: date | None = None) -> dict:
         "usage_note": p["usage_note"],
         "from": money(min(q.own(s) for s in p["services"] if q.kind(s) == "system")),
     }
+    # The 3D editions, Bonus Kit, Care Plan box and add-ons drawer: their own
+    # section on /services/, outside the bundle rules. Strings take {price},
+    # {deposit}, {balance}, {kit_value}, {kit_standalone}, {care_monthly}, {care_yearly}.
+    kit = p["kit"]
+    fill_base = {"kit_value": money(kit["value"]), "kit_standalone": money(kit["standalone"]),
+                 "care_monthly": money(p["care_plan"]["monthly"]), "care_yearly": money(p["care_plan"]["yearly"])}
+
+    def fill(text: str, extra: dict | None = None) -> str:
+        for k, v in {**fill_base, **(extra or {})}.items():
+            text = text.replace("{" + k + "}", v)
+        return text
+
+    editions = []
+    for e in p["editions"]:
+        now = e["launch"] if launch else e["standard"]
+        vals = {"price": money(now)}
+        if "deposit" in e:
+            vals["deposit"] = money(e["deposit"])
+            vals["balance"] = money(e["standard"] - e["deposit"])
+        editions.append({
+            "id": e["id"], "featured": bool(e.get("featured")),
+            "badge": e["badge"] if launch else e["badge_after"],
+            "title": e["title"], "subtitle": e["subtitle"],
+            "now": money(now),
+            "was": money(e["standard"]) if launch and e["launch"] != e["standard"] else "",
+            "bullets": [fill(x, vals) for x in e["bullets"]],
+            "cta": fill(e["cta"] if launch else e.get("cta_after", e["cta"]), vals),
+            "ready": f"Ready in under {e['days']} days, once we have your details.",
+        })
+    pricing["editions"] = editions
+    pricing["kit"] = {"eyebrow": fill(kit["eyebrow"]), "title": kit["title"], "text": fill(kit["text"]),
+                      "parts": [{"num": f"{i:02d}", "name": x["name"], "text": x["text"]}
+                                for i, x in enumerate(kit["parts"], 1)]}
+    pricing["care"] = {"tag": p["care"]["tag"], "title": fill(p["care"]["title"]), "text": p["care"]["text"]}
+    per_label = {"page": " / page", "month": " / mo"}
+    pricing["addons_summary"] = p["addons_summary"]
+    pricing["addons"] = [{
+        "name": a["name"],
+        "price": a.get("prefix", "") + money(kit["standalone"] if a.get("amount_from_kit") else a["amount"]) + per_label.get(a.get("per", ""), ""),
+    } for a in p["addons_list"]]
     # What the browser needs to quote a selection (shared by /start and /services)
     pricing["json"] = json.dumps({
         "launch": launch,

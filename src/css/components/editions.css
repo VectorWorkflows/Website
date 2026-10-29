@@ -1,0 +1,51 @@
+/* ==========================================================================
+   EDITIONS: the three 3D editions on /services/, then the Bonus Kit, the
+   Care Plan box and the add-ons drawer. Every amount is printed from
+   data/pricing.json by build.py.
+   ========================================================================== */
+@layer components {
+  .editions { display: grid; gap: var(--space-m); margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 64rem) { .editions { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; } }
+  .edition { display: flex; }
+  .edition > .card { inline-size: 100%; }
+  .edition--featured > .card { box-shadow: inset 0 0 0 1px var(--edge-violet), var(--shadow-float); }
+  .edition__core { gap: var(--space-s); }
+  .edition__badge { align-self: start; color: var(--c-lilac); }
+  .edition__title { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.02em; color: var(--c-bone); }
+  .edition__sub { color: var(--c-bone-2); font-size: var(--step--1); text-wrap: pretty; }
+  .edition__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.125rem 0.625rem; max-inline-size: none; }
+  .edition__price strong { font-family: var(--font-display); font-weight: inherit; font-size: var(--step-3); line-height: 1; letter-spacing: -0.02em; color: var(--c-bone); }
+  .edition__price del { font-family: var(--font-display); color: var(--c-bone-3); text-decoration-thickness: 1px; }
+  .edition__price span { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-bone-3); }
+  .edition__list { display: grid; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; font-size: var(--step--1); color: var(--c-bone-2); }
+  .edition__list li { padding-inline-start: 1rem; position: relative; text-wrap: pretty; }
+  .edition__list li::before { content: ""; position: absolute; inset-inline-start: 0; inset-block-start: 0.6em; inline-size: 0.35rem; block-size: 0.35rem; border-radius: 50%; background: var(--c-lilac); }
+  .edition__ready { font-size: var(--step--2); color: var(--c-bone-3); }
+  .edition__cta { margin-block-start: auto; }
+
+  .kit__core { gap: var(--space-m); }
+  .kit__eyebrow { color: var(--c-lilac); }
+  .kit__title { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-2); letter-spacing: -0.02em; color: var(--c-bone); }
+  .kit__text { color: var(--c-bone-2); max-inline-size: calc(60 * var(--ch-body)); text-wrap: pretty; }
+  .kit__parts { display: grid; gap: var(--space-s); margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 40rem) { .kit__parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 64rem) { .kit__parts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .kit__part { display: grid; gap: 0.25rem; align-content: start; padding: var(--space-s); border-radius: 0.75rem; box-shadow: inset 0 0 0 1px var(--edge); }
+  .kit__part strong { color: var(--c-bone); font-weight: var(--weight-medium); font-size: var(--step--1); }
+  .kit__part span { color: var(--c-bone-2); font-size: var(--step--1); text-wrap: pretty; }
+
+  .extras { display: grid; gap: var(--space-m); align-items: start; }
+  @media (min-width: 52rem) { .extras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .care__core { gap: var(--space-xs); }
+  .care__tag { color: var(--c-lilac); }
+  .care__title { font-family: var(--font-ui); font-weight: var(--weight-medium); font-size: var(--step-1); letter-spacing: -0.02em; color: var(--c-bone); text-wrap: balance; }
+  .care__text { color: var(--c-bone-2); font-size: var(--step--1); text-wrap: pretty; }
+  .addons { padding: var(--card-pad); }
+  .addons__sum { display: flex; align-items: center; justify-content: space-between; gap: var(--space-s); cursor: pointer; list-style: none; font-family: var(--font-ui); font-weight: var(--weight-medium); color: var(--c-bone); min-block-size: 2.75rem; }
+  .addons__sum::-webkit-details-marker { display: none; }
+  .addons__sum:focus-visible { outline: 2px solid var(--c-lilac); outline-offset: 4px; }
+  .addons[open] .addons__sum { color: var(--c-lilac); }
+  .addons__list { display: grid; margin: var(--space-xs) 0 0; padding: 0; list-style: none; }
+  .addons__list li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-s); padding-block: var(--space-xs); box-shadow: 0 -1px 0 var(--edge-faint); font-size: var(--step--1); color: var(--c-bone-2); }
+  .addons__list li span:last-child { font-family: var(--font-display); color: var(--c-bone); white-space: nowrap; }
+}

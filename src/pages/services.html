@@ -7,7 +7,7 @@ nav: services
 schema: organization, services
 body_class: page-services
 js: pricing, bundle
-css: components/tradelinks.css
+css: components/tradelinks.css, components/editions.css
 critical_css: components/page-head.css, components/card.css, components/launch.css, components/offer.css, components/faq.css, pages/services.css
 ---
 
@@ -16,7 +16,7 @@ critical_css: components/page-head.css, components/card.css, components/launch.c
     <div class="g-rail"><p class="index-label"><span class="index-label__num">S</span><span class="index-label__rule"></span>Services &amp; prices</p></div>
     <div class="g-body stack flow-l">
       <h1 id="page-title" class="page-head__title">Things you can name, <em>priced</em> in the open.</h1>
-      <p class="t-lead page-head__lead">Twelve services in three groups. Each one shows what you get, what it costs and how soon it's running. Pick one, or put a few together.</p>
+      <p class="t-lead page-head__lead">Explore our industry 3D editions, full-service digital infrastructure, and custom bespoke commissions.</p>
     </div>
   </div>
 
@@ -52,6 +52,55 @@ critical_css: components/page-head.css, components/card.css, components/launch.c
       {% endfor %}
     </ol>
   </nav>
+</section>
+
+<section class="frame section" id="editions" aria-labelledby="editions-title">
+  <div class="grid">
+    <div class="g-rail"><p class="index-label"><span class="index-label__num">3D</span><span class="index-label__rule"></span>Editions</p></div>
+    <div class="g-body stack flow-m">
+      <h2 id="editions-title" class="t-h2-s">Three 3D <em>editions</em>.</h2>
+      <ol class="editions" role="list">
+        {% for e in pricing.editions %}
+        <li class="edition{% if e.featured %} edition--featured{% endif %}">
+          <article class="card" aria-labelledby="ed-{{ e.id }}">
+            <div class="card__core edition__core">
+              {% if e.badge %}<p class="edition__badge t-label">{{ e.badge }}</p>{% endif %}
+              <h3 id="ed-{{ e.id }}" class="edition__title">{{ e.title }}</h3>
+              <p class="edition__sub">{{ e.subtitle }}</p>
+              <p class="edition__price" data-copy>{% if e.was %}<del><span class="sr-only">standard price </span>{{ e.was }}</del> {% endif %}<strong>{{ e.now }}</strong> <span>one-time</span></p>
+              <ul class="edition__list" role="list">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+              <p class="edition__ready">{{ e.ready }}</p>
+              <a class="btn btn--primary edition__cta" href="{{ site.cal_url }}" target="_blank" rel="noopener"><span class="btn__label">{{ e.cta }}</span></a>
+            </div>
+          </article>
+        </li>
+        {% endfor %}
+      </ol>
+
+      <article class="card kit" aria-labelledby="kit-title">
+        <div class="card__core kit__core">
+          <p class="kit__eyebrow t-label">{{ pricing.kit.eyebrow }}</p>
+          <h3 id="kit-title" class="kit__title">{{ pricing.kit.title }}</h3>
+          <p class="kit__text">{{ pricing.kit.text }}</p>
+          <ol class="kit__parts" role="list">{% for k in pricing.kit.parts %}<li class="kit__part"><strong>{{ k.num }} · {{ k.name }}</strong><span>{{ k.text }}</span></li>{% endfor %}</ol>
+        </div>
+      </article>
+
+      <div class="extras">
+        <article class="card care">
+          <div class="card__core care__core">
+            <p class="care__tag t-label">{{ pricing.care.tag }}</p>
+            <h3 class="care__title">{{ pricing.care.title }}</h3>
+            <p class="care__text">{{ pricing.care.text }}</p>
+          </div>
+        </article>
+        <details class="card addons">
+          <summary class="addons__sum">{{ pricing.addons_summary }}</summary>
+          <ul class="addons__list" role="list">{% for a in pricing.addons %}<li><span>{{ a.name }}</span><span data-copy>{{ a.price }}</span></li>{% endfor %}</ul>
+        </details>
+      </div>
+    </div>
+  </div>
 </section>
 
 {% for g in site.service_groups %}

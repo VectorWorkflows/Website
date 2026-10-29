@@ -114,7 +114,92 @@
     "Small changes and fixes (text, prices, hours, photos)"
   ],
 
-  "care_plan": { "monthly": 19, "yearly": 190 },
+  "care_plan": { "monthly": 39, "yearly": 390 },
+
+  "_editions": "The three 3D editions, their own top-level section on /services/. They are not services: they never enter the bundle, packs or calculator. Strings may hold {price}, {deposit}, {balance}, {kit_value} and {kit_standalone}, filled by build.py from the numbers beside them. badge is shown in the launch period, badge_after and cta_after after launch_end (cta_after falls back to cta). When launch equals standard no strike-through is shown.",
+  "editions": [
+    {
+      "id": "trades", "launch": 149, "standard": 299, "days": 3,
+      "radius_miles": 15, "radius_km": 25,
+      "badge": "FOUNDING LAUNCH OFFER · SAVE 50%", "badge_after": "",
+      "title": "Automotive & Local Trades 3D Edition",
+      "subtitle": "Multi-page interactive 3D studio built for detailing, PPF, tint & local service shops.",
+      "bullets": [
+        "Full Multi-Page 3D Website (9-section 3D homepage + up to 6 dedicated service pages + Work gallery + Booking page)",
+        "Mobile-optimized instant fallback & sub-2s edge loading",
+        "15-Mile (25 km) Competitor Radius Lock — layout & colorway locked against nearby competitors",
+        "Includes the 8-Part Local SEO & Bay Bonus Kit ({kit_value} value — FREE)",
+        "100% code ownership ($0/mo self-hosting supported; pay only after approving your live preview)"
+      ],
+      "cta": "Claim {price} Launch Build →", "cta_after": "Order 3D Edition →"
+    },
+    {
+      "id": "builder", "launch": 499, "standard": 999, "days": 7, "featured": true,
+      "radius_miles": 35, "radius_km": 55,
+      "badge": "MOST POPULAR · SAVE 50%", "badge_after": "MOST POPULAR",
+      "title": "Architectural & Builder 3D Edition",
+      "subtitle": "Real-time 60fps 3D showcase for custom home builders, pool studios & luxury remodelers.",
+      "bullets": [
+        "Full Real-Time 60fps 3D Architectural Showcase (home.baggudi.com engine)",
+        "Interactive CAD Wireframe Loupe + Real-Time 3D Construction Sweep",
+        "Live Time-of-Day Sun/Lighting Bezel + 3 Architectural Material Palettes",
+        "5-Waypoint Interior/Exterior 3D Walkthrough + Interactive Commission Drawer",
+        "35-Mile (55 km) Territory Radius Lock across your metro build area",
+        "Includes the 8-Part Local SEO & Lead Conversion Kit ({kit_value} value — FREE)"
+      ],
+      "cta": "Claim {price} Builder Showcase →", "cta_after": "Order 3D Edition →"
+    },
+    {
+      "id": "bespoke", "launch": 1999, "standard": 1999, "days": 21, "deposit": 999,
+      "radius_miles": 65, "radius_km": 100,
+      "badge": "1-OF-1 EXCLUSIVE COMMISSION", "badge_after": "1-OF-1 EXCLUSIVE COMMISSION",
+      "title": "Bespoke 3D Brand Platform",
+      "subtitle": "Custom-modeled 3D architecture, product stage & shaders engineered from scratch.",
+      "bullets": [
+        "100% Custom-Modeled 3D Scene, CAD Geometry & GLSL Shaders built around your flagship project or product",
+        "Bespoke editorial copywriting, custom subpages & interactive configurators",
+        "65-Mile (100 km) Exclusive Design Protection Lock — never sold or adapted for any competitor in your region",
+        "Priority engineering + Full 8-Part Local SEO & Growth Kit included",
+        "Flexible split: {deposit} deposit + {balance} on final launch approval"
+      ],
+      "cta": "Commission Bespoke Build →"
+    }
+  ],
+
+  "_kit": "The 8-Part Local SEO bonus kit: free with every edition, or standalone. eyebrow and text may hold {kit_value} and {kit_standalone}.",
+  "kit": {
+    "standalone": 99, "value": 199,
+    "eyebrow": "INCLUDED FREE WITH EVERY BUILD ({kit_value} VALUE) · OR {kit_standalone} STANDALONE",
+    "title": "The 8-Part Local SEO & Bay Domination Bonus Kit",
+    "text": "Every website ships with our personalized, print-ready local growth system—or order it standalone for {kit_standalone} to upgrade your existing shop.",
+    "parts": [
+      { "name": "GBP Local SEO Domination Manual", "text": "Primary category audit + exact weekly review-velocity math to overtake your #1 local competitor." },
+      { "name": "High-Ticket Bay Playbook", "text": "In-person inspection framing and upsell scripts for high-margin packages." },
+      { "name": "Branded Aftercare & Warranty Sheet", "text": "Print-ready client handover PDF tailored to your services." },
+      { "name": "Custom QR Mirror Hangtags & Counter Cards", "text": "Print-ready vector QR cards with built-in UTM tracking." },
+      { "name": "Client Launch Guide", "text": "First-week checklist to turn your new site into booked bays." },
+      { "name": "Zero-Downtime DNS Walkthrough", "text": "Step-by-step domain connection with zero email or site interruption." },
+      { "name": "Day-14 Map-Pack Diagnostic", "text": "2-week local ranking check and Google Business Profile velocity audit." },
+      { "name": "30-Day Social Media Reels & Captions Engine", "text": "Ready-to-shoot short-form video prompts and captions tailored to your menu." }
+    ]
+  },
+
+  "_care": "The Care Plan box beside the add-ons drawer. title may hold {care_monthly} and {care_yearly}; the amounts come from care_plan above.",
+  "care": {
+    "tag": "OPTIONAL HANDS-OFF MANAGEMENT",
+    "title": "Vector Care & Priority Updates — {care_monthly}/mo (or {care_yearly}/yr)",
+    "text": "Self-hosting on Cloudflare/GitHub is $0/mo forever—you own your code 100%. If you prefer hands-off management, our Care Plan covers managed edge hosting, SSL, unlimited text/photo/price updates within 24 hours, and monthly uptime & GBP health checks."
+  },
+
+  "_addons": "The optional add-ons drawer. per is 'page' or 'month'; amount_from_kit uses the standalone kit price.",
+  "addons_summary": "+ View Optional Add-Ons & Custom Upgrades",
+  "addons_list": [
+    { "name": "Additional Custom Service or City SEO Landing Page", "amount": 49, "prefix": "+", "per": "page" },
+    { "name": "Custom 3D Vehicle / Residence / Product Model Swap", "amount": 249, "prefix": "+" },
+    { "name": "Live CRM, Calendly, Square or Urable Booking Integration", "amount": 99, "prefix": "+" },
+    { "name": "Standalone 8-Part Local SEO & Print Kit (No Website)", "amount_from_kit": true },
+    { "name": "Monthly Local SEO & Weekly GBP Post Management", "amount": 149, "per": "month" }
+  ],
 
   "usage_note": "Chats your customers start cost nothing extra. Messages your business starts on WhatsApp (reminders, follow-ups) carry small Meta fees, and phone services need a phone line. Both are billed at cost, and we tell you the numbers before anything is set up."
 }
